@@ -25,6 +25,7 @@ public class SendSMS extends AppCompatActivity {
     private Button btnSms;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        ActivityCompat.requestPermissions(SendSMS.this, new String[]{Manifest.permission.SEND_SMS}, 1);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_send_sms);
         txtMobile = (EditText)findViewById(R.id.mblTxt);
@@ -34,8 +35,6 @@ public class SendSMS extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 try{
-
-                    ActivityCompat.requestPermissions(SendSMS.this, new String[]{Manifest.permission.SEND_SMS});
 
                     SmsManager smgr = SmsManager.getDefault();
                     smgr.sendTextMessage(txtMobile.getText().toString(),null,txtMessage.getText().toString(),null,null);
