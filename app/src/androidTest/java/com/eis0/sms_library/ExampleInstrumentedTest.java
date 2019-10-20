@@ -30,7 +30,5 @@ public class ExampleInstrumentedTest {
     public void sendSMS() {
         SmsManager smgr = SmsManager.getDefault();
         smgr.sendTextMessage("+393423541601", null, "Ses", null, null);
-        /*
-        */
     }
 }

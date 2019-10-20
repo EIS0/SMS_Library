@@ -25,12 +25,18 @@ public class SendSMS extends AppCompatActivity {
     private Button btnSms;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        ActivityCompat.requestPermissions(SendSMS.this, new String[]{Manifest.permission.SEND_SMS}, 1);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_send_sms);
         txtMobile = (EditText)findViewById(R.id.mblTxt);
         txtMessage = (EditText)findViewById(R.id.msgTxt);
         btnSms = (Button)findViewById(R.id.btnSend);
+        ActivityCompat.requestPermissions(SendSMS.this,
+                new String[]{
+                        Manifest.permission.SEND_SMS,
+                        Manifest.permission.READ_SMS,
+                        Manifest.permission.READ_PHONE_STATE,
+                        Manifest.permission.RECEIVE_SMS
+                }, 1);
         btnSms.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -48,12 +54,3 @@ public class SendSMS extends AppCompatActivity {
         });
     }
 }
-
-/*
-* package com.tutlane.sendsmsexample;
-
-public class MainActivity extends AppCompatActivity {
-
-
-}
-* */
