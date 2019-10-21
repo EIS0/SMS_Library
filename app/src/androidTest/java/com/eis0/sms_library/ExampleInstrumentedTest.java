@@ -1,15 +1,14 @@
 package com.eis0.sms_library;
 
 import android.content.Context;
-import android.telephony.SmsManager;
 
-import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Instrumented test, which will execute on an Android device.
@@ -26,9 +25,20 @@ public class ExampleInstrumentedTest {
         assertEquals("com.eis0.sms_library", appContext.getPackageName());
     }
 
+    /*
     @Test
     public void sendSMS() {
         SmsManager smgr = SmsManager.getDefault();
         smgr.sendTextMessage("+393423541601", null, "Ses", null, null);
     }
+
+    @Test
+    public void messageReception() {
+        TestReceiveMethod tm1 = new TestReceiveMethod();
+        TestReceiveMethod tm2 = new TestReceiveMethod();
+        SMSLib receiver = new SMSLib();
+        receiver.addOnReceiveListener(tm1);
+        receiver.addOnReceiveListener(tm2);
+    }
+     */
 }

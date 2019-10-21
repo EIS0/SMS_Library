@@ -8,15 +8,15 @@ import android.util.Log;
 
 import java.util.ArrayList;
 
-class SMSLib extends BroadcastReceiver {
+public class SMSLib extends BroadcastReceiver {
 
-    private ArrayList<SMSReceivedListener> listeners;
+    private static ArrayList<SMSReceivedListener> listeners = new ArrayList<>();
 
-    public void addOnReceiveListener(SMSReceivedListener listener) {
-        this.listeners.add(listener);
+    public static void addOnReceiveListener(SMSReceivedListener listener) {
+        listeners.add(listener);
     }
 
-    public void removeOnReceiveListener(SMSReceivedListener listener) {
+    public static void removeOnReceiveListener(SMSReceivedListener listener) {
         listeners.remove(listener);
     }
 
@@ -25,9 +25,10 @@ class SMSLib extends BroadcastReceiver {
         Log.d("RECEIVE", "Message Received");
         Object[] pdus = (Object[])intent.getExtras().get("pdus");
         SmsMessage shortMessage = SmsMessage.createFromPdu((byte[])pdus[0]);
+        String from = shortMessage.getDisplayOriginatingAddress();
         String text = shortMessage.getDisplayMessageBody();
         Log.d("RECEIVE", "Message Received: " + text);
-        for (SMSReceivedListener listener : listeners) listener.onReceive("from", text);
+        for (SMSReceivedListener listener : listeners) listener.onReceive(from, text);
         if(text.contains("ses")){
             abortBroadcast();
             Log.d("RECEIVE", "Blocked a message with text " + text);
