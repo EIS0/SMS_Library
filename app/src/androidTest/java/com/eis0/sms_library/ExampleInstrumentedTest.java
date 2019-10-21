@@ -1,6 +1,7 @@
 package com.eis0.sms_library;
 
 import android.content.Context;
+import android.telephony.SmsManager;
 
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -23,5 +24,11 @@ public class ExampleInstrumentedTest {
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
 
         assertEquals("com.eis0.sms_library", appContext.getPackageName());
+    }
+
+    @Test
+    public void sendSMS() {
+        SmsManager smgr = SmsManager.getDefault();
+        smgr.sendTextMessage("+393423541601", null, "Ses", null, null);
     }
 }
