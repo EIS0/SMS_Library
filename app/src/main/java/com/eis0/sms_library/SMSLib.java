@@ -9,7 +9,6 @@ import android.content.pm.PackageManager;
 import android.telephony.SmsManager;
 import android.telephony.SmsMessage;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -22,11 +21,16 @@ public class SMSLib extends BroadcastReceiver {
     private static SmsManager manager = SmsManager.getDefault();
     private static final String[] PERMISSIONS = {
             Manifest.permission.SEND_SMS,
-            Manifest.permission.RECEIVE_SMS
+            Manifest.permission.RECEIVE_SMS,
+            Manifest.permission.READ_PHONE_STATE
     };
 
-    // Probabilmente inutile
+    /**
+    * Funzione per controllare se sono stati inviati tutti i permessi
+    * necessari per ricezione e invio messaggi
+    * */
     public boolean hasPermissions(Activity activity) {
+        // Probabilmente inutile
         boolean hasPermissions = true;
         for (String permission : PERMISSIONS)
             if(ContextCompat.checkSelfPermission(activity, permission)
@@ -34,22 +38,42 @@ public class SMSLib extends BroadcastReceiver {
         return hasPermissions;
     }
 
+    /**
+    * Funzione per richiedere i permessi necessari
+    * */
     public void requestPermissions(Activity activity) {
+        Log.d("SMS_PERMISSION_REQUEST", "Requesting Permissions");
         ActivityCompat.requestPermissions(activity, PERMISSIONS, 1);
     }
 
+    /**
+    * Dato un oggetto di tipo SMSReceivedListener questo viene aggiunto
+    * alla lista di oggetti di callback
+    * */
     public void addOnReceiveListener(SMSReceivedListener listener) {
         listeners.add(listener);
     }
 
+    /**
+    * Rimuove un oggetto di callback dalla lista
+    * */
     public void removeOnReceiveListener(SMSReceivedListener listener) {
         listeners.remove(listener);
     }
 
+    /**
+    * Pulisce l'intero array di callback dalla lista
+    * */
     public void clearOnReceiveListeners() {
         listeners.clear();
     }
 
+    /**
+     * Funzione di invio di un messaggio dati destinatario e messaggio da inviare
+     *
+     * @param to destinatario del messaggio (con codice nazionale facoltativo)
+     * @param message messaggio da inviare al destinatario (massimo 180 caratteri)
+     */
     public void sendMessage(String to, String message) {
         try {
             manager.sendTextMessage(to,null, message,null,null);
@@ -61,6 +85,12 @@ public class SMSLib extends BroadcastReceiver {
         }
     }
 
+    /**
+     * Funzione chiamata quando viene ricevuto un messaggio.
+     * Vengono chiamati i callback presenti nella lista dei listener
+     * @param context Contesto per ricevere i messaggi (necessaria per BroadcastReceiver)
+     * @param intent Intent di ricezione messaggi (necessaria per BroadcastReceiver)
+     */
     @Override
     public void onReceive(Context context, Intent intent) {
         Object[] pdus = (Object[])intent.getExtras().get("pdus");

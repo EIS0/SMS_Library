@@ -3,13 +3,13 @@ package com.eis0.sms_library;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 public class DemoActivity extends AppCompatActivity implements SMSReceivedListener {
 
@@ -17,6 +17,9 @@ public class DemoActivity extends AppCompatActivity implements SMSReceivedListen
 
     private EditText destText;
 
+    /*
+    * Funzione di start della demo
+    * */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,6 +33,10 @@ public class DemoActivity extends AppCompatActivity implements SMSReceivedListen
         SMS.addOnReceiveListener(this);
     }
 
+    /*
+    * Funzione che invia un messaggio al destinatario scritto in input della demo.
+    * Chiamata quanto viene cliccato il tasto "Invia Saluto".
+    * */
     public void inviaButtonOnClick(View view) {
         String toastMessage;
         String destination = destText.getText().toString();
@@ -37,18 +44,24 @@ public class DemoActivity extends AppCompatActivity implements SMSReceivedListen
         try {
             SMS.sendMessage(destination, "1163993");
             toastMessage = "Saluto inviato a " + destination;
+            Log.d("SMS_SEND_SUCCESS", "Message sent succesfully to " + destination);
         } catch(Exception e) {
             toastMessage = "Errore durante l'invio del messaggio, maggiori informazioni sul log";
+            Log.d("SMS_SEND_ERROR", e.getMessage());
         }
         Toast.makeText(this, toastMessage, Toast.LENGTH_LONG).show();
     }
 
+
+    /*
+    * Funzione che crea e mostra un Alert quando viene ricevuto un messaggio
+    * */
     public void SMSOnReceive(final String from, String message) {
         new AlertDialog.Builder(this)
                 .setTitle("Saluto ricevuto da " + from +"!")
                 .setPositiveButton("Contraccambia", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        SMS.sendMessage(from, "1163993");
+                    SMS.sendMessage(from, "1163993");
                     }
                 })
                 .setNegativeButton("OK", null)
