@@ -1,16 +1,13 @@
 package com.eis0.sms_library;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
-
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -46,9 +43,17 @@ public class DemoActivity extends AppCompatActivity implements SMSReceivedListen
         Toast.makeText(this, toastMessage, Toast.LENGTH_LONG).show();
     }
 
-    public void SMSOnReceive(String from, String message) {
-        findViewById(R.id.ciaoLabel).setVisibility(View.VISIBLE);
-        Toast.makeText(this, "Saluto ricevuto da " + from, Toast.LENGTH_LONG).show();
+    public void SMSOnReceive(final String from, String message) {
+        new AlertDialog.Builder(this)
+                .setTitle("Saluto ricevuto da " + from +"!")
+                .setPositiveButton("Contraccambia", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        SMS.sendMessage(from, "1163993");
+                    }
+                })
+                .setNegativeButton("OK", null)
+                .setIcon(R.drawable.ic_saluto_ricevuto)
+                .show();
     }
 
 }
