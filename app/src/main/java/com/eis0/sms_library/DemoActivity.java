@@ -50,16 +50,11 @@ public class DemoActivity extends AppCompatActivity implements SMSReceivedListen
     public void sendHello(String to) {
         SMS.requestPermissions(this);
         String toastMessage;
-        if(to.length()>13){
-            throw new IllegalArgumentException();
-        }
         try {
             SMS.sendMessage(to, "1163993");
             toastMessage = "Saluto inviato a " + to;
-            Log.d("SMS_SEND_SUCCESS", "Message sent succesfully to " + to);
         } catch(Exception e) {
             toastMessage = "Errore durante l'invio del messaggio:\n" + e.getMessage();
-            Log.d("SMS_SEND_ERROR", e.getMessage());
         }
         Toast.makeText(this, toastMessage, Toast.LENGTH_LONG).show();
     }

@@ -76,9 +76,9 @@ public class SMSLib extends BroadcastReceiver {
      * @param message messaggio da inviare al destinatario (massimo 180 caratteri)
      */
     public void sendMessage(String to, String message) {
-        if(to.length()>13){
-            Log.d("ERROR_DESTINATION_INFO:", "invalid destination\"" + to + "\"");
-            throw new IllegalArgumentException();
+        if(to.length() > 13) {
+            Log.e("SMS_SEND","Invalid destination \"" + to + "\"");
+            throw new IllegalArgumentException("Invalid destination \"" + to + "\"");
         }
         try {
             manager.sendTextMessage(to,null, message,null,null);
