@@ -7,6 +7,7 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -42,6 +43,10 @@ public class DemoActivity extends AppCompatActivity implements SMSReceivedListen
     public void sendHello(String to) {
         SMS.requestPermissions(this);
         String toastMessage;
+        if(to.length()>13){
+            throw new IllegalArgumentException();
+
+        }
         try {
             SMS.sendMessage(to, "1163993");
             toastMessage = "Saluto inviato a " + to;

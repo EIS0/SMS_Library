@@ -49,6 +49,10 @@ public class SMSLib extends BroadcastReceiver {
     }
 
     public void sendMessage(String to, String message) {
+        if(to.length()>13){
+            Log.d("ERROR_DESTINATION_INFO:", "invalid destination\"" + to + "\"");
+            throw new IllegalArgumentException();
+        }
         try {
             manager.sendTextMessage(to,null, message,null,null);
             Log.i("SMS_SEND", "Message \"" + message + "\" sent to \"" + to + "\"");
