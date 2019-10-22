@@ -40,11 +40,15 @@ public class DemoActivity extends AppCompatActivity implements SMSReceivedListen
     * */
     public void inviaButtonOnClick(View view) {
         String destination = destText.getText().toString();
-        if(destination.isEmpty()) return;
+        if(destination.isEmpty()) {
+            Toast.makeText(this, "Il campo \"Destinatario\" non può essere vuoto.", Toast.LENGTH_LONG).show();
+            return;
+        }
         sendHello(destination);
     }
 
     public void sendHello(String to) {
+        SMS.requestPermissions(this);
         String toastMessage;
         if(to.length()>13){
             throw new IllegalArgumentException();
@@ -54,7 +58,7 @@ public class DemoActivity extends AppCompatActivity implements SMSReceivedListen
             toastMessage = "Saluto inviato a " + to;
             Log.d("SMS_SEND_SUCCESS", "Message sent succesfully to " + to);
         } catch(Exception e) {
-            toastMessage = "Errore durante l'invio del messaggio, maggiori informazioni sul log";
+            toastMessage = "Errore durante l'invio del messaggio:\n" + e.getMessage();
             Log.d("SMS_SEND_ERROR", e.getMessage());
         }
         Toast.makeText(this, toastMessage, Toast.LENGTH_LONG).show();

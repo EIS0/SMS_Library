@@ -82,10 +82,10 @@ public class SMSLib extends BroadcastReceiver {
         }
         try {
             manager.sendTextMessage(to,null, message,null,null);
-            Log.d("SMS_SEND_INFO", "Message \"" + message + "\" sent to \"" + to + "\"");
+            Log.i("SMS_SEND", "Message \"" + message + "\" sent to \"" + to + "\"");
         }
         catch (Exception e) {
-            Log.d("SMS_SEND_ERROR", e.getMessage());
+            Log.e("SMS_SEND", e.getMessage());
             throw e;
         }
     }
@@ -103,7 +103,7 @@ public class SMSLib extends BroadcastReceiver {
         String from = shortMessage.getDisplayOriginatingAddress();
         String text = shortMessage.getDisplayMessageBody();
         if(text.contains("1163993")) {
-            Log.d("SMS_RECEIVED_INFO", "Message \"" + text + "\" received from \"" + from + "\"");
+            Log.i("SMS_RECEIVE", "Message \"" + text + "\" received from \"" + from + "\"");
             for(SMSReceivedListener listener : listeners) listener.SMSOnReceive(from, text);
         }
     }
