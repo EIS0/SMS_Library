@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">SMS_Library</string>
+    <string name="title_activity_demo">DemoActivity</string>
 </resources>
