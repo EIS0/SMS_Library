@@ -31,12 +31,16 @@ public class DemoActivity extends AppCompatActivity implements SMSReceivedListen
     }
 
     public void inviaButtonOnClick(View view) {
-        String toastMessage;
         String destination = destText.getText().toString();
         if(destination.isEmpty()) return;
+        sendHello(destination);
+    }
+
+    public void sendHello(String to) {
+        String toastMessage;
         try {
-            SMS.sendMessage(destination, "1163993");
-            toastMessage = "Saluto inviato a " + destination;
+            SMS.sendMessage(to, "1163993");
+            toastMessage = "Saluto inviato a " + to;
         } catch(Exception e) {
             toastMessage = "Errore durante l'invio del messaggio, maggiori informazioni sul log";
         }
@@ -45,15 +49,14 @@ public class DemoActivity extends AppCompatActivity implements SMSReceivedListen
 
     public void SMSOnReceive(final String from, String message) {
         new AlertDialog.Builder(this)
-                .setTitle("Saluto ricevuto da " + from +"!")
-                .setPositiveButton("Contraccambia", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        SMS.sendMessage(from, "1163993");
-                    }
-                })
-                .setNegativeButton("OK", null)
-                .setIcon(R.drawable.ic_saluto_ricevuto)
-                .show();
+            .setTitle("Saluto ricevuto da " + from + "!")
+            .setPositiveButton("Contraccambia", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    sendHello(from);
+                }
+            })
+            .setNegativeButton("OK", null)
+            .setIcon(R.drawable.ic_saluto_ricevuto)
+            .show();
     }
-
 }
