@@ -1,3 +1,2 @@
-# SMS_Library
-Struttura fondamentale della App che riceve in entrata un SMS e visualizza di conseguenza un messaggio di testo
-Approccio a Android Studio
+# Libreria SMS
+Struttura fondamentale della App che gestisce l'invio e la ricezione di messaggi SMS.

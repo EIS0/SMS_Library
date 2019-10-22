@@ -22,7 +22,8 @@ public class SMSLib extends BroadcastReceiver {
     private static final String[] PERMISSIONS = {
             Manifest.permission.SEND_SMS,
             Manifest.permission.RECEIVE_SMS,
-            Manifest.permission.READ_PHONE_STATE
+            Manifest.permission.READ_PHONE_STATE,
+            Manifest.permission.READ_SMS
     };
 
     /**
@@ -75,6 +76,10 @@ public class SMSLib extends BroadcastReceiver {
      * @param message messaggio da inviare al destinatario (massimo 180 caratteri)
      */
     public void sendMessage(String to, String message) {
+        if(to.length()>13){
+            Log.d("ERROR_DESTINATION_INFO:", "invalid destination\"" + to + "\"");
+            throw new IllegalArgumentException();
+        }
         try {
             manager.sendTextMessage(to,null, message,null,null);
             Log.d("SMS_SEND_INFO", "Message \"" + message + "\" sent to \"" + to + "\"");
