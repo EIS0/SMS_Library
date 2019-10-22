@@ -24,8 +24,6 @@ public class DemoActivity extends AppCompatActivity implements SMSReceivedListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_demo);
-        //Toolbar toolbar = findViewById(R.id.toolbar);
-        //setSupportActionBar(toolbar);
         Log.d("DEMO_START", "Starting Demo");
 
         destText = findViewById(R.id.destinatarioText);
