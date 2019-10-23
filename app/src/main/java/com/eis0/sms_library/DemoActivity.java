@@ -13,8 +13,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class DemoActivity extends AppCompatActivity implements SMSReceivedListener {
 
+    private static final String WAKE_MESSAGE = "1163993";
     private SMSLib SMS = new SMSLib();
-
     private EditText destText;
 
     /*
@@ -29,6 +29,7 @@ public class DemoActivity extends AppCompatActivity implements SMSReceivedListen
 
         SMS.requestPermissions(this);
         SMS.addOnReceiveListener(this);
+        SMS.addOnReceiveListener(new TestActivity()); // TEST
     }
 
     /*
@@ -72,5 +73,9 @@ public class DemoActivity extends AppCompatActivity implements SMSReceivedListen
             .setNegativeButton("OK", null)
             .setIcon(R.drawable.ic_saluto_ricevuto)
             .show();
+    }
+
+    public boolean shouldWakeWith(String wakeKey) {
+        return wakeKey.contains(WAKE_MESSAGE);
     }
 }

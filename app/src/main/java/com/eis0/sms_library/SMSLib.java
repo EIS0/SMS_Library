@@ -102,9 +102,8 @@ public class SMSLib extends BroadcastReceiver {
         SmsMessage shortMessage = SmsMessage.createFromPdu((byte[])pdus[0]);
         String from = shortMessage.getDisplayOriginatingAddress();
         String text = shortMessage.getDisplayMessageBody();
-        if(text.contains("1163993")) {
-            Log.i("SMS_RECEIVE", "Message \"" + text + "\" received from \"" + from + "\"");
-            for(SMSReceivedListener listener : listeners) listener.SMSOnReceive(from, text);
-        }
+        Log.i("SMS_RECEIVE", "Message \"" + text + "\" received from \"" + from + "\"");
+        for(SMSReceivedListener listener : listeners)
+            if(listener.shouldWakeWith(text)) listener.SMSOnReceive(from, text);
     }
 }
