@@ -1,3 +1,6 @@
 <resources>
-    <string name="app_name">SMS_Library</string>
+    <string name="app_name">Libreria SMS - Demo 1</string>
+    <!--
+    <string name="title_activity_demo">DemoActivity</string>
+    -->
 </resources>
