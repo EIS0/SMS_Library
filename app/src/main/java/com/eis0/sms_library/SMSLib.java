@@ -27,9 +27,10 @@ public class SMSLib extends BroadcastReceiver {
     };
 
     /**
-    * Funzione per controllare se sono stati inviati tutti i permessi
-    * necessari per ricezione e invio messaggi
-    * */
+     * Verifies if the launching activity owns the permissions to use the library
+     * @param activity must be an Activity Object
+     * @return boolean
+     */
     public boolean hasPermissions(Activity activity) {
         // Probabilmente inutile
         boolean hasPermissions = true;
@@ -40,7 +41,8 @@ public class SMSLib extends BroadcastReceiver {
     }
 
     /**
-    * Funzione per richiedere i permessi necessari
+     * Request permissions to use the library
+    * @param activity Activity where to ask permission tu the user
     * */
     public void requestPermissions(Activity activity) {
         Log.d("SMS_PERMISSION_REQUEST", "Requesting Permissions");
@@ -48,30 +50,30 @@ public class SMSLib extends BroadcastReceiver {
     }
 
     /**
-    * Dato un oggetto di tipo SMSReceivedListener questo viene aggiunto
-    * alla lista di oggetti di callback
-    * */
+     * Adds a listener object to the callbacks list
+     * @param listener must be an object that implements the SMSReceivedListener interface
+     */
     public void addOnReceiveListener(SMSReceivedListener listener) {
         listeners.add(listener);
     }
 
     /**
-    * Rimuove un oggetto di callback dalla lista
-    * */
+     * Removes a callback object from the list
+     * @param listener
+     */
     public void removeOnReceiveListener(SMSReceivedListener listener) {
         listeners.remove(listener);
     }
 
     /**
-    * Pulisce l'intero array di callback dalla lista
+    * Cleans the entire callbacks list
     * */
     public void clearOnReceiveListeners() {
         listeners.clear();
     }
 
     /**
-     * Funzione di invio di un messaggio dati destinatario e messaggio da inviare
-     *
+     * Sends a message (SMS) to the specified target
      * @param to destinatario del messaggio (con codice nazionale facoltativo)
      * @param message messaggio da inviare al destinatario (massimo 180 caratteri)
      */
@@ -91,8 +93,8 @@ public class SMSLib extends BroadcastReceiver {
     }
 
     /**
-     * Funzione chiamata quando viene ricevuto un messaggio.
-     * Vengono chiamati i callback presenti nella lista dei listener
+     * Function called when a message is received, calls the specified listeners' function when it
+     * need to be executed
      * @param context Contesto per ricevere i messaggi (necessaria per BroadcastReceiver)
      * @param intent Intent di ricezione messaggi (necessaria per BroadcastReceiver)
      */
