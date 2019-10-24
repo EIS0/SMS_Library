@@ -3,6 +3,7 @@ package com.eis0.sms_library;
 import android.util.Log;
 
 public class TestActivity implements SMSReceivedListener {
+
     private static final String WAKE_MESSAGE = "WakeTestActivity";
 
     public boolean shouldWakeWith(String text) {
