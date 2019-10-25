@@ -13,11 +13,9 @@ import android.util.Log;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import java.util.ArrayList;
-
 public class SMSLib extends BroadcastReceiver {
 
-    private static ArrayList<SMSReceivedListener> listeners = new ArrayList<>();
+    private static SMSReceivedListener listener;
     private static SmsManager manager = SmsManager.getDefault();
     private static final String[] PERMISSIONS = {
             Manifest.permission.SEND_SMS,
@@ -42,7 +40,7 @@ public class SMSLib extends BroadcastReceiver {
 
     /**
      * Request permissions to use the library
-    * @param activity Activity where to ask permission tu the user
+    * @param activity Activity which is asking for permissions
     * */
     public void requestPermissions(Activity activity) {
         Log.d("SMS_PERMISSION_REQUEST", "Requesting Permissions");
@@ -50,26 +48,19 @@ public class SMSLib extends BroadcastReceiver {
     }
 
     /**
-     * Adds a listener object to the callbacks list
-     * @param listener must be an object that implements the SMSReceivedListener interface
+     * Adds the listener object
+     * @param activity must be an object that implements the SMSReceivedListener interface
      */
-    public void addOnReceiveListener(SMSReceivedListener listener) {
-        listeners.add(listener);
+    public void addOnReceiveListener(SMSReceivedListener activity) {
+        listener = activity;
     }
 
     /**
-     * Removes a callback object from the list
-     * @param listener
+     * Removes the listener object
+     * @param activity
      */
-    public void removeOnReceiveListener(SMSReceivedListener listener) {
-        listeners.remove(listener);
-    }
-
-    /**
-    * Cleans the entire callbacks list
-    * */
-    public void clearOnReceiveListeners() {
-        listeners.clear();
+    public void removeOnReceiveListener(SMSReceivedListener activity) {
+        if (listener == activity) listener = null;
     }
 
     /**
@@ -105,7 +96,6 @@ public class SMSLib extends BroadcastReceiver {
         String from = shortMessage.getDisplayOriginatingAddress();
         String text = shortMessage.getDisplayMessageBody();
         Log.i("SMS_RECEIVE", "Message \"" + text + "\" received from \"" + from + "\"");
-        for(SMSReceivedListener listener : listeners)
-            if(listener.shouldWakeWith(text)) listener.SMSOnReceive(from, text);
+        if(listener.shouldWakeWith(text)) listener.SMSOnReceive(from, text);
     }
 }
