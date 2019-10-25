@@ -29,7 +29,6 @@ public class DemoActivity extends AppCompatActivity implements SMSReceivedListen
 
         SMS.requestPermissions(this);
         SMS.addOnReceiveListener(this);
-        SMS.addOnReceiveListener(new TestActivity()); // TEST
     }
 
     /**
