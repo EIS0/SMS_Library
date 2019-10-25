@@ -1,6 +1,9 @@
 package com.eis0.sms_library;
 
 public interface SMSReceivedListener {
+
+    boolean shouldWakeWith(String text);
+
     /*
     * Implementare questo metodo e poi passare questo
     * oggetto a SMSLib.addOnReceiveListener per poter creare metodi di callback
