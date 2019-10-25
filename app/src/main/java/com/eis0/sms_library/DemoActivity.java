@@ -3,7 +3,6 @@ package com.eis0.sms_library;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -25,7 +24,7 @@ public class DemoActivity extends AppCompatActivity implements SMSReceivedListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_demo);
 
-        destText = findViewById(R.id.destinatarioText);
+        destText = findViewById(R.id.recipientNumber);
 
         SMS.requestPermissions(this);
         SMS.addOnReceiveListener(this);
