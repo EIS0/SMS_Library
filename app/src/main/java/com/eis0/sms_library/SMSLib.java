@@ -17,7 +17,7 @@ import java.util.ArrayList;
 
 public class SMSLib extends BroadcastReceiver {
 
-    private static ArrayList<DemoActivity> listeners = new ArrayList<>();
+    private static ArrayList<SMSReceivedListener> listeners = new ArrayList<>();
     private static SmsManager manager = SmsManager.getDefault();
     private static final String[] PERMISSIONS = {
             Manifest.permission.SEND_SMS,
@@ -51,17 +51,17 @@ public class SMSLib extends BroadcastReceiver {
 
     /**
      * Adds a listener object to the callbacks list
-     * @param listener must be DemoActivity
+     * @param listener must be an object that implements the SMSReceivedListener interface
      */
-    public void addOnReceiveListener(DemoActivity listener) {
+    public void addOnReceiveListener(SMSReceivedListener listener) {
         listeners.add(listener);
     }
 
     /**
      * Removes a callback object from the list
-     * @param listener must be DemoActivity
+     * @param listener
      */
-    public void removeOnReceiveListener(DemoActivity listener) {
+    public void removeOnReceiveListener(SMSReceivedListener listener) {
         listeners.remove(listener);
     }
 
@@ -105,7 +105,7 @@ public class SMSLib extends BroadcastReceiver {
         String from = shortMessage.getDisplayOriginatingAddress();
         String text = shortMessage.getDisplayMessageBody();
         Log.i("SMS_RECEIVE", "Message \"" + text + "\" received from \"" + from + "\"");
-        for(DemoActivity listener : listeners)
+        for(SMSReceivedListener listener : listeners)
             if(listener.shouldWakeWith(text)) listener.SMSOnReceive(from, text);
     }
 }

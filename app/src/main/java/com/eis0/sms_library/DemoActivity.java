@@ -11,7 +11,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 
-public class DemoActivity extends AppCompatActivity {
+public class DemoActivity extends AppCompatActivity implements SMSReceivedListener {
 
     private static final String WAKE_MESSAGE = "1163993";
     private SMSLib SMS = new SMSLib();
@@ -29,6 +29,7 @@ public class DemoActivity extends AppCompatActivity {
 
         SMS.requestPermissions(this);
         SMS.addOnReceiveListener(this);
+        SMS.addOnReceiveListener(new TestActivity()); // TEST
     }
 
     /**
