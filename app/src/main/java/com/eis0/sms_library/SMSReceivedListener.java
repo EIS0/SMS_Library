@@ -1,16 +1,20 @@
 package com.eis0.sms_library;
 
 public interface SMSReceivedListener {
-
+    /**
+     * Function to implement to decide if the activity should get started
+     * @param text text received in the SMS message
+     * @return returns a boolean indicating if the activity should be started (true) or not (false)
+     */
     boolean shouldWakeWith(String text);
 
-    /*
-    * Implementare questo metodo e poi passare questo
-    * oggetto a SMSLib.addOnReceiveListener per poter creare metodi di callback
-    * che vengono chiamati quando viene ricevuto un messaggio.
-    *
-    * Riceve in input una String con il mittente del messaggio
-    * e una String con il messaggio ricevuto.
-    * */
+
+    /**
+     * You should implement this method, then pass it to SMSLib.addOnReceiveListener
+     * to create a callback method which gets called when a mesasge is received
+     *
+     * @param from phone number of the user who sent the text message
+     * @param message text messaged inside the SMS
+     */
     void SMSOnReceive(String from, String message);
 }
