@@ -21,8 +21,8 @@ public class DemoActivity extends AppCompatActivity implements SMSOnReceiveListe
     private EditText destText;
 
     /**
-    * Demo start function
-    * */
+    * Demo start function.
+    */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,13 +35,13 @@ public class DemoActivity extends AppCompatActivity implements SMSOnReceiveListe
 
         destText = findViewById(R.id.destinatarioText);
 
-        SMSCore.requestPermissions(this);
+        SMSCore.checkPermissions(this);
         SMSHandler.setSMSOnReceiveListener(this);
     }
 
     /**
-     * Sends a message to the target received in input from the demo
-     * @param view
+     * Sends a message to the target received in input from the demo.
+     * @param view View that sends the onClick event.
      */
     public void inviaButtonOnClick(View view) {
         String destination = destText.getText().toString();
@@ -53,11 +53,11 @@ public class DemoActivity extends AppCompatActivity implements SMSOnReceiveListe
     }
 
     /**
-     * Sends a message (SMS) to the specified target
-     * @param to target who will receive the message "1163993"
+     * Sends a message (SMS) to the specified target.
+     * @param to Target who will receive the message with the APP_ID.
      */
     public void sendHello(String to) {
-        SMSCore.requestPermissions(this);
+        SMSCore.checkPermissions(this);
         String toastMessage;
         try {
             SMSCore.sendMessage(to, (char)0x02 + "");
@@ -69,9 +69,9 @@ public class DemoActivity extends AppCompatActivity implements SMSOnReceiveListe
     }
 
     /**
-     * Creates and shows an Alert when a message is received
-     * @param from phone number of the user who sent the message
-     * @param message text of the SMS message
+     * Creates and shows an Alert when a message is received.
+     * @param from Phone number of the user who sent the message.
+     * @param message Text of the SMS message.
      */
     public void SMSOnReceive(final String from, String message) {
         new AlertDialog.Builder(this)
@@ -87,9 +87,9 @@ public class DemoActivity extends AppCompatActivity implements SMSOnReceiveListe
     }
 
     /**
-     * checks if the notification listener is enabled
-     * @param context Context where the notification listener should be active
-     * @return returns if the notification listener is enabled
+     * Checks if the notification listener is enabled.
+     * @param context Context where the notification listener should be active.
+     * @return Returns if the notification listener is enabled.
      */
     public boolean isNotificationListenerEnabled(Context context) {
         Set<String> packageNames = NotificationManagerCompat.getEnabledListenerPackages(this);
@@ -97,7 +97,7 @@ public class DemoActivity extends AppCompatActivity implements SMSOnReceiveListe
     }
 
     /**
-     * Opens the notification settings menu for the user to enable notifications
+     * Opens the notification settings menu for the user to enable notifications.
      */
     public void openNotificationListenSettings() {
         try {

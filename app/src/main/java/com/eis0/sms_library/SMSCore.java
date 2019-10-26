@@ -24,30 +24,17 @@ public class SMSCore extends BroadcastReceiver {
     };
 
     /**
-     * Verifies if the launching activity owns the permissions to use the library
-     * @param activity must be an Activity Object
-     * @return boolean
+     * Check if permissions are granted, if not requests the required ones.
+     * @param activity Activity which is asking for permissions.
      */
-    public static boolean hasPermissions(Activity activity) {
-        boolean hasPermissions = true;
-        for (String permission : PERMISSIONS)
-            if(ContextCompat.checkSelfPermission(activity, permission)
-                    != PackageManager.PERMISSION_GRANTED) hasPermissions = false;
-        return hasPermissions;
-    }
-
-    /**
-     * Request permissions to use the library
-    * @param activity Activity which is asking for permissions
-    * */
-    public static void requestPermissions(Activity activity) {
+    public static void checkPermissions(Activity activity) {
         ActivityCompat.requestPermissions(activity, PERMISSIONS, 1);
     }
 
     /**
-     * Sends a message (SMS) to the specified target
-     * @param to destinatario del messaggio (con codice nazionale facoltativo)
-     * @param message messaggio da inviare al destinatario (massimo 180 caratteri)
+     * Sends a message (SMS) to the specified target.
+     * @param to Destination phone number.
+     * @param message Message to send to the destination number.
      */
     public static void sendMessage(String to, String message) {
         if(to.length() > 15) {
@@ -65,10 +52,10 @@ public class SMSCore extends BroadcastReceiver {
     }
 
     /**
-     * Function called when a message is received, calls the specified listeners' function when it
-     * need to be executed
-     * @param context Contesto per ricevere i messaggi (necessaria per BroadcastReceiver)
-     * @param intent Intent di ricezione messaggi (necessaria per BroadcastReceiver)
+     * Function called when a message is received. It delegates the message to the SMS Message
+     * Handler which analyzes its content.
+     * @param context Received message context.
+     * @param intent Received message Intent.
      */
     @Override
     public void onReceive(Context context, Intent intent) {
