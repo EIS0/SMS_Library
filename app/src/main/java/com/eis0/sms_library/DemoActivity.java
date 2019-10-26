@@ -1,14 +1,19 @@
 package com.eis0.sms_library;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
+import android.provider.Settings;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationManagerCompat;
+
+import java.util.Set;
 
 
 public class DemoActivity extends AppCompatActivity implements SMSReceivedListener {
@@ -17,13 +22,18 @@ public class DemoActivity extends AppCompatActivity implements SMSReceivedListen
     private SMSLib SMS = new SMSLib();
     private EditText destText;
 
-    /*
-    * Funzione di start della demo
+    /**
+    * Demo start function
     * */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_demo);
+
+        //asks the user for permission if not already granted
+        if(!isNotificationListenerEnabled(getApplicationContext())) {
+            openNotificationListenSettings();
+        }
 
         destText = findViewById(R.id.destinatarioText);
 
@@ -61,14 +71,12 @@ public class DemoActivity extends AppCompatActivity implements SMSReceivedListen
     }
 
 
-    /*
-    * Funzione che crea e mostra un Alert quando viene ricevuto un messaggio
-    * */
+
 
     /**
      * Creates and shows an Alert when a message is received
-     * @param from
-     * @param message
+     * @param from phone number of the user who sent the message
+     * @param message text of the SMS message
      */
     public void SMSOnReceive(final String from, String message) {
         new AlertDialog.Builder(this)
@@ -90,5 +98,27 @@ public class DemoActivity extends AppCompatActivity implements SMSReceivedListen
      */
     public boolean shouldWakeWith(String wakeKey) {
         return wakeKey.contains(WAKE_MESSAGE);
+    }
+
+    /**
+     * checks if the notification listener is enabled
+     * @param context Context where the notification listener should be active
+     * @return returns if the notification listener is enabled
+     */
+    public boolean isNotificationListenerEnabled(Context context) {
+        Set<String> packageNames = NotificationManagerCompat.getEnabledListenerPackages(this);
+        return packageNames.contains(context.getPackageName());
+    }
+
+    /**
+     * Opens the notification settings menu for the user to enable notifications
+     */
+    public void openNotificationListenSettings() {
+        try {
+            Intent intent = new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS);
+            startActivity(intent);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
