@@ -29,8 +29,7 @@ public class SMSLib extends BroadcastReceiver {
      * @param activity must be an Activity Object
      * @return boolean
      */
-    public boolean hasPermissions(Activity activity) {
-        // Probabilmente inutile
+    public static boolean hasPermissions(Activity activity) {
         boolean hasPermissions = true;
         for (String permission : PERMISSIONS)
             if(ContextCompat.checkSelfPermission(activity, permission)
@@ -42,7 +41,7 @@ public class SMSLib extends BroadcastReceiver {
      * Request permissions to use the library
     * @param activity Activity which is asking for permissions
     * */
-    public void requestPermissions(Activity activity) {
+    public static void requestPermissions(Activity activity) {
         Log.d("SMS_PERMISSION_REQUEST", "Requesting Permissions");
         ActivityCompat.requestPermissions(activity, PERMISSIONS, 1);
     }
@@ -51,7 +50,7 @@ public class SMSLib extends BroadcastReceiver {
      * Adds the listener object
      * @param activity must be an object that implements the SMSReceivedListener interface
      */
-    public void addOnReceiveListener(SMSReceivedListener activity) {
+    public static void addOnReceiveListener(SMSReceivedListener activity) {
         listener = activity;
     }
 
@@ -59,7 +58,7 @@ public class SMSLib extends BroadcastReceiver {
      * Removes the listener object
      * @param activity
      */
-    public void removeOnReceiveListener(SMSReceivedListener activity) {
+    public static void removeOnReceiveListener(SMSReceivedListener activity) {
         if (listener == activity) listener = null;
     }
 
@@ -69,7 +68,7 @@ public class SMSLib extends BroadcastReceiver {
      * @param message messaggio da inviare al destinatario (massimo 180 caratteri)
      */
     public void sendMessage(String to, String message) {
-        if(to.length() > 13) {
+        if(to.length() > 15) {
             Log.e("SMS_SEND","Invalid destination \"" + to + "\"");
             throw new IllegalArgumentException("Invalid destination \"" + to + "\"");
         }
