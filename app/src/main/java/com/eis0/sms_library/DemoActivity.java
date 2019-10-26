@@ -1,39 +1,46 @@
 package com.eis0.sms_library;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
+import android.provider.Settings;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationManagerCompat;
+
+import java.util.Set;
 
 
-public class DemoActivity extends AppCompatActivity implements SMSReceivedListener {
+public class DemoActivity extends AppCompatActivity implements SMSOnReceiveListener {
 
-    private static final String WAKE_MESSAGE = "1163993";
-    private SMSLib SMS = new SMSLib();
     private EditText destText;
 
-    /*
-    * Funzione di start della demo
-    * */
+    /**
+    * Demo start function.
+    */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_demo);
 
+        // Asks the user for permission if not already granted
+        if(!isNotificationListenerEnabled(getApplicationContext()))
+            openNotificationListenSettings();
+
         destText = findViewById(R.id.destinatarioText);
 
-        SMS.requestPermissions(this);
-        SMS.addOnReceiveListener(this);
+        SMSCore.checkPermissions(this);
+        SMSHandler.setSMSOnReceiveListener(this);
     }
 
     /**
-     * Sends a message to the target received in input from the demo
-     * @param view
+     * Sends a message to the target received in input from the demo.
+     * @param view View that sends the onClick event.
      */
     public void inviaButtonOnClick(View view) {
         String destination = destText.getText().toString();
@@ -45,14 +52,14 @@ public class DemoActivity extends AppCompatActivity implements SMSReceivedListen
     }
 
     /**
-     * Sends a message (SMS) to the specified target
-     * @param to target who will receive the message "1163993"
+     * Sends a message (SMS) to the specified target.
+     * @param to Target who will receive the message with the APP_ID.
      */
     public void sendHello(String to) {
-        SMS.requestPermissions(this);
+        SMSCore.checkPermissions(this);
         String toastMessage;
         try {
-            SMS.sendMessage(to, "1163993");
+            SMSCore.sendMessage(to, (char)0x02 + "");
             toastMessage = "Saluto inviato a " + to;
         } catch(Exception e) {
             toastMessage = "Errore durante l'invio del messaggio:\n" + e.getMessage();
@@ -60,15 +67,10 @@ public class DemoActivity extends AppCompatActivity implements SMSReceivedListen
         Toast.makeText(this, toastMessage, Toast.LENGTH_LONG).show();
     }
 
-
-    /*
-    * Funzione che crea e mostra un Alert quando viene ricevuto un messaggio
-    * */
-
     /**
-     * Creates and shows an Alert when a message is received
-     * @param from
-     * @param message
+     * Creates and shows an Alert when a message is received.
+     * @param from Phone number of the user who sent the message.
+     * @param message Text of the SMS message.
      */
     public void SMSOnReceive(final String from, String message) {
         new AlertDialog.Builder(this)
@@ -79,16 +81,29 @@ public class DemoActivity extends AppCompatActivity implements SMSReceivedListen
                 }
             })
             .setNegativeButton("OK", null)
-            .setIcon(R.drawable.ic_saluto_ricevuto)
+            .setIcon(R.drawable.ic_hello_received)
             .show();
     }
 
     /**
-     *
-     * @param wakeKey
-     * @return boolean
+     * Checks if the notification listener is enabled.
+     * @param context Context where the notification listener should be active.
+     * @return Returns if the notification listener is enabled.
      */
-    public boolean shouldWakeWith(String wakeKey) {
-        return wakeKey.contains(WAKE_MESSAGE);
+    public boolean isNotificationListenerEnabled(Context context) {
+        Set<String> packageNames = NotificationManagerCompat.getEnabledListenerPackages(this);
+        return packageNames.contains(context.getPackageName());
+    }
+
+    /**
+     * Opens the notification settings menu for the user to enable notifications.
+     */
+    public void openNotificationListenSettings() {
+        try {
+            Intent intent = new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS);
+            startActivity(intent);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

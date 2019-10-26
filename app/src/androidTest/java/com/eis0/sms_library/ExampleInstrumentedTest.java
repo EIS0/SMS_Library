@@ -36,7 +36,7 @@ public class ExampleInstrumentedTest {
     public void messageReception() {
         TestReceiveMethod tm1 = new TestReceiveMethod();
         TestReceiveMethod tm2 = new TestReceiveMethod();
-        SMSLib receiver = new SMSLib();
+        SMSCore receiver = new SMSCore();
         receiver.addOnReceiveListener(tm1);
         receiver.addOnReceiveListener(tm2);
     }
