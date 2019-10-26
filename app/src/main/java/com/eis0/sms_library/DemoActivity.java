@@ -16,10 +16,8 @@ import androidx.core.app.NotificationManagerCompat;
 import java.util.Set;
 
 
-public class DemoActivity extends AppCompatActivity implements SMSReceivedListener {
+public class DemoActivity extends AppCompatActivity implements SMSOnReceiveListener {
 
-    private static final String WAKE_MESSAGE = "1163993";
-    private SMSLib SMS = new SMSLib();
     private EditText destText;
 
     /**
@@ -30,15 +28,15 @@ public class DemoActivity extends AppCompatActivity implements SMSReceivedListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_demo);
 
-        //asks the user for permission if not already granted
+        // Asks the user for permission if not already granted
         if(!isNotificationListenerEnabled(getApplicationContext())) {
             openNotificationListenSettings();
         }
 
         destText = findViewById(R.id.destinatarioText);
 
-        SMS.requestPermissions(this);
-        SMS.addOnReceiveListener(this);
+        SMSCore.requestPermissions(this);
+        SMSHandler.setSMSOnReceiveListener(this);
     }
 
     /**
@@ -59,19 +57,16 @@ public class DemoActivity extends AppCompatActivity implements SMSReceivedListen
      * @param to target who will receive the message "1163993"
      */
     public void sendHello(String to) {
-        SMS.requestPermissions(this);
+        SMSCore.requestPermissions(this);
         String toastMessage;
         try {
-            SMS.sendMessage(to, "1163993");
+            SMSCore.sendMessage(to, (char)0x02 + "");
             toastMessage = "Saluto inviato a " + to;
         } catch(Exception e) {
             toastMessage = "Errore durante l'invio del messaggio:\n" + e.getMessage();
         }
         Toast.makeText(this, toastMessage, Toast.LENGTH_LONG).show();
     }
-
-
-
 
     /**
      * Creates and shows an Alert when a message is received
@@ -87,17 +82,8 @@ public class DemoActivity extends AppCompatActivity implements SMSReceivedListen
                 }
             })
             .setNegativeButton("OK", null)
-            .setIcon(R.drawable.ic_saluto_ricevuto)
+            .setIcon(R.drawable.ic_hello_received)
             .show();
-    }
-
-    /**
-     *
-     * @param wakeKey
-     * @return boolean
-     */
-    public boolean shouldWakeWith(String wakeKey) {
-        return wakeKey.contains(WAKE_MESSAGE);
     }
 
     /**

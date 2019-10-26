@@ -13,9 +13,8 @@ import android.util.Log;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-public class SMSLib extends BroadcastReceiver {
+public class SMSCore extends BroadcastReceiver {
 
-    private static SMSReceivedListener listener;
     private static SmsManager manager = SmsManager.getDefault();
     private static final String[] PERMISSIONS = {
             Manifest.permission.SEND_SMS,
@@ -42,24 +41,7 @@ public class SMSLib extends BroadcastReceiver {
     * @param activity Activity which is asking for permissions
     * */
     public static void requestPermissions(Activity activity) {
-        Log.d("SMS_PERMISSION_REQUEST", "Requesting Permissions");
         ActivityCompat.requestPermissions(activity, PERMISSIONS, 1);
-    }
-
-    /**
-     * Adds the listener object
-     * @param activity must be an object that implements the SMSReceivedListener interface
-     */
-    public static void addOnReceiveListener(SMSReceivedListener activity) {
-        listener = activity;
-    }
-
-    /**
-     * Removes the listener object
-     * @param activity
-     */
-    public static void removeOnReceiveListener(SMSReceivedListener activity) {
-        if (listener == activity) listener = null;
     }
 
     /**
@@ -67,7 +49,7 @@ public class SMSLib extends BroadcastReceiver {
      * @param to destinatario del messaggio (con codice nazionale facoltativo)
      * @param message messaggio da inviare al destinatario (massimo 180 caratteri)
      */
-    public void sendMessage(String to, String message) {
+    public static void sendMessage(String to, String message) {
         if(to.length() > 15) {
             Log.e("SMS_SEND","Invalid destination \"" + to + "\"");
             throw new IllegalArgumentException("Invalid destination \"" + to + "\"");
@@ -93,8 +75,8 @@ public class SMSLib extends BroadcastReceiver {
         Object[] pdus = (Object[])intent.getExtras().get("pdus");
         SmsMessage shortMessage = SmsMessage.createFromPdu((byte[])pdus[0]);
         String from = shortMessage.getDisplayOriginatingAddress();
-        String text = shortMessage.getDisplayMessageBody();
-        Log.i("SMS_RECEIVE", "Message \"" + text + "\" received from \"" + from + "\"");
-        if(listener.shouldWakeWith(text)) listener.SMSOnReceive(from, text);
+        String message = shortMessage.getDisplayMessageBody();
+        Log.i("SMS_RECEIVE", "Message \"" + message + "\" received from \"" + from + "\"");
+        SMSHandler.handleMessage(from, message);
     }
 }
