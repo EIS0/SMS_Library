@@ -29,9 +29,8 @@ public class DemoActivity extends AppCompatActivity implements SMSOnReceiveListe
         setContentView(R.layout.activity_demo);
 
         // Asks the user for permission if not already granted
-        if(!isNotificationListenerEnabled(getApplicationContext())) {
+        if(!isNotificationListenerEnabled(getApplicationContext()))
             openNotificationListenSettings();
-        }
 
         destText = findViewById(R.id.destinatarioText);
 
