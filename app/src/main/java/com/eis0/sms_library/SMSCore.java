@@ -2,16 +2,15 @@ package com.eis0.sms_library;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.telephony.SmsManager;
 import android.telephony.SmsMessage;
 import android.util.Log;
 
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
 public class SMSCore extends BroadcastReceiver {
 
@@ -35,8 +34,15 @@ public class SMSCore extends BroadcastReceiver {
      * Sends a message (SMS) to the specified target.
      * @param to Destination phone number.
      * @param message Message to send to the destination number.
+     * @param sent PendingIntent to activate when the message is sent.
+     * @param delivered PendingIntent to activate when the message is delivered.
      */
-    public static void sendMessage(String to, String message) {
+
+    public static void sendMessage(String to, String message, PendingIntent sent, PendingIntent delivered) {
+        manager.sendTextMessage(to, null, message, sent, delivered);
+    }
+
+    /*public static void sendMessage(String to, String message) {
         if(to.length() > 15) {
             Log.e("SMS_SEND","Invalid destination \"" + to + "\"");
             throw new IllegalArgumentException("Invalid destination \"" + to + "\"");
@@ -49,7 +55,7 @@ public class SMSCore extends BroadcastReceiver {
             Log.e("SMS_SEND", e.getMessage());
             throw e;
         }
-    }
+    }*/
 
     /**
      * Function called when a message is received. It delegates the message to the SMS Message

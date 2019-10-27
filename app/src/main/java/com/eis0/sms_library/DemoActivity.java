@@ -1,9 +1,13 @@
 package com.eis0.sms_library;
 
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.view.View;
@@ -19,6 +23,8 @@ import java.util.Set;
 public class DemoActivity extends AppCompatActivity implements SMSOnReceiveListener {
 
     private EditText destText;
+    private BroadcastReceiver onSend = null;
+    private BroadcastReceiver onDeliver = null;
 
     /**
     * Demo start function.
@@ -57,14 +63,30 @@ public class DemoActivity extends AppCompatActivity implements SMSOnReceiveListe
      */
     public void sendHello(String to) {
         SMSCore.checkPermissions(this);
-        String toastMessage;
-        try {
-            SMSCore.sendMessage(to, (char)0x02 + "");
-            toastMessage = "Saluto inviato a " + to;
-        } catch(Exception e) {
-            toastMessage = "Errore durante l'invio del messaggio:\n" + e.getMessage();
-        }
-        Toast.makeText(this, toastMessage, Toast.LENGTH_LONG).show();
+        PendingIntent sent = PendingIntent.getBroadcast(getApplicationContext(), 0, new Intent("SMS_SENT"), 0);
+        PendingIntent delivered = PendingIntent.getBroadcast(getApplicationContext(), 0, new Intent("SMS_DELIVERED"), 0);
+        onSend = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (getResultCode()== Activity.RESULT_OK)
+                    Toast.makeText(context, "SMS sent", Toast.LENGTH_LONG).show();
+                else
+                    Toast.makeText(context, "Error while sending", Toast.LENGTH_LONG).show();
+            }
+        };
+        onDeliver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (getResultCode()==Activity.RESULT_OK)
+                    Toast.makeText(context, "SMS delivered", Toast.LENGTH_LONG).show();
+                else
+                    Toast.makeText(context, "Error while delivering", Toast.LENGTH_LONG).show();
+            }
+        };
+        // activate the BroadcastReceiver when the corresponding PendingIntent is launched
+        registerReceiver(onSend, new IntentFilter("SMS_SENT"));
+        registerReceiver(onDeliver, new IntentFilter("SMS_DELIVERED"));
+        SMSCore.sendMessage(to, (char)0x02 + "", sent, delivered);
     }
 
     /**
