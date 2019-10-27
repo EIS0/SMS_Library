@@ -7,8 +7,10 @@
     <string name="ok">OK</string>
     <string name="enter_phone">Enter a phone number</string>
     <string name="to_field_cannot_be_empty">The \\\"To:\\\" field cannot be empty</string>
-    <string name="message_sent">"Hi sent to "</string>
-    <string name="send_message_error">An error occurred while sending the message:\\n</string>
+    <string name="message_sent">Hi sent</string>
+    <string name="send_message_error">An error occurred while sending your hi</string>
+    <string name="message_delivered">Hi delivered</string>
+    <string name="deliver_message_error">An error occurred while delivering your hi</string>
     <!--
     <string name="title_activity_demo">DemoActivity</string>
     -->

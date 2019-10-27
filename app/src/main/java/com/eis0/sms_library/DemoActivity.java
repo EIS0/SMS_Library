@@ -69,18 +69,18 @@ public class DemoActivity extends AppCompatActivity implements SMSOnReceiveListe
             @Override
             public void onReceive(Context context, Intent intent) {
                 if (getResultCode()== Activity.RESULT_OK)
-                    Toast.makeText(context, "SMS sent", Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, getString(R.string.message_sent), Toast.LENGTH_LONG).show();
                 else
-                    Toast.makeText(context, "Error while sending", Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, getString(R.string.send_message_error), Toast.LENGTH_LONG).show();
             }
         };
         onDeliver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 if (getResultCode()==Activity.RESULT_OK)
-                    Toast.makeText(context, "SMS delivered", Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, getString(R.string.message_delivered), Toast.LENGTH_LONG).show();
                 else
-                    Toast.makeText(context, "Error while delivering", Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, getString(R.string.deliver_message_error), Toast.LENGTH_LONG).show();
             }
         };
         // activate the BroadcastReceiver when the corresponding PendingIntent is launched
