@@ -32,7 +32,7 @@ public class DemoActivity extends AppCompatActivity implements SMSOnReceiveListe
         if(!isNotificationListenerEnabled(getApplicationContext()))
             openNotificationListenSettings();
 
-        destText = findViewById(R.id.destinatarioText);
+        destText = findViewById(R.id.recipientNumber);
 
         SMSCore.checkPermissions(this);
         SMSHandler.setSMSOnReceiveListener(this);
