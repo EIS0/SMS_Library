@@ -6,6 +6,9 @@
     <string name="say_hi_back">Say hi back</string>
     <string name="ok">OK</string>
     <string name="enter_phone">Enter a phone number</string>
+    <string name="to_field_cannot_be_empty">The \\\"To:\\\" field cannot be empty</string>
+    <string name="message_sent">"Hi sent to "</string>
+    <string name="send_message_error">An error occurred while sending the message:\\n</string>
     <!--
     <string name="title_activity_demo">DemoActivity</string>
     -->

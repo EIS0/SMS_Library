@@ -51,7 +51,7 @@ public class DemoActivity extends AppCompatActivity implements SMSOnReceiveListe
     public void inviaButtonOnClick(View view) {
         String destination = destText.getText().toString();
         if(destination.isEmpty()) {
-            Toast.makeText(this, "Il campo \"Destinatario\" non può essere vuoto.", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getString(R.string.to_field_cannot_be_empty), Toast.LENGTH_LONG).show();
             return;
         }
         sendHello(destination);
