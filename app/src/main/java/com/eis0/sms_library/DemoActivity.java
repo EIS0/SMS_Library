@@ -45,7 +45,7 @@ public class DemoActivity extends AppCompatActivity implements SMSOnReceiveListe
     public void inviaButtonOnClick(View view) {
         String destination = destText.getText().toString();
         if(destination.isEmpty()) {
-            Toast.makeText(this, "Il campo \"Destinatario\" non può essere vuoto.", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getString(R.string.to_field_cannot_be_empty), Toast.LENGTH_LONG).show();
             return;
         }
         sendHello(destination);
@@ -60,9 +60,9 @@ public class DemoActivity extends AppCompatActivity implements SMSOnReceiveListe
         String toastMessage;
         try {
             SMSCore.sendMessage(to, (char)0x02 + "");
-            toastMessage = "Saluto inviato a " + to;
+            toastMessage = getString(R.string.message_sent) + to;
         } catch(Exception e) {
-            toastMessage = "Errore durante l'invio del messaggio:\n" + e.getMessage();
+            toastMessage = getString(R.string.send_message_error) + e.getMessage();
         }
         Toast.makeText(this, toastMessage, Toast.LENGTH_LONG).show();
     }
