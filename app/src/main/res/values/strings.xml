@@ -1,7 +1,11 @@
 <resources>
     <string name="app_name">SMS Library - Demo 1</string>
-    <string name="recipient">To:</string>
-    <string name="send_message">Say hi!</string>
+    <string name="to">To:</string>
+    <string name="say_hi">Say hi!</string>
+    <string name="says_hi">" says hi!"</string>
+    <string name="say_hi_back">Say hi back</string>
+    <string name="ok">OK</string>
+    <string name="enter_phone">Enter a phone number</string>
     <!--
     <string name="title_activity_demo">DemoActivity</string>
     -->
