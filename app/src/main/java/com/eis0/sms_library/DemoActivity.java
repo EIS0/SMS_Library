@@ -96,13 +96,13 @@ public class DemoActivity extends AppCompatActivity implements SMSOnReceiveListe
      */
     public void SMSOnReceive(final String from, String message) {
         new AlertDialog.Builder(this)
-            .setTitle("Saluto ricevuto da " + from + "!")
-            .setPositiveButton("Contraccambia", new DialogInterface.OnClickListener() {
+            .setTitle(from + getString(R.string.says_hi))
+            .setPositiveButton(getString(R.string.say_hi_back), new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
                 sendHello(from);
                 }
             })
-            .setNegativeButton("OK", null)
+            .setNegativeButton(getString(R.string.ok), null)
             .setIcon(R.drawable.ic_hello_received)
             .show();
     }
