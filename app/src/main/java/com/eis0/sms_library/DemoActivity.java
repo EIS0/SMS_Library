@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -68,6 +69,7 @@ public class DemoActivity extends AppCompatActivity implements SMSOnReceiveListe
         onSend = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
+                Log.d("DemoActivity", "Entered onReceive of onSend");
                 if (getResultCode()== Activity.RESULT_OK)
                     Toast.makeText(context, getString(R.string.message_sent), Toast.LENGTH_LONG).show();
                 else
@@ -77,6 +79,7 @@ public class DemoActivity extends AppCompatActivity implements SMSOnReceiveListe
         onDeliver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
+                Log.d("DemoActivity", "Entered onReceive of onDeliver");
                 if (getResultCode()==Activity.RESULT_OK)
                     Toast.makeText(context, getString(R.string.message_delivered), Toast.LENGTH_LONG).show();
                 else
