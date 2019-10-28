@@ -12,7 +12,5 @@
     <string name="send_message_error">An error occurred while sending your hi</string>
     <string name="message_delivered">Hi delivered</string>
     <string name="deliver_message_error">An error occurred while delivering your hi</string>
-    <!--
-    <string name="title_activity_demo">DemoActivity</string>
-    -->
+    <string name="title_activity_demo">SMS Library - Demo 1</string>
 </resources>

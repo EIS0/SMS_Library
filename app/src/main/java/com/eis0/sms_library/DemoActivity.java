@@ -9,6 +9,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.NotificationManagerCompat;
+
 import android.provider.Settings;
 import android.util.Log;
 import android.view.Menu;
@@ -17,11 +22,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.NotificationManagerCompat;
-
 import java.util.Set;
-
 
 public class DemoActivity extends AppCompatActivity implements SMSOnReceiveListener {
 
@@ -37,6 +38,8 @@ public class DemoActivity extends AppCompatActivity implements SMSOnReceiveListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_demo);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         // Asks the user for permission if not already granted
         if(!isNotificationListenerEnabled(getApplicationContext()))
@@ -46,6 +49,29 @@ public class DemoActivity extends AppCompatActivity implements SMSOnReceiveListe
 
         SMSCore.checkPermissions(this);
         SMSHandler.setSMSOnReceiveListener(this);
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     /**
@@ -75,28 +101,6 @@ public class DemoActivity extends AppCompatActivity implements SMSOnReceiveListe
             return;
         }
         sendHello(destination);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     /**
@@ -147,7 +151,7 @@ public class DemoActivity extends AppCompatActivity implements SMSOnReceiveListe
             .setTitle(from + getString(R.string.says_hi))
             .setPositiveButton(getString(R.string.say_hi_back), new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
-                sendHello(from);
+                    sendHello(from);
                 }
             })
             .setNegativeButton(getString(R.string.ok), null)
