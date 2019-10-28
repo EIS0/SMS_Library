@@ -37,25 +37,20 @@ public class SMSCore extends BroadcastReceiver {
      * @param sent PendingIntent to activate when the message is sent.
      * @param delivered PendingIntent to activate when the message is delivered.
      */
-
     public static void sendMessage(String to, String message, PendingIntent sent, PendingIntent delivered) {
-        manager.sendTextMessage(to, null, message, sent, delivered);
-    }
-
-    /*public static void sendMessage(String to, String message) {
         if(to.length() > 15) {
             Log.e("SMS_SEND","Invalid destination \"" + to + "\"");
             throw new IllegalArgumentException("Invalid destination \"" + to + "\"");
         }
         try {
-            manager.sendTextMessage(to,null, message,null,null);
+            manager.sendTextMessage(to,null, message, sent, delivered);
             Log.i("SMS_SEND", "Message \"" + message + "\" sent to \"" + to + "\"");
         }
         catch (Exception e) {
             Log.e("SMS_SEND", e.getMessage());
             throw e;
         }
-    }*/
+    }
 
     /**
      * Function called when a message is received. It delegates the message to the SMS Message

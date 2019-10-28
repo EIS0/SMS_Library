@@ -28,8 +28,8 @@ public class DemoActivity extends AppCompatActivity implements SMSOnReceiveListe
     private BroadcastReceiver onDeliver = null;
 
     /**
-    * Demo start function.
-    */
+     * Demo start function.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,6 +43,22 @@ public class DemoActivity extends AppCompatActivity implements SMSOnReceiveListe
 
         SMSCore.checkPermissions(this);
         SMSHandler.setSMSOnReceiveListener(this);
+    }
+
+    /**
+     * Unregister BroadcastReceivers used for confirmation of sending and delivery of SMS
+     */
+    @Override
+    protected void onStop()
+    {
+        super.onStop();
+        try{
+            unregisterReceiver(onSend);
+            unregisterReceiver(onDeliver);
+        }
+        catch (IllegalArgumentException e){
+            Log.d("DemoActivity", "Can't unregister non-registered BroadcastReceiver");
+        }
     }
 
     /**
@@ -69,7 +85,6 @@ public class DemoActivity extends AppCompatActivity implements SMSOnReceiveListe
         onSend = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                Log.d("DemoActivity", "Entered onReceive of onSend");
                 if (getResultCode()== Activity.RESULT_OK)
                     Toast.makeText(context, getString(R.string.message_sent), Toast.LENGTH_LONG).show();
                 else
@@ -79,7 +94,6 @@ public class DemoActivity extends AppCompatActivity implements SMSOnReceiveListe
         onDeliver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                Log.d("DemoActivity", "Entered onReceive of onDeliver");
                 if (getResultCode()==Activity.RESULT_OK)
                     Toast.makeText(context, getString(R.string.message_delivered), Toast.LENGTH_LONG).show();
                 else
