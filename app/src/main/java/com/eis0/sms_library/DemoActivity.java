@@ -24,6 +24,7 @@ import java.util.Set;
 public class DemoActivity extends AppCompatActivity implements SMSOnReceiveListener {
 
     private EditText destText;
+    protected boolean deliveryConfirmation = false;
     private BroadcastReceiver onSend = null;
     private BroadcastReceiver onDeliver = null;
 

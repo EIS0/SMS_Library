@@ -31,7 +31,28 @@ public class SMSCore extends BroadcastReceiver {
     }
 
     /**
-     * Sends a message (SMS) to the specified target.
+     * Sends a message (SMS) to the specified target, with sent confirmation.
+     * @param to Destination phone number.
+     * @param message Message to send to the destination number.
+     * @param sent PendingIntent to activate when the message is sent.
+     */
+    protected static void sendMessage(String to, String message, PendingIntent sent) {
+        if(to.length() > 15) {
+            Log.e("SMS_SEND","Invalid destination \"" + to + "\"");
+            throw new IllegalArgumentException("Invalid destination \"" + to + "\"");
+        }
+        try {
+            manager.sendTextMessage(to,null, message, sent, null);
+            Log.i("SMS_SEND", "Message \"" + message + "\" sent to \"" + to + "\"");
+        }
+        catch (Exception e) {
+            Log.e("SMS_SEND", e.getMessage());
+            throw e;
+        }
+    }
+
+    /**
+     * Sends a message (SMS) to the specified target, with sent and delivery confirmation.
      * @param to Destination phone number.
      * @param message Message to send to the destination number.
      * @param sent PendingIntent to activate when the message is sent.
