@@ -15,7 +15,7 @@ public class SMSHandler extends NotificationListenerService {
      * Sets the listener, that is the object to be called when an SMS with the APP_ID is received.
      * @param listener Must be an object that implements the SMSOnReceiveListener interface.
      */
-    public static void setSMSOnReceiveListener(SMSOnReceiveListener listener) {
+    protected static void setSMSOnReceiveListener(SMSOnReceiveListener listener) {
         l = listener;
     }
 

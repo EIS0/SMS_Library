@@ -26,7 +26,7 @@ public class SMSCore extends BroadcastReceiver {
      * Check if permissions are granted, if not requests the required ones.
      * @param activity Activity which is asking for permissions.
      */
-    public static void checkPermissions(Activity activity) {
+    protected static void checkPermissions(Activity activity) {
         ActivityCompat.requestPermissions(activity, PERMISSIONS, 1);
     }
 
@@ -37,7 +37,7 @@ public class SMSCore extends BroadcastReceiver {
      * @param sent PendingIntent to activate when the message is sent.
      * @param delivered PendingIntent to activate when the message is delivered.
      */
-    public static void sendMessage(String to, String message, PendingIntent sent, PendingIntent delivered) {
+    protected static void sendMessage(String to, String message, PendingIntent sent, PendingIntent delivered) {
         if(to.length() > 15) {
             Log.e("SMS_SEND","Invalid destination \"" + to + "\"");
             throw new IllegalArgumentException("Invalid destination \"" + to + "\"");

@@ -78,7 +78,7 @@ public class DemoActivity extends AppCompatActivity implements SMSOnReceiveListe
      * Sends a message (SMS) to the specified target.
      * @param to Target who will receive the message with the APP_ID.
      */
-    public void sendHello(String to) {
+    private void sendHello(String to) {
         SMSCore.checkPermissions(this);
         PendingIntent sent = PendingIntent.getBroadcast(getApplicationContext(), 0, new Intent("SMS_SENT"), 0);
         PendingIntent delivered = PendingIntent.getBroadcast(getApplicationContext(), 0, new Intent("SMS_DELIVERED"), 0);
@@ -129,7 +129,7 @@ public class DemoActivity extends AppCompatActivity implements SMSOnReceiveListe
      * @param context Context where the notification listener should be active.
      * @return Returns if the notification listener is enabled.
      */
-    public boolean isNotificationListenerEnabled(Context context) {
+    private boolean isNotificationListenerEnabled(Context context) {
         Set<String> packageNames = NotificationManagerCompat.getEnabledListenerPackages(this);
         return packageNames.contains(context.getPackageName());
     }
@@ -137,7 +137,7 @@ public class DemoActivity extends AppCompatActivity implements SMSOnReceiveListe
     /**
      * Opens the notification settings menu for the user to enable notifications.
      */
-    public void openNotificationListenSettings() {
+    private void openNotificationListenSettings() {
         try {
             Intent intent = new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS);
             startActivity(intent);
