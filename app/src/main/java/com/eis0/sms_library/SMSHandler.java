@@ -36,7 +36,7 @@ public class SMSHandler extends NotificationListenerService {
     @Override
     public void onNotificationPosted (StatusBarNotification sbn) {
         Notification notification = sbn.getNotification();
-        if(notification.category.equals("msg") && notification.tickerText.toString().contains(APP_ID + ""))
+        if(notification.category != null && notification.category.equals("msg") && notification.tickerText.toString().contains(APP_ID + ""))
             cancelNotification(sbn.getKey());
     }
 }
