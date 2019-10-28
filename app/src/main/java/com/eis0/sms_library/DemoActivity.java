@@ -109,7 +109,7 @@ public class DemoActivity extends AppCompatActivity implements SMSOnReceiveListe
             registerReceiver(onDeliver, new IntentFilter("SMS_DELIVERED"));
             SMSCore.sendMessage(to, message, sent, delivered);
         } else{
-            SMSCore.sendMessage(to, message, sent);
+            SMSCore.sendMessage(to, message, sent, null);
         }
     }
 
