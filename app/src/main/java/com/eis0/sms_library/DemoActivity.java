@@ -81,8 +81,9 @@ public class DemoActivity extends AppCompatActivity implements SMSOnReceiveListe
      */
     private void sendHello(String to) {
         SMSCore.checkPermissions(this);
+        String message = (char)0x02 + "";
+
         PendingIntent sent = PendingIntent.getBroadcast(getApplicationContext(), 0, new Intent("SMS_SENT"), 0);
-        PendingIntent delivered = PendingIntent.getBroadcast(getApplicationContext(), 0, new Intent("SMS_DELIVERED"), 0);
         onSend = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -92,19 +93,24 @@ public class DemoActivity extends AppCompatActivity implements SMSOnReceiveListe
                     Toast.makeText(context, getString(R.string.send_message_error), Toast.LENGTH_LONG).show();
             }
         };
-        onDeliver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                if (getResultCode()==Activity.RESULT_OK)
-                    Toast.makeText(context, getString(R.string.message_delivered), Toast.LENGTH_LONG).show();
-                else
-                    Toast.makeText(context, getString(R.string.deliver_message_error), Toast.LENGTH_LONG).show();
-            }
-        };
-        // activate the BroadcastReceiver when the corresponding PendingIntent is launched
         registerReceiver(onSend, new IntentFilter("SMS_SENT"));
-        registerReceiver(onDeliver, new IntentFilter("SMS_DELIVERED"));
-        SMSCore.sendMessage(to, (char)0x02 + "", sent, delivered);
+
+        if (deliveryConfirmation) {
+            PendingIntent delivered = PendingIntent.getBroadcast(getApplicationContext(), 0, new Intent("SMS_DELIVERED"), 0);
+            onDeliver = new BroadcastReceiver() {
+                @Override
+                public void onReceive(Context context, Intent intent) {
+                    if (getResultCode() == Activity.RESULT_OK)
+                        Toast.makeText(context, getString(R.string.message_delivered), Toast.LENGTH_LONG).show();
+                    else
+                        Toast.makeText(context, getString(R.string.deliver_message_error), Toast.LENGTH_LONG).show();
+                }
+            };
+            registerReceiver(onDeliver, new IntentFilter("SMS_DELIVERED"));
+            SMSCore.sendMessage(to, message, sent, delivered);
+        } else{
+            SMSCore.sendMessage(to, message, sent);
+        }
     }
 
     /**
