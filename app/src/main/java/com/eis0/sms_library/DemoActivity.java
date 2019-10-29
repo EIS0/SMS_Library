@@ -1,24 +1,35 @@
 package com.eis0.sms_library;
 
 import android.app.AlertDialog;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.telephony.SmsMessage;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.lifecycle.Lifecycle;
 
+import java.util.ArrayList;
 import java.util.Set;
 
 public class DemoActivity extends AppCompatActivity implements SMSOnReceiveListener {
 
     private EditText destText;
+    private static NotificationManager notificationManager;
+    private static final String CHANNEL_ID = "eis0_notification_channel";
+    private static int notificationID = 0;
+    private static ArrayList<AlertDialog> pendingDialogs = new ArrayList<>();
 
     /**
     * Demo start function.
@@ -36,10 +47,23 @@ public class DemoActivity extends AppCompatActivity implements SMSOnReceiveListe
 
         SMSCore.checkPermissions(this);
         SMSHandler.setSMSOnReceiveListener(this);
+        createNotificationChannel();
+        for(AlertDialog pendingDialog : pendingDialogs) {
+            // TODO: Show pending dialogs received when app was destroyed
+        }
+        pendingDialogs.clear();
     }
 
-    public boolean isDestroyed() {
-        return this.getLifecycle().getCurrentState() == Lifecycle.State.DESTROYED;
+    private void createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = getString(R.string.channel_name);
+            String description = getString(R.string.channel_description);
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+            notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
     }
 
     /**
@@ -77,16 +101,41 @@ public class DemoActivity extends AppCompatActivity implements SMSOnReceiveListe
      * @param message Text of the SMS message.
      */
     public void SMSOnReceive(final String from, String message) {
-        new AlertDialog.Builder(this)
-            .setTitle(from + getString(R.string.says_hi))
-            .setPositiveButton(getString(R.string.say_hi_back), new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                sendHello(from);
-                }
-            })
-            .setNegativeButton(getString(R.string.ok), null)
-            .setIcon(R.drawable.ic_hello_received)
-            .show();
+        final int notID = notificationID++;
+        // TODO: Show notification drop
+        if(getLifecycle().getCurrentState() != Lifecycle.State.RESUMED) {
+            Intent intent = new Intent(this, DemoActivity.class);
+            intent.setAction(Intent.ACTION_MAIN);
+            intent.addCategory(Intent.CATEGORY_LAUNCHER);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
+                    .setSmallIcon(R.drawable.ic_hello_received)
+                    .setContentTitle(from + getString(R.string.says_hi))
+                    .setContentText(getString(R.string.open_app))
+                    .setContentIntent(pendingIntent)
+                    .setAutoCancel(true)
+                    .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                    .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+            notificationManager.notify(notID, builder.build());
+        }
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setTitle(from + getString(R.string.says_hi))
+                .setPositiveButton(getString(R.string.say_hi_back), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        sendHello(from);
+                    }
+                })
+                .setNegativeButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        notificationManager.cancel(notID);
+                    }
+                })
+                .setIcon(R.drawable.ic_hello_received)
+                .create();
+        if(getLifecycle().getCurrentState() == Lifecycle.State.DESTROYED) pendingDialogs.add(dialog);
+        else dialog.show();
     }
 
     /**

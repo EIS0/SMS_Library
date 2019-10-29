@@ -25,10 +25,8 @@ public class SMSHandler extends NotificationListenerService {
      */
     public static void setSMSOnReceiveListener(SMSOnReceiveListener listener) {
         smsListener = listener;
-        ArrayList<SmsMessage> pendMsgs = new ArrayList<>();
-        pendMsgs.addAll(pendingMessages);
+        for (SmsMessage pendingMessage : pendingMessages) handleMessage(pendingMessage);
         pendingMessages.clear();
-        for (SmsMessage pendingMessage : pendMsgs) handleMessage(pendingMessage);
     }
 
     /**
@@ -38,7 +36,7 @@ public class SMSHandler extends NotificationListenerService {
     protected static void handleMessage(SmsMessage sms) {
         String content = sms.getDisplayMessageBody();
         if(content.charAt(0) != APP_ID) return;
-        if(smsListener == null || smsListener.isDestroyed()) pendingMessages.add(sms);
+        if(smsListener == null) pendingMessages.add(sms);
         else smsListener.SMSOnReceive(sms.getDisplayOriginatingAddress(), content.substring(1));
     }
 
