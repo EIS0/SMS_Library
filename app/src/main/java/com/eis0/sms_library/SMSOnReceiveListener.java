@@ -8,4 +8,10 @@ public interface SMSOnReceiveListener {
      * @param message Text message of the SMS.
      */
     void SMSOnReceive(String from, String message);
+
+    /**
+     * Needed by the handler to know if the listener can handle the onReceive() call.
+     * @return Boolean representing if the listener activity is destroyed.
+     */
+    boolean isDestroyed();
 }

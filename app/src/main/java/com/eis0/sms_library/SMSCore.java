@@ -61,9 +61,7 @@ public class SMSCore extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         Object[] pdus = (Object[])intent.getExtras().get("pdus");
         SmsMessage shortMessage = SmsMessage.createFromPdu((byte[])pdus[0]);
-        String from = shortMessage.getDisplayOriginatingAddress();
-        String message = shortMessage.getDisplayMessageBody();
-        Log.i("SMS_RECEIVE", "Message \"" + message + "\" received from \"" + from + "\"");
-        SMSHandler.handleMessage(from, message);
+        Log.i("SMS_RECEIVE", "Message received");
+        SMSHandler.handleMessage(shortMessage);
     }
 }

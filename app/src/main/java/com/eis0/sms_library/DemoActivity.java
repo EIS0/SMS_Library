@@ -12,9 +12,9 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.lifecycle.Lifecycle;
 
 import java.util.Set;
-
 
 public class DemoActivity extends AppCompatActivity implements SMSOnReceiveListener {
 
@@ -36,6 +36,10 @@ public class DemoActivity extends AppCompatActivity implements SMSOnReceiveListe
 
         SMSCore.checkPermissions(this);
         SMSHandler.setSMSOnReceiveListener(this);
+    }
+
+    public boolean isDestroyed() {
+        return this.getLifecycle().getCurrentState() == Lifecycle.State.DESTROYED;
     }
 
     /**
