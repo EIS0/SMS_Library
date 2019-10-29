@@ -68,6 +68,7 @@ public class DemoActivity extends AppCompatActivity implements SMSOnReceiveListe
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            openSettings();
             return true;
         }
 
@@ -178,5 +179,10 @@ public class DemoActivity extends AppCompatActivity implements SMSOnReceiveListe
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void openSettings() {
+        Intent intent = new Intent(this, SettingsActivity.class);
+        startActivity(intent);
     }
 }
