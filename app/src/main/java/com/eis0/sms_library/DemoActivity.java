@@ -78,8 +78,7 @@ public class DemoActivity extends AppCompatActivity implements SMSOnReceiveListe
      * Unregister BroadcastReceivers used for confirmation of sending and delivery of SMS
      */
     @Override
-    protected void onStop()
-    {
+    protected void onStop() {
         super.onStop();
         try{
             unregisterReceiver(onSend);
@@ -94,7 +93,7 @@ public class DemoActivity extends AppCompatActivity implements SMSOnReceiveListe
      * Sends a message to the target received in input from the demo.
      * @param view View that sends the onClick event.
      */
-    public void inviaButtonOnClick(View view) {
+    public void sendButtonOnClick(View view) {
         String destination = destText.getText().toString();
         if(destination.isEmpty()) {
             Toast.makeText(this, getString(R.string.to_field_cannot_be_empty), Toast.LENGTH_LONG).show();
