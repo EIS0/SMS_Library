@@ -1,12 +1,15 @@
 package com.eis0.sms_library;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
 import android.telephony.SmsMessage;
 import android.util.Log;
+
+import androidx.core.app.ActivityCompat;
 
 import java.util.ArrayList;
 
@@ -18,13 +21,22 @@ public class SMSHandler extends NotificationListenerService {
     private static ArrayList<SmsMessage> pendingMessages = new ArrayList<>();
 
     /**
+     * Check if permissions are granted, if not requests the required ones.
+     * (Stun method)
+     * @param activity Activity which is asking for permissions.
+     */
+    public static void SMSCheckPermissions(Activity activity) {
+        SMSCore.checkPermissions(activity);
+    }
+
+    /**
      * Sends a message (SMS) to the specified target, with sent and delivery confirmation.
      * @param to Destination phone number.
      * @param message Message to send to the destination number.
      * @param sent PendingIntent to activate when the message is sent.
      * @param delivered PendingIntent to activate when the message is delivered.
      */
-    public static void sendMessage(String to, String message, PendingIntent sent, PendingIntent delivered) {
+    public static void SMSSendMessage(String to, String message, PendingIntent sent, PendingIntent delivered) {
         if(to.length() > 15) {
             Log.e("SMS_SEND","Invalid destination \"" + to + "\"");
             throw new IllegalArgumentException("Invalid destination \"" + to + "\"");

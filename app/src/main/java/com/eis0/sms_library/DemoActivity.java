@@ -66,7 +66,7 @@ public class DemoActivity extends AppCompatActivity implements SMSOnReceiveListe
             notificationManager = getSystemService(NotificationManager.class);
         }
 
-        SMSCore.checkPermissions(this);
+        SMSHandler.SMSCheckPermissions(this);
         SMSHandler.setSMSOnReceiveListener(this);
         createNotificationChannel();
         for(final String[] pendingDialog : pendingDialogs) {
@@ -169,7 +169,7 @@ public class DemoActivity extends AppCompatActivity implements SMSOnReceiveListe
      * @param to Target who will receive the message with the APP_ID.
      */
     private void sendHello(String to) {
-        SMSCore.checkPermissions(this);
+        SMSHandler.SMSCheckPermissions(this);
         String message = (char)0x02 + "";
 
         PendingIntent sent = PendingIntent.getBroadcast(getApplicationContext(), 0, new Intent("SMS_SENT"), 0);
@@ -196,9 +196,9 @@ public class DemoActivity extends AppCompatActivity implements SMSOnReceiveListe
                 }
             };
             registerReceiver(onDeliver, new IntentFilter("SMS_DELIVERED"));
-            SMSHandler.sendMessage(to, message, sent, delivered);
+            SMSHandler.SMSSendMessage(to, message, sent, delivered);
         } else {
-            SMSHandler.sendMessage(to, message, sent, null);
+            SMSHandler.SMSSendMessage(to, message, sent, null);
         }
     }
 

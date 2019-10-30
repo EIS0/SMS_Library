@@ -26,7 +26,7 @@ public class SMSCore extends BroadcastReceiver {
      * Check if permissions are granted, if not requests the required ones.
      * @param activity Activity which is asking for permissions.
      */
-    public static void checkPermissions(Activity activity) {
+    protected static void checkPermissions(Activity activity) {
         ActivityCompat.requestPermissions(activity, PERMISSIONS, 1);
     }
 
