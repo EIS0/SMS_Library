@@ -46,6 +46,10 @@ public class DemoActivity extends AppCompatActivity implements SMSOnReceiveListe
 
         destText = findViewById(R.id.recipientNumber);
 
+        if (Build.VERSION.SDK_INT >=23) {
+            notificationManager = getSystemService(NotificationManager.class);
+        }
+
         SMSCore.checkPermissions(this);
         SMSHandler.setSMSOnReceiveListener(this);
         createNotificationChannel();
@@ -76,7 +80,6 @@ public class DemoActivity extends AppCompatActivity implements SMSOnReceiveListe
             int importance = NotificationManager.IMPORTANCE_HIGH;
             NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
             channel.setDescription(description);
-            notificationManager = getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
         }
     }
