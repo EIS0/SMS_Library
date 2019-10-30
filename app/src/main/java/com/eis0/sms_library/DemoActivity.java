@@ -14,8 +14,8 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.NotificationManagerCompat;
-import androidx.preference.PreferenceManager;
 
+import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.Menu;
@@ -45,8 +45,7 @@ public class DemoActivity extends AppCompatActivity implements SMSOnReceiveListe
         setSupportActionBar(toolbar);
 
         // get app settings
-        sharedPreferences =
-                PreferenceManager.getDefaultSharedPreferences(this);
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         // Asks the user for permission if not already granted
         if(!isNotificationListenerEnabled(getApplicationContext()))
