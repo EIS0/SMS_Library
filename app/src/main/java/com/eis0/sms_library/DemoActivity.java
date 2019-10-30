@@ -2,6 +2,14 @@ package com.eis0.sms_library;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.os.Build;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -24,6 +32,12 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
+import androidx.lifecycle.Lifecycle;
+
+import java.util.ArrayList;
 import java.util.Set;
 
 public class DemoActivity extends AppCompatActivity implements SMSOnReceiveListener {
@@ -33,6 +47,10 @@ public class DemoActivity extends AppCompatActivity implements SMSOnReceiveListe
     private boolean deliveryReport = false;
     private BroadcastReceiver onSend = null;
     private BroadcastReceiver onDeliver = null;
+    private static NotificationManager notificationManager;
+    private static final String CHANNEL_ID = "eis0_notification_channel";
+    private static int notificationID = 0;
+    private static ArrayList<String[]> pendingDialogs = new ArrayList<>();
 
     /**
      * Demo start function.
@@ -53,8 +71,42 @@ public class DemoActivity extends AppCompatActivity implements SMSOnReceiveListe
 
         destText = findViewById(R.id.recipientNumber);
 
+        if (Build.VERSION.SDK_INT >= 23) {
+            notificationManager = getSystemService(NotificationManager.class);
+        }
+
         SMSCore.checkPermissions(this);
         SMSHandler.setSMSOnReceiveListener(this);
+        createNotificationChannel();
+        for(final String[] pendingDialog : pendingDialogs) {
+            new AlertDialog.Builder(this)
+                    .setTitle(pendingDialog[0] + getString(R.string.says_hi))
+                    .setPositiveButton(getString(R.string.say_hi_back), new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            sendHello(pendingDialog[0]);
+                        }
+                    })
+                    .setNegativeButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            notificationManager.cancel(Integer.parseInt(pendingDialog[1]));
+                        }
+                    })
+                    .setIcon(R.drawable.ic_hello_received)
+                    .show();
+        }
+        pendingDialogs.clear();
+    }
+
+    private void createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= 26) {
+            CharSequence name = getString(R.string.channel_name);
+            String description = getString(R.string.channel_description);
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+            notificationManager.createNotificationChannel(channel);
+        }
     }
 
     /**
@@ -162,16 +214,45 @@ public class DemoActivity extends AppCompatActivity implements SMSOnReceiveListe
      * @param message Text of the SMS message.
      */
     public void SMSOnReceive(final String from, String message) {
-        new AlertDialog.Builder(this)
-            .setTitle(from + getString(R.string.says_hi))
-            .setPositiveButton(getString(R.string.say_hi_back), new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                    sendHello(from);
-                }
-            })
-            .setNegativeButton(getString(R.string.ok), null)
-            .setIcon(R.drawable.ic_hello_received)
-            .show();
+        final int notID = notificationID++;
+        if(getLifecycle().getCurrentState() != Lifecycle.State.RESUMED) {
+            Intent intent = new Intent(this, DemoActivity.class);
+            intent.setAction(Intent.ACTION_MAIN);
+            intent.addCategory(Intent.CATEGORY_LAUNCHER);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
+                    .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                    .setPriority(NotificationCompat.PRIORITY_HIGH)
+                    .setSmallIcon(R.drawable.ic_hello_received)
+                    .setContentTitle(from + getString(R.string.says_hi))
+                    .setContentText(getString(R.string.open_app))
+                    .setContentIntent(pendingIntent)
+                    .setAutoCancel(true);
+            notificationManager.notify(notID, builder.build());
+        }
+
+        if(getLifecycle().getCurrentState() == Lifecycle.State.DESTROYED) {
+            String[] pendingDialog = {from, notID + ""};
+            pendingDialogs.add(pendingDialog);
+        }
+        else {
+            new AlertDialog.Builder(this)
+                    .setTitle(from + getString(R.string.says_hi))
+                    .setPositiveButton(getString(R.string.say_hi_back), new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            sendHello(from);
+                        }
+                    })
+                    .setNegativeButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            notificationManager.cancel(notID);
+                        }
+                    })
+                    .setIcon(R.drawable.ic_hello_received)
+                    .show();
+        }
     }
 
     /**
