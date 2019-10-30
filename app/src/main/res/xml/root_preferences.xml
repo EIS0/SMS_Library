@@ -14,14 +14,16 @@
   ~ limitations under the License.
   -->
 
-<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory app:title="@string/sms_header">
 
         <SwitchPreferenceCompat
+            android:id="@+id/deliveryReport"
             app:key="deliveryReport"
-            app:title="@string/deliveryReport_title"
-            app:summary="@string/deliveryReport_summary" />
+            app:summary="@string/deliveryReport_summary"
+            app:title="@string/deliveryReport_title" />
 
     </PreferenceCategory>
 

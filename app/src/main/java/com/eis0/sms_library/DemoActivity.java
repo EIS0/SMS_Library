@@ -8,11 +8,13 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.preference.PreferenceManager;
 
 import android.provider.Settings;
 import android.util.Log;
@@ -27,7 +29,8 @@ import java.util.Set;
 public class DemoActivity extends AppCompatActivity implements SMSOnReceiveListener {
 
     private EditText destText;
-    protected boolean deliveryConfirmation = false;
+    private SharedPreferences sharedPreferences;
+    private boolean deliveryReport = false;
     private BroadcastReceiver onSend = null;
     private BroadcastReceiver onDeliver = null;
 
@@ -41,6 +44,10 @@ public class DemoActivity extends AppCompatActivity implements SMSOnReceiveListe
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        // get app settings
+        sharedPreferences =
+                PreferenceManager.getDefaultSharedPreferences(this);
+
         // Asks the user for permission if not already granted
         if(!isNotificationListenerEnabled(getApplicationContext()))
             openNotificationListenSettings();
@@ -51,6 +58,29 @@ public class DemoActivity extends AppCompatActivity implements SMSOnReceiveListe
         SMSHandler.setSMSOnReceiveListener(this);
     }
 
+    /**
+     * Every time this activity appears on the foreground
+     */
+    @Override
+    protected void onResume() {
+        super.onResume();
+        deliveryReport = sharedPreferences.getBoolean("deliveryReport", false);
+    }
+
+    /**
+     * Unregister BroadcastReceivers used for confirmation of sending and delivery of SMS
+     */
+    @Override
+    protected void onStop() {
+        super.onStop();
+        try{
+            unregisterReceiver(onSend);
+            unregisterReceiver(onDeliver);
+        }
+        catch (IllegalArgumentException e){
+            Log.d("DemoActivity", "Can't unregister non-registered BroadcastReceiver");
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -68,26 +98,12 @@ public class DemoActivity extends AppCompatActivity implements SMSOnReceiveListe
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            openSettings();
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
             return true;
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    /**
-     * Unregister BroadcastReceivers used for confirmation of sending and delivery of SMS
-     */
-    @Override
-    protected void onStop() {
-        super.onStop();
-        try{
-            unregisterReceiver(onSend);
-            unregisterReceiver(onDeliver);
-        }
-        catch (IllegalArgumentException e){
-            Log.d("DemoActivity", "Can't unregister non-registered BroadcastReceiver");
-        }
     }
 
     /**
@@ -123,7 +139,7 @@ public class DemoActivity extends AppCompatActivity implements SMSOnReceiveListe
         };
         registerReceiver(onSend, new IntentFilter("SMS_SENT"));
 
-        if (deliveryConfirmation) {
+        if (deliveryReport) {
             PendingIntent delivered = PendingIntent.getBroadcast(getApplicationContext(), 0, new Intent("SMS_DELIVERED"), 0);
             onDeliver = new BroadcastReceiver() {
                 @Override
@@ -179,10 +195,5 @@ public class DemoActivity extends AppCompatActivity implements SMSOnReceiveListe
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    public void openSettings() {
-        Intent intent = new Intent(this, SettingsActivity.class);
-        startActivity(intent);
     }
 }
