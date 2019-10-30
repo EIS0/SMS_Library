@@ -46,7 +46,7 @@ public class DemoActivity extends AppCompatActivity implements SMSOnReceiveListe
 
         destText = findViewById(R.id.recipientNumber);
 
-        if (Build.VERSION.SDK_INT >=23) {
+        if (Build.VERSION.SDK_INT >= 23) {
             notificationManager = getSystemService(NotificationManager.class);
         }
 
@@ -74,7 +74,7 @@ public class DemoActivity extends AppCompatActivity implements SMSOnReceiveListe
     }
 
     private void createNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        if (Build.VERSION.SDK_INT >= 26) {
             CharSequence name = getString(R.string.channel_name);
             String description = getString(R.string.channel_description);
             int importance = NotificationManager.IMPORTANCE_HIGH;
@@ -128,6 +128,7 @@ public class DemoActivity extends AppCompatActivity implements SMSOnReceiveListe
             PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
             NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
                     .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                    .setPriority(NotificationCompat.PRIORITY_HIGH)
                     .setSmallIcon(R.drawable.ic_hello_received)
                     .setContentTitle(from + getString(R.string.says_hi))
                     .setContentText(getString(R.string.open_app))
