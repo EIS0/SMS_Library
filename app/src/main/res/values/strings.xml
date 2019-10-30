@@ -15,7 +15,6 @@
 	<string name="channel_name">Demo Notification Channel</string>
     <string name="channel_description">Channel used for showing hi notifications.</string>
     <string name="open_app">Tap to open application</string>
-    <string name="title_activity_demo">SMS Library - Demo 2</string>
     <string name="title_activity_settings">Settings</string>
 
     <!-- Preference Titles -->

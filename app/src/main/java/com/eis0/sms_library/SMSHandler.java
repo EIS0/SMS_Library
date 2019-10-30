@@ -1,16 +1,14 @@
 package com.eis0.sms_library;
 
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.app.Notification;
+import android.app.PendingIntent;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
 import android.telephony.SmsMessage;
-
-import androidx.lifecycle.Lifecycle;
+import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.Collection;
 
 @TargetApi(21)
 public class SMSHandler extends NotificationListenerService {
@@ -18,6 +16,27 @@ public class SMSHandler extends NotificationListenerService {
     private static final char APP_ID = (char)0x02;
     private static SMSOnReceiveListener smsListener;
     private static ArrayList<SmsMessage> pendingMessages = new ArrayList<>();
+
+    /**
+     * Sends a message (SMS) to the specified target, with sent and delivery confirmation.
+     * @param to Destination phone number.
+     * @param message Message to send to the destination number.
+     * @param sent PendingIntent to activate when the message is sent.
+     * @param delivered PendingIntent to activate when the message is delivered.
+     */
+    public static void sendMessage(String to, String message, PendingIntent sent, PendingIntent delivered) {
+        if(to.length() > 15) {
+            Log.e("SMS_SEND","Invalid destination \"" + to + "\"");
+            throw new IllegalArgumentException("Invalid destination \"" + to + "\"");
+        }
+        try {
+            SMSCore.sendMessage(to, message, sent, delivered);
+        }
+        catch (Exception e) {
+            Log.e("SMS_SEND", e.getMessage());
+            throw e;
+        }
+    }
 
     /**
      * Sets the listener, that is the object to be called when an SMS with the APP_ID is received.
@@ -47,8 +66,7 @@ public class SMSHandler extends NotificationListenerService {
      */
     @Override
     public void onNotificationPosted (StatusBarNotification sbn) {
-        Notification notification = sbn.getNotification();
-        if(notification.category != null && notification.category.equals("msg") && notification.tickerText.toString().contains(APP_ID + ""))
+        if(sbn.getPackageName().equals("com.google.android.apps.messaging") && sbn.getNotification().tickerText.toString().contains(APP_ID + ""))
             cancelNotification(sbn.getKey());
     }
 }

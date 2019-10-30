@@ -2,7 +2,6 @@ package com.eis0.sms_library;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -10,11 +9,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
-import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -32,9 +27,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 import androidx.lifecycle.Lifecycle;
 
 import java.util.ArrayList;
@@ -59,8 +52,6 @@ public class DemoActivity extends AppCompatActivity implements SMSOnReceiveListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_demo);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
         // get app settings
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -98,6 +89,9 @@ public class DemoActivity extends AppCompatActivity implements SMSOnReceiveListe
         pendingDialogs.clear();
     }
 
+    /**
+     * Creates a notification channel (only for API >= 26)
+     */
     private void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= 26) {
             CharSequence name = getString(R.string.channel_name);
@@ -164,7 +158,7 @@ public class DemoActivity extends AppCompatActivity implements SMSOnReceiveListe
     public void sendButtonOnClick(View view) {
         String destination = destText.getText().toString();
         if(destination.isEmpty()) {
-            Toast.makeText(this, getString(R.string.to_field_cannot_be_empty), Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getString(R.string.to_field_cannot_be_empty), Toast.LENGTH_SHORT).show();
             return;
         }
         sendHello(destination);
@@ -183,9 +177,9 @@ public class DemoActivity extends AppCompatActivity implements SMSOnReceiveListe
             @Override
             public void onReceive(Context context, Intent intent) {
                 if (getResultCode()== Activity.RESULT_OK)
-                    Toast.makeText(context, getString(R.string.message_sent), Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, getString(R.string.message_sent), Toast.LENGTH_SHORT).show();
                 else
-                    Toast.makeText(context, getString(R.string.send_message_error), Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, getString(R.string.send_message_error), Toast.LENGTH_SHORT).show();
             }
         };
         registerReceiver(onSend, new IntentFilter("SMS_SENT"));
@@ -196,20 +190,21 @@ public class DemoActivity extends AppCompatActivity implements SMSOnReceiveListe
                 @Override
                 public void onReceive(Context context, Intent intent) {
                     if (getResultCode() == Activity.RESULT_OK)
-                        Toast.makeText(context, getString(R.string.message_delivered), Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, getString(R.string.message_delivered), Toast.LENGTH_SHORT).show();
                     else
-                        Toast.makeText(context, getString(R.string.deliver_message_error), Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, getString(R.string.deliver_message_error), Toast.LENGTH_SHORT).show();
                 }
             };
             registerReceiver(onDeliver, new IntentFilter("SMS_DELIVERED"));
-            SMSCore.sendMessage(to, message, sent, delivered);
-        } else{
-            SMSCore.sendMessage(to, message, sent, null);
+            SMSHandler.sendMessage(to, message, sent, delivered);
+        } else {
+            SMSHandler.sendMessage(to, message, sent, null);
         }
     }
 
     /**
-     * Creates and shows an Alert when a message is received.
+     * Creates and shows an Alert when a message is received. If the app is running in background shows
+     * a notification.
      * @param from Phone number of the user who sent the message.
      * @param message Text of the SMS message.
      */

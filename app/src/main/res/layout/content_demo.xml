@@ -11,19 +11,18 @@
 
     <TextView
         android:id="@+id/to"
-        android:layout_width="wrap_content"
+        android:layout_width="34dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         android:text="@string/to"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         android:textSize="24sp"
         app:layout_constraintBottom_toTopOf="@+id/recipientNumber"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/recipientNumber"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0" />
 
@@ -35,7 +34,7 @@
         android:layout_marginLeft="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="8dp"
         android:ems="10"
         android:hint="@string/enter_phone"
         android:importantForAutofill="no"
@@ -48,15 +47,13 @@
         android:id="@+id/sendButton"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
-        android:layout_marginBottom="208dp"
+        android:layout_marginBottom="250dp"
         android:onClick="sendButtonOnClick"
         android:text="@string/say_hi"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/recipientNumber" />
 </androidx.constraintlayout.widget.ConstraintLayout>
