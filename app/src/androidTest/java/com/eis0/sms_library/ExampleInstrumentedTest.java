@@ -4,8 +4,11 @@ import android.content.Context;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
-
+import static org.junit.Assert.fail;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.internal.runners.statements.ExpectException;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 
 import static org.junit.Assert.assertEquals;
@@ -17,28 +20,19 @@ import static org.junit.Assert.assertEquals;
  */
 @RunWith(AndroidJUnit4.class)
 public class ExampleInstrumentedTest {
-    @Test
-    public void useAppContext() {
-        // Context of the app under test.
-        Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
 
-        assertEquals("com.eis0.sms_library", appContext.getPackageName());
+    @Test(expected=IllegalArgumentException.class)
+    public void messageToNull_isNotSent() {
+        SMSCore.sendMessage("", "sending a message", null, null);
+        fail();
     }
-
-    /*
-    @Test
-    public void sendSMS() {
-        SmsManager smgr = SmsManager.getDefault();
-        smgr.sendTextMessage("+393423541601", null, "Ses", null, null);
+    @Test(expected = IllegalArgumentException.class)
+    public void invalidDestination(){
+        SMSCore.sendMessage("111111111111111111", "", null, null);
+        fail();
     }
-
-    @Test
-    public void messageReception() {
-        TestReceiveMethod tm1 = new TestReceiveMethod();
-        TestReceiveMethod tm2 = new TestReceiveMethod();
-        SMSCore receiver = new SMSCore();
-        receiver.addOnReceiveListener(tm1);
-        receiver.addOnReceiveListener(tm2);
-    }
-     */
 }
+
+
+
+
