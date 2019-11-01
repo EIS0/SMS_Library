@@ -1,11 +1,12 @@
 package com.eis0.sms_library;
 
+import android.app.PendingIntent;
 import android.content.Context;
+import android.provider.Telephony;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import static org.junit.Assert.fail;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.internal.runners.statements.ExpectException;
 import org.junit.rules.ExpectedException;
@@ -30,6 +31,15 @@ public class ExampleInstrumentedTest {
     public void invalidDestination(){
         SMSCore.sendMessage("111111111111111111", "", null, null);
         fail();
+    }
+
+    @Test //test to Handle message (case smsListener null)
+    public void testArrayList(){
+        boolean isEmpty = true;
+        boolean result;
+        SMSHandler.setSMSOnReceiveListener(null);
+        result = SMSHandler.isPendingMessagesEmpty();
+        assertEquals(isEmpty, result);
     }
 }
 
