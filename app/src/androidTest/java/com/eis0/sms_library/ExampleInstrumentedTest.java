@@ -40,6 +40,7 @@ public class ExampleInstrumentedTest {
         SMSHandler.setSMSOnReceiveListener(null);
         result = SMSHandler.isPendingMessagesEmpty();
         assertEquals(isEmpty, result);
+
     }
 }
 
