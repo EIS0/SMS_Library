@@ -21,6 +21,7 @@ public class SMSCore extends BroadcastReceiver {
             Manifest.permission.READ_PHONE_STATE,
             Manifest.permission.READ_SMS
     };
+    private static final String LOG_KEY = "SMS_CORE";
 
     /**
      * Check if permissions are granted, if not requests the required ones.
@@ -39,7 +40,7 @@ public class SMSCore extends BroadcastReceiver {
      */
     protected static void sendMessage(String to, String message, PendingIntent sent, PendingIntent delivered) {
         manager.sendTextMessage(to,null, message, sent, delivered);
-        Log.i("SMS_SEND", "Message \"" + message + "\" sent to \"" + to + "\"");
+        Log.i(LOG_KEY, "Message \"" + message + "\" sent to \"" + to + "\"");
     }
 
     /**
@@ -52,7 +53,7 @@ public class SMSCore extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         Object[] pdus = (Object[])intent.getExtras().get("pdus");
         SmsMessage shortMessage = SmsMessage.createFromPdu((byte[])pdus[0]);
-        Log.i("SMS_RECEIVE", "Message received");
+        Log.i(LOG_KEY, "Message received");
         SMSHandler.handleMessage(shortMessage);
     }
 }

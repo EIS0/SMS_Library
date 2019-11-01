@@ -2,14 +2,11 @@ package com.eis0.sms_library;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.Notification;
 import android.app.PendingIntent;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
 import android.telephony.SmsMessage;
 import android.util.Log;
-
-import androidx.core.app.ActivityCompat;
 
 import java.util.ArrayList;
 
@@ -19,7 +16,7 @@ public class SMSHandler extends NotificationListenerService {
     private static final char APP_ID = (char)0x02;
     private static SMSOnReceiveListener smsListener;
     private static ArrayList<SmsMessage> pendingMessages = new ArrayList<>();
-
+    private static final String LOG_KEY = "SMS_HANDLER";
     /**
      * Check if permissions are granted, if not requests the required ones.
      * (Stun method)
@@ -38,14 +35,14 @@ public class SMSHandler extends NotificationListenerService {
      */
     public static void SMSSendMessage(String to, String message, PendingIntent sent, PendingIntent delivered) {
         if(to.length() > 15) {
-            Log.e("SMS_SEND","Invalid destination \"" + to + "\"");
+            Log.e(LOG_KEY,"Invalid destination \"" + to + "\"");
             throw new IllegalArgumentException("Invalid destination \"" + to + "\"");
         }
         try {
             SMSCore.sendMessage(to, message, sent, delivered);
         }
         catch (Exception e) {
-            Log.e("SMS_SEND", e.getMessage());
+            Log.e(LOG_KEY, e.getMessage());
             throw e;
         }
     }
