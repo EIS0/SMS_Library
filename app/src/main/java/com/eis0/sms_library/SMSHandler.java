@@ -61,7 +61,7 @@ public class SMSHandler extends NotificationListenerService {
      * Analyze the message received by SMSCore, if the APP_ID is recognized it calls the listener.
      * @param sms The object representing the short message.
      */
-    private static void handleMessage(SmsMessage sms) {
+    protected static void handleMessage(SmsMessage sms) {
         String content = sms.getDisplayMessageBody();
         if(content.charAt(0) != APP_ID) return;
         if(smsListener == null) pendingMessages.add(sms);
