@@ -14,7 +14,7 @@ import java.util.ArrayList;
 public class SMSHandler extends NotificationListenerService {
 
     private static final char APP_ID = (char)0x02;
-    private static SMSOnReceiveListener smsListener;
+    private static ReceivedMessageListener smsListener;
     private static ArrayList<SmsMessage> pendingMessages = new ArrayList<>();
     private static final String LOG_KEY = "SMS_HANDLER";
     /**
@@ -33,7 +33,7 @@ public class SMSHandler extends NotificationListenerService {
      * @param sent PendingIntent to activate when the message is sent.
      * @param delivered PendingIntent to activate when the message is delivered.
      */
-    public static void SMSSendMessage(String to, String message, PendingIntent sent, PendingIntent delivered) {
+    public static void SMSSendMessage(Message message, PendingIntent sent, PendingIntent delivered) {
         if(to.length() > 15) {
             Log.e(LOG_KEY,"Invalid destination \"" + to + "\"");
             throw new IllegalArgumentException("Invalid destination \"" + to + "\"");
@@ -49,9 +49,9 @@ public class SMSHandler extends NotificationListenerService {
 
     /**
      * Sets the listener, that is the object to be called when an SMS with the APP_ID is received.
-     * @param listener Must be an object that implements the SMSOnReceiveListener interface.
+     * @param listener Must be an object that implements the ReceivedMessageListener interface.
      */
-    public static void setSMSOnReceiveListener(SMSOnReceiveListener listener) {
+    public static void setSMSOnReceiveListener(ReceivedMessageListener listener) {
         smsListener = listener;
         for (SmsMessage pendingMessage : pendingMessages) handleMessage(pendingMessage);
         pendingMessages.clear();
