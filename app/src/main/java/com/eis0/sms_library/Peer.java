@@ -1,25 +1,25 @@
 package com.eis0.sms_library;
 
 public class Peer {
-    private String destination;
+    private String address;
 
     Peer(String destination){
-        this.destination = destination;
+        this.address = destination;
     }
 
     public String getDestination(){
-        return destination;
+        return address;
     }
 
     public String toString(){
-        return destination;
+        return address;
     }
 
     public boolean isEmpty(){
-        return destination.equals("");
+        return address.equals("");
     }
 
     public boolean isValid(){
-        return !isEmpty() && destination.length() < 15;
+        return !isEmpty() && address.length() < 15;
     }
 }

@@ -10,9 +10,18 @@ import android.util.Log;
 
 public class SMSCore extends BroadcastReceiver {
 
-    private static SmsManager manager = SmsManager.getDefault();
+    //Singleton Design Pattern
+    private SMSCore() { }
+    private static SMSCore instance = null;
+    public static SMSCore getInstance(){
+        if(instance == null){
+            instance = new SMSCore();
+        }
+        return instance;
+    }
 
-    private static final String LOG_KEY = "SMS_CORE";
+    private SmsManager manager = SmsManager.getDefault();
+    private final String LOG_KEY = "SMS_CORE";
 
     /**
      * Sends a message (SMS) to the specified target, with sent and delivery confirmation.
@@ -20,7 +29,7 @@ public class SMSCore extends BroadcastReceiver {
      * @param sent PendingIntent to activate when the message is sent.
      * @param delivered PendingIntent to activate when the message is delivered.
      */
-    protected static void sendMessage(Message message, PendingIntent sent, PendingIntent delivered) {
+    protected void sendMessage(Message message, PendingIntent sent, PendingIntent delivered) {
         String destination = message.getPeer().getDestination();
         String textMessage = message.getMessage();
         manager.sendTextMessage(destination,null, textMessage, sent, delivered);
@@ -38,6 +47,6 @@ public class SMSCore extends BroadcastReceiver {
         Object[] pdus = (Object[])intent.getExtras().get("pdus");
         SmsMessage shortMessage = SmsMessage.createFromPdu((byte[])pdus[0]);
         Log.i(LOG_KEY, "Message received");
-        SMSHandler.handleMessage(shortMessage);
+        SMSHandler.getInstance().handleMessage(shortMessage);
     }
 }

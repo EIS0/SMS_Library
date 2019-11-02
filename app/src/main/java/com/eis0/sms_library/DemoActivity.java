@@ -1,22 +1,18 @@
 package com.eis0.sms_library;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -37,8 +33,7 @@ public class DemoActivity extends AppCompatActivity implements ReceivedMessageLi
     private EditText destText;
     private SharedPreferences sharedPreferences;
     private boolean deliveryReport = false;
-    private BroadcastReceiver onSend = null;
-    private BroadcastReceiver onDeliver = null;
+
     private static NotificationManager notificationManager;
     private static final String CHANNEL_ID = "eis0_notification_channel";
     private static int notificationID = 0;
@@ -71,10 +66,8 @@ public class DemoActivity extends AppCompatActivity implements ReceivedMessageLi
             notificationManager = getSystemService(NotificationManager.class);
         }
 
-        //SMSHandler.SMSCheckPermissions(this);
-        //SMSHandler.setSMSOnReceiveListener(this);
         requestPermissions();
-        SMSManager.getInstance().addReceiveListener(this);
+        SMSHandler.getInstance().addReceiveListener(this);
 
         createNotificationChannel();
         for(final String[] pendingDialog : pendingDialogs) {
@@ -126,6 +119,7 @@ public class DemoActivity extends AppCompatActivity implements ReceivedMessageLi
     @Override
     protected void onStop() {
         super.onStop();
+        /*
         try{
             unregisterReceiver(onSend);
             unregisterReceiver(onDeliver);
@@ -133,6 +127,7 @@ public class DemoActivity extends AppCompatActivity implements ReceivedMessageLi
         catch (IllegalArgumentException e){
             Log.d("DemoActivity", "Can't unregister non-registered BroadcastReceiver");
         }
+         */
     }
 
     @Override
@@ -178,38 +173,9 @@ public class DemoActivity extends AppCompatActivity implements ReceivedMessageLi
      * @param destination Target who will receive the message with the APP_ID.
      */
     private void sendHello(Peer destination) {
-        //SMSHandler.SMSCheckPermissions(this);
         requestPermissions();
         String message = (char)0x02 + "";
-
-        PendingIntent sent = PendingIntent.getBroadcast(this, 0, new Intent("SMS_SENT"), 0);
-        onSend = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                if (getResultCode()== Activity.RESULT_OK)
-                    Toast.makeText(context, getString(R.string.message_sent), Toast.LENGTH_SHORT).show();
-                else
-                    Toast.makeText(context, getString(R.string.send_message_error), Toast.LENGTH_SHORT).show();
-            }
-        };
-        registerReceiver(onSend, new IntentFilter("SMS_SENT"));
-
-        if (deliveryReport) {
-            PendingIntent delivered = PendingIntent.getBroadcast(this, 0, new Intent("SMS_DELIVERED"), 0);
-            onDeliver = new BroadcastReceiver() {
-                @Override
-                public void onReceive(Context context, Intent intent) {
-                    if (getResultCode() == Activity.RESULT_OK)
-                        Toast.makeText(context, getString(R.string.message_delivered), Toast.LENGTH_SHORT).show();
-                    else
-                        Toast.makeText(context, getString(R.string.deliver_message_error), Toast.LENGTH_SHORT).show();
-                }
-            };
-            registerReceiver(onDeliver, new IntentFilter("SMS_DELIVERED"));
-            SMSManager.sendTrackingSms(to, message, sent, delivered);
-        } else {
-            SMSManager.sendTrackingSms(to, message, sent, null);
-        }
+        SMSHandler.getInstance().sendMessage(new Message(destination, message));
     }
 
     private void requestPermissions(){
