@@ -1,5 +1,6 @@
 package com.eis0.sms_library;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.NotificationChannel;
@@ -23,6 +24,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.lifecycle.Lifecycle;
@@ -30,7 +32,7 @@ import androidx.lifecycle.Lifecycle;
 import java.util.ArrayList;
 import java.util.Set;
 
-public class DemoActivity extends AppCompatActivity implements SMSListener {
+public class DemoActivity extends AppCompatActivity implements ReceivedMessageListener {
 
     private EditText destText;
     private SharedPreferences sharedPreferences;
@@ -41,6 +43,12 @@ public class DemoActivity extends AppCompatActivity implements SMSListener {
     private static final String CHANNEL_ID = "eis0_notification_channel";
     private static int notificationID = 0;
     private static ArrayList<String[]> pendingDialogs = new ArrayList<>();
+    private static final String[] PERMISSIONS = {
+            Manifest.permission.SEND_SMS,
+            Manifest.permission.RECEIVE_SMS,
+            Manifest.permission.READ_PHONE_STATE,
+            Manifest.permission.READ_SMS
+    };
 
     /**
      * Demo start function.
@@ -65,8 +73,8 @@ public class DemoActivity extends AppCompatActivity implements SMSListener {
 
         //SMSHandler.SMSCheckPermissions(this);
         //SMSHandler.setSMSOnReceiveListener(this);
-        SMSManager.checkPermissions(this);
-        SMSManager.setSmsReceiver(this);
+        requestPermissions();
+        SMSManager.getInstance().addReceiveListener(this);
 
         createNotificationChannel();
         for(final String[] pendingDialog : pendingDialogs) {
@@ -74,7 +82,7 @@ public class DemoActivity extends AppCompatActivity implements SMSListener {
                     .setTitle(pendingDialog[0] + getString(R.string.says_hi))
                     .setPositiveButton(getString(R.string.say_hi_back), new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            sendHello(pendingDialog[0]);
+                            sendHello(new Peer(pendingDialog[0]));
                         }
                     })
                     .setNegativeButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
@@ -156,24 +164,25 @@ public class DemoActivity extends AppCompatActivity implements SMSListener {
      * @param view View that sends the onClick event.
      */
     public void sendButtonOnClick(View view) {
-        String destination = destText.getText().toString();
+        Peer destination = new Peer(destText.getText().toString());
         if(destination.isEmpty()) {
             Toast.makeText(this, getString(R.string.to_field_cannot_be_empty), Toast.LENGTH_SHORT).show();
             return;
         }
+        //TODO: check if destination is valid
         sendHello(destination);
     }
 
     /**
      * Sends a message (SMS) to the specified target.
-     * @param to Target who will receive the message with the APP_ID.
+     * @param destination Target who will receive the message with the APP_ID.
      */
-    private void sendHello(String to) {
+    private void sendHello(Peer destination) {
         //SMSHandler.SMSCheckPermissions(this);
-        SMSManager.checkPermissions(this);
+        requestPermissions();
         String message = (char)0x02 + "";
 
-        PendingIntent sent = PendingIntent.getBroadcast(getApplicationContext(), 0, new Intent("SMS_SENT"), 0);
+        PendingIntent sent = PendingIntent.getBroadcast(this, 0, new Intent("SMS_SENT"), 0);
         onSend = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -186,7 +195,7 @@ public class DemoActivity extends AppCompatActivity implements SMSListener {
         registerReceiver(onSend, new IntentFilter("SMS_SENT"));
 
         if (deliveryReport) {
-            PendingIntent delivered = PendingIntent.getBroadcast(getApplicationContext(), 0, new Intent("SMS_DELIVERED"), 0);
+            PendingIntent delivered = PendingIntent.getBroadcast(this, 0, new Intent("SMS_DELIVERED"), 0);
             onDeliver = new BroadcastReceiver() {
                 @Override
                 public void onReceive(Context context, Intent intent) {
@@ -197,21 +206,23 @@ public class DemoActivity extends AppCompatActivity implements SMSListener {
                 }
             };
             registerReceiver(onDeliver, new IntentFilter("SMS_DELIVERED"));
-            //SMSHandler.SMSSendMessage(to, message, sent, delivered);
             SMSManager.sendTrackingSms(to, message, sent, delivered);
         } else {
             SMSManager.sendTrackingSms(to, message, sent, null);
-            //SMSHandler.SMSSendMessage(to, message, sent, null);
         }
+    }
+
+    private void requestPermissions(){
+        ActivityCompat.requestPermissions(this, PERMISSIONS, 1);
     }
 
     /**
      * Creates and shows an Alert when a message is received. If the app is running in background shows
      * a notification.
-     * @param from Phone number of the user who sent the message.
-     * @param message Text of the SMS message.
+     * @param message the message received.
      */
-    public void onReceiveSMS(final String from, String message) {
+    public void onMessageReceived(Message message) {
+        final Peer from = message.getPeer();
         final int notID = notificationID++;
         if(getLifecycle().getCurrentState() != Lifecycle.State.RESUMED) {
             Intent intent = new Intent(this, DemoActivity.class);
@@ -231,7 +242,7 @@ public class DemoActivity extends AppCompatActivity implements SMSListener {
         }
 
         if(getLifecycle().getCurrentState() == Lifecycle.State.DESTROYED) {
-            String[] pendingDialog = {from, notID + ""};
+            String[] pendingDialog = {from.getDestination(), notID + ""};
             pendingDialogs.add(pendingDialog);
         }
         else {

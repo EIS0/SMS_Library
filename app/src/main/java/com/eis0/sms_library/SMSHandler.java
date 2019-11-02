@@ -1,7 +1,6 @@
 package com.eis0.sms_library;
 
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.app.PendingIntent;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
@@ -17,29 +16,21 @@ public class SMSHandler extends NotificationListenerService {
     private static ReceivedMessageListener smsListener;
     private static ArrayList<SmsMessage> pendingMessages = new ArrayList<>();
     private static final String LOG_KEY = "SMS_HANDLER";
-    /**
-     * Check if permissions are granted, if not requests the required ones.
-     * (Stun method)
-     * @param activity Activity which is asking for permissions.
-     */
-    public static void SMSCheckPermissions(Activity activity) {
-        SMSCore.checkPermissions(activity);
-    }
 
     /**
      * Sends a message (SMS) to the specified target, with sent and delivery confirmation.
-     * @param to Destination phone number.
-     * @param message Message to send to the destination number.
+     * @param message Message to send to the destination Peer.
      * @param sent PendingIntent to activate when the message is sent.
      * @param delivered PendingIntent to activate when the message is delivered.
      */
     public static void SMSSendMessage(Message message, PendingIntent sent, PendingIntent delivered) {
-        if(to.length() > 15) {
-            Log.e(LOG_KEY,"Invalid destination \"" + to + "\"");
-            throw new IllegalArgumentException("Invalid destination \"" + to + "\"");
+        Peer destination = message.getPeer();
+        if(!destination.isValid()) {
+            Log.e(LOG_KEY,"Invalid destination \"" + destination + "\"");
+            throw new IllegalArgumentException("Invalid destination \"" + destination + "\"");
         }
         try {
-            SMSCore.sendMessage(to, message, sent, delivered);
+            SMSCore.sendMessage(message, sent, delivered);
         }
         catch (Exception e) {
             Log.e(LOG_KEY, e.getMessage());
@@ -65,7 +56,7 @@ public class SMSHandler extends NotificationListenerService {
         String content = sms.getDisplayMessageBody();
         if(content.charAt(0) != APP_ID) return;
         if(smsListener == null) pendingMessages.add(sms);
-        else smsListener.SMSOnReceive(sms.getDisplayOriginatingAddress(), content.substring(1));
+        else smsListener.onMessageReceived(new Message(new Peer(sms.getDisplayOriginatingAddress()), content.substring(1)));
     }
 
     /**
