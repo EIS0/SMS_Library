@@ -1,4 +1,4 @@
-package com.eis0.sms_library;
+package com.eis0.smslibrary;
 
 public class Message {
     private Peer destination;

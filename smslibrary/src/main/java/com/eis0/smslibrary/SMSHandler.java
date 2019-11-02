@@ -1,4 +1,4 @@
-package com.eis0.sms_library;
+package com.eis0.smslibrary;
 
 import android.annotation.TargetApi;
 import android.app.PendingIntent;
@@ -14,44 +14,33 @@ import android.util.Log;
 import java.util.ArrayList;
 
 @TargetApi(21)
-public class SMSHandler extends NotificationListenerService implements CommunicationHandler {
+public class SMSHandler extends NotificationListenerService{
 
-    private final char APP_ID = (char)0x02;
-    private final String LOG_KEY = "SMS_HANDLER";
-    private ArrayList<SmsMessage> pendingMessages = new ArrayList<>();
+    private static final char APP_ID = (char)0x02;
+    private static final String LOG_KEY = "SMS_HANDLER";
+    private static ArrayList<SmsMessage> pendingMessages = new ArrayList<>();
 
     //listeners related variables
-    private ReceivedMessageListener smsReceivedListener;
-    private SentMessageListener smsSentListener;
-    private BroadcastReceiver onSend = null;
-    private PendingIntent sent;
-    private DeliveredMessageListener smsDeliveredListener;
-    private BroadcastReceiver onDeliver = null;
-    private PendingIntent delivered;
-
-
-    //Singleton Design Pattern
-    private SMSHandler() { }
-    private static SMSHandler instance = null;
-    public static SMSHandler getInstance(){
-        if(instance == null){
-            instance = new SMSHandler();
-        }
-        return instance;
-    }
+    private static ReceivedMessageListener smsReceivedListener;
+    private static SentMessageListener smsSentListener;
+    private static BroadcastReceiver onSend = null;
+    private static PendingIntent sent;
+    private static DeliveredMessageListener smsDeliveredListener;
+    private static BroadcastReceiver onDeliver = null;
+    private static PendingIntent delivered;
 
     /**
      * Sends a message (SMS) to the specified target, with sent and delivery confirmation.
      * @param message Message to send to the destination Peer.
      */
-    public void sendMessage(Message message) {
+    public static void sendMessage(Message message) {
         Peer destination = message.getPeer();
         if(!destination.isValid()) {
             Log.e(LOG_KEY,"Invalid destination \"" + destination + "\"");
             throw new IllegalArgumentException("Invalid destination \"" + destination + "\"");
         }
         try {
-            SMSCore.getInstance().sendMessage(message, sent, delivered);
+            SMSCore.sendMessage(message, sent, delivered);
         }
         catch (Exception e) {
             Log.e(LOG_KEY, e.getMessage());
@@ -63,17 +52,17 @@ public class SMSHandler extends NotificationListenerService implements Communica
      * Sets the listener, that is the object to be called when an SMS with the APP_ID is received.
      * @param listener Must be an object that implements the ReceivedMessageListener interface.
      */
-    public void addReceiveListener(ReceivedMessageListener listener) {
+    public static void addReceiveListener(ReceivedMessageListener listener) {
         smsReceivedListener = listener;
         for (SmsMessage pendingMessage : pendingMessages) handleMessage(pendingMessage);
         pendingMessages.clear();
     }
 
-    public void removeReceiveListener(){
+    public static void removeReceiveListener(){
         smsReceivedListener = null;
     }
 
-    public void addSentListener(SentMessageListener listener, Context context) {
+    public static void addSentListener(SentMessageListener listener, Context context) {
         smsSentListener = listener;
 
         sent = PendingIntent.getBroadcast(context, 0, new Intent("SMS_SENT"), 0);
@@ -86,7 +75,7 @@ public class SMSHandler extends NotificationListenerService implements Communica
         context.registerReceiver(onSend, new IntentFilter("SMS_SENT"));
     }
 
-    public void addDeliveredListener(DeliveredMessageListener listener, Context context) {
+    public static void addDeliveredListener(DeliveredMessageListener listener, Context context) {
         smsDeliveredListener = listener;
 
         delivered = PendingIntent.getBroadcast(context, 0, new Intent("SMS_DELIVERED"), 0);
@@ -103,7 +92,7 @@ public class SMSHandler extends NotificationListenerService implements Communica
      * Analyze the message received by SMSCore, if the APP_ID is recognized it calls the listener.
      * @param sms The object representing the short message.
      */
-    protected void handleMessage(SmsMessage sms) {
+    protected static void handleMessage(SmsMessage sms) {
         String content = sms.getDisplayMessageBody();
         if(content.charAt(0) != APP_ID) return;
         if(smsReceivedListener == null) pendingMessages.add(sms);
@@ -114,7 +103,7 @@ public class SMSHandler extends NotificationListenerService implements Communica
      * Create only to test an sms insert if smsListener is null
      * @return true if is empty
      */
-    public boolean isPendingMessagesEmpty(){
+    public static boolean isPendingMessagesEmpty(){
         ArrayList<SmsMessage> test =  new ArrayList<>(pendingMessages);
         return test.isEmpty();
     }

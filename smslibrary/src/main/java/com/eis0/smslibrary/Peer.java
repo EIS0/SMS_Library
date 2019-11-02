@@ -1,9 +1,9 @@
-package com.eis0.sms_library;
+package com.eis0.smslibrary;
 
 public class Peer {
     private String address;
 
-    Peer(String destination){
+    public Peer(String destination){
         this.address = destination;
     }
 

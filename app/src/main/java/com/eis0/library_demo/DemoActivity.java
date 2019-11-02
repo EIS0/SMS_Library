@@ -1,4 +1,4 @@
-package com.eis0.sms_library;
+package com.eis0.library_demo;
 
 import android.Manifest;
 import android.app.AlertDialog;
@@ -24,6 +24,11 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.lifecycle.Lifecycle;
+
+import com.eis0.smslibrary.Message;
+import com.eis0.smslibrary.Peer;
+import com.eis0.smslibrary.ReceivedMessageListener;
+import com.eis0.smslibrary.SMSManager;
 
 import java.util.ArrayList;
 import java.util.Set;
@@ -67,7 +72,7 @@ public class DemoActivity extends AppCompatActivity implements ReceivedMessageLi
         }
 
         requestPermissions();
-        SMSHandler.getInstance().addReceiveListener(this);
+        SMSManager.getInstance().addReceiveListener(this);
 
         createNotificationChannel();
         for(final String[] pendingDialog : pendingDialogs) {
@@ -175,7 +180,7 @@ public class DemoActivity extends AppCompatActivity implements ReceivedMessageLi
     private void sendHello(Peer destination) {
         requestPermissions();
         String message = (char)0x02 + "";
-        SMSHandler.getInstance().sendMessage(new Message(destination, message));
+        SMSManager.getInstance().sendMessage(new Message(destination, message));
     }
 
     private void requestPermissions(){

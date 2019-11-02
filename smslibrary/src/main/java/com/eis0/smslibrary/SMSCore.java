@@ -1,4 +1,4 @@
-package com.eis0.sms_library;
+package com.eis0.smslibrary;
 
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -10,18 +10,8 @@ import android.util.Log;
 
 public class SMSCore extends BroadcastReceiver {
 
-    //Singleton Design Pattern
-    private SMSCore() { }
-    private static SMSCore instance = null;
-    public static SMSCore getInstance(){
-        if(instance == null){
-            instance = new SMSCore();
-        }
-        return instance;
-    }
-
-    private SmsManager manager = SmsManager.getDefault();
-    private final String LOG_KEY = "SMS_CORE";
+    private static SmsManager manager = SmsManager.getDefault();
+    private static final String LOG_KEY = "SMS_CORE";
 
     /**
      * Sends a message (SMS) to the specified target, with sent and delivery confirmation.
@@ -29,7 +19,7 @@ public class SMSCore extends BroadcastReceiver {
      * @param sent PendingIntent to activate when the message is sent.
      * @param delivered PendingIntent to activate when the message is delivered.
      */
-    protected void sendMessage(Message message, PendingIntent sent, PendingIntent delivered) {
+    protected static void sendMessage(Message message, PendingIntent sent, PendingIntent delivered) {
         String destination = message.getPeer().getDestination();
         String textMessage = message.getMessage();
         manager.sendTextMessage(destination,null, textMessage, sent, delivered);
@@ -47,6 +37,6 @@ public class SMSCore extends BroadcastReceiver {
         Object[] pdus = (Object[])intent.getExtras().get("pdus");
         SmsMessage shortMessage = SmsMessage.createFromPdu((byte[])pdus[0]);
         Log.i(LOG_KEY, "Message received");
-        SMSHandler.getInstance().handleMessage(shortMessage);
+        SMSHandler.handleMessage(shortMessage);
     }
 }
