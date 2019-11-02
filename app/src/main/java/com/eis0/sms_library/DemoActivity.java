@@ -5,19 +5,14 @@ import android.app.AlertDialog;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Build;
-import android.content.BroadcastReceiver;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.NotificationManagerCompat;
-
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.util.Log;
@@ -27,13 +22,15 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.lifecycle.Lifecycle;
 
 import java.util.ArrayList;
 import java.util.Set;
 
-public class DemoActivity extends AppCompatActivity implements SMSOnReceiveListener {
+public class DemoActivity extends AppCompatActivity implements SMSListener {
 
     private EditText destText;
     private SharedPreferences sharedPreferences;
@@ -66,8 +63,11 @@ public class DemoActivity extends AppCompatActivity implements SMSOnReceiveListe
             notificationManager = getSystemService(NotificationManager.class);
         }
 
-        SMSHandler.SMSCheckPermissions(this);
-        SMSHandler.setSMSOnReceiveListener(this);
+        //SMSHandler.SMSCheckPermissions(this);
+        //SMSHandler.setSMSOnReceiveListener(this);
+        SMSManager.checkPermissions(this);
+        SMSManager.setSmsReceiver(this);
+
         createNotificationChannel();
         for(final String[] pendingDialog : pendingDialogs) {
             new AlertDialog.Builder(this)
@@ -169,7 +169,8 @@ public class DemoActivity extends AppCompatActivity implements SMSOnReceiveListe
      * @param to Target who will receive the message with the APP_ID.
      */
     private void sendHello(String to) {
-        SMSHandler.SMSCheckPermissions(this);
+        //SMSHandler.SMSCheckPermissions(this);
+        SMSManager.checkPermissions(this);
         String message = (char)0x02 + "";
 
         PendingIntent sent = PendingIntent.getBroadcast(getApplicationContext(), 0, new Intent("SMS_SENT"), 0);
@@ -196,9 +197,11 @@ public class DemoActivity extends AppCompatActivity implements SMSOnReceiveListe
                 }
             };
             registerReceiver(onDeliver, new IntentFilter("SMS_DELIVERED"));
-            SMSHandler.SMSSendMessage(to, message, sent, delivered);
+            //SMSHandler.SMSSendMessage(to, message, sent, delivered);
+            SMSManager.sendTrackingSms(to, message, sent, delivered);
         } else {
-            SMSHandler.SMSSendMessage(to, message, sent, null);
+            SMSManager.sendTrackingSms(to, message, sent, null);
+            //SMSHandler.SMSSendMessage(to, message, sent, null);
         }
     }
 
@@ -208,7 +211,7 @@ public class DemoActivity extends AppCompatActivity implements SMSOnReceiveListe
      * @param from Phone number of the user who sent the message.
      * @param message Text of the SMS message.
      */
-    public void SMSOnReceive(final String from, String message) {
+    public void onReceiveSMS(final String from, String message) {
         final int notID = notificationID++;
         if(getLifecycle().getCurrentState() != Lifecycle.State.RESUMED) {
             Intent intent = new Intent(this, DemoActivity.class);
