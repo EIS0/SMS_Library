@@ -213,7 +213,7 @@ public class DemoActivity extends AppCompatActivity implements ReceivedMessageLi
         }
 
         if(getLifecycle().getCurrentState() == Lifecycle.State.DESTROYED) {
-            String[] pendingDialog = {from.getDestination(), notID + ""};
+            String[] pendingDialog = {from.getAddress(), notID + ""};
             pendingDialogs.add(pendingDialog);
         }
         else {

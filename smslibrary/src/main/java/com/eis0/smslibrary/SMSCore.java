@@ -20,8 +20,8 @@ public class SMSCore extends BroadcastReceiver {
      * @param delivered PendingIntent to activate when the message is delivered.
      */
     protected static void sendMessage(SMSMessage message, PendingIntent sent, PendingIntent delivered) {
-        String destination = message.getPeer().getDestination();
-        String textMessage = message.getMessage();
+        String destination = message.getPeer().getAddress();
+        String textMessage = message.getData();
         manager.sendTextMessage(destination,null, textMessage, sent, delivered);
         Log.i(LOG_KEY, "SMSMessage \"" + message + "\" sent to \"" + destination + "\"");
     }
