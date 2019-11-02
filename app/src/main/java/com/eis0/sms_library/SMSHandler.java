@@ -69,6 +69,15 @@ public class SMSHandler extends NotificationListenerService {
     }
 
     /**
+     * Create only to test an sms insert if smsListener is null
+     * @return true if is empty
+     */
+    public static boolean isPendingMessagesEmpty(){
+        ArrayList<SmsMessage> test =  new ArrayList<>(pendingMessages);
+        return test.isEmpty();
+    }
+
+    /**
      * Overridden method that catches the notifications. If a notification of type 'sms' is
      * recognized and it contains the APP_ID than it will be cancelled.
      * @param sbn StatusBarNotification object that contains all the notification informations.
