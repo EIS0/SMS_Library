@@ -2,10 +2,6 @@ package com.eis0.smslibrary;
 
 import android.annotation.TargetApi;
 import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
 import android.telephony.SmsMessage;
@@ -22,18 +18,14 @@ public class SMSHandler extends NotificationListenerService{
 
     //listeners related variables
     private static ReceivedMessageListener smsReceivedListener;
-    private static SentMessageListener smsSentListener;
-    private static BroadcastReceiver onSend = null;
-    private static PendingIntent sent;
-    private static DeliveredMessageListener smsDeliveredListener;
-    private static BroadcastReceiver onDeliver = null;
-    private static PendingIntent delivered;
+
+
 
     /**
      * Sends a message (SMS) to the specified target, with sent and delivery confirmation.
      * @param message Message to send to the destination Peer.
      */
-    public static void sendMessage(Message message) {
+    public static void sendMessage(Message message, PendingIntent sent, PendingIntent delivered) {
         Peer destination = message.getPeer();
         if(!destination.isValid()) {
             Log.e(LOG_KEY,"Invalid destination \"" + destination + "\"");
@@ -62,31 +54,8 @@ public class SMSHandler extends NotificationListenerService{
         smsReceivedListener = null;
     }
 
-    public static void addSentListener(SentMessageListener listener, Context context) {
-        smsSentListener = listener;
 
-        sent = PendingIntent.getBroadcast(context, 0, new Intent("SMS_SENT"), 0);
-        onSend = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                smsSentListener.onMessageSent(getResultCode());
-            }
-        };
-        context.registerReceiver(onSend, new IntentFilter("SMS_SENT"));
-    }
 
-    public static void addDeliveredListener(DeliveredMessageListener listener, Context context) {
-        smsDeliveredListener = listener;
-
-        delivered = PendingIntent.getBroadcast(context, 0, new Intent("SMS_DELIVERED"), 0);
-        onDeliver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                smsDeliveredListener.onMessageDelivered(getResultCode());
-            }
-        };
-        context.registerReceiver(onDeliver, new IntentFilter("SMS_DELIVERED"));
-    }
 
     /**
      * Analyze the message received by SMSCore, if the APP_ID is recognized it calls the listener.
