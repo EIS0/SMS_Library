@@ -23,10 +23,10 @@ public class SMSHandler extends NotificationListenerService{
 
     /**
      * Sends a message (SMS) to the specified target, with sent and delivery confirmation.
-     * @param message Message to send to the destination Peer.
+     * @param message SMSMessage to send to the destination SMSPeer.
      */
-    public static void sendMessage(Message message, PendingIntent sent, PendingIntent delivered) {
-        Peer destination = message.getPeer();
+    public static void sendMessage(SMSMessage message, PendingIntent sent, PendingIntent delivered) {
+        SMSPeer destination = message.getPeer();
         if(!destination.isValid()) {
             Log.e(LOG_KEY,"Invalid destination \"" + destination + "\"");
             throw new IllegalArgumentException("Invalid destination \"" + destination + "\"");
@@ -65,7 +65,7 @@ public class SMSHandler extends NotificationListenerService{
         String content = sms.getDisplayMessageBody();
         if(content.charAt(0) != APP_ID) return;
         if(smsReceivedListener == null) pendingMessages.add(sms);
-        else smsReceivedListener.onMessageReceived(new Message(new Peer(sms.getDisplayOriginatingAddress()), content.substring(1)));
+        else smsReceivedListener.onMessageReceived(new SMSMessage(new SMSPeer(sms.getDisplayOriginatingAddress()), content.substring(1)));
     }
 
     /**

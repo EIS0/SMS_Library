@@ -6,5 +6,5 @@ public interface ReceivedMessageListener {
      * Called by SMSHandler whenever a message is received.
      * @param message the message received
      */
-    void onMessageReceived(Message message);
+    void onMessageReceived(SMSMessage message);
 }

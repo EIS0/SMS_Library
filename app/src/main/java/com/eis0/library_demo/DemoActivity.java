@@ -25,8 +25,8 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.lifecycle.Lifecycle;
 
-import com.eis0.smslibrary.Message;
-import com.eis0.smslibrary.Peer;
+import com.eis0.smslibrary.SMSMessage;
+import com.eis0.smslibrary.SMSPeer;
 import com.eis0.smslibrary.ReceivedMessageListener;
 import com.eis0.smslibrary.SMSManager;
 
@@ -80,7 +80,7 @@ public class DemoActivity extends AppCompatActivity implements ReceivedMessageLi
                     .setTitle(pendingDialog[0] + getString(R.string.says_hi))
                     .setPositiveButton(getString(R.string.say_hi_back), new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            sendHello(new Peer(pendingDialog[0]));
+                            sendHello(new SMSPeer(pendingDialog[0]));
                         }
                     })
                     .setNegativeButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
@@ -164,7 +164,7 @@ public class DemoActivity extends AppCompatActivity implements ReceivedMessageLi
      * @param view View that sends the onClick event.
      */
     public void sendButtonOnClick(View view) {
-        Peer destination = new Peer(destText.getText().toString());
+        SMSPeer destination = new SMSPeer(destText.getText().toString());
         if(destination.isEmpty()) {
             Toast.makeText(this, getString(R.string.to_field_cannot_be_empty), Toast.LENGTH_SHORT).show();
             return;
@@ -177,10 +177,10 @@ public class DemoActivity extends AppCompatActivity implements ReceivedMessageLi
      * Sends a message (SMS) to the specified target.
      * @param destination Target who will receive the message with the APP_ID.
      */
-    private void sendHello(Peer destination) {
+    private void sendHello(SMSPeer destination) {
         requestPermissions();
         String message = (char)0x02 + "";
-        SMSManager.getInstance().sendMessage(new Message(destination, message));
+        SMSManager.getInstance().sendMessage(new SMSMessage(destination, message));
     }
 
     private void requestPermissions(){
@@ -192,8 +192,8 @@ public class DemoActivity extends AppCompatActivity implements ReceivedMessageLi
      * a notification.
      * @param message the message received.
      */
-    public void onMessageReceived(Message message) {
-        final Peer from = message.getPeer();
+    public void onMessageReceived(SMSMessage message) {
+        final SMSPeer from = message.getPeer();
         final int notID = notificationID++;
         if(getLifecycle().getCurrentState() != Lifecycle.State.RESUMED) {
             Intent intent = new Intent(this, DemoActivity.class);

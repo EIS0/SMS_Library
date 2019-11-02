@@ -32,11 +32,11 @@ public class SMSManager implements CommunicationHandler {
         SMSHandler.removeReceiveListener();
     }
 
-    public void sendMessage(Message message){
+    public void sendMessage(SMSMessage message){
         SMSHandler.sendMessage(message, sent, delivered);
     }
 
-    public void sendMessage(final Message message, SentMessageListener listener, Context context) {
+    public void sendMessage(final SMSMessage message, SentMessageListener listener, Context context) {
         smsSentListener = listener;
 
         sent = PendingIntent.getBroadcast(context, 0, new Intent("SMS_SENT"), 0);
@@ -50,7 +50,7 @@ public class SMSManager implements CommunicationHandler {
     }
 
 
-    public void sendMessage(final Message message, DeliveredMessageListener listener, Context context) {
+    public void sendMessage(final SMSMessage message, DeliveredMessageListener listener, Context context) {
         smsDeliveredListener = listener;
 
         delivered = PendingIntent.getBroadcast(context, 0, new Intent("SMS_DELIVERED"), 0);
