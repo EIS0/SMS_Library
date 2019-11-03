@@ -9,5 +9,5 @@ public interface Message {
     /**
      * returns the Peer of the message
      */
-    public SMSPeer getPeer();
+    public Peer getPeer();
 }
