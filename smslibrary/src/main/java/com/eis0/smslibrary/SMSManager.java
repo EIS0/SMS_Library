@@ -6,14 +6,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 
-public class SMSManager implements CommunicationHandler {
+public class SMSManager extends CommunicationHandler<SMSMessage> {
     //Singleton Design Pattern
     private SMSManager() { }
     private static SMSManager instance = null;
-    public static SMSManager getInstance(){
+    private static Context context;
+    public static SMSManager getInstance(Context context){
         if(instance == null){
             instance = new SMSManager();
         }
+        SMSManager.context = context;
         return instance;
     }
 
@@ -24,7 +26,7 @@ public class SMSManager implements CommunicationHandler {
     private static PendingIntent sent;
     private static PendingIntent delivered;
 
-    public void addReceiveListener(ReceivedMessageListener listener){
+    public void addReceiveListener(ReceivedMessageListener<SMSMessage> listener){
         SMSHandler.addReceiveListener(listener);
     }
 
@@ -36,7 +38,7 @@ public class SMSManager implements CommunicationHandler {
         SMSHandler.sendMessage(message, sent, delivered);
     }
 
-    public void sendMessage(final SMSMessage message, SentMessageListener listener, Context context) {
+    public void sendMessage(final SMSMessage message, SentMessageListener listener) {
         smsSentListener = listener;
 
         sent = PendingIntent.getBroadcast(context, 0, new Intent("SMS_SENT"), 0);
@@ -50,7 +52,7 @@ public class SMSManager implements CommunicationHandler {
     }
 
 
-    public void sendMessage(final SMSMessage message, DeliveredMessageListener listener, Context context) {
+    public void sendMessage(final SMSMessage message, DeliveredMessageListener listener) {
         smsDeliveredListener = listener;
 
         delivered = PendingIntent.getBroadcast(context, 0, new Intent("SMS_DELIVERED"), 0);

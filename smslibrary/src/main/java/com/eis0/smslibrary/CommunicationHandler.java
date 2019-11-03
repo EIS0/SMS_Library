@@ -1,7 +1,7 @@
 package com.eis0.smslibrary;
 
-public interface CommunicationHandler {
-    void sendMessage(SMSMessage msg);
-    void addReceiveListener(ReceivedMessageListener listener);
-    void removeReceiveListener();
+public abstract class CommunicationHandler<T extends  Message> {
+    public abstract void sendMessage(T message);
+    public abstract void addReceiveListener(ReceivedMessageListener<T> listener);
+    public abstract void removeReceiveListener();
 }

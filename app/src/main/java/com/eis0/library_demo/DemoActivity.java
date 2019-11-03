@@ -33,7 +33,7 @@ import com.eis0.smslibrary.SMSManager;
 import java.util.ArrayList;
 import java.util.Set;
 
-public class DemoActivity extends AppCompatActivity implements ReceivedMessageListener {
+public class DemoActivity extends AppCompatActivity implements ReceivedMessageListener<SMSMessage> {
 
     private EditText destText;
     private SharedPreferences sharedPreferences;
@@ -72,7 +72,7 @@ public class DemoActivity extends AppCompatActivity implements ReceivedMessageLi
         }
 
         requestPermissions();
-        SMSManager.getInstance().addReceiveListener(this);
+        SMSManager.getInstance(this).addReceiveListener(this);
 
         createNotificationChannel();
         for(final String[] pendingDialog : pendingDialogs) {
@@ -180,7 +180,7 @@ public class DemoActivity extends AppCompatActivity implements ReceivedMessageLi
     private void sendHello(SMSPeer destination) {
         requestPermissions();
         String message = (char)0x02 + "";
-        SMSManager.getInstance().sendMessage(new SMSMessage(destination, message));
+        SMSManager.getInstance(this).sendMessage(new SMSMessage(destination, message));
     }
 
     private void requestPermissions(){
