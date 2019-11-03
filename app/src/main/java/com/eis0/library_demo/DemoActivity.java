@@ -124,17 +124,13 @@ public class DemoActivity extends AppCompatActivity implements ReceivedMessageLi
     @Override
     protected void onStop() {
         super.onStop();
-        /*
-        try{
-            unregisterReceiver(onSend);
-            unregisterReceiver(onDeliver);
-        }
-        catch (IllegalArgumentException e){
-            Log.d("DemoActivity", "Can't unregister non-registered BroadcastReceiver");
-        }
-         */
     }
 
+    /**
+     * called when the option menu is created
+     * @param menu option menu created
+     * @return returns true when the option menu is created
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -142,6 +138,11 @@ public class DemoActivity extends AppCompatActivity implements ReceivedMessageLi
         return true;
     }
 
+    /**
+     * called when an item is selected in the option menu
+     * @param item item that gets selected
+     * @return returns the state of the option menu
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -183,6 +184,9 @@ public class DemoActivity extends AppCompatActivity implements ReceivedMessageLi
         SMSManager.getInstance(this).sendMessage(new SMSMessage(destination, message));
     }
 
+    /**
+     * requests permissions for the library/app to work if not granted
+     */
     private void requestPermissions(){
         ActivityCompat.requestPermissions(this, PERMISSIONS, 1);
     }

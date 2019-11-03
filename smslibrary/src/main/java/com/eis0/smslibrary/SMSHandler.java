@@ -16,14 +16,14 @@ public class SMSHandler extends NotificationListenerService{
     private static final String LOG_KEY = "SMS_HANDLER";
     private static ArrayList<SmsMessage> pendingMessages = new ArrayList<>();
 
-    //listeners related variables
     private static ReceivedMessageListener smsReceivedListener;
 
-
-
     /**
-     * Sends a message (SMS) to the specified target, with sent and delivery confirmation.
-     * @param message SMSMessage to send to the destination SMSPeer.
+     * Sends a valid SMSmessage, with sent and delivery confirmation.
+     * @param message SMSMessage to send to the SMSPeer.
+     * @param sent PendingIntent listening for message sent
+     * @param delivered PendingIntent listening for message delivery
+     * @throws IllegalArgumentException if the destination is invalid
      */
     public static void sendMessage(SMSMessage message, PendingIntent sent, PendingIntent delivered) {
         SMSPeer destination = message.getPeer();
@@ -31,31 +31,25 @@ public class SMSHandler extends NotificationListenerService{
             Log.e(LOG_KEY,"Invalid destination \"" + destination + "\"");
             throw new IllegalArgumentException("Invalid destination \"" + destination + "\"");
         }
-        try {
-            SMSCore.sendMessage(message, sent, delivered);
-        }
-        catch (Exception e) {
-            Log.e(LOG_KEY, e.getMessage());
-            throw e;
-        }
+        SMSCore.sendMessage(message, sent, delivered);
     }
 
     /**
      * Sets the listener, that is the object to be called when an SMS with the APP_ID is received.
-     * @param listener Must be an object that implements the ReceivedMessageListener interface.
+     * @param listener Must be an object that implements the ReceivedMessageListener<SMSMessage> interface.
      */
-    public static void addReceiveListener(ReceivedMessageListener listener) {
+    public static void addReceiveListener(ReceivedMessageListener<SMSMessage> listener) {
         smsReceivedListener = listener;
         for (SmsMessage pendingMessage : pendingMessages) handleMessage(pendingMessage);
         pendingMessages.clear();
     }
 
+    /**
+     * removes a listener from listening to incoming messages
+     */
     public static void removeReceiveListener(){
         smsReceivedListener = null;
     }
-
-
-
 
     /**
      * Analyze the message received by SMSCore, if the APP_ID is recognized it calls the listener.
@@ -69,16 +63,14 @@ public class SMSHandler extends NotificationListenerService{
     }
 
     /**
-     * Create only to test an sms insert if smsListener is null
-     * @return true if is empty
+     * Returns true if there's no pending message, false otherwise
      */
     public static boolean isPendingMessagesEmpty(){
-        ArrayList<SmsMessage> test =  new ArrayList<>(pendingMessages);
-        return test.isEmpty();
+        return pendingMessages.isEmpty();
     }
 
     /**
-     * Overridden method that catches the notifications. If a notification of type 'sms' is
+     * Overridden method that catches the notifications. If a messaging notification is
      * recognized and it contains the APP_ID than it will be cancelled.
      * @param sbn StatusBarNotification object that contains all the notification informations.
      */

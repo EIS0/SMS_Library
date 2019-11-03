@@ -27,7 +27,7 @@ public class SMSCore extends BroadcastReceiver {
     }
 
     /**
-     * Function called when a message is received. It delegates the message to the SMS SMSMessage
+     * Function called when a message is received. It delegates the message to the SMSMessage
      * Handler which analyzes its content.
      * @param context Received message context.
      * @param intent Received message Intent.

@@ -11,6 +11,13 @@ public class SMSManager extends CommunicationHandler<SMSMessage> {
     private SMSManager() { }
     private static SMSManager instance = null;
     private static Context context;
+
+    /**
+     * returns an instance of SMSManager if none exist, otherwise the one instance already created
+     * as per the Singleton Design Patter, gets also the context of the application for future use
+     * @param context context of the application to use when needed
+     * @return single instance of this class
+     */
     public static SMSManager getInstance(Context context){
         if(instance == null){
             instance = new SMSManager();
@@ -26,18 +33,33 @@ public class SMSManager extends CommunicationHandler<SMSMessage> {
     private static PendingIntent sent;
     private static PendingIntent delivered;
 
+    /**
+     * adds the listener watching for incoming SMSMessages
+     * @param listener the listener to wake up when a message is received
+     */
     public void addReceiveListener(ReceivedMessageListener<SMSMessage> listener){
         SMSHandler.addReceiveListener(listener);
     }
 
+    /**
+     * removes the listener of incoming messages
+     */
     public void removeReceiveListener(){
         SMSHandler.removeReceiveListener();
     }
 
+    /**
+     * sends a given valid message
+     */
     public void sendMessage(SMSMessage message){
         SMSHandler.sendMessage(message, sent, delivered);
     }
 
+    /**
+     * sends a given valid message and sets a listener for message sent
+     * @param message valid message to send
+     * @param listener listener watching for message sent event
+     */
     public void sendMessage(final SMSMessage message, SentMessageListener listener) {
         smsSentListener = listener;
 
@@ -51,7 +73,11 @@ public class SMSManager extends CommunicationHandler<SMSMessage> {
         context.registerReceiver(onSend, new IntentFilter("SMS_SENT"));
     }
 
-
+    /**
+     * sends a given valid message and sets a listener for message delivery
+     * @param message valid message to send
+     * @param listener listener watching for message delivered event
+     */
     public void sendMessage(final SMSMessage message, DeliveredMessageListener listener) {
         smsDeliveredListener = listener;
 
