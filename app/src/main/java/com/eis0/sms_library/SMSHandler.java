@@ -77,6 +77,8 @@ public class SMSHandler extends NotificationListenerService {
         return test.isEmpty();
     }
 
+
+
     /**
      * Overridden method that catches the notifications. If a notification of type 'sms' is
      * recognized and it contains the APP_ID than it will be cancelled.
