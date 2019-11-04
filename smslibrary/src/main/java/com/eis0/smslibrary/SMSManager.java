@@ -60,17 +60,8 @@ public class SMSManager extends CommunicationHandler<SMSMessage> {
      * @param message valid message to send
      * @param listener listener watching for message sent event
      */
-    public void sendMessage(final SMSMessage message, SentMessageListener listener) {
-        smsSentListener = listener;
-
-        sent = PendingIntent.getBroadcast(context, 0, new Intent("SMS_SENT"), 0);
-        onSend = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                smsSentListener.onMessageSent(getResultCode(), message);
-            }
-        };
-        context.registerReceiver(onSend, new IntentFilter("SMS_SENT"));
+    public void sendMessage(SMSMessage message, SentMessageListener listener) {
+        setSentIntent(message, context, listener);
     }
 
     /**
@@ -78,14 +69,57 @@ public class SMSManager extends CommunicationHandler<SMSMessage> {
      * @param message valid message to send
      * @param listener listener watching for message delivered event
      */
-    public void sendMessage(final SMSMessage message, DeliveredMessageListener listener) {
-        smsDeliveredListener = listener;
+    public void sendMessage(SMSMessage message, DeliveredMessageListener listener) {
+        setDeliveredIntent(message, context, listener);
+    }
 
+    /**
+     * sends a given valid message and sets listeners for both message sent and delivered
+     * @param message valid message to send
+     * @param sendListener listener watching for message sent event
+     * @param deliveredListener listener watching for message delivered event
+     */
+    public void sendMessage(SMSMessage message,
+                            SentMessageListener sendListener,
+                            DeliveredMessageListener deliveredListener)
+    {
+        setSentIntent(message, context, sendListener);
+        setDeliveredIntent(message, context, deliveredListener);
+    }
+
+    /**
+     * sets the sent PendingIntent for a given message to send in a specific context
+     */
+    private void setSentIntent(final SMSMessage message, final Context cont, SentMessageListener listener){
+        if(onSend != null){
+            context.unregisterReceiver(onSend);
+        }
+        smsSentListener = listener;
+        sent = PendingIntent.getBroadcast(context, 0, new Intent("SMS_SENT"), 0);
+        onSend = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                smsSentListener.onMessageSent(getResultCode(), message);
+                cont.unregisterReceiver(onSend);
+            }
+        };
+        context.registerReceiver(onSend, new IntentFilter("SMS_SENT"));
+    }
+
+    /**
+     * sets the delivered PendingIntent for a given message to deliver in a specific context
+     */
+    private void setDeliveredIntent(final SMSMessage message, final Context cont, DeliveredMessageListener listener){
+        if(onDeliver != null){
+            context.unregisterReceiver(onDeliver);
+        }
+        smsDeliveredListener = listener;
         delivered = PendingIntent.getBroadcast(context, 0, new Intent("SMS_DELIVERED"), 0);
         onDeliver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 smsDeliveredListener.onMessageDelivered(getResultCode(), message);
+                cont.unregisterReceiver(onDeliver);
             }
         };
         context.registerReceiver(onDeliver, new IntentFilter("SMS_DELIVERED"));
