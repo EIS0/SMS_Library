@@ -1,5 +1,7 @@
 package com.eis0.smslibrary;
 
+import android.util.Log;
+
 public class SMSPeer implements Peer{
     private String address;
 
@@ -35,6 +37,21 @@ public class SMSPeer implements Peer{
      * returns true if the SMSPeer is valid
      */
     public boolean isValid(){
-        return !isEmpty() && address.length() < 15;
+        try {
+            if (!isEmpty() && address.length() < 15 ) {
+                if (address.charAt(0)=='+') {
+                    int test = Integer.parseInt(address.substring(1)); //to verify exceptions
+                    return true;
+                } else {
+                    int test = Integer.parseInt(address);
+                    return true;
+                }
+            }
+        }
+        catch(Exception e){
+            Log.e("address", "letters on test");
+            return false;
+        }
+        return false;
     }
 }
