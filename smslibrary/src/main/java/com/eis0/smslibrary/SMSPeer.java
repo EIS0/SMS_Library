@@ -50,7 +50,6 @@ public class SMSPeer implements Peer{
         }
         catch(Exception e){
             Log.e("address", "letters on test");
-            return false;
         }
         return false;
     }

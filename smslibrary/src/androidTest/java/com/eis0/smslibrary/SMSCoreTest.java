@@ -1,5 +1,8 @@
 package com.eis0.smslibrary;
 
+import static org.junit.Assert.*;
+
+
 
 import android.content.Context;
 
@@ -13,6 +16,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 public class SMSCoreTest {
+    @Test
+    public void sendMessage() {
+    }
+
     @RunWith(AndroidJUnit4.class)
     public class SMSCore_Tests {
         @Test
