@@ -4,5 +4,5 @@ public interface Peer {
     /**
      * returns the address of the Peer
      */
-    public String getAddress();
+    String getAddress();
 }

@@ -1,6 +1,6 @@
 package com.eis0.smslibrary;
 
-public abstract class CommunicationHandler<T extends  Message> {
+public abstract class CommunicationHandler<T extends Message> {
     /**
      * sends a valid message to a valid Peer
      * @param message the message to send

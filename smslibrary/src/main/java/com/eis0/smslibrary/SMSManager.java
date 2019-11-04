@@ -7,31 +7,31 @@ import android.content.Intent;
 import android.content.IntentFilter;
 
 public class SMSManager extends CommunicationHandler<SMSMessage> {
-    //Singleton Design Pattern
+    // Singleton Design Pattern
     private SMSManager() { }
     private static SMSManager instance = null;
     private static Context context;
 
     /**
-     * returns an instance of SMSManager if none exist, otherwise the one instance already created
+     * Returns an instance of SMSManager if none exist, otherwise the one instance already created
      * as per the Singleton Design Patter, gets also the context of the application for future use
      * @param context context of the application to use when needed
      * @return single instance of this class
      */
-    public static SMSManager getInstance(Context context){
-        if(instance == null){
+    public static SMSManager getInstance(Context context) {
+        if(instance == null) {
             instance = new SMSManager();
         }
         SMSManager.context = context;
         return instance;
     }
 
-    private static SentMessageListener smsSentListener;
-    private static BroadcastReceiver onSend = null;
-    private static DeliveredMessageListener smsDeliveredListener;
-    private static BroadcastReceiver onDeliver = null;
-    private static PendingIntent sent;
-    private static PendingIntent delivered;
+    private SentMessageListener smsSentListener;
+    private BroadcastReceiver onSend = null;
+    private DeliveredMessageListener smsDeliveredListener;
+    private BroadcastReceiver onDeliver = null;
+    private PendingIntent sent;
+    private PendingIntent delivered;
 
     /**
      * adds the listener watching for incoming SMSMessages

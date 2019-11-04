@@ -4,10 +4,10 @@ public interface Message {
     /**
      * returns the data contained in the message
      */
-    public String getData();
+    String getData();
 
     /**
      * returns the Peer of the message
      */
-    public Peer getPeer();
+    Peer getPeer();
 }
