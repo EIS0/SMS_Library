@@ -1,6 +1,6 @@
-package com.eis0.sms_library;
+package com.eis0.library_demo;
 
-import android.app.Activity;
+import android.Manifest;
 import android.app.AlertDialog;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -8,42 +8,47 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Build;
-import android.content.BroadcastReceiver;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.NotificationManagerCompat;
-
 import android.preference.PreferenceManager;
 import android.provider.Settings;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.lifecycle.Lifecycle;
+
+import com.eis0.smslibrary.SMSMessage;
+import com.eis0.smslibrary.SMSPeer;
+import com.eis0.smslibrary.ReceivedMessageListener;
+import com.eis0.smslibrary.SMSManager;
 
 import java.util.ArrayList;
 import java.util.Set;
 
-public class DemoActivity extends AppCompatActivity implements SMSOnReceiveListener {
+public class DemoActivity extends AppCompatActivity implements ReceivedMessageListener<SMSMessage> {
 
     private EditText destText;
     private SharedPreferences sharedPreferences;
     private boolean deliveryReport = false;
-    private BroadcastReceiver onSend = null;
-    private BroadcastReceiver onDeliver = null;
+
     private static NotificationManager notificationManager;
     private static final String CHANNEL_ID = "eis0_notification_channel";
     private static int notificationID = 0;
     private static ArrayList<String[]> pendingDialogs = new ArrayList<>();
+    private static final String[] PERMISSIONS = {
+            Manifest.permission.SEND_SMS,
+            Manifest.permission.RECEIVE_SMS,
+            Manifest.permission.READ_PHONE_STATE,
+            Manifest.permission.READ_SMS
+    };
 
     /**
      * Demo start function.
@@ -66,15 +71,16 @@ public class DemoActivity extends AppCompatActivity implements SMSOnReceiveListe
             notificationManager = getSystemService(NotificationManager.class);
         }
 
-        SMSHandler.SMSCheckPermissions(this);
-        SMSHandler.setSMSOnReceiveListener(this);
+        requestPermissions();
+        SMSManager.getInstance(this).addReceiveListener(this);
+
         createNotificationChannel();
         for(final String[] pendingDialog : pendingDialogs) {
             new AlertDialog.Builder(this)
                     .setTitle(pendingDialog[0] + getString(R.string.says_hi))
                     .setPositiveButton(getString(R.string.say_hi_back), new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            sendHello(pendingDialog[0]);
+                            sendHello(new SMSPeer(pendingDialog[0]));
                         }
                     })
                     .setNegativeButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
@@ -118,15 +124,13 @@ public class DemoActivity extends AppCompatActivity implements SMSOnReceiveListe
     @Override
     protected void onStop() {
         super.onStop();
-        try{
-            unregisterReceiver(onSend);
-            unregisterReceiver(onDeliver);
-        }
-        catch (IllegalArgumentException e){
-            Log.d("DemoActivity", "Can't unregister non-registered BroadcastReceiver");
-        }
     }
 
+    /**
+     * called when the option menu is created
+     * @param menu option menu created
+     * @return returns true when the option menu is created
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -134,6 +138,11 @@ public class DemoActivity extends AppCompatActivity implements SMSOnReceiveListe
         return true;
     }
 
+    /**
+     * called when an item is selected in the option menu
+     * @param item item that gets selected
+     * @return returns the state of the option menu
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -156,59 +165,39 @@ public class DemoActivity extends AppCompatActivity implements SMSOnReceiveListe
      * @param view View that sends the onClick event.
      */
     public void sendButtonOnClick(View view) {
-        String destination = destText.getText().toString();
+        SMSPeer destination = new SMSPeer(destText.getText().toString());
         if(destination.isEmpty()) {
             Toast.makeText(this, getString(R.string.to_field_cannot_be_empty), Toast.LENGTH_SHORT).show();
             return;
         }
+        //TODO: check if destination is valid
         sendHello(destination);
     }
 
     /**
      * Sends a message (SMS) to the specified target.
-     * @param to Target who will receive the message with the APP_ID.
+     * @param destination Target who will receive the message with the APP_ID.
      */
-    private void sendHello(String to) {
-        SMSHandler.SMSCheckPermissions(this);
+    private void sendHello(SMSPeer destination) {
+        requestPermissions();
         String message = (char)0x02 + "";
+        SMSManager.getInstance(this).sendMessage(new SMSMessage(destination, message));
+    }
 
-        PendingIntent sent = PendingIntent.getBroadcast(getApplicationContext(), 0, new Intent("SMS_SENT"), 0);
-        onSend = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                if (getResultCode()== Activity.RESULT_OK)
-                    Toast.makeText(context, getString(R.string.message_sent), Toast.LENGTH_SHORT).show();
-                else
-                    Toast.makeText(context, getString(R.string.send_message_error), Toast.LENGTH_SHORT).show();
-            }
-        };
-        registerReceiver(onSend, new IntentFilter("SMS_SENT"));
-
-        if (deliveryReport) {
-            PendingIntent delivered = PendingIntent.getBroadcast(getApplicationContext(), 0, new Intent("SMS_DELIVERED"), 0);
-            onDeliver = new BroadcastReceiver() {
-                @Override
-                public void onReceive(Context context, Intent intent) {
-                    if (getResultCode() == Activity.RESULT_OK)
-                        Toast.makeText(context, getString(R.string.message_delivered), Toast.LENGTH_SHORT).show();
-                    else
-                        Toast.makeText(context, getString(R.string.deliver_message_error), Toast.LENGTH_SHORT).show();
-                }
-            };
-            registerReceiver(onDeliver, new IntentFilter("SMS_DELIVERED"));
-            SMSHandler.SMSSendMessage(to, message, sent, delivered);
-        } else {
-            SMSHandler.SMSSendMessage(to, message, sent, null);
-        }
+    /**
+     * requests permissions for the library/app to work if not granted
+     */
+    private void requestPermissions(){
+        ActivityCompat.requestPermissions(this, PERMISSIONS, 1);
     }
 
     /**
      * Creates and shows an Alert when a message is received. If the app is running in background shows
      * a notification.
-     * @param from Phone number of the user who sent the message.
-     * @param message Text of the SMS message.
+     * @param message the message received.
      */
-    public void SMSOnReceive(final String from, String message) {
+    public void onMessageReceived(SMSMessage message) {
+        final SMSPeer from = message.getPeer();
         final int notID = notificationID++;
         if(getLifecycle().getCurrentState() != Lifecycle.State.RESUMED) {
             Intent intent = new Intent(this, DemoActivity.class);
@@ -228,7 +217,7 @@ public class DemoActivity extends AppCompatActivity implements SMSOnReceiveListe
         }
 
         if(getLifecycle().getCurrentState() == Lifecycle.State.DESTROYED) {
-            String[] pendingDialog = {from, notID + ""};
+            String[] pendingDialog = {from.getAddress(), notID + ""};
             pendingDialogs.add(pendingDialog);
         }
         else {

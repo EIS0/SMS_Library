@@ -1,15 +1,9 @@
-package com.eis0.sms_library;
-
-import android.app.PendingIntent;
-import android.content.Context;
-import android.provider.Telephony;
+package com.eis0.library_demo;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.platform.app.InstrumentationRegistry;
+
 import static org.junit.Assert.fail;
 import org.junit.Test;
-import org.junit.internal.runners.statements.ExpectException;
-import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 
 import static org.junit.Assert.assertEquals;
