@@ -33,19 +33,29 @@ public class SMSPeer implements Peer{
         return address.equals("");
     }
 
+
+    /**
+     * returns true if SMSPeer has prefix
+     */
+
+    public boolean hasPrefix(){
+        char prefix = '+';
+        return address.charAt(0) == prefix;
+    }
+
     /**
      * returns true if the SMSPeer is valid
      */
     public boolean isValid(){
         try {
-            if (!isEmpty() && address.length() < 15 ) {
-                if (address.charAt(0)=='+') {
+            int maxLength = 15;
+            if (!isEmpty() && address.length() < maxLength ) {
+                if (hasPrefix()) {
                     int test = Integer.parseInt(address.substring(1)); //to verify exceptions
-                    return true;
                 } else {
                     int test = Integer.parseInt(address);
-                    return true;
                 }
+                return true;
             }
         }
         catch(Exception e){

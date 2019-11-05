@@ -44,4 +44,9 @@ public class SMSPeerTest {
         SMSPeer test = new SMSPeer("+1233er4"); //I catch exception in the SMSPeer class
         assertEquals(test.isValid(), false);
     }
+    @Test
+    public void hasBoolean(){
+        SMSPeer test = new SMSPeer("1234");
+        assertEquals(test.hasPrefix(), false);
+    }
 }
