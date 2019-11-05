@@ -34,7 +34,6 @@ import java.util.ArrayList;
 import java.util.Set;
 
 public class DemoActivity extends AppCompatActivity implements ReceivedMessageListener<SMSMessage> {
-
     private EditText destText;
     private SharedPreferences sharedPreferences;
     private boolean deliveryReport = false;
@@ -58,7 +57,7 @@ public class DemoActivity extends AppCompatActivity implements ReceivedMessageLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_demo);
 
-        // get app settings
+        // Get app settings
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         // Asks the user for permission if not already granted
@@ -180,8 +179,7 @@ public class DemoActivity extends AppCompatActivity implements ReceivedMessageLi
      */
     private void sendHello(SMSPeer destination) {
         requestPermissions();
-        String message = (char)0x02 + "";
-        SMSManager.getInstance(this).sendMessage(new SMSMessage(destination, message));
+        SMSManager.getInstance(this).sendMessage(new SMSMessage(destination, ""));
     }
 
     /**

@@ -10,11 +10,11 @@ import android.util.Log;
 import java.util.ArrayList;
 
 @TargetApi(21)
-public class SMSHandler extends NotificationListenerService{
+public class SMSHandler extends NotificationListenerService {
 
     private static final char APP_ID = (char)0x02;
     private static final String LOG_KEY = "SMS_HANDLER";
-    private static ArrayList<SmsMessage> pendingMessages = new ArrayList<>();
+    private static ArrayList<SMSMessage> pendingMessages = new ArrayList<>();
 
     private static ReceivedMessageListener smsReceivedListener;
 
@@ -27,6 +27,7 @@ public class SMSHandler extends NotificationListenerService{
      */
     public static void sendMessage(SMSMessage message, PendingIntent sent, PendingIntent delivered) {
         SMSPeer destination = message.getPeer();
+        message.addHeader(APP_ID + "");
         if(!destination.isValid()) {
             Log.e(LOG_KEY,"Invalid destination \"" + destination + "\"");
             throw new IllegalArgumentException("Invalid destination \"" + destination + "\"");
@@ -40,14 +41,14 @@ public class SMSHandler extends NotificationListenerService{
      */
     public static void addReceiveListener(ReceivedMessageListener<SMSMessage> listener) {
         smsReceivedListener = listener;
-        for (SmsMessage pendingMessage : pendingMessages) handleMessage(pendingMessage);
+        for (SMSMessage pendingMessage : pendingMessages) smsReceivedListener.onMessageReceived(pendingMessage);
         pendingMessages.clear();
     }
 
     /**
      * Removes a listener from listening to incoming messages
      */
-    public static void removeReceiveListener(){
+    public static void removeReceiveListener() {
         smsReceivedListener = null;
     }
 
@@ -57,18 +58,18 @@ public class SMSHandler extends NotificationListenerService{
      */
     protected static void handleMessage(SmsMessage sms) {
         String content = sms.getDisplayMessageBody();
+        if(content.charAt(0) != APP_ID) return;
         SMSMessage message = new SMSMessage(
                 new SMSPeer(sms.getDisplayOriginatingAddress()),
                 content.substring(1));
-        if(content.charAt(0) != APP_ID) return;
-        if(smsReceivedListener == null) pendingMessages.add(sms);
+        if(smsReceivedListener == null) pendingMessages.add(message);
         else smsReceivedListener.onMessageReceived(message);
     }
 
     /**
      * Returns true if there's no pending message, false otherwise
      */
-    public static boolean isPendingMessagesEmpty(){
+    public static boolean isPendingMessagesEmpty() {
         return pendingMessages.isEmpty();
     }
 
@@ -79,7 +80,8 @@ public class SMSHandler extends NotificationListenerService{
      */
     @Override
     public void onNotificationPosted (StatusBarNotification sbn) {
-        if(sbn.getPackageName().equals("com.google.android.apps.messaging") && sbn.getNotification().tickerText.toString().contains(APP_ID + ""))
+        if(sbn.getPackageName().equals("com.google.android.apps.messaging")
+                && sbn.getNotification().tickerText.toString().contains(APP_ID + ""))
             cancelNotification(sbn.getKey());
     }
 }
