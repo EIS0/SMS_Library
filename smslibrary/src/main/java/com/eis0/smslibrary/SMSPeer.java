@@ -35,12 +35,12 @@ public class SMSPeer implements Peer {
 
 
     /**
-     * returns true if SMSPeer has prefix
+     * Returns true if SMSPeer has prefix
      */
 
-    public boolean hasPrefix(){
-        char prefix = '+';
-        return address.charAt(0) == prefix;
+    public boolean hasPrefix() {
+        char prefixSign = '+';
+        return address.charAt(0) == prefixSign;
     }
 
     /**
@@ -50,17 +50,12 @@ public class SMSPeer implements Peer {
         try {
             int maxLength = 15;
             if (!isEmpty() && address.length() < maxLength) {
-                if (hasPrefix()) {
-                    int test = Integer.parseInt(address.substring(1)); // To verify exceptions
-                } else {
-                    int test = Integer.parseInt(address);
-                }
+                if (hasPrefix()) Integer.parseInt(address.substring(1)); // To verify exceptions
+                else Integer.parseInt(address);
                 return true;
             }
         }
-        catch(Exception e) {
-            Log.e("address", "letters on test");
-        }
+        catch(Exception e) { }
         return false;
     }
 }

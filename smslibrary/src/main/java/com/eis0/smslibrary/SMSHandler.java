@@ -27,12 +27,12 @@ public class SMSHandler extends NotificationListenerService {
      */
     public static void sendMessage(SMSMessage message, PendingIntent sent, PendingIntent delivered) {
         SMSPeer destination = message.getPeer();
-        message.addHeader(APP_ID + "");
+        SMSMessage msg = new SMSMessage(destination, APP_ID + message.getData());
         if(!destination.isValid()) {
             Log.e(LOG_KEY,"Invalid destination \"" + destination + "\"");
             throw new IllegalArgumentException("Invalid destination \"" + destination + "\"");
         }
-        SMSCore.sendMessage(message, sent, delivered);
+        SMSCore.sendMessage(msg, sent, delivered);
     }
 
     /**

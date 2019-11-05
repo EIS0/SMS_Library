@@ -27,13 +27,6 @@ public class SMSMessage implements Message {
     }
 
     /**
-     * Adds a string header before the message
-     */
-    public void addHeader(String header) {
-        message = header + message;
-    }
-
-    /**
      * Helper function to write the message as a string
      */
     public String toString() {
