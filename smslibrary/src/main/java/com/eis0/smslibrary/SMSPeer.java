@@ -2,34 +2,34 @@ package com.eis0.smslibrary;
 
 import android.util.Log;
 
-public class SMSPeer implements Peer{
+public class SMSPeer implements Peer {
     private String address;
 
     /**
      * Creates and returns an SMSPeer given a valid destination
      */
-    public SMSPeer(String destination){
+    public SMSPeer(String destination) {
         this.address = destination;
     }
 
     /**
      * Returns the SMSPeer address if valid
      */
-    public String getAddress(){
+    public String getAddress() {
         return address;
     }
 
     /**
      * Helper function to write the SMSPeer as a string
      */
-    public String toString(){
+    public String toString() {
         return address;
     }
 
     /**
      * Returns true if the address is empty
      */
-    public boolean isEmpty(){
+    public boolean isEmpty() {
         return address.equals("");
     }
 
@@ -46,19 +46,19 @@ public class SMSPeer implements Peer{
     /**
      * Returns true if the SMSPeer is valid
      */
-    public boolean isValid(){
+    public boolean isValid() {
         try {
             int maxLength = 15;
-            if (!isEmpty() && address.length() < maxLength ) {
+            if (!isEmpty() && address.length() < maxLength) {
                 if (hasPrefix()) {
-                    int test = Integer.parseInt(address.substring(1)); //to verify exceptions
+                    int test = Integer.parseInt(address.substring(1)); // To verify exceptions
                 } else {
                     int test = Integer.parseInt(address);
                 }
                 return true;
             }
         }
-        catch(Exception e){
+        catch(Exception e) {
             Log.e("address", "letters on test");
         }
         return false;
