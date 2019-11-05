@@ -36,7 +36,7 @@ public class SMSManager extends CommunicationHandler<SMSMessage> {
      * @param listener The listener to wake up when a message is received
      */
     public void addReceiveListener(ReceivedMessageListener<SMSMessage> listener) {
-        SMSHandler.addReceiveListener(listener);
+        SMSHandler.setReceiveListener(listener);
     }
 
     /**

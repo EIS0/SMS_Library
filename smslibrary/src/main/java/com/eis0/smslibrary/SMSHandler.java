@@ -25,7 +25,7 @@ public class SMSHandler extends NotificationListenerService {
      * @param delivered PendingIntent listening for message delivery
      * @throws IllegalArgumentException if the destination is invalid
      */
-    public static void sendMessage(SMSMessage message, PendingIntent sent, PendingIntent delivered) {
+    protected static void sendMessage(SMSMessage message, PendingIntent sent, PendingIntent delivered) {
         SMSPeer destination = message.getPeer();
         SMSMessage msg = new SMSMessage(destination, APP_ID + message.getData());
         if(!destination.isValid()) {
@@ -39,7 +39,7 @@ public class SMSHandler extends NotificationListenerService {
      * Sets the listener, that is the object to be called when an SMS with the APP_ID is received.
      * @param listener Must be an object that implements the ReceivedMessageListener<SMSMessage> interface.
      */
-    public static void addReceiveListener(ReceivedMessageListener<SMSMessage> listener) {
+    protected static void setReceiveListener(ReceivedMessageListener<SMSMessage> listener) {
         smsReceivedListener = listener;
         for (SMSMessage pendingMessage : pendingMessages) smsReceivedListener.onMessageReceived(pendingMessage);
         pendingMessages.clear();
@@ -48,7 +48,7 @@ public class SMSHandler extends NotificationListenerService {
     /**
      * Removes a listener from listening to incoming messages
      */
-    public static void removeReceiveListener() {
+    protected static void removeReceiveListener() {
         smsReceivedListener = null;
     }
 
@@ -69,7 +69,7 @@ public class SMSHandler extends NotificationListenerService {
     /**
      * Returns true if there's no pending message, false otherwise
      */
-    public static boolean isPendingMessagesEmpty() {
+    protected static boolean isPendingMessagesEmpty() {
         return pendingMessages.isEmpty();
     }
 
