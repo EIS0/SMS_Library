@@ -45,7 +45,7 @@ public class SMSHandler extends NotificationListenerService{
     }
 
     /**
-     * removes a listener from listening to incoming messages
+     * Removes a listener from listening to incoming messages
      */
     public static void removeReceiveListener(){
         smsReceivedListener = null;
@@ -57,9 +57,12 @@ public class SMSHandler extends NotificationListenerService{
      */
     protected static void handleMessage(SmsMessage sms) {
         String content = sms.getDisplayMessageBody();
+        SMSMessage message = new SMSMessage(
+                new SMSPeer(sms.getDisplayOriginatingAddress()),
+                content.substring(1));
         if(content.charAt(0) != APP_ID) return;
         if(smsReceivedListener == null) pendingMessages.add(sms);
-        else smsReceivedListener.onMessageReceived(new SMSMessage(new SMSPeer(sms.getDisplayOriginatingAddress()), content.substring(1)));
+        else smsReceivedListener.onMessageReceived(message);
     }
 
     /**

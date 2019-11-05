@@ -127,9 +127,9 @@ public class DemoActivity extends AppCompatActivity implements ReceivedMessageLi
     }
 
     /**
-     * called when the option menu is created
-     * @param menu option menu created
-     * @return returns true when the option menu is created
+     * Called when the option menu is created
+     * @param menu Option menu created
+     * @return Returns true when the option menu is created
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -139,9 +139,9 @@ public class DemoActivity extends AppCompatActivity implements ReceivedMessageLi
     }
 
     /**
-     * called when an item is selected in the option menu
-     * @param item item that gets selected
-     * @return returns the state of the option menu
+     * Called when an item is selected in the option menu
+     * @param item Item that gets selected
+     * @return Returns the state of the option menu
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -185,7 +185,7 @@ public class DemoActivity extends AppCompatActivity implements ReceivedMessageLi
     }
 
     /**
-     * requests permissions for the library/app to work if not granted
+     * Requests permissions for the library/app to work if not granted
      */
     private void requestPermissions(){
         ActivityCompat.requestPermissions(this, PERMISSIONS, 1);
@@ -194,7 +194,7 @@ public class DemoActivity extends AppCompatActivity implements ReceivedMessageLi
     /**
      * Creates and shows an Alert when a message is received. If the app is running in background shows
      * a notification.
-     * @param message the message received.
+     * @param message The message received.
      */
     public void onMessageReceived(SMSMessage message) {
         final SMSPeer from = message.getPeer();
@@ -253,11 +253,7 @@ public class DemoActivity extends AppCompatActivity implements ReceivedMessageLi
      * Opens the notification settings menu for the user to enable notifications.
      */
     private void openNotificationListenSettings() {
-        try {
-            Intent intent = new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS);
-            startActivity(intent);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        Intent intent = new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS);
+        startActivity(intent);
     }
 }
