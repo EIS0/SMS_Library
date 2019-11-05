@@ -1,13 +1,16 @@
 package com.eis0.smslibrary;
 
+/**
+ * Interface to implement to create a new Message type
+ */
 public interface Message {
     /**
-     * returns the data contained in the message
+     * Returns the data contained in the message
      */
-    public String getData();
+    String getData();
 
     /**
-     * returns the Peer of the message
+     * Returns the Peer of the message
      */
-    public Peer getPeer();
+    Peer getPeer();
 }

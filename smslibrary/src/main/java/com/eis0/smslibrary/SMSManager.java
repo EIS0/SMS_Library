@@ -7,77 +7,77 @@ import android.content.Intent;
 import android.content.IntentFilter;
 
 public class SMSManager extends CommunicationHandler<SMSMessage> {
-    //Singleton Design Pattern
+    // Singleton Design Pattern
     private SMSManager() { }
     private static SMSManager instance = null;
-    private static Context context;
+    private Context context;
 
     /**
-     * returns an instance of SMSManager if none exist, otherwise the one instance already created
+     * Returns an instance of SMSManager if none exist, otherwise the one instance already created
      * as per the Singleton Design Patter, gets also the context of the application for future use
-     * @param context context of the application to use when needed
-     * @return single instance of this class
+     * @param context Context of the application to use when needed
+     * @return Single instance of this class
      */
-    public static SMSManager getInstance(Context context){
-        if(instance == null){
+    public static SMSManager getInstance(Context context) {
+        if(instance == null) {
             instance = new SMSManager();
         }
-        SMSManager.context = context;
+        instance.context = context;
         return instance;
     }
 
-    private static SentMessageListener smsSentListener;
-    private static BroadcastReceiver onSend = null;
-    private static DeliveredMessageListener smsDeliveredListener;
-    private static BroadcastReceiver onDeliver = null;
-    private static PendingIntent sent;
-    private static PendingIntent delivered;
+    private SentMessageListener smsSentListener;
+    private BroadcastReceiver onSend = null;
+    private DeliveredMessageListener smsDeliveredListener;
+    private BroadcastReceiver onDeliver = null;
+    private PendingIntent sent;
+    private PendingIntent delivered;
 
     /**
-     * adds the listener watching for incoming SMSMessages
-     * @param listener the listener to wake up when a message is received
+     * Adds the listener watching for incoming SMSMessages
+     * @param listener The listener to wake up when a message is received
      */
     public void addReceiveListener(ReceivedMessageListener<SMSMessage> listener){
         SMSHandler.addReceiveListener(listener);
     }
 
     /**
-     * removes the listener of incoming messages
+     * Removes the listener of incoming messages
      */
     public void removeReceiveListener(){
         SMSHandler.removeReceiveListener();
     }
 
     /**
-     * sends a given valid message
+     * Sends a given valid message
      */
     public void sendMessage(SMSMessage message){
         SMSHandler.sendMessage(message, sent, delivered);
     }
 
     /**
-     * sends a given valid message and sets a listener for message sent
-     * @param message valid message to send
-     * @param listener listener watching for message sent event
+     * Sends a given valid message and sets a listener for message sent
+     * @param message Valid message to send
+     * @param listener Listener watching for message sent event
      */
     public void sendMessage(SMSMessage message, SentMessageListener listener) {
         setSentIntent(message, context, listener);
     }
 
     /**
-     * sends a given valid message and sets a listener for message delivery
-     * @param message valid message to send
-     * @param listener listener watching for message delivered event
+     * Sends a given valid message and sets a listener for message delivery
+     * @param message Valid message to send
+     * @param listener Listener watching for message delivered event
      */
     public void sendMessage(SMSMessage message, DeliveredMessageListener listener) {
         setDeliveredIntent(message, context, listener);
     }
 
     /**
-     * sends a given valid message and sets listeners for both message sent and delivered
-     * @param message valid message to send
-     * @param sendListener listener watching for message sent event
-     * @param deliveredListener listener watching for message delivered event
+     * Sends a given valid message and sets listeners for both message sent and delivered
+     * @param message Valid message to send
+     * @param sendListener Listener watching for message sent event
+     * @param deliveredListener Listener watching for message delivered event
      */
     public void sendMessage(SMSMessage message,
                             SentMessageListener sendListener,
@@ -88,14 +88,18 @@ public class SMSManager extends CommunicationHandler<SMSMessage> {
     }
 
     /**
-     * sets the sent PendingIntent for a given message to send in a specific context
+     * Sets the sent PendingIntent for a given message to send in a specific context
+     * @param message The message to set the intent for
+     * @param cont The context used for the event listener
+     * @param listener the specific listener to link to the message
      */
     private void setSentIntent(final SMSMessage message, final Context cont, SentMessageListener listener){
         if(onSend != null){
             context.unregisterReceiver(onSend);
         }
         smsSentListener = listener;
-        sent = PendingIntent.getBroadcast(context, 0, new Intent("SMS_SENT"), 0);
+        String action = "SMS_SENT";
+        sent = PendingIntent.getBroadcast(context, 0, new Intent(action), 0);
         onSend = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -103,18 +107,22 @@ public class SMSManager extends CommunicationHandler<SMSMessage> {
                 cont.unregisterReceiver(onSend);
             }
         };
-        context.registerReceiver(onSend, new IntentFilter("SMS_SENT"));
+        context.registerReceiver(onSend, new IntentFilter(action));
     }
 
     /**
-     * sets the delivered PendingIntent for a given message to deliver in a specific context
+     * Sets the delivered PendingIntent for a given message to deliver in a specific context
+     * @param message The message to set the intent for
+     * @param cont The context used for the event listener
+     * @param listener the specific listener to link to the message
      */
     private void setDeliveredIntent(final SMSMessage message, final Context cont, DeliveredMessageListener listener){
         if(onDeliver != null){
             context.unregisterReceiver(onDeliver);
         }
         smsDeliveredListener = listener;
-        delivered = PendingIntent.getBroadcast(context, 0, new Intent("SMS_DELIVERED"), 0);
+        String action = "SMS_DELIVERED";
+        delivered = PendingIntent.getBroadcast(context, 0, new Intent(action), 0);
         onDeliver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -122,6 +130,6 @@ public class SMSManager extends CommunicationHandler<SMSMessage> {
                 cont.unregisterReceiver(onDeliver);
             }
         };
-        context.registerReceiver(onDeliver, new IntentFilter("SMS_DELIVERED"));
+        context.registerReceiver(onDeliver, new IntentFilter(action));
     }
 }
