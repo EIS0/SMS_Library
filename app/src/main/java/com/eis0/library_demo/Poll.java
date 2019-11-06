@@ -3,7 +3,7 @@ package com.eis0.library_demo;
 import com.eis0.smslibrary.SMSPeer;
 
 /**
- * Interface to implement to create a poll
+ * Class to extend to create a poll
  */
 abstract class Poll {
 
