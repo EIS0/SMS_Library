@@ -7,19 +7,7 @@
     tools:context=".CreatePollActivity">
 
     <EditText
-        android:id="@+id/editText4"
-        android:layout_width="213dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:ems="10"
-        android:hint="Send me a poll!"
-        android:inputType="phone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText3" />
-
-    <EditText
-        android:id="@+id/editText"
+        android:id="@+id/questionText"
         android:layout_width="279dp"
         android:layout_height="93dp"
         android:layout_marginStart="64dp"
@@ -29,43 +17,58 @@
         android:layout_marginRight="64dp"
         android:ems="10"
         android:gravity="center|start|center_horizontal|top"
-        android:hint="Ask a question!"
+        android:hint="@string/question_input"
         android:inputType="textMultiLine"
+        android:maxLength="130"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/editText2"
+        android:id="@+id/peerText1"
         android:layout_width="213dp"
-        android:layout_height="wrap_content"
+        android:layout_height="45dp"
         android:layout_marginTop="64dp"
         android:ems="10"
-        android:hint="Send me a poll!"
+        android:hint="@string/peer_number"
         android:inputType="phone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText" />
+        app:layout_constraintTop_toBottomOf="@+id/questionText" />
 
     <EditText
-        android:id="@+id/editText3"
+        android:id="@+id/peerText2"
         android:layout_width="213dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:ems="10"
-        android:hint="Send me a poll!"
+        android:hint="@string/peer_number"
         android:inputType="phone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText2" />
+        app:layout_constraintTop_toBottomOf="@+id/peerText1" />
+
+    <EditText
+        android:id="@+id/peerText3"
+        android:layout_width="213dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:ems="10"
+        android:hint="@string/peer_number"
+        android:inputType="phone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/peerText2" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/sendButton"
         android:layout_width="88dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="64dp"
-        android:text="Send"
+        android:onClick="sendPollOnClick"
+        android:text="@string/button_send"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText4" />
+        app:layout_constraintTop_toBottomOf="@+id/peerText3" />
 </androidx.constraintlayout.widget.ConstraintLayout>

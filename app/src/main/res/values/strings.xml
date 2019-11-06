@@ -17,6 +17,11 @@
     <string name="open_app">Tap to open application</string>
     <string name="title_activity_settings">Settings</string>
 
+    <!-- Create Poll strings-->
+    <string name="question_input">Ask a question!</string>
+    <string name="peer_number">Send me a poll!</string>
+    <string name="button_send">Send</string>
+
     <!-- Preference Titles -->
     <string name="sms_header">SMS</string>
 
