@@ -2,8 +2,8 @@ package com.eis0.library_demo;
 
 
 public class AppPoll implements Poll {
-    public enum resultPoll {YES, NO, INDISPONIBILE};
-    private static int poolCount  = 0;
+    public enum resultPoll {YES, NO, INDISPONIBILE}
+    private static int poolCount = 0;
     private int poolId;
     private resultPoll result;
 
@@ -27,7 +27,6 @@ public class AppPoll implements Poll {
     }
 
     /**
-     *
      * @return poll ID
      */
      public int getPoolId() {
