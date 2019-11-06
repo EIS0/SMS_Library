@@ -49,12 +49,12 @@ public class CreatePollActivity extends AppCompatActivity {
         peers.add(new SMSPeer(peerEditText3.getText().toString()));
 
         //at least one Peer is required
-        if(!isAtLeastOnePresent()){
+        removeEmptyPeers();
+        if(peers.isEmpty()){
             Toast.makeText(this, "At least one Peer is required!", Toast.LENGTH_SHORT).show();
             return;
         }
         //remove useless peers from the list
-        removeEmptyPeers();
         //every Peer must be valid
         if(!isEachPeerValid()){
             Toast.makeText(this, "Every Peer must be valid!", Toast.LENGTH_SHORT).show();
@@ -67,21 +67,6 @@ public class CreatePollActivity extends AppCompatActivity {
             SMSMessage sms = new SMSMessage(peer, question);
             SMSManager.getInstance(this).sendMessage(sms);
         }
-    }
-
-    /**
-     * Returns true if at least one SMSPeer is not empty, false otherwise
-     */
-    private boolean isAtLeastOnePresent(){
-        //assume every input is empty
-        boolean isEmpty = true;
-        //Check if at least one is NOT empty
-        for(SMSPeer peer : peers){
-            if(!peer.isEmpty())
-                isEmpty = false;
-        }
-        //at least one must be NOT empty
-        return isEmpty;
     }
 
     /**
