@@ -8,5 +8,6 @@ The library has the following essential structure (updated 5-11-2019):
 ![functional-diagram](./images/functional-diagram.svg)
 
 ## Demo
-The demonstration is a simple app that allows the user to send fixed messages to another phone containg an "hello".
-Two phones with the demo app can communicate in this way.
+To see a simple demonstration of the basic functionalities of the library please refer to the [Releases Page](https://github.com/EIS0/SMS_Library/releases).
+
+Other apps will be coming soon in the next releases...
