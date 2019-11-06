@@ -1,4 +1,4 @@
-# SMS Library v1.0
+# SMS Library
 This repository contains an Android Studio project with two modules:
 * The library module: It contains the library itself
 * The demo module: It contains a basic demo activity for demonstrating the library functionalities
