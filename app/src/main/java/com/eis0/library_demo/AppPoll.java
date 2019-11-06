@@ -7,7 +7,7 @@ import com.eis0.smslibrary.SMSPeer;
 import java.util.HashMap;
 import java.util.Map;
 
-public class AppPoll extends Poll {
+class AppPoll extends Poll {
     private enum PollResult {YES, NO, UNAVAILABLE}
     private static int pollCount = 0;
     private int pollId;
@@ -54,7 +54,7 @@ public class AppPoll extends Poll {
      * Set user's answer to no.
      * @param user user who answered no.
      */
-    protected void setNo(SMSPeer user) {
+    void setNo(SMSPeer user) {
         if (hasUser(user)) {
             PollResult result = PollResult.NO;
             pollUsers.put(user.getAddress(), result);
