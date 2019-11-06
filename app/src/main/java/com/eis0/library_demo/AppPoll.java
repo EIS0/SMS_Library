@@ -1,6 +1,5 @@
 package com.eis0.library_demo;
 
-
 import android.util.Log;
 
 import com.eis0.smslibrary.SMSPeer;
@@ -8,14 +7,14 @@ import com.eis0.smslibrary.SMSPeer;
 import java.util.HashMap;
 import java.util.Map;
 
-public class AppPoll implements Poll {
-    public enum PollResult {YES, NO, UNAVAILABLE}
+public class AppPoll extends Poll {
+    private enum PollResult {YES, NO, UNAVAILABLE}
     private static int pollCount = 0;
     private int pollId;
     private Map<String, PollResult> pollUsers;
-    private String LOG_KEY = "APP_POLL";
+    private final String LOG_KEY = "APP_POLL";
 
-    public AppPoll() {
+    AppPoll() {
         pollId = ++AppPoll.pollCount;
         pollUsers = new HashMap<>();
     }
@@ -23,25 +22,27 @@ public class AppPoll implements Poll {
     /**
      * Check if the user is in the poll
      * @param user the user for which the check is being requested
+     * @return true if the user is in the poll, false otherwise
      */
-    public boolean hasUser(SMSPeer user){
+    boolean hasUser(SMSPeer user){
         return pollUsers.containsKey(user.getAddress());
     }
 
     /**
      * Insert an user in the poll.
-     * Ask for a SMSPeer representing an user
+     * @param user the user to insert in the poll
      */
-    public void setUser(SMSPeer user){
-        PollResult result = PollResult.UNAVAILABLE; //at the beginning we have no feedback by the user
+    void setUser(SMSPeer user){
+        // at the beginning we have no feedback by the user
+        PollResult result = PollResult.UNAVAILABLE;
         pollUsers.put(user.getAddress(), result);
     }
 
     /**
-     * Set specific user poll to yes.
-     * @param user that said yes.
+     * Set user's answer to yes.
+     * @param user user who answered yes.
      */
-    public void setYes(SMSPeer user) {
+    void setYes(SMSPeer user) {
         if (hasUser(user)) {
             PollResult result = PollResult.YES;
             pollUsers.put(user.getAddress(), result);
@@ -50,10 +51,10 @@ public class AppPoll implements Poll {
     }
 
     /**
-     * Set specific user poll to no.
-     * @param user that said yes.
+     * Set user's answer to no.
+     * @param user user who answered no.
      */
-    public void setNo(SMSPeer user) {
+    protected void setNo(SMSPeer user) {
         if (hasUser(user)) {
             PollResult result = PollResult.NO;
             pollUsers.put(user.getAddress(), result);
@@ -64,7 +65,7 @@ public class AppPoll implements Poll {
     /**
      * @return poll ID.
      */
-     public int getPollId() {
-         return this.pollId;
-     }
+    int getPollId() {
+        return this.pollId;
+    }
 }

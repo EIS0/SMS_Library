@@ -3,26 +3,26 @@ package com.eis0.library_demo;
 import com.eis0.smslibrary.SMSPeer;
 
 /**
-     * Interface to implement to create a poll
-     */
-public interface Poll {
+ * Interface to implement to create a poll
+ */
+abstract class Poll {
 
     /**
-     * Returns ID poll
+     * @return poll ID
      */
-    int getPollId();
+    abstract int getPollId();
 
     /**
-     * Set poll of a specific user to yes.
-     * If not inside the map, it insert it.
-     * @param user that said yes
+     * Sets user's answer to yes.
+     * If not inside the map, this method inserts it.
+     * @param user who answered yes
      */
-     void setYes(SMSPeer user);
+    abstract void setYes(SMSPeer user);
 
-     /**
-      * Set poll of a specific user to no.
-      * If not inside the map, it insert it.
-      * @param user that said yes
-      */
-     void setNo(SMSPeer user);
-    }
+    /**
+     * Sets user's answer to no.
+     * If not inside the map, this method inserts it.
+     * @param user who answered no
+     */
+    abstract void setNo(SMSPeer user);
+}
