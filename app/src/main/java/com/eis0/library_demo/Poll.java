@@ -3,14 +3,14 @@ package com.eis0.library_demo;
 import com.eis0.smslibrary.SMSPeer;
 
 /**
-     * Interface to implement to create a pool
+     * Interface to implement to create a poll
      */
 public interface Poll {
 
     /**
-     * Returns ID pool
+     * Returns ID poll
      */
-    int getPoolId();
+    int getPollId();
 
     /**
      * Set poll of a specific user to yes.

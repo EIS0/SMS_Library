@@ -10,18 +10,18 @@ import java.util.Map;
 
 public class AppPoll implements Poll {
     public enum resultPoll {YES, NO, INDISPONIBILE}
-    private static int poolCount = 0;
-    private int poolId;
+    private static int pollCount = 0;
+    private int pollId;
     private Map<String, resultPoll> pollUsers;
-    private String LOG_KEY = "APP_POOL";
+    private String LOG_KEY = "APP_POLL";
 
      public AppPoll() {
-         poolId = ++this.poolCount;
+         pollId = ++this.pollCount;
          pollUsers = new HashMap<>();
      }
 
     /**
-     * Check if the user is in the pool
+     * Check if the user is in the poll
      * @param user
      */
     public boolean hasUser(SMSPeer user){
@@ -50,7 +50,7 @@ public class AppPoll implements Poll {
      }
 
     /**
-     * Set specific user pool to no.
+     * Set specific user poll to no.
      * @param user that said yes.
      */
     public void setNo(SMSPeer user) {
@@ -64,7 +64,7 @@ public class AppPoll implements Poll {
     /**
      * @return poll ID.
      */
-     public int getPoolId() {
-         return this.poolId;
+     public int getPollId() {
+         return this.pollId;
      }
 }
