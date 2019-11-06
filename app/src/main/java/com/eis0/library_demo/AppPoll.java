@@ -16,13 +16,13 @@ public class AppPoll implements Poll {
     private String LOG_KEY = "APP_POLL";
 
     public AppPoll() {
-        pollId = ++this.pollCount;
+        pollId = ++AppPoll.pollCount;
         pollUsers = new HashMap<>();
     }
 
     /**
      * Check if the user is in the poll
-     * @param user
+     * @param user the user for which the check is being requested
      */
     public boolean hasUser(SMSPeer user){
         return pollUsers.containsKey(user.getAddress());
