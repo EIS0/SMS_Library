@@ -9,16 +9,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class AppPoll implements Poll {
-    public enum resultPoll {YES, NO, INDISPONIBILE}
+    public enum PollResult {YES, NO, UNAVAILABLE}
     private static int pollCount = 0;
     private int pollId;
-    private Map<String, resultPoll> pollUsers;
+    private Map<String, PollResult> pollUsers;
     private String LOG_KEY = "APP_POLL";
 
-     public AppPoll() {
-         pollId = ++this.pollCount;
-         pollUsers = new HashMap<>();
-     }
+    public AppPoll() {
+        pollId = ++this.pollCount;
+        pollUsers = new HashMap<>();
+    }
 
     /**
      * Check if the user is in the poll
@@ -33,29 +33,29 @@ public class AppPoll implements Poll {
      * Ask for a SMSPeer representing an user
      */
     public void setUser(SMSPeer user){
-        resultPoll result = resultPoll.INDISPONIBILE; //at the beginning we have no feedback by the user
-         pollUsers.put(user.getAddress(), result);
-     }
+        PollResult result = PollResult.UNAVAILABLE; //at the beginning we have no feedback by the user
+        pollUsers.put(user.getAddress(), result);
+    }
 
     /**
      * Set specific user poll to yes.
      * @param user that said yes.
      */
     public void setYes(SMSPeer user) {
-        if(hasUser(user)) {
-            resultPoll result = resultPoll.YES;
+        if (hasUser(user)) {
+            PollResult result = PollResult.YES;
             pollUsers.put(user.getAddress(), result);
         }
         else Log.i(LOG_KEY, "trying to manage an inexistent user");
-     }
+    }
 
     /**
      * Set specific user poll to no.
      * @param user that said yes.
      */
     public void setNo(SMSPeer user) {
-        if(hasUser(user)) {
-            resultPoll result = resultPoll.NO;
+        if (hasUser(user)) {
+            PollResult result = PollResult.NO;
             pollUsers.put(user.getAddress(), result);
         }
         else Log.i(LOG_KEY, "trying to manage an inexistent user");
