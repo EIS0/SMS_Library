@@ -1,8 +1,8 @@
 package com.eis0.library_demo;
 
+import com.eis0.smslibrary.SMSPeer;
 
-
-    /**
+/**
      * Interface to implement to create a pool
      */
 public interface Poll {
@@ -13,12 +13,16 @@ public interface Poll {
     int getPoolId();
 
     /**
-     * Set poll to yes
+     * Set poll of a specific user to yes.
+     * If not inside the map, it insert it.
+     * @param user that said yes
      */
-     void setYes();
+     void setYes(SMSPeer user);
 
      /**
-      * Set poll to no
+      * Set poll of a specific user to no.
+      * If not inside the map, it insert it.
+      * @param user that said yes
       */
-     void setNo();
+     void setNo(SMSPeer user);
     }
