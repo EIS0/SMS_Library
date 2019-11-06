@@ -7,16 +7,27 @@ import com.eis0.smslibrary.SMSPeer;
 import java.util.HashMap;
 import java.util.Map;
 
-class AppPoll extends Poll {
+class BinaryPoll extends Poll {
     private enum PollResult {YES, NO, UNAVAILABLE}
     private static int pollCount = 0;
     private int pollId;
+    private String pollQuestion;
     private Map<String, PollResult> pollUsers;
-    private final String LOG_KEY = "APP_POLL";
+    private final static String LOG_KEY = "APP_POLL";
 
-    AppPoll() {
-        pollId = ++AppPoll.pollCount;
+    BinaryPoll () {
+        pollId = ++BinaryPoll.pollCount;
+        pollQuestion = "";
         pollUsers = new HashMap<>();
+    }
+
+    BinaryPoll (String question, SMSPeer[] users) {
+        pollId = ++BinaryPoll.pollCount;
+        pollQuestion = question;
+        pollUsers = new HashMap<>();
+        for (SMSPeer user:users) {
+            this.addUser(user);
+        }
     }
 
     /**
@@ -32,7 +43,7 @@ class AppPoll extends Poll {
      * Insert an user in the poll.
      * @param user the user to insert in the poll
      */
-    void setUser(SMSPeer user){
+    void addUser(SMSPeer user){
         // at the beginning we have no feedback by the user
         PollResult result = PollResult.UNAVAILABLE;
         pollUsers.put(user.getAddress(), result);

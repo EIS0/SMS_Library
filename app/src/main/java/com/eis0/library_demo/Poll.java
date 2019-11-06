@@ -13,16 +13,15 @@ abstract class Poll {
     abstract int getPollId();
 
     /**
-     * Sets user's answer to yes.
-     * If not inside the map, this method inserts it.
-     * @param user who answered yes
+     * Check if the user is in the poll
+     * @param user the user for which the check is being requested
+     * @return true if the user is in the poll, false otherwise
      */
-    abstract void setYes(SMSPeer user);
+    abstract boolean hasUser(SMSPeer user);
 
     /**
-     * Sets user's answer to no.
-     * If not inside the map, this method inserts it.
-     * @param user who answered no
+     * Insert an user in the poll.
+     * @param user the user to insert in the poll
      */
-    abstract void setNo(SMSPeer user);
+    abstract void addUser(SMSPeer user);
 }
