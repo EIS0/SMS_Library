@@ -50,7 +50,7 @@ public class SMSManager extends CommunicationHandler<SMSMessage> {
      * Sends a given valid message
      */
     public void sendMessage(SMSMessage message) {
-        SMSHandler.sendMessage(message, sent, delivered);
+        SMSHandler.sendMessage(message, null, null);
     }
 
     /**
@@ -60,6 +60,7 @@ public class SMSManager extends CommunicationHandler<SMSMessage> {
      */
     public void sendMessage(SMSMessage message, SentMessageListener listener) {
         setSentIntent(message, context, listener);
+        SMSHandler.sendMessage(message, sent, null);
     }
 
     /**
@@ -69,6 +70,7 @@ public class SMSManager extends CommunicationHandler<SMSMessage> {
      */
     public void sendMessage(SMSMessage message, DeliveredMessageListener listener) {
         setDeliveredIntent(message, context, listener);
+        SMSHandler.sendMessage(message, null, delivered);
     }
 
     /**
@@ -82,6 +84,7 @@ public class SMSManager extends CommunicationHandler<SMSMessage> {
                             DeliveredMessageListener deliveredListener) {
         setSentIntent(message, context, sendListener);
         setDeliveredIntent(message, context, deliveredListener);
+        SMSHandler.sendMessage(message, sent, delivered);
     }
 
     /**
