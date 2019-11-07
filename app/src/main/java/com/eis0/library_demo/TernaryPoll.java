@@ -11,15 +11,30 @@ import java.util.HashMap;
 import java.util.Map;
 
 class TernaryPoll extends Poll {
-    private enum PollResult {YES, NO, UNAVAILABLE}
+    private enum PollResult {
+        YES("Yes"), NO("No"), UNAVAILABLE("Unavailable");
+        private String answer;
+        PollResult(String pollAnswer){
+            this.answer = pollAnswer;
+        }
+        @Override
+        public String toString(){
+            return answer;
+        }
+    }
     private static int pollCount = 0;
-    // TODO: check if there can be pollId conflicts when polls are created by different users
     private int pollId;
+    private SMSPeer pollAuthor;
     private String pollQuestion;
     private Map<SMSPeer, PollResult> pollUsers;
     private static final String LOG_KEY = "APP_POLL";
 
-    TernaryPoll() {
+    /**
+     * Creates an empty poll given the author
+     * @param author the user creating the poll
+     */
+    TernaryPoll(SMSPeer author) {
+        pollAuthor = author;
         pollId = ++TernaryPoll.pollCount;
         pollQuestion = "";
         pollUsers = new HashMap<>();
@@ -83,6 +98,19 @@ class TernaryPoll extends Poll {
     }
 
     /**
+     * Return the answer of the specific user
+     * @param user the user whose answer is being requested
+     * @return String representing answer
+     * @throws IllegalArgumentException when the user is not included in the poll
+     */
+    public String getAnswer(SMSPeer user) throws IllegalArgumentException {
+        if (hasUser(user))
+            return pollUsers.get(user).toString();
+        else
+            throw new IllegalArgumentException("The user is not part of the poll");
+    }
+
+    /**
      * @return poll ID.
      */
     int getPollId() {
@@ -107,7 +135,7 @@ class TernaryPoll extends Poll {
         String message = "0" + pollAuthor + "\r" + pollId + "\r" + pollQuestion;
         // adds each pollUser to the end of the message
         for (SMSPeer user : pollUsers.keySet()) {
-            message = message + "\r" + user.getAddress();
+            message = message + "\r" + user;
         }
         return message;
     }

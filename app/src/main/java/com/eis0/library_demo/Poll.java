@@ -7,10 +7,10 @@ import com.eis0.smslibrary.SMSPeer;
  */
 abstract class Poll {
 
-        /**
-         * @return Int representing poll ID
-         */
-        abstract int getPoolId();
+    /**
+     * @return Int representing poll ID
+     */
+    abstract int getPollId();
 
     /**
      * Check if the user is in the poll
@@ -27,7 +27,7 @@ abstract class Poll {
 
     /**
      * Return the answer of a specific user
-     * @param user
+     * @param user the user whose answer is being requested
      * @return String representing the answer
      */
     abstract String getAnswer(SMSPeer user);
