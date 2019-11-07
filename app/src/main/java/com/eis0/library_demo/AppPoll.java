@@ -9,14 +9,26 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class AppPoll implements Poll {
-    public enum resultPoll {YES, NO, INDISPONIBILE}
+    public enum resultPoll {
+        YES("Yes"), NO("No"), UNAVAILABLE("Unavailable");
+        private String answer;
+        resultPoll(String pollAnswer){
+            this.answer = pollAnswer;
+        }
+        @Override
+        public String toString(){
+            return answer;
+        }
+    }
     private static int poolCount = 0;
     private int poolId;
+    private String author;
     private Map<String, resultPoll> pollUsers;
     private String LOG_KEY = "APP_POOL";
 
-     public AppPoll() {
-         poolId = ++this.poolCount;
+     public AppPoll(SMSPeer pollAuthor) {
+         author = pollAuthor.getAddress();
+         poolId = ++this.poolCount + Integer.parseInt(author); //Equal polls created by different authors will have different id
          pollUsers = new HashMap<>();
      }
 
@@ -33,7 +45,7 @@ public class AppPoll implements Poll {
      * Ask for a SMSPeer representing an user
      */
     public void setUser(SMSPeer user){
-        resultPoll result = resultPoll.INDISPONIBILE; //at the beginning we have no feedback by the user
+        resultPoll result = resultPoll.UNAVAILABLE; //at the beginning we have no feedback by the user
          pollUsers.put(user.getAddress(), result);
      }
 
@@ -59,6 +71,15 @@ public class AppPoll implements Poll {
             pollUsers.put(user.getAddress(), result);
         }
         else Log.i(LOG_KEY, "trying to manage an inexistent user");
+    }
+
+    /**
+     * Return the answer of the specific user
+     * @param user
+     * @return String representing answer
+     */
+    public String getAnswer(SMSPeer user){
+        return pollUsers.get(user.getAddress()).toString();
     }
 
     /**
