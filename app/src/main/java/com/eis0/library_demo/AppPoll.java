@@ -8,7 +8,7 @@ import com.eis0.smslibrary.SMSPeer;
 import java.util.HashMap;
 import java.util.Map;
 
-public class AppPoll implements Poll {
+public class AppPoll extends Poll {
     public enum resultPoll {
         YES("Yes"), NO("No"), UNAVAILABLE("Unavailable");
         private String answer;
@@ -50,7 +50,7 @@ public class AppPoll implements Poll {
      }
 
     /**
-     * Set specific user poll to yes.
+     * Set specific user's poll to yes.
      * @param user that said yes.
      */
     public void setYes(SMSPeer user) {
@@ -62,7 +62,7 @@ public class AppPoll implements Poll {
      }
 
     /**
-     * Set specific user pool to no.
+     * Set specific user's pool to no.
      * @param user that said yes.
      */
     public void setNo(SMSPeer user) {
@@ -74,7 +74,7 @@ public class AppPoll implements Poll {
     }
 
     /**
-     * Return the answer of the specific user
+     * Return user's answer
      * @param user
      * @return String representing answer
      */
@@ -85,7 +85,7 @@ public class AppPoll implements Poll {
     /**
      * @return poll ID.
      */
-     public int getPoolId() {
+     public int getPollId() {
          return this.poolId;
      }
 }

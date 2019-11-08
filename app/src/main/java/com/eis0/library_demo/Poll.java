@@ -10,7 +10,7 @@ abstract class Poll {
         /**
          * @return Int representing ID pool
          */
-        abstract int getPoolId();
+        abstract int getPollId();
 
 
         /**
