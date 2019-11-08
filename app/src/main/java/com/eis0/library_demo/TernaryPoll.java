@@ -1,8 +1,18 @@
+/**
+ *
+ * This class provides the creation of polls.
+ * Users involved in a specific poll can only
+ * reply "Yes" or "No".
+ *
+ * @author 1-128 Edoardo Raimondi with some advices from Giovanni Velludo.
+ *         129-160 Giovanni Velludo.
+ */
 package com.eis0.library_demo;
 
 import android.content.Context;
 import android.util.Log;
 
+import com.eis0.library_demo.Poll;
 import com.eis0.smslibrary.SMSManager;
 import com.eis0.smslibrary.SMSMessage;
 import com.eis0.smslibrary.SMSPeer;

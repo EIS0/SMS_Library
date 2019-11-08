@@ -7,6 +7,7 @@ import com.eis0.smslibrary.SMSPeer;
  */
 abstract class Poll {
 
+
     /**
      * @return Int representing poll ID
      */
@@ -18,6 +19,7 @@ abstract class Poll {
      * @return true if the user is in the poll, false otherwise
      */
     abstract boolean hasUser(SMSPeer user);
+
 
     /**
      * Insert an user in the poll.
