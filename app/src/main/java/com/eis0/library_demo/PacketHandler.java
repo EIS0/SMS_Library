@@ -39,6 +39,7 @@ class PacketHandler implements ReceivedMessageListener<SMSMessage> {
 
     private Context context;
     private static final int payloadSize = 154;
+    private static final char APP_ID = '\r';
 
     private static final int messageNumberIndex = 1;
     private static final int fragmentNumberIndex = 2;
@@ -104,8 +105,10 @@ class PacketHandler implements ReceivedMessageListener<SMSMessage> {
                 processedChars += payloadSize;
             }
         }
-        // end of message fragmentation
-
+        // add headers to fragments
+        for (String fragment : fragments) {
+            fragment =
+        }
 
     }
 }
