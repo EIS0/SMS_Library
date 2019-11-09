@@ -3,4 +3,11 @@
     <string name="tab_text_1">Incoming</string>
     <string name="tab_text_2">Opened</string>
     <string name="tab_text_3">Closed</string>
+
+    <!-- Poll ListItem strings -->
+    <string name="poll_li_colon">:</string>
+    <string name="poll_li_yes">YES</string>
+    <string name="poll_li_dash">-</string>
+    <string name="poll_li_no">NO</string>
+    <string name="poll_li_percentage">%</string>
 </resources>

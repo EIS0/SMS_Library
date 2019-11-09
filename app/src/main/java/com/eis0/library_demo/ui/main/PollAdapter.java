@@ -36,15 +36,21 @@ public class PollAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup container) {
         if(convertView == null)
-            convertView = inflater.inflate(R.layout.poll_list_item, null);
-        TextView pollName = convertView.findViewById(R.id.pollName);
-        TextView pollId = convertView.findViewById(R.id.pollId);
-        ProgressBar pollProgress = convertView.findViewById(R.id.pollProgress);
-        TextView pollResult = convertView.findViewById(R.id.pollResult);
+            convertView = inflater.inflate(R.layout.opened_poll_li, null);
+        TextView pollName = convertView.findViewById(R.id.pollNameTxt);
+        TextView pollID = convertView.findViewById(R.id.pollIDTxt);
+        ProgressBar pollProgress = convertView.findViewById(R.id.pollProgressBar);
+        TextView yesNum = convertView.findViewById(R.id.yesNumTxt);
+        TextView noNum = convertView.findViewById(R.id.noNumTxt);
+        TextView pollQuestion = convertView.findViewById(R.id.pollQuestionTxt);
+        TextView percentage = convertView.findViewById(R.id.percentageTxt);
         pollName.setText("Pizza Poll");
-        pollId.setText(": 0001");
-        pollProgress.setProgress(50);
-        pollResult.setText("5 YES - 2 NO");
+        pollID.setText("45378");
+        percentage.setText("66");
+        pollProgress.setProgress(Integer.parseInt(percentage.getText().toString()));
+        noNum.setText("2");
+        yesNum.setText("4");
+        pollQuestion.setText("Do you want to eat pizza tonight?");
         return convertView;
     }
 }
