@@ -11,7 +11,7 @@ import java.util.ArrayList;
 /**
  * Sends and receives messages longer than a single SMS.
  *
- * Messages longer than (140 chars - packet headers) are split into fragments.
+ * Messages longer than (160 chars - packet headers) are split into fragments.
  * Packet structure is the following:
  * APP_ID | MESSAGE_NUMBER | FRAGMENT_NUMBER | [TOTAL FRAGMENTS] | PAYLOAD
  *
@@ -34,11 +34,11 @@ import java.util.ArrayList;
  */
 
 // TODO: add checks for lost packages during the transmission of messages (using built-in SMS delivery reports?)
-// TODO: check what happens if characters outside of the GSM character set are used
+// TODO: check what happens when characters outside of the GSM character set are used
 // TODO: handle messages too large to be split in the maximum amount of fragments allowed in an SMS
 // TODO: skip check of TOTAL_FRAGMENTS in messages other than the first
-// TODO: use groups of bits instead of characters for headers
-// TODO: implement a timeout for MESSAGE_NUMBER, to discard messages that were not completely received and free up a slot
+// TODO: use groups of bits instead of characters for headers (to save precious SMS space)
+// TODO: implement a timeout for MESSAGE_NUMBER, to discard messages that were not completely received and free up a receiving slot
 class PacketHandler implements ReceivedMessageListener<SMSMessage> {
 
     private Context context;
