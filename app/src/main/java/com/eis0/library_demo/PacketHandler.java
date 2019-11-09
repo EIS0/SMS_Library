@@ -13,22 +13,18 @@ import java.util.ArrayList;
  *
  * Messages longer than (160 chars - packet headers) are split into fragments.
  * Packet structure is the following:
- * APP_ID | MESSAGE_NUMBER | FRAGMENT_NUMBER | [TOTAL FRAGMENTS] | PAYLOAD
+ * APP_ID | MESSAGE_NUMBER | FRAGMENT_NUMBER | TOTAL FRAGMENTS | PAYLOAD
  *
  * APP_ID is a single char == 0x02, this lets SMSHandler identify the message and send it
  * to our app;
- * MESSAGE_NUMBER identifies to which message this fragment belongs, together with the sender's
- * phone number. It's a single char, it allows us to distinguish a message from others with
- * reasonable confidence. When a peer has finished receiving a message with a certain number,
- * that number can be reused for future messages;
- * FRAGMENT_NUMBER are 2 chars which identify the current fragment;
+ * MESSAGE_NUMBER  is a single char with value from 0 to 9, it identifies to which message this
+ * fragment belongs, together with the sender's phone number. It is associated to a slot in a
+ * message array with 10 elements. When a peer has finished receiving a message with a certain
+ * number, that slot can be reused for future messages;
+ * FRAGMENT_NUMBER are 2 chars with value from 0 to 98 which identify the current fragment;
  * TOTAL_FRAGMENTS are 2 chars indicating the number of fragments in which the original message
- * was split, it is only sent in the first fragment of the message and its maximum value is 99;
- * PAYLOAD is the message fragment.
- *
- *                          Header size:    Payload max size:
- * First fragment:          6 chars         154 chars
- * Subsequent fragments:    4 chars         156 chars
+ * was split, its maximum value is 99;
+ * PAYLOAD is the message fragment and it's 154 chars long.
  *
  * @author Giovanni Velludo
  */
@@ -42,6 +38,8 @@ import java.util.ArrayList;
 class PacketHandler implements ReceivedMessageListener<SMSMessage> {
 
     private Context context;
+    private static final int payloadSize = 154;
+
     private static final int messageNumberIndex = 1;
     private static final int fragmentNumberIndex = 2;
     private static final int totalFragmentsIndex = 2;
@@ -93,21 +91,21 @@ class PacketHandler implements ReceivedMessageListener<SMSMessage> {
     }
 
     void sendMessage(String message, SMSPeer destination) {
-        // assuming that the last part of the message will fit perfectly into the last fragment,
-        // and the message is at least 154 chars long
         int processedChars = 0;
         ArrayList<String> fragments = new ArrayList<String>();
-        fragments.add(message.substring(processedChars, 154));
-        processedChars += 154;
-        if (processedChars < message.length()){
-            while (processedChars < message.length()) {
-                fragments.add(message.substring(processedChars, 156));
-                processedChars += 154;
-
-
-
+        while (processedChars < message.length()) {
+            if (message.length() - processedChars <= payloadSize) {
+                // if the remaining part of the message fits in a single fragment
+                fragments.add(message.substring(processedChars));
+                break;
+            } else {
+                // if the remaining part of the message needs to be divided in multiple fragments
+                fragments.add(message.substring(processedChars, processedChars + payloadSize));
+                processedChars += payloadSize;
             }
         }
+        // end of message fragmentation
+
 
     }
 }
