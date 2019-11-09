@@ -3,6 +3,7 @@ package com.eis0.library_demo;
 import android.content.Context;
 
 import com.eis0.smslibrary.ReceivedMessageListener;
+import com.eis0.smslibrary.SMSManager;
 import com.eis0.smslibrary.SMSMessage;
 import com.eis0.smslibrary.SMSPeer;
 
@@ -39,18 +40,18 @@ import java.util.Map;
 // TODO: implement a timeout for MESSAGE_NUMBER, to discard messages that were not completely received and free up a receiving slot
 class PacketHandler implements ReceivedMessageListener<SMSMessage> {
 
-    private Context context;
     private static final int payloadSize = 154;
     private static final char APP_ID = '\r';
-    private Map<SMSPeer, MessageSlots> peerSockets;
+    private static Map<SMSPeer, SmsSocket> peerToSockets;
+    private SMSManager smsManager;
 
     /**
      * Creates a PacketHandler object, to send and receive messages longer than a single SMS.
      * @param context Context of the application using this object.
      */
     PacketHandler(Context context) {
-        this.context = context;
-        peerSockets = new HashMap<SMSPeer, MessageSlots>();
+        peerToSockets = new HashMap<SMSPeer, SmsSocket>();
+        smsManager = SMSManager.getInstance(context);
     }
 
     /**
@@ -65,26 +66,39 @@ class PacketHandler implements ReceivedMessageListener<SMSMessage> {
     }
 
     void sendMessage(String message, SMSPeer destination) {
-        /* TODO: check if destination has an associated peerSockets, if not create it and set
-         *  messageNumber to zero, otherwise use the first free outgoingMessages slot
-         */
-        int processedChars = 0;
-        ArrayList<String> fragments = new ArrayList<String>();
-        while (processedChars < message.length()) {
-            if (message.length() - processedChars <= payloadSize) {
-                // if the remaining part of the message fits in a single fragment
-                fragments.add(message.substring(processedChars));
-                break;
-            } else {
-                // if the remaining part of the message needs to be divided in multiple fragments
-                fragments.add(message.substring(processedChars, processedChars + payloadSize));
-                processedChars += payloadSize;
+        // if a socket for the required destination exists
+        if (peerToSockets.containsKey(destination)) {
+            // use the first free outgoingMessages slot
+        } else {
+            // creates sockets for SMSPeer destination
+            int processedChars = 0;
+            SmsSocket sockets = new SmsSocket();
+            ArrayList<String> packets = sockets.outgoingMessages[0];
+            while (processedChars < message.length()) {
+                if (message.length() - processedChars <= payloadSize) {
+                    // if the remaining part of the message fits in a single fragment
+                    packets.add(message.substring(processedChars));
+                    break;
+                } else {
+                    // if the remaining part of the message needs to be divided in multiple packets
+                    packets.add(message.substring(processedChars, processedChars + payloadSize));
+                    processedChars += payloadSize;
+                }
+            }
+            // adds headers to each element of packets
+            for (int i = 0; i < packets.size(); i++) {
+                String fragment = packets.get(i);
+                fragment = APP_ID + '0' + i + packets.size() + fragment;
+                packets.set(i, fragment);
+            }
+            // copies packets in which this message was divided to slot 0 of outgoingMessage for destination
+            sockets.outgoingMessages[0] = packets;
+            peerToSockets.put(destination, sockets);
+            // sends messages to destination
+            for (String packet : peerToSockets.get(destination).outgoingMessages[0]){
+                // TODO: create listeners
+                smsManager.sendMessage(new SMSMessage(destination, packet), listener, listener2);
             }
         }
-        // add headers to fragments
-        for (String fragment : fragments) {
-            fragment = APP_ID + "" + "" + "" + fragment;
-        }
-
     }
 }
