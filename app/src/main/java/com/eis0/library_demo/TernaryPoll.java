@@ -47,7 +47,7 @@ class TernaryPoll extends Poll {
         pollAuthor = author;
         pollId = ++TernaryPoll.pollCount;
         pollQuestion = "";
-        pollUsers = new HashMap<>();
+        pollUsers = new HashMap<SMSPeer, PollResult>();
     }
 
     /**
@@ -59,7 +59,7 @@ class TernaryPoll extends Poll {
     TernaryPoll(String question, SMSPeer[] users, Context activity) {
         pollId = ++TernaryPoll.pollCount;
         pollQuestion = question;
-        pollUsers = new HashMap<>();
+        pollUsers = new HashMap<SMSPeer, PollResult>();
         for (SMSPeer user : users) this.addUser(user);
         this.sendPoll(activity);
     }

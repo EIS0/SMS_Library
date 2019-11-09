@@ -7,6 +7,7 @@ import com.eis0.smslibrary.SMSMessage;
 import com.eis0.smslibrary.SMSPeer;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -49,6 +50,7 @@ class PacketHandler implements ReceivedMessageListener<SMSMessage> {
      */
     PacketHandler(Context context) {
         this.context = context;
+        peerSockets = new HashMap<SMSPeer, MessageSlots>();
     }
 
     /**
