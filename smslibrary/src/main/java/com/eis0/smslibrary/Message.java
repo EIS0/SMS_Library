@@ -2,6 +2,7 @@ package com.eis0.smslibrary;
 
 /**
  * Interface to implement to create a new Message type
+ * @author Marco Cognolato
  */
 public interface Message {
     /**

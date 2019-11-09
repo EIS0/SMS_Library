@@ -3,6 +3,7 @@ package com.eis0.smslibrary;
 /**
  * Generic class for handling communications. Extend this to implement a new communication type
  * @param <T> For a communication to work, this must be specific for a type of message
+ * @author Marco Cognolato
  */
 public abstract class CommunicationHandler<T extends Message> {
     /**

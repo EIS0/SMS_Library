@@ -6,6 +6,11 @@ import com.eis0.smslibrary.SMSPeer;
  * @author Marco Cognolato
  */
 public class SMSNetDictionary implements NetworkDictionary<SMSPeer,SMSResource> {
+
+    public SMSNetDictionary(){
+
+    }
+
     /**
      * Finds the Peer that has a given valid resource, if available, else returns null
      */

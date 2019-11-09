@@ -6,6 +6,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 
+/**
+ * @author Marco Cognolato
+ */
 public class SMSManager extends CommunicationHandler<SMSMessage> {
     // Singleton Design Pattern
     private SMSManager() { }
@@ -89,6 +92,7 @@ public class SMSManager extends CommunicationHandler<SMSMessage> {
      * @param message The message to set the intent for
      * @param cont The context used for the event listener
      * @param listener the specific listener to link to the message
+     * @author Giovanni Velludo for PendingIntents, little improvements by Marco Cognolato
      */
     private void setSentIntent(final SMSMessage message, final Context cont, SentMessageListener listener) {
         if(onSend != null) context.unregisterReceiver(onSend);
@@ -110,6 +114,7 @@ public class SMSManager extends CommunicationHandler<SMSMessage> {
      * @param message The message to set the intent for
      * @param cont The context used for the event listener
      * @param listener the specific listener to link to the message
+     * @author Giovanni Velludo for PendingIntents, little improvements by Marco Cognolato
      */
     private void setDeliveredIntent(final SMSMessage message, final Context cont, DeliveredMessageListener listener) {
         if(onDeliver != null) context.unregisterReceiver(onDeliver);

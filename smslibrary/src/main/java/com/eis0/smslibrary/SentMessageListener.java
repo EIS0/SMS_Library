@@ -2,6 +2,7 @@ package com.eis0.smslibrary;
 
 /**
  * Interface to implement to create a listener for a Message Sent event
+ * @author Marco Cognolato
  */
 public interface SentMessageListener {
     /**
