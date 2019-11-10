@@ -7,9 +7,12 @@
  * @author Enrico Cestaro
  */
 package com.eis0.storagelibrary;
+
 import android.content.Context;
 import android.util.Log;
+
 import com.google.gson.Gson;
+
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -24,6 +27,7 @@ public class SaveAndLoadPoll implements PollStorage<TernaryPoll> {
     /**
      * This method makes use of the google library GSON to convert a TernaryPoll object in the
      * corresponding JSON String
+     *
      * @param ternaryPoll the TernaryPoll object to convert
      * @return Returns a String containing the corresponding .jar value
      */
@@ -38,6 +42,7 @@ public class SaveAndLoadPoll implements PollStorage<TernaryPoll> {
     /**
      * This method makes use of the google library GSON to convert a String value (representing a
      * .json file) into a TernaryPoll object
+     *
      * @param json The String value containing the .json format file
      * @return
      */
@@ -51,6 +56,7 @@ public class SaveAndLoadPoll implements PollStorage<TernaryPoll> {
     /**
      * This method allows the User to create custom names for the files which will be used to store
      * in the Internal Storage the content of the specified TernaryPoll objects
+     *
      * @param poll Contains the TernaryPoll object of which must be created a name
      * @return Returns the name of the file inside to whom the corresponding poll is being saved
      * (in the .json format)
@@ -63,8 +69,9 @@ public class SaveAndLoadPoll implements PollStorage<TernaryPoll> {
     /**
      * This method converts and saves the content of the poll inside of the corresponding file
      * in the .json format
+     *
      * @param fileName Name of the file to save in the Internal Storage
-     * @param json The String value containing the .json format file
+     * @param json     The String value containing the .json format file
      */
     public void saveJsonToInternal(Context context, String fileName, String json) {
         FileOutputStream fileOutputStream = null;
@@ -78,7 +85,7 @@ public class SaveAndLoadPoll implements PollStorage<TernaryPoll> {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        }   finally {
+        } finally {
             if (fileOutputStream != null) {
                 try {
                     fileOutputStream.close();
@@ -91,6 +98,7 @@ public class SaveAndLoadPoll implements PollStorage<TernaryPoll> {
 
     /**
      * This method loads the content of the specified file as a String value
+     *
      * @param fileName The name of the file to load from the Internal Storage
      * @return Returns the content of the selected file
      */
@@ -98,14 +106,14 @@ public class SaveAndLoadPoll implements PollStorage<TernaryPoll> {
         FileInputStream fileInputStream = null;
         String text = "";
         String json = "";
-        try  {
+        try {
             //Opens the file
             fileInputStream = context.openFileInput(fileName);
             //Converts the content of the file into a String value
             InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
             BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
             StringBuilder stringBuilder = new StringBuilder();
-            while((text = bufferedReader.readLine()) != null) {
+            while ((text = bufferedReader.readLine()) != null) {
                 stringBuilder.append(text).append("\n");
             }
 
@@ -116,7 +124,7 @@ public class SaveAndLoadPoll implements PollStorage<TernaryPoll> {
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            if(fileInputStream != null) {
+            if (fileInputStream != null) {
                 try {
                     fileInputStream.close();
                 } catch (IOException e) {
