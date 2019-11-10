@@ -11,6 +11,8 @@ import static org.junit.Assert.assertNull;
  * Example local unit test, which will execute on the development machine (host).
  *
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
+ *
+ * @author Edoardo Raimondi
  */
 public class SMSNet_Tests {
     @Test
