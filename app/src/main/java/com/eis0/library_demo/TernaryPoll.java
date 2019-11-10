@@ -4,7 +4,7 @@
  * Users involved in a specific poll can only
  * reply "Yes" or "No".
  *
- * @author 1-128 Edoardo Raimondi with some advices from Giovanni Velludo.
+ * @author 1-128 Edoardo Raimondi with some advice from Giovanni Velludo.
  *         129-160 Giovanni Velludo.
  */
 package com.eis0.library_demo;
@@ -12,7 +12,6 @@ package com.eis0.library_demo;
 import android.content.Context;
 import android.util.Log;
 
-import com.eis0.library_demo.Poll;
 import com.eis0.smslibrary.SMSManager;
 import com.eis0.smslibrary.SMSMessage;
 import com.eis0.smslibrary.SMSPeer;
@@ -38,30 +37,37 @@ class TernaryPoll extends Poll {
     private String pollQuestion;
     private Map<SMSPeer, PollResult> pollUsers;
     private static final String LOG_KEY = "APP_POLL";
+    private Context context;
 
     /**
-     * Creates an empty poll given the author
+     * Creates a poll given the author and the question
+     * @param question the question to ask all users
      * @param author the user creating the poll
+     * @param activity context of the application creating the poll, needed by SMSManager
      */
-    TernaryPoll(SMSPeer author) {
+    TernaryPoll(String question, SMSPeer author, Context activity) {
         pollAuthor = author;
         pollId = ++TernaryPoll.pollCount;
-        pollQuestion = "";
-        pollUsers = new HashMap<>();
+        pollQuestion = question;
+        pollUsers = new HashMap<SMSPeer, PollResult>();
+        context = activity;
     }
 
     /**
      * Creates a poll and sends it to all users included in it
      * @param question the question to ask all users
+     * @param author the user creating the poll
      * @param users users to include in the poll
      * @param activity context of the application creating the poll, needed by SMSManager
      */
-    TernaryPoll(String question, SMSPeer[] users, Context activity) {
+    TernaryPoll(String question, SMSPeer author, SMSPeer[] users, Context activity) {
         pollId = ++TernaryPoll.pollCount;
         pollQuestion = question;
-        pollUsers = new HashMap<>();
+        pollAuthor = author;
+        pollUsers = new HashMap<SMSPeer, PollResult>();
+        context = activity;
         for (SMSPeer user : users) this.addUser(user);
-        this.sendPoll(activity);
+        this.sendPoll();
     }
 
     /**
@@ -140,6 +146,7 @@ class TernaryPoll extends Poll {
      * 2 when the message is sent from the author to users and contains updated poll data
      *
      * @return message to send to poll users
+     * @author Giovanni Velludo
      */
     private String pollToMessage() {
         String message = "0" + pollAuthor + "\r" + pollId + "\r" + pollQuestion;
@@ -150,10 +157,14 @@ class TernaryPoll extends Poll {
         return message;
     }
 
-    private void sendPoll(Context activity) {
+    /**
+     * Sends a poll as a text message
+     * @author Giovanni Velludo
+     */
+    private void sendPoll() {
         String message = this.pollToMessage();
         for (SMSPeer user : pollUsers.keySet()) {
-            SMSManager.getInstance(activity).sendMessage(new SMSMessage(user, message));
+            SMSManager.getInstance(context).sendMessage(new SMSMessage(user, message));
         }
     }
 }
