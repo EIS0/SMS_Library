@@ -57,6 +57,10 @@ class PollManager implements ReceivedMessageListener<SMSMessage> {
         // TODO: create Poll, add it to map of polls and send it to all users
     }
 
+    void answerPoll(SMSPeer author, int id, SMSPeer user, boolean answer) {
+        // TODO: update local copy of poll, send answer to author
+    }
+
     /**
      * Receives an SMSMessage and updates poll data accordingly.
      * If the message was sent by the pollAuthor: if the Poll already exists, updates the content of
