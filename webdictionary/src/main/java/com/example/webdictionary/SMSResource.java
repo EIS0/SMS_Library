@@ -2,12 +2,10 @@ package com.example.webdictionary;
 
 import com.eis0.smslibrary.SMSPeer;
 
-public class SMSResource implements Resource<SMSPeer,String> {
-    private SMSPeer peer;
+public class SMSResource implements Resource<String> {
     private String resource;
 
-    public SMSResource(SMSPeer peer, String resource){
-        this.peer = peer;
+    public SMSResource(String resource){
         this.resource = resource;
     }
 
@@ -17,14 +15,6 @@ public class SMSResource implements Resource<SMSPeer,String> {
     public String getResource(){
         return resource;
     }
-
-    /**
-     * Returns the Peer who has the resource
-     */
-    public SMSPeer getPeer(){
-        return peer;
-    }
-
 
     /**
      * An SMS Resource (meaning a resource that can be sent through an SMS),
