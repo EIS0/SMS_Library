@@ -1,17 +1,16 @@
+/**
+ * This class allows the User to:
+ * => create a custom name for the file inside whom the Poll will be saved, based upon the Poll ID
+ * => convert TernaryPoll Objects in .jar files, and vice versa
+ * => save and load .jar files in and from the Internal Storage
+ *
+ * @author Enrico Cestaro
+ */
 package com.eis0.storagelibrary;
-
-/*
-This class allows the User to:
-=> create a custom name for the file inside whom the Poll will be saved, based upon the Poll ID
-=> convert TernaryPoll Objects in .jar files, and vice versa
-=> save and load .jar files in and from the Internal Storage
-*/
 
 import android.content.Context;
 import android.util.Log;
-
 import com.google.gson.Gson;
-
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -128,4 +127,13 @@ public class SaveAndLoadPoll implements PollStorage<TernaryPoll> {
         }
         return json;
     }
+
+
+    /*TODO
+    Complete this class
+     */
+    public void deleteInternalFile(String fileName) {
+
+    }
+
 }
