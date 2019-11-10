@@ -7,7 +7,6 @@
  * @author Enrico Cestaro
  */
 package com.eis0.storagelibrary;
-
 import android.content.Context;
 import android.util.Log;
 import com.google.gson.Gson;
@@ -39,7 +38,7 @@ public class SaveAndLoadPoll implements PollStorage<TernaryPoll> {
     /**
      * This method makes use of the google library GSON to convert a String value (representing a
      * .json file) into a TernaryPoll object
-     * @param json
+     * @param json The String value containing the .json format file
      * @return
      */
     public TernaryPoll fromJsonToPoll(String json) {
@@ -52,8 +51,8 @@ public class SaveAndLoadPoll implements PollStorage<TernaryPoll> {
     /**
      * This method allows the User to create custom names for the files which will be used to store
      * in the Internal Storage the content of the specified TernaryPoll objects
-     * @param poll
-     * @return the name of the file inside to whom the corresponding poll is being saved
+     * @param poll Contains the TernaryPoll object of which must be created a name
+     * @return Returns the name of the file inside to whom the corresponding poll is being saved
      * (in the .json format)
      */
     public String setFileName(TernaryPoll poll) {
@@ -64,8 +63,8 @@ public class SaveAndLoadPoll implements PollStorage<TernaryPoll> {
     /**
      * This method converts and saves the content of the poll inside of the corresponding file
      * in the .json format
-     * @param fileName
-     * @param json
+     * @param fileName Name of the file to save in the Internal Storage
+     * @param json The String value containing the .json format file
      */
     public void saveJsonToInternal(Context context, String fileName, String json) {
         FileOutputStream fileOutputStream = null;
@@ -92,7 +91,7 @@ public class SaveAndLoadPoll implements PollStorage<TernaryPoll> {
 
     /**
      * This method loads the content of the specified file as a String value
-     * @param fileName
+     * @param fileName The name of the file to load from the Internal Storage
      * @return Returns the content of the selected file
      */
     public String loadJsonFromInternal(Context context, String fileName) {
