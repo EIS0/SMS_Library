@@ -4,8 +4,8 @@
  * Users involved in a specific poll can only
  * reply "Yes" or "No".
  *
- * @author 1-128 Edoardo Raimondi with some advice from Giovanni Velludo.
- *         129-160 Giovanni Velludo.
+ * @author Edoardo Raimondi with some advice from Giovanni Velludo, except where specified
+ * otherwise.
  */
 package com.eis0.library_demo;
 
@@ -20,7 +20,7 @@ import com.eis0.smslibrary.SMSPeer;
 import java.util.HashMap;
 import java.util.Map;
 
-class TernaryPoll extends Poll implements ReceivedMessageListener<SMSMessage> {
+class TernaryPoll extends Poll {
     private enum PollResult {
         YES("Yes"), NO("No"), UNAVAILABLE("Unavailable");
         private String answer;
@@ -41,10 +41,10 @@ class TernaryPoll extends Poll implements ReceivedMessageListener<SMSMessage> {
     private SMSManager smsManager;
 
     /**
-     * Creates a poll given the author and the question
-     * @param question the question to ask all users
-     * @param author the user creating the poll
-     * @param activity context of the application creating the poll, needed by SMSManager
+     * Creates a poll given the author and the question.
+     * @param question the question to ask all users.
+     * @param author the user creating the poll.
+     * @param activity context of the application creating the poll, needed by SMSManager.
      */
     TernaryPoll(String question, SMSPeer author, Context activity) {
         pollAuthor = author;
@@ -55,11 +55,11 @@ class TernaryPoll extends Poll implements ReceivedMessageListener<SMSMessage> {
     }
 
     /**
-     * Creates a poll and sends it to all users included in it
-     * @param question the question to ask all users
-     * @param author the user creating the poll
-     * @param users users to include in the poll
-     * @param activity context of the application creating the poll, needed by SMSManager
+     * Creates a poll and sends it to all users included in it.
+     * @param question the question to ask all users.
+     * @param author the user creating the poll.
+     * @param users users to include in the poll.
+     * @param activity context of the application creating the poll, needed by SMSManager.
      */
     TernaryPoll(String question, SMSPeer author, SMSPeer[] users, Context activity) {
         pollId = ++TernaryPoll.pollCount;
@@ -139,7 +139,7 @@ class TernaryPoll extends Poll implements ReceivedMessageListener<SMSMessage> {
      * messageCode + pollAuthor + pollId + pollQuestion + pollUsers
      * Fields are separated by the character CR, except for messageCode
      * and pollAuthor because the first is always only the first character.
-     * Various pollUsers are separated by the character CR.
+     * Different pollUsers are separated by the character CR.
      *
      * messageCode assumes the following values:
      * 0 when the message contains a new poll
@@ -169,14 +169,4 @@ class TernaryPoll extends Poll implements ReceivedMessageListener<SMSMessage> {
         }
     }
 
-    /**
-     * Receives an SMSMessage and updates poll data accordingly.
-     * If the message was sent by the pollAuthor, updates the content of the local copy of the Poll.
-     * If the message was sent by a pollUser who is not the pollAuthor, sets his answer accordingly
-     * and updates all other users.
-     * @author Giovanni Velludo
-     */
-    public void onMessageReceived(SMSMessage message) {
-
-    }
 }
