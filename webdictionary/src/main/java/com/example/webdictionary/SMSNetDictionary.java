@@ -14,19 +14,19 @@ import java.util.Map;
 public class SMSNetDictionary implements NetworkDictionary<SMSPeer,SMSResource> {
 
     private Map<SMSPeer, SMSResource[]> NetDict;
-    private String LOG_KEY = "DICTIONARY";
+    private String LOG_KEY = "NET_DICTIONARY";
 
     public SMSNetDictionary(){
         NetDict = new HashMap<>();
     }
 
     /**
-     * Finds the Peer that has a given valid resource, if available, else returns null
+     * If available, it finds the first Peer that has a given valid resource, else returns null
      */
     public SMSPeer findPeerWithResource(SMSResource resource) {
         for (Map.Entry <SMSPeer, SMSResource[]> entry : NetDict.entrySet())
         {
-            for(int i = 0; i < entry.getValue().length - 1; i++) { //Scanner of single array resource
+            for(int i = 0; i < entry.getValue().length - 1; i++) { //Scanner of a single array resource
                 if (entry.getValue()[i].equals(resource)) return entry.getKey();
             }
         }
@@ -34,14 +34,14 @@ public class SMSNetDictionary implements NetworkDictionary<SMSPeer,SMSResource> 
     }
 
     /**
-     * Returns the list of resources of a given peer if present, else returns null
+     * If present, it returns the list of resources of a given Peer, else returns null
      */
     public SMSResource[] findPeerResources(SMSPeer peer){
         try{
            return NetDict.get(peer);
         }
         catch(Exception e){
-            Log.i(LOG_KEY, "User not present");
+            Log.i(LOG_KEY, "User not present.");
             return null;
         }
     }
@@ -50,13 +50,32 @@ public class SMSNetDictionary implements NetworkDictionary<SMSPeer,SMSResource> 
      * Returns the list of Peers currently on the network dictionary
      */
     public SMSPeer[] getAvailablePeers(){
-        return null;
+        SMSPeer[] allAvailablePeers = new SMSPeer[NetDict.size()];
+        int i = 0;
+        for (Map.Entry <SMSPeer, SMSResource[]> entry : NetDict.entrySet()){
+            allAvailablePeers[i++] = entry.getKey();
+        }
+        return allAvailablePeers;
     }
 
     /**
      * Returns the list of resources currently on the network dictionary
      */
-    public SMSResource[] getAvailableResources(){ return null; }
+    public SMSResource[] getAvailableResources(){
+        int securityLength = 1000; //is there a better way?
+        int cont = 0; //to keep return array (allAvailableResource) absolute position
+        SMSResource[] allAvailableResources = new SMSResource[securityLength]; //array to return
+        for (Map.Entry <SMSPeer, SMSResource[]> entry : NetDict.entrySet())
+        {
+            cont++;
+            for(int i = 0; i < entry.getValue().length - 1; i++) { //Scanner of a single array resource
+                int index = i + ++cont;
+                allAvailableResources[index] = entry.getValue()[i];
+            }
+        }
+        // Need 38 seconds working with 50000 elements. Is there a better way?
+        return allAvailableResources;
+    }
 
     /**
      * Adds a valid Peer-Resources[] couple to the network dictionary
