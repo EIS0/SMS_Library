@@ -18,7 +18,6 @@ import java.util.Map;
  * to an instance of PollManager with addPollListener(PollListener).
  * @author Giovanni Velludo
  */
-
 class PollManager implements ReceivedMessageListener<SMSMessage> {
 
     private static PollManager instance = null; // must always be static for getInstance to work
