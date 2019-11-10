@@ -14,8 +14,8 @@ import java.util.Map;
 
 /**
  * Creates and modifies TernaryPoll objects based on inputs from Activities and SMS Messages.
- * To be notified of new polls, your class must implement NewPollListener, and you must pass it to
- * an instance of PollManager with addNewPollListener(NewPollListener).
+ * To be notified of changes to polls, your class must implement PollListener, and you must pass it
+ * to an instance of PollManager with addPollListener(PollListener).
  * @author Giovanni Velludo
  */
 
@@ -25,7 +25,7 @@ class PollManager implements ReceivedMessageListener<SMSMessage> {
     private static final char fieldSeparator = '\r';
     private static final int authorIndex = 1;
     private static Map<Pair<SMSPeer, Integer>, TernaryPoll> polls = new HashMap<>();
-    private static NewPollListener newPollListener;
+    private static PollListener pollListener;
     private Context context;
     private SMSManager smsManager;
 
@@ -50,8 +50,8 @@ class PollManager implements ReceivedMessageListener<SMSMessage> {
      * Adds the listener watching for incoming TernaryPolls
      * @param listener The listener to wake up when a message is received
      */
-    void addNewPollListener(NewPollListener listener) {
-        newPollListener = listener;
+    void addPollListener(PollListener listener) {
+        pollListener = listener;
     }
 
     /**
@@ -124,8 +124,8 @@ class PollManager implements ReceivedMessageListener<SMSMessage> {
             // creates a new Poll and adds it to a Map of Polls
             TernaryPoll poll = new TernaryPoll(pollQuestion, pollAuthor, pollUsers, pollId);
             polls.put(new Pair<>(pollAuthor, pollId), poll);
-            // informs NewPollListener
-            newPollListener.onNewPollReceived(poll);
+            // informs PollListener
+            pollListener.onNewPollReceived(poll);
         } else if (messageCode == 1) {
             /* Received new answer from an user.
              *
@@ -184,7 +184,7 @@ class PollManager implements ReceivedMessageListener<SMSMessage> {
             if (pollResult) poll.setYes(pollUser);
             else poll.setNo(pollUser);
             polls.put(authorAndId, poll);
-            // informs UpdatedPollListener
+            // informs PollListener
             // TODO: send modified poll to all users (except for the voter)
         }
     }
