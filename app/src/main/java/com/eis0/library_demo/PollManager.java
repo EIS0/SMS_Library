@@ -95,7 +95,7 @@ class PollManager implements ReceivedMessageListener<SMSMessage> {
             ArrayList<SMSPeer> pollUsers = new ArrayList<>();
 
             /* TODO: use a single for cycle for parsing, unless it becomes too difficult to read,
-             *  we could use a single ArrayList for all fields
+             *  we could use a single ArrayList for all fields and convert them later
              */
 
             int authorEndIndex = authorIndex;
@@ -137,7 +137,7 @@ class PollManager implements ReceivedMessageListener<SMSMessage> {
             /* Received new answer from an user.
              *
              * SMSMessage fields:
-             * messageCode + pollAuthor + pollId + pollUser + result + CR
+             * messageCode + pollAuthor + pollId + pollUser + result
              * Fields are separated by the character CR, except for messageCode
              * and pollAuthor because the first is always only the first character.
              * result is 1 if the answer is yes, 0 if the answer is no.
@@ -147,10 +147,6 @@ class PollManager implements ReceivedMessageListener<SMSMessage> {
             int pollId;
             SMSPeer pollUser;
             boolean pollResult;
-
-            /* TODO: use a single for cycle for parsing, unless it becomes too difficult to read,
-             *  we could use a single ArrayList for all fields
-             */
 
             int authorEndIndex = authorIndex;
             while (data.charAt(authorEndIndex) != fieldSeparator) {
@@ -172,17 +168,8 @@ class PollManager implements ReceivedMessageListener<SMSMessage> {
             }
             pollUser = new SMSPeer(data.substring(userIndex, userEndIndex - userIndex));
 
-            // TODO: get next character instead of parsing
             int resultIndex = userEndIndex + 1;
-            int resultEndIndex = resultIndex;
-            while (data.charAt(resultEndIndex) != fieldSeparator) {
-                resultEndIndex++;
-            }
-            if (data.substring(resultIndex, resultEndIndex - resultIndex).equalsIgnoreCase("1")) {
-                pollResult = true;
-            } else pollResult = false;
-
-
+            pollResult = data.substring(resultIndex).equals("1");
             // finished parsing message fields
 
             // modifies pollResult of pollUser in Poll identified by pollId and pollAuthor
@@ -193,7 +180,12 @@ class PollManager implements ReceivedMessageListener<SMSMessage> {
             polls.put(authorAndId, poll);
             // informs PollListener
             pollListener.onPollUpdated(poll);
-            // TODO: send modified poll to all users (except for the voter)
+            // sends modified poll to all users (except for the voter)
+            ArrayList<SMSPeer> destinations = new ArrayList<>();
+            for (SMSPeer user : poll.pollUsers.keySet()){
+                if (!user.equals(pollUser)) destinations.add(user);
+            }
+            this.sendUpdatedPoll(poll, destinations);
 
         } else if (messageCode == '2') {
             // TODO: parse message, update poll data and inform PollListener
@@ -234,5 +226,13 @@ class PollManager implements ReceivedMessageListener<SMSMessage> {
         for (SMSPeer user : poll.pollUsers.keySet()) {
             smsManager.sendMessage(new SMSMessage(user, message));
         }
+    }
+
+    /**
+     * Sends an updated poll as a text message to the target users.
+     * @author Giovanni Velludo
+     */
+    private void sendUpdatedPoll(TernaryPoll poll, ArrayList<SMSPeer> users) {
+
     }
 }

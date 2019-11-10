@@ -2,7 +2,6 @@ package com.eis0.library_demo;
 
 import android.util.Log;
 
-import com.eis0.smslibrary.SMSMessage;
 import com.eis0.smslibrary.SMSPeer;
 
 import java.util.ArrayList;
