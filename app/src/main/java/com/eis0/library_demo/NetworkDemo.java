@@ -22,11 +22,14 @@ public class NetworkDemo extends AppCompatActivity {
         Button btn = findViewById(R.id.button);
         EditText t1 = findViewById(R.id.editText);
         ListView AddressesList = findViewById(R.id.ListView);
+
         //list containing user's number inside the network
         final ArrayList<Peer> UserList = new ArrayList<Peer>();
+
         //adapter array that will provide AddressesList's information
         final ArrayAdapter<Peer> adapter = new ArrayAdapter<Peer> ( this,android.R.layout.simple_list_item_1, UserList );
         AddressesList.setAdapter(adapter); //insert information to AddressesList
+
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
