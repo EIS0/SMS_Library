@@ -10,11 +10,11 @@ import android.widget.TextView;
 
 import com.eis0.library_demo.R;
 
-public class PollAdapter extends BaseAdapter {
+public class OpenedPollAdapter extends BaseAdapter {
 
     private static LayoutInflater inflater = null;
 
-    public PollAdapter(Context context) {
+    public OpenedPollAdapter(Context context) {
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 

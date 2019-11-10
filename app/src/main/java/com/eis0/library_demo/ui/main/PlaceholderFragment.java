@@ -4,10 +4,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.ListFragment;
 
 /**
@@ -29,7 +27,18 @@ public class PlaceholderFragment extends ListFragment {
     public View onCreateView(
             @NonNull LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
-        setListAdapter(new PollAdapter(inflater.getContext()));
+        int sectionNumber = getArguments().getInt(ARG_SECTION_NUMBER);
+        switch(sectionNumber) {
+            case 1:
+                setListAdapter(new IncomingPollAdapter(inflater.getContext()));
+                break;
+            case 2:
+                setListAdapter(new OpenedPollAdapter(inflater.getContext()));
+                break;
+            case 3:
+                setListAdapter(new ClosedPollAdapter(inflater.getContext()));
+                break;
+        }
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 }
