@@ -37,7 +37,7 @@ class TernaryPoll extends Poll {
     private String pollQuestion;
     private Map<SMSPeer, PollResult> pollUsers;
     private static final String LOG_KEY = "APP_POLL";
-    private Context context;
+    private SMSManager smsManager;
 
     /**
      * Creates a poll given the author and the question
@@ -50,7 +50,7 @@ class TernaryPoll extends Poll {
         pollId = ++TernaryPoll.pollCount;
         pollQuestion = question;
         pollUsers = new HashMap<SMSPeer, PollResult>();
-        context = activity;
+        smsManager = SMSManager.getInstance(activity);
     }
 
     /**
@@ -65,7 +65,7 @@ class TernaryPoll extends Poll {
         pollQuestion = question;
         pollAuthor = author;
         pollUsers = new HashMap<SMSPeer, PollResult>();
-        context = activity;
+        smsManager = SMSManager.getInstance(activity);
         for (SMSPeer user : users) this.addUser(user);
         this.sendPoll();
     }
@@ -158,13 +158,13 @@ class TernaryPoll extends Poll {
     }
 
     /**
-     * Sends a poll as a text message
+     * Sends a poll as a text message to each pollUser.
      * @author Giovanni Velludo
      */
     private void sendPoll() {
         String message = this.pollToMessage();
         for (SMSPeer user : pollUsers.keySet()) {
-            SMSManager.getInstance(context).sendMessage(new SMSMessage(user, message));
+            smsManager.sendMessage(new SMSMessage(user, message));
         }
     }
 }
