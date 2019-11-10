@@ -1,12 +1,3 @@
-/**
- *
- * This class provides the creation of polls.
- * Users involved in a specific poll can only
- * reply "Yes" or "No".
- *
- * @author Edoardo Raimondi with some advice from Giovanni Velludo, except where specified
- * otherwise.
- */
 package com.eis0.library_demo;
 
 import android.util.Log;
@@ -18,6 +9,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ *
+ * This class provides the creation of polls.
+ * Users involved in a specific poll can only
+ * reply "Yes" or "No".
+ *
+ * @author Edoardo Raimondi with some advice from Giovanni Velludo, except where specified
+ * otherwise.
+ */
 class TernaryPoll extends Poll {
     private enum PollResult {
         YES("Yes"), NO("No"), UNAVAILABLE("Unavailable");
@@ -31,10 +31,10 @@ class TernaryPoll extends Poll {
         }
     }
     private static int pollCount = 0;
-    private int pollId;
-    private SMSPeer pollAuthor;
-    private String pollQuestion;
-    private Map<SMSPeer, PollResult> pollUsers;
+    int pollId;
+    SMSPeer pollAuthor;
+    String pollQuestion;
+    Map<SMSPeer, PollResult> pollUsers;
     private static final String LOG_KEY = "APP_POLL";
 
     /**
@@ -128,40 +128,4 @@ class TernaryPoll extends Poll {
     int getPollId() {
         return this.pollId;
     }
-
-    /**
-     * Converts a new poll to the following String:
-     * messageCode + pollAuthor + pollId + pollQuestion + pollUsers + CR
-     * Fields are separated by the character CR, except for messageCode
-     * and pollAuthor because the first is always only the first character.
-     * Different pollUsers are separated by the character CR.
-     *
-     * messageCode assumes the following values:
-     * 0 when the message contains a new poll
-     * 1 when the message is sent from a user to the author and contains an answer
-     * 2 when the message is sent from the author to users and contains updated poll data
-     *
-     * @return message to send to poll users
-     * @author Giovanni Velludo
-     */
-    private String pollToMessage() {
-        String message = "0" + pollAuthor + "\r" + pollId + "\r" + pollQuestion + "\r";
-        // adds each pollUser to the end of the message
-        for (SMSPeer user : pollUsers.keySet()) {
-            message = message + "\r" + user;
-        }
-        return message;
-    }
-
-    /**
-     * Sends a poll as a text message to each pollUser.
-     * @author Giovanni Velludo
-     */
-    private void sendPoll() {
-        String message = this.pollToMessage();
-        for (SMSPeer user : pollUsers.keySet()) {
-            smsManager.sendMessage(new SMSMessage(user, message));
-        }
-    }
-
 }

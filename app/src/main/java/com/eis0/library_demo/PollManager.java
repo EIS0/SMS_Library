@@ -24,8 +24,8 @@ class PollManager implements ReceivedMessageListener<SMSMessage> {
     private static PollManager instance = null; // must always be static for getInstance to work
     private static final char fieldSeparator = '\r';
     private static final int authorIndex = 1;
-    private static Map<Pair<SMSPeer, Integer>, TernaryPoll> polls = new HashMap<>();
-    private static PollListener pollListener;
+    private Map<Pair<SMSPeer, Integer>, TernaryPoll> polls = new HashMap<>();
+    private PollListener pollListener;
     private Context context;
     private SMSManager smsManager;
 
@@ -52,6 +52,10 @@ class PollManager implements ReceivedMessageListener<SMSMessage> {
      */
     void addPollListener(PollListener listener) {
         pollListener = listener;
+    }
+
+    void createPoll(String question, SMSPeer author, ArrayList<SMSPeer> users) {
+        // TODO: create Poll, add it to map of polls and send it to all users
     }
 
     /**
@@ -179,13 +183,53 @@ class PollManager implements ReceivedMessageListener<SMSMessage> {
             // finished parsing message fields
 
             // modifies pollResult of pollUser in Poll identified by pollId and pollAuthor
-            Pair<SMSPeer, Integer> authorAndId = new Pair<SMSPeer, Integer>(pollAuthor, pollId);
+            Pair<SMSPeer, Integer> authorAndId = new Pair<>(pollAuthor, pollId);
             TernaryPoll poll = polls.get(authorAndId);
             if (pollResult) poll.setYes(pollUser);
             else poll.setNo(pollUser);
             polls.put(authorAndId, poll);
             // informs PollListener
+            pollListener.onPollUpdated(poll);
             // TODO: send modified poll to all users (except for the voter)
+
+        } else if (messageCode == '2') {
+            // TODO: parse message, update poll data and inform PollListener
+        }
+    }
+
+
+    /**
+     * Converts a new poll to the following String:
+     * messageCode + pollAuthor + pollId + pollQuestion + pollUsers + CR
+     * Fields are separated by the character CR, except for messageCode
+     * and pollAuthor because the first is always only the first character.
+     * Different pollUsers are separated by the character CR.
+     *
+     * messageCode assumes the following values:
+     * 0 when the message contains a new poll
+     * 1 when the message is sent from a user to the author and contains an answer
+     * 2 when the message is sent from the author to users and contains updated poll data
+     *
+     * @return message to send to poll users
+     * @author Giovanni Velludo
+     */
+    private static String newPollToMessage(TernaryPoll poll) {
+        String message = "0" + poll.pollAuthor + "\r" + poll.pollId + "\r" + poll.pollQuestion + "\r";
+        // adds each pollUser to the end of the message
+        for (SMSPeer user : poll.pollUsers.keySet()) {
+            message = message + "\r" + user;
+        }
+        return message;
+    }
+
+    /**
+     * Sends a new poll as a text message to each pollUser.
+     * @author Giovanni Velludo
+     */
+    private void sendNewPoll(TernaryPoll poll) {
+        String message = newPollToMessage(poll);
+        for (SMSPeer user : poll.pollUsers.keySet()) {
+            smsManager.sendMessage(new SMSMessage(user, message));
         }
     }
 }
