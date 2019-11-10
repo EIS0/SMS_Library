@@ -9,11 +9,8 @@
  */
 package com.eis0.library_demo;
 
-import android.content.Context;
 import android.util.Log;
 
-import com.eis0.smslibrary.ReceivedMessageListener;
-import com.eis0.smslibrary.SMSManager;
 import com.eis0.smslibrary.SMSMessage;
 import com.eis0.smslibrary.SMSPeer;
 
@@ -38,20 +35,17 @@ class TernaryPoll extends Poll {
     private String pollQuestion;
     private Map<SMSPeer, PollResult> pollUsers;
     private static final String LOG_KEY = "APP_POLL";
-    private SMSManager smsManager;
 
     /**
      * Creates a poll given the author and the question.
      * @param question the question to ask all users.
      * @param author the user creating the poll.
-     * @param activity context of the application creating the poll, needed by SMSManager.
      */
-    TernaryPoll(String question, SMSPeer author, Context activity) {
+    TernaryPoll(String question, SMSPeer author) {
         pollAuthor = author;
         pollId = ++TernaryPoll.pollCount;
         pollQuestion = question;
-        pollUsers = new HashMap<SMSPeer, PollResult>();
-        smsManager = SMSManager.getInstance(activity);
+        pollUsers = new HashMap<>();
     }
 
     /**
@@ -59,16 +53,13 @@ class TernaryPoll extends Poll {
      * @param question the question to ask all users.
      * @param author the user creating the poll.
      * @param users users to include in the poll.
-     * @param activity context of the application creating the poll, needed by SMSManager.
      */
-    TernaryPoll(String question, SMSPeer author, SMSPeer[] users, Context activity) {
+    TernaryPoll(String question, SMSPeer author, SMSPeer[] users) {
         pollId = ++TernaryPoll.pollCount;
         pollQuestion = question;
         pollAuthor = author;
-        pollUsers = new HashMap<SMSPeer, PollResult>();
-        smsManager = SMSManager.getInstance(activity);
+        pollUsers = new HashMap<>();
         for (SMSPeer user : users) this.addUser(user);
-        this.sendPoll();
     }
 
     /**

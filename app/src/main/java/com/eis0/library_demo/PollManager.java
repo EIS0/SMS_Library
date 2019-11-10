@@ -102,7 +102,7 @@ class PollManager implements ReceivedMessageListener<SMSMessage> {
             // finished parsing message fields
 
             // creates a new Poll and adds it to a list of Polls
-
+            TernaryPoll poll = new TernaryPoll();
         }
     }
 }
