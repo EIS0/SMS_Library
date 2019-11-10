@@ -12,6 +12,7 @@ package com.eis0.library_demo;
 import android.content.Context;
 import android.util.Log;
 
+import com.eis0.smslibrary.ReceivedMessageListener;
 import com.eis0.smslibrary.SMSManager;
 import com.eis0.smslibrary.SMSMessage;
 import com.eis0.smslibrary.SMSPeer;
@@ -19,7 +20,7 @@ import com.eis0.smslibrary.SMSPeer;
 import java.util.HashMap;
 import java.util.Map;
 
-class TernaryPoll extends Poll {
+class TernaryPoll extends Poll implements ReceivedMessageListener<SMSMessage> {
     private enum PollResult {
         YES("Yes"), NO("No"), UNAVAILABLE("Unavailable");
         private String answer;
@@ -166,5 +167,15 @@ class TernaryPoll extends Poll {
         for (SMSPeer user : pollUsers.keySet()) {
             smsManager.sendMessage(new SMSMessage(user, message));
         }
+    }
+
+    /**
+     * Receives an SMSMessage and updates poll data accordingly.
+     * If the message was sent by the pollAuthor, updates the content of the local copy of the Poll.
+     * If the message was sent by a pollUser who is not the pollAuthor, sets his answer accordingly
+     * and updates all other users.
+     */
+    public void onMessageReceived(SMSMessage message) {
+
     }
 }
