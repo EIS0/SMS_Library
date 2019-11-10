@@ -63,6 +63,9 @@ public class SMSPeer implements Peer {
         return false;
     }
 
+    /**
+     * @author Giovanni Velludo
+     */
     @Override
     public boolean equals(@Nullable Object obj) {
         if (obj == this) return true;
@@ -72,6 +75,9 @@ public class SMSPeer implements Peer {
         return peer.address.equals(this.address);
     }
 
+    /**
+     * @author Giovanni Velludo
+     */
     @Override
     public int hashCode() {
         return address.hashCode();

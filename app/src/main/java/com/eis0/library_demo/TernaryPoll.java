@@ -174,6 +174,7 @@ class TernaryPoll extends Poll implements ReceivedMessageListener<SMSMessage> {
      * If the message was sent by the pollAuthor, updates the content of the local copy of the Poll.
      * If the message was sent by a pollUser who is not the pollAuthor, sets his answer accordingly
      * and updates all other users.
+     * @author Giovanni Velludo
      */
     public void onMessageReceived(SMSMessage message) {
 
