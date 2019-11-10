@@ -14,6 +14,7 @@ import android.util.Log;
 import com.eis0.smslibrary.SMSMessage;
 import com.eis0.smslibrary.SMSPeer;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,24 +38,27 @@ class TernaryPoll extends Poll {
     private static final String LOG_KEY = "APP_POLL";
 
     /**
-     * Creates a poll given the author and the question.
+     * Creates a local copy of a poll coming from another device.
      * @param question the question to ask all users.
      * @param author the user creating the poll.
+     * @param users users to include in the poll.
+     * @param id the id of the poll.
      */
-    TernaryPoll(String question, SMSPeer author) {
+    TernaryPoll(String question, SMSPeer author, ArrayList<SMSPeer> users, int id) {
         pollAuthor = author;
-        pollId = ++TernaryPoll.pollCount;
+        pollId = id;
         pollQuestion = question;
         pollUsers = new HashMap<>();
+        for (SMSPeer user : users) this.addUser(user);
     }
 
     /**
-     * Creates a poll and sends it to all users included in it.
+     * Creates a new poll from this device.
      * @param question the question to ask all users.
      * @param author the user creating the poll.
      * @param users users to include in the poll.
      */
-    TernaryPoll(String question, SMSPeer author, SMSPeer[] users) {
+    TernaryPoll(String question, SMSPeer author, ArrayList<SMSPeer> users) {
         pollId = ++TernaryPoll.pollCount;
         pollQuestion = question;
         pollAuthor = author;
@@ -127,7 +131,7 @@ class TernaryPoll extends Poll {
 
     /**
      * Converts a new poll to the following String:
-     * messageCode + pollAuthor + pollId + pollQuestion + pollUsers
+     * messageCode + pollAuthor + pollId + pollQuestion + pollUsers + CR
      * Fields are separated by the character CR, except for messageCode
      * and pollAuthor because the first is always only the first character.
      * Different pollUsers are separated by the character CR.
@@ -141,7 +145,7 @@ class TernaryPoll extends Poll {
      * @author Giovanni Velludo
      */
     private String pollToMessage() {
-        String message = "0" + pollAuthor + "\r" + pollId + "\r" + pollQuestion;
+        String message = "0" + pollAuthor + "\r" + pollId + "\r" + pollQuestion + "\r";
         // adds each pollUser to the end of the message
         for (SMSPeer user : pollUsers.keySet()) {
             message = message + "\r" + user;
