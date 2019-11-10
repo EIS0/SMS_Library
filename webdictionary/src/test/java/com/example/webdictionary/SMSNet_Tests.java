@@ -22,7 +22,7 @@ public class SMSNet_Tests {
     public void addPeer_CheckIfAdded() {
         SMSNetDictionary net = new SMSNetDictionary();
         SMSPeer peer = new SMSPeer("3423541601");
-        SMSResource resource = new SMSResource(peer,"photo.png");
+        SMSResource resource = new SMSResource("photo.png");
         SMSResource[] resources = {resource};
         net.add(peer, resources);
         assertEquals(net.getAvailablePeers()[0], peer);
@@ -40,7 +40,7 @@ public class SMSNet_Tests {
     public void addResource_CheckIfAdded() {
         SMSNetDictionary net = new SMSNetDictionary();
         SMSPeer peer = new SMSPeer("3423541601");
-        SMSResource resource = new SMSResource(peer,"photo.png");
+        SMSResource resource = new SMSResource("photo.png");
         SMSResource[] resources = {resource};
         net.add(peer, resources);
         assertEquals(net.getAvailableResources()[0], resource);
@@ -50,7 +50,7 @@ public class SMSNet_Tests {
     public void removePeer_CheckNoPeer() {
         SMSNetDictionary net = new SMSNetDictionary();
         SMSPeer peer = new SMSPeer("3423541601");
-        SMSResource resource = new SMSResource(peer,"photo.png");
+        SMSResource resource = new SMSResource("photo.png");
         SMSResource[] resources = {resource};
         net.add(peer, resources);
         net.remove(peer);
@@ -61,7 +61,7 @@ public class SMSNet_Tests {
     public void removePeer_CheckNoResources() {
         SMSNetDictionary net = new SMSNetDictionary();
         SMSPeer peer = new SMSPeer("3423541601");
-        SMSResource resource = new SMSResource(peer,"photo.png");
+        SMSResource resource = new SMSResource("photo.png");
         SMSResource[] resources = {resource};
         net.add(peer, resources);
         net.remove(peer);
@@ -72,9 +72,9 @@ public class SMSNet_Tests {
     public void addResources_CheckPeerResources() {
         SMSNetDictionary net = new SMSNetDictionary();
         SMSPeer peer = new SMSPeer("3423541601");
-        SMSResource resource1 = new SMSResource(peer,"photo.png");
-        SMSResource resource2 = new SMSResource(peer,"home.jpg");
-        SMSResource resource3 = new SMSResource(peer,"test.jpg");
+        SMSResource resource1 = new SMSResource("photo.png");
+        SMSResource resource2 = new SMSResource("home.jpg");
+        SMSResource resource3 = new SMSResource("test.jpg");
         SMSResource[] resources = {resource1, resource2, resource3};
         net.add(peer, resources);
         for(int i = 0; i < resources.length; i++){
@@ -87,9 +87,9 @@ public class SMSNet_Tests {
         SMSNetDictionary net = new SMSNetDictionary();
         SMSPeer peer1 = new SMSPeer("3423541601");
         SMSPeer peer2 = new SMSPeer("5554");
-        SMSResource resource1 = new SMSResource(peer1,"photo.png");
-        SMSResource resource2 = new SMSResource(peer1,"home.jpg");
-        SMSResource resource3 = new SMSResource(peer2,"test.jpg");
+        SMSResource resource1 = new SMSResource("photo.png");
+        SMSResource resource2 = new SMSResource("home.jpg");
+        SMSResource resource3 = new SMSResource("test.jpg");
         SMSResource[] resources1 = {resource1, resource2};
         SMSResource[] resources2 = {resource3};
         net.add(peer1, resources1);

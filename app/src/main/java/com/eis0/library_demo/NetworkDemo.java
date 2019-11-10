@@ -1,13 +1,13 @@
 package com.eis0.library_demo;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.eis0.smslibrary.Peer;
 
@@ -24,10 +24,10 @@ public class NetworkDemo extends AppCompatActivity {
         ListView AddressesList = findViewById(R.id.ListView);
 
         //list containing user's number inside the network
-        final ArrayList<Peer> UserList = new ArrayList<Peer>();
+        final ArrayList<Peer> UserList = new ArrayList<>();
 
         //adapter array that will provide AddressesList's information
-        final ArrayAdapter<Peer> adapter = new ArrayAdapter<Peer> ( this,android.R.layout.simple_list_item_1, UserList );
+        final ArrayAdapter<Peer> adapter = new ArrayAdapter<> ( this,android.R.layout.simple_list_item_1, UserList );
         AddressesList.setAdapter(adapter); //insert information to AddressesList
 
         btn.setOnClickListener(new View.OnClickListener() {
