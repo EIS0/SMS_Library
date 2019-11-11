@@ -39,7 +39,7 @@ public class CreatePollActivity extends AppCompatActivity {
         //check if the question is empty
         String question = questionEditText.getText().toString();
         if(question.isEmpty()){
-            Toast.makeText(this, getString(R.string.to_field_cannot_be_empty), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.empty_to_field_message), Toast.LENGTH_SHORT).show();
             return;
         }
 
