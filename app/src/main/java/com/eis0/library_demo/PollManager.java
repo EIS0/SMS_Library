@@ -78,20 +78,21 @@ class PollManager implements ReceivedMessageListener<SMSMessage> {
     }
 
     /**
-     * Creates a new poll and sends it to all included users.
+     * Creates a new poll and sends it to all included users, except for the current user.
      * @param question The question to ask users.
      * @param author The current user of the app.
      * @param users Users to which the question should be asked.
      */
     void createPoll(String question, SMSPeer author, ArrayList<SMSPeer> users) {
         TernaryPoll poll = new TernaryPoll(question, author, users);
-        polls.put(new Pair<SMSPeer, Integer>(poll.pollAuthor, poll.pollId), poll);
+        polls.put(new Pair<>(poll.pollAuthor, poll.pollId), poll);
         sendNewPoll(poll);
     }
 
     /**
      * Sets the answer of the user in the local copy of the poll and sends the updated poll to
-     * the author.
+     * the author. If the current user is also the author of the poll, he will receive an SMS from
+     * himself and thus pollListener will be informed with onPollUpdated
      * @param author The author of the poll.
      * @param id ID of the poll.
      * @param user The current user of the application.
@@ -104,7 +105,7 @@ class PollManager implements ReceivedMessageListener<SMSMessage> {
         if (answer) poll.setYes(user);
         else poll.setNo(user);
         polls.put(key, poll);
-        sendAnswer(poll, author);
+        sendAnswer(poll, user);
     }
 
     /**
@@ -126,7 +127,7 @@ class PollManager implements ReceivedMessageListener<SMSMessage> {
         String data = message.getData();
         char messageCode = data.charAt(0);
         if (messageCode == '0') {
-            /* Received new TernaryPoll.
+            /* Received a new TernaryPoll.
              *
              * SMSMessage fields:
              * messageCode + pollAuthor + pollId + pollQuestion + pollUsers + CR
@@ -362,10 +363,36 @@ class PollManager implements ReceivedMessageListener<SMSMessage> {
 
     /**
      * Sends an answer as a text message from a user to the author.
+     * @param poll The poll which was answered.
+     * @param voter The current user, who answered the poll.
      * @author Giovanni Velludo
      */
-    private void sendAnswer(TernaryPoll poll, SMSPeer author) {
-        String message = answerToMessage(poll);
-        smsManager.sendMessage(new SMSMessage(author, message));
+    private void sendAnswer(TernaryPoll poll, SMSPeer voter) {
+        String message = answerToMessage(poll, voter);
+        smsManager.sendMessage(new SMSMessage(poll.pollAuthor, message));
+    }
+
+    /**
+     * Converts a poll answer to the following String:
+     * messageCode + pollAuthor + pollId + pollUser + pollResult
+     * Fields are separated by the character CR, except for messageCode
+     * and pollAuthor because the first is always only the first character.
+     *
+     * messageCode assumes the following values:
+     * 0 when the message contains a new poll
+     * 1 when the message is sent from a user to the author and contains an answer
+     * 2 when the message is sent from the author to users and contains updated poll data
+     *
+     * @param poll The updated poll.
+     * @return Message to send to poll users.
+     * @author Giovanni Velludo
+     */
+    private static String answerToMessage(TernaryPoll poll, SMSPeer voter) {
+        // TODO: write getters in TernaryPoll and use those instead of accessing variables directly
+        String message = "1" + poll.pollAuthor + "\r" + poll.pollId + "\r" + voter + "\r";
+        int result;
+        if (poll.getAnswer(voter).equals("Yes")) result = 1;
+        else result = 0;
+        return message + result;
     }
 }
