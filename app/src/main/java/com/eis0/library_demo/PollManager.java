@@ -149,30 +149,34 @@ class PollManager implements ReceivedMessageListener<SMSMessage> {
             while (data.charAt(authorEndIndex) != fieldSeparator) {
                 authorEndIndex++;
             }
-            pollAuthor = new SMSPeer(data.substring(authorIndex, authorEndIndex - authorIndex));
+            pollAuthor = new SMSPeer(data.substring(authorIndex, authorEndIndex));
 
             int idIndex = authorEndIndex + 1;
             int idEndIndex = idIndex;
             while (data.charAt(idEndIndex) != fieldSeparator) {
                 idEndIndex++;
             }
-            pollId = Integer.parseInt(data.substring(idIndex, idEndIndex - idIndex));
+            pollId = Integer.parseInt(data.substring(idIndex, idEndIndex));
 
             int questionIndex = idEndIndex + 1;
             int questionEndIndex = questionIndex;
             while (data.charAt(questionEndIndex) != fieldSeparator) {
                 questionEndIndex++;
             }
-            pollQuestion = data.substring(questionIndex, questionEndIndex - questionIndex);
+            pollQuestion = data.substring(questionIndex, questionEndIndex);
 
             // TODO: test these two cycles
-            int userEndIndex = questionEndIndex + 1;
-            for (int userIndex = userEndIndex; userIndex < data.length(); userIndex += userEndIndex + 1) {
+            int userIndex = questionEndIndex + 1;
+            int userEndIndex = userIndex;
+            while (userEndIndex < data.length()) {
                 while (data.charAt(userEndIndex) != fieldSeparator) {
                     userEndIndex++;
-                }
-                pollUsers.add(new SMSPeer(data.substring(userIndex, userEndIndex - userIndex)));
+                    }
+                pollUsers.add(new SMSPeer(data.substring(userIndex, userEndIndex)));
+                userIndex = userEndIndex + 1;
+                userEndIndex = userIndex;
             }
+
             // finished parsing message fields
 
             // creates a new Poll and adds it to a Map of Polls
@@ -202,21 +206,21 @@ class PollManager implements ReceivedMessageListener<SMSMessage> {
             while (data.charAt(authorEndIndex) != fieldSeparator) {
                 authorEndIndex++;
             }
-            pollAuthor = new SMSPeer(data.substring(authorIndex, authorEndIndex - authorIndex));
+            pollAuthor = new SMSPeer(data.substring(authorIndex, authorEndIndex));
 
             int idIndex = authorEndIndex + 1;
             int idEndIndex = idIndex;
             while (data.charAt(idEndIndex) != fieldSeparator) {
                 idEndIndex++;
             }
-            pollId = Integer.parseInt(data.substring(idIndex, idEndIndex - idIndex));
+            pollId = Integer.parseInt(data.substring(idIndex, idEndIndex));
 
             int userIndex = idEndIndex + 1;
             int userEndIndex = userIndex;
             while (data.charAt(userEndIndex) != fieldSeparator) {
                 userEndIndex++;
             }
-            pollUser = new SMSPeer(data.substring(userIndex, userEndIndex - userIndex));
+            pollUser = new SMSPeer(data.substring(userIndex, userEndIndex));
 
             int resultIndex = userEndIndex + 1;
             pollResult = data.substring(resultIndex).equals("1");
@@ -257,21 +261,21 @@ class PollManager implements ReceivedMessageListener<SMSMessage> {
             while (data.charAt(authorEndIndex) != fieldSeparator) {
                 authorEndIndex++;
             }
-            pollAuthor = new SMSPeer(data.substring(authorIndex, authorEndIndex - authorIndex));
+            pollAuthor = new SMSPeer(data.substring(authorIndex, authorEndIndex));
 
             int idIndex = authorEndIndex + 1;
             int idEndIndex = idIndex;
             while (data.charAt(idEndIndex) != fieldSeparator) {
                 idEndIndex++;
             }
-            pollId = Integer.parseInt(data.substring(idIndex, idEndIndex - idIndex));
+            pollId = Integer.parseInt(data.substring(idIndex, idEndIndex));
 
             int userIndex = idEndIndex + 1;
             int userEndIndex = userIndex;
             while (data.charAt(userEndIndex) != fieldSeparator) {
                 userEndIndex++;
             }
-            pollUser = new SMSPeer(data.substring(userIndex, userEndIndex - userIndex));
+            pollUser = new SMSPeer(data.substring(userIndex, userEndIndex));
 
             int resultIndex = userEndIndex + 1;
             pollResult = data.substring(resultIndex).equals("1");
