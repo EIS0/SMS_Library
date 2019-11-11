@@ -1,6 +1,9 @@
 package com.eis0.library_demo;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -14,11 +17,13 @@ import com.eis0.smslibrary.SMSPeer;
 import java.util.ArrayList;
 
 public class CreatePollActivity extends AppCompatActivity {
+
     private EditText questionEditText;
     private EditText peerEditText1;
     private EditText peerEditText2;
     private EditText peerEditText3;
     private ArrayList<SMSPeer> peers = new ArrayList<>();
+    private PollManager pollManager = PollManager.getInstance(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,10 +68,20 @@ public class CreatePollActivity extends AppCompatActivity {
         //if I'm here I have at least one Peer, and they're all valid
 
         //create and send each SMS
-        for(SMSPeer peer : peers){
-            SMSMessage sms = new SMSMessage(peer, question);
-            SMSManager.getInstance(this).sendMessage(sms);
+        //for(SMSPeer peer : peers){
+        //    SMSMessage sms = new SMSMessage(peer, question);
+        //    SMSManager.getInstance(this).sendMessage(sms);
+        //}
+
+        String mPhoneNumber = "";
+        try {
+            TelephonyManager tMgr = (TelephonyManager)this.getSystemService(Context.TELEPHONY_SERVICE);
+            mPhoneNumber = tMgr.getLine1Number();
+        } catch(SecurityException e) {
+            throw e;
         }
+
+        pollManager.createPoll(question, new SMSPeer(mPhoneNumber), peers);
     }
 
     /**
@@ -87,7 +102,7 @@ public class CreatePollActivity extends AppCompatActivity {
     /**
      * Removes empty Peers from the peers list
      */
-    private void removeEmptyPeers(){
+    private void removeEmptyPeers() {
         for(SMSPeer peer : peers){
             if(peer.isEmpty()){
                 peers.remove(peer);

@@ -7,7 +7,6 @@ import com.eis0.smslibrary.SMSPeer;
  */
 abstract class Poll {
 
-
     /**
      * @return Int representing poll ID
      */

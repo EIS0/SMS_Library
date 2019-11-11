@@ -18,6 +18,7 @@ import java.util.Map;
  * otherwise.
  */
 class TernaryPoll extends Poll {
+
     private enum PollResult {
         YES("Yes"), NO("No"), UNAVAILABLE("Unavailable");
         private String answer;
