@@ -39,36 +39,53 @@ public class NetworkConnection {
     public enum RequestType{
         JoinPermission,
         AcceptJoin,
+        UpdatePeers,
         LeavePermission,
         Ping
     }
-    private enum UpdateType{
-        Add,
-        Remove,
-        Change
-    }
 
     /**
-     * Sends a given valid peer a request to join his network
+     * Sends a given valid peer a request to join his network,
+     * It also sends the current network state
+     * @param peer The peer to send the message to.
      */
     public void askToJoin(SMSPeer peer){
-        SMSManager.getInstance(context).sendMessage(new SMSMessage(peer, RequestType.JoinPermission.ordinal()+""));
+        SMSManager.getInstance(context).sendMessage(new SMSMessage(peer, RequestType.JoinPermission.ordinal()+" " + peersInNetwork()));
     }
 
     /**
      * Accepts a request to Join this network, then sends the peer an update on the net
-     * @param peer The Peer asking to join this network
+     * @param linkPeer The Peer asking to join this network, working as a link between 2 nets now joined
+     * @param text The message received with the sender's network state
      */
-    private void acceptJoin(SMSPeer peer){
-        //Create a String with all the Peers in my network
+    private void acceptJoin(SMSPeer linkPeer, String text){
+        String[] newPeersOnNet = text.split(" ");
+        String oldPeersInNet = peersInNetwork();
+        //add new peers to my net
+        for(int i = 1; i < newPeersOnNet.length; i++){
+            netDict.add(new SMSPeer(newPeersOnNet[i]), null);
+        }
+        //notify new peers of my old peers
+        for(String newPeerAddress: newPeersOnNet){
+            SMSPeer newPeer = new SMSPeer(newPeerAddress);
+            SMSManager.getInstance(context).sendMessage(new SMSMessage(newPeer, RequestType.UpdatePeers.ordinal() + " " + oldPeersInNet));
+        }
+        //notify my old peers about the new ones
+        for(String oldPeerAddress : oldPeersInNet.split(" ")){
+            SMSPeer oldPeer = new SMSPeer(oldPeerAddress);
+            SMSManager.getInstance(context).sendMessage(new SMSMessage(oldPeer, RequestType.UpdatePeers.ordinal() + " " + text));
+        }
+    }
+
+    /**
+     * Returns a space separated String with all the Peers in my Network
+     */
+    private String peersInNetwork(){
         String netPeers = "";
         for(SMSPeer netPeer : netDict.getAvailablePeers()){
             netPeers += netPeer + " ";
         }
-        //Then I add the new peer to the net, and I update him on the net state
-        //N.B. I don't send him that he's on the net because he already has it's own net with him inside
-        netDict.add(peer, null);
-        SMSManager.getInstance(context).sendMessage(new SMSMessage(peer, RequestType.AcceptJoin.ordinal() + " " + netPeers));
+        return netPeers;
     }
 
     /**
@@ -124,10 +141,14 @@ public class NetworkConnection {
 
             if(incomingRequest == RequestType.JoinPermission){
                 Log.d(LOG_KEY, "Received Join Permission: accepting...");
-                net.acceptJoin(peer);
+                net.acceptJoin(peer, text);
             }
             else if(incomingRequest == RequestType.AcceptJoin){
                 Log.d(LOG_KEY, "Received Join Accepted: updating net...");
+                net.updateNet(text);
+            }
+            else if(incomingRequest == RequestType.UpdatePeers){
+                Log.d(LOG_KEY, "Received Update Net Request: updating net...");
                 net.updateNet(text);
             }
         }
