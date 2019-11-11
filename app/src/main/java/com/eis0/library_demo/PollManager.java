@@ -179,6 +179,9 @@ class PollManager implements ReceivedMessageListener<SMSMessage> {
             polls.put(new Pair<>(pollAuthor, pollId), poll);
             // informs PollListener
             pollListener.onNewPollReceived(poll);
+
+
+        // TODO: merge handling of messages with messageCode 1 and 2, as it's almost the same
         } else if (messageCode == 1) {
             /* Received new answer from an user.
              *
@@ -233,8 +236,54 @@ class PollManager implements ReceivedMessageListener<SMSMessage> {
             }
             this.sendUpdatedPoll(poll, destinations);
 
+
         } else if (messageCode == '2') {
-            // TODO: parse message, update poll data and inform PollListener
+            /* Received an update from pollAuthor.
+             *
+             * SMSMessage fields:
+             * messageCode + pollAuthor + pollId + pollUser + result
+             * Fields are separated by the character CR, except for messageCode
+             * and pollAuthor because the first is always only the first character.
+             * result is 1 if the answer is yes, 0 if the answer is no.
+             */
+            // TODO: check if pollAuthor is the same as peer and act accordingly
+            SMSPeer pollAuthor;
+            int pollId;
+            SMSPeer pollUser;
+            boolean pollResult;
+
+            int authorEndIndex = authorIndex;
+            while (data.charAt(authorEndIndex) != fieldSeparator) {
+                authorEndIndex++;
+            }
+            pollAuthor = new SMSPeer(data.substring(authorIndex, authorEndIndex - authorIndex));
+
+            int idIndex = authorEndIndex + 1;
+            int idEndIndex = idIndex;
+            while (data.charAt(idEndIndex) != fieldSeparator) {
+                idEndIndex++;
+            }
+            pollId = Integer.parseInt(data.substring(idIndex, idEndIndex - idIndex));
+
+            int userIndex = idEndIndex + 1;
+            int userEndIndex = userIndex;
+            while (data.charAt(userEndIndex) != fieldSeparator) {
+                userEndIndex++;
+            }
+            pollUser = new SMSPeer(data.substring(userIndex, userEndIndex - userIndex));
+
+            int resultIndex = userEndIndex + 1;
+            pollResult = data.substring(resultIndex).equals("1");
+            // finished parsing message fields
+
+            // modifies pollResult of pollUser in Poll identified by pollId and pollAuthor
+            Pair<SMSPeer, Integer> authorAndId = new Pair<>(pollAuthor, pollId);
+            TernaryPoll poll = polls.get(authorAndId);
+            if (pollResult) poll.setYes(pollUser);
+            else poll.setNo(pollUser);
+            polls.put(authorAndId, poll);
+            // informs PollListener
+            pollListener.onPollUpdated(poll);
         }
     }
 
