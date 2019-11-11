@@ -62,16 +62,17 @@ public class NetworkConnection {
         String[] newPeersOnNet = text.split(" ");
         String oldPeersInNet = peersInNetwork();
         //add new peers to my net
-        for(int i = 1; i < newPeersOnNet.length; i++){
-            netDict.add(new SMSPeer(newPeersOnNet[i]), null);
-        }
+        updateNet(text);
+        updateNet(oldPeersInNet);
         //notify new peers of my old peers
         for(String newPeerAddress: newPeersOnNet){
+            Log.d(LOG_KEY, "New Peer: " + newPeerAddress);
             SMSPeer newPeer = new SMSPeer(newPeerAddress);
             SMSManager.getInstance(context).sendMessage(new SMSMessage(newPeer, RequestType.UpdatePeers.ordinal() + " " + oldPeersInNet));
         }
         //notify my old peers about the new ones
         for(String oldPeerAddress : oldPeersInNet.split(" ")){
+            Log.d(LOG_KEY, "Old Peer: " + oldPeerAddress);
             SMSPeer oldPeer = new SMSPeer(oldPeerAddress);
             SMSManager.getInstance(context).sendMessage(new SMSMessage(oldPeer, RequestType.UpdatePeers.ordinal() + " " + text));
         }
@@ -138,18 +139,17 @@ public class NetworkConnection {
                 peer = new SMSPeer(peer.toString().substring(peer.toString().length() - 4));
             }
             RequestType incomingRequest = RequestType.values()[Integer.parseInt(text.split(" ")[0])];
-
             if(incomingRequest == RequestType.JoinPermission){
                 Log.d(LOG_KEY, "Received Join Permission: accepting...");
-                net.acceptJoin(peer, text);
+                net.acceptJoin(peer, text.substring(2));
             }
             else if(incomingRequest == RequestType.AcceptJoin){
                 Log.d(LOG_KEY, "Received Join Accepted: updating net...");
-                net.updateNet(text);
+                net.updateNet(text.substring(2));
             }
             else if(incomingRequest == RequestType.UpdatePeers){
                 Log.d(LOG_KEY, "Received Update Net Request: updating net...");
-                net.updateNet(text);
+                net.updateNet(text.substring(2));
             }
         }
     }
