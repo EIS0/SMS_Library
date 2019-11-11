@@ -13,6 +13,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,6 +30,8 @@ import com.eis0.smslibrary.SMSMessage;
 import com.eis0.smslibrary.SMSPeer;
 import com.eis0.smslibrary.ReceivedMessageListener;
 import com.eis0.smslibrary.SMSManager;
+import com.eis0.storagelibrary.PollStoring;
+import com.eis0.storagelibrary.TernaryPoll;
 
 import java.util.ArrayList;
 import java.util.Set;
@@ -61,7 +64,7 @@ public class DemoActivity extends AppCompatActivity implements ReceivedMessageLi
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         // Asks the user for permission if not already granted
-        if(!isNotificationListenerEnabled(getApplicationContext()))
+        if (!isNotificationListenerEnabled(getApplicationContext()))
             openNotificationListenSettings();
 
         destText = findViewById(R.id.recipientNumber);
@@ -74,7 +77,7 @@ public class DemoActivity extends AppCompatActivity implements ReceivedMessageLi
         SMSManager.getInstance(this).addReceiveListener(this);
 
         createNotificationChannel();
-        for(final String[] pendingDialog : pendingDialogs) {
+        for (final String[] pendingDialog : pendingDialogs) {
             new AlertDialog.Builder(this)
                     .setTitle(pendingDialog[0] + getString(R.string.says_hi))
                     .setPositiveButton(getString(R.string.say_hi_back), new DialogInterface.OnClickListener() {
@@ -92,6 +95,35 @@ public class DemoActivity extends AppCompatActivity implements ReceivedMessageLi
                     .show();
         }
         pendingDialogs.clear();
+
+
+
+
+        /**TODO: I have to remember to tell the Boys that I changed TernaryPoll and getPollId from not-specified/protected to public
+         * P.S. I hope they don't get mad
+         */
+        String destination = "+393479281192";
+        PollStoring storage = new PollStoring();
+        TernaryPoll first = new TernaryPoll(new SMSPeer(destination));
+        TernaryPoll second = new TernaryPoll(new SMSPeer(destination));
+
+        //Creating a custom fileName for the TernaryPoll object
+        String fileName = storage.setFileName(second);
+        Log.d("Data_management_process", "File name: " + fileName);
+
+        //Converting the TernaryPoll object into a .json file
+        String jason = storage.convertToJson(second);
+
+        //Saving and loading from the Internal Storage
+        storage.saveJsonToInternal(this, fileName, jason);
+        String jasonReturned = storage.loadJsonFromInternal(this, fileName);
+
+        //Converting the .json file into a TernaryPoll object
+        TernaryPoll restituito = storage.convertFromJson(jasonReturned);
+
+        //Checking for the correct transfer of the file, visualizing a representative value of the object
+        Log.d("Data_management_process", "Poll ID: " + restituito.getPollId());
+
     }
 
     /**
@@ -127,6 +159,7 @@ public class DemoActivity extends AppCompatActivity implements ReceivedMessageLi
 
     /**
      * Called when the option menu is created
+     *
      * @param menu Option menu created
      * @return Returns true when the option menu is created
      */
@@ -139,6 +172,7 @@ public class DemoActivity extends AppCompatActivity implements ReceivedMessageLi
 
     /**
      * Called when an item is selected in the option menu
+     *
      * @param item Item that gets selected
      * @return Returns the state of the option menu
      */
@@ -161,11 +195,12 @@ public class DemoActivity extends AppCompatActivity implements ReceivedMessageLi
 
     /**
      * Sends a message to the target received in input from the demo.
+     *
      * @param view View that sends the onClick event.
      */
     public void sendButtonOnClick(View view) {
         SMSPeer destination = new SMSPeer(destText.getText().toString());
-        if(destination.isEmpty()) {
+        if (destination.isEmpty()) {
             Toast.makeText(this, getString(R.string.to_field_cannot_be_empty), Toast.LENGTH_SHORT).show();
             return;
         }
@@ -175,6 +210,7 @@ public class DemoActivity extends AppCompatActivity implements ReceivedMessageLi
 
     /**
      * Sends a message (SMS) to the specified target.
+     *
      * @param destination Target who will receive the message with the APP_ID.
      */
     private void sendHello(SMSPeer destination) {
@@ -185,19 +221,20 @@ public class DemoActivity extends AppCompatActivity implements ReceivedMessageLi
     /**
      * Requests permissions for the library/app to work if not granted
      */
-    private void requestPermissions(){
+    private void requestPermissions() {
         ActivityCompat.requestPermissions(this, PERMISSIONS, 1);
     }
 
     /**
      * Creates and shows an Alert when a message is received. If the app is running in background shows
      * a notification.
+     *
      * @param message The message received.
      */
     public void onMessageReceived(SMSMessage message) {
         final SMSPeer from = message.getPeer();
         final int notID = notificationID++;
-        if(getLifecycle().getCurrentState() != Lifecycle.State.RESUMED) {
+        if (getLifecycle().getCurrentState() != Lifecycle.State.RESUMED) {
             Intent intent = new Intent(this, DemoActivity.class);
             intent.setAction(Intent.ACTION_MAIN);
             intent.addCategory(Intent.CATEGORY_LAUNCHER);
@@ -214,11 +251,10 @@ public class DemoActivity extends AppCompatActivity implements ReceivedMessageLi
             notificationManager.notify(notID, builder.build());
         }
 
-        if(getLifecycle().getCurrentState() == Lifecycle.State.DESTROYED) {
+        if (getLifecycle().getCurrentState() == Lifecycle.State.DESTROYED) {
             String[] pendingDialog = {from.getAddress(), notID + ""};
             pendingDialogs.add(pendingDialog);
-        }
-        else {
+        } else {
             new AlertDialog.Builder(this)
                     .setTitle(from + getString(R.string.says_hi))
                     .setPositiveButton(getString(R.string.say_hi_back), new DialogInterface.OnClickListener() {
@@ -239,6 +275,7 @@ public class DemoActivity extends AppCompatActivity implements ReceivedMessageLi
 
     /**
      * Checks if the notification listener is enabled.
+     *
      * @param context Context where the notification listener should be active.
      * @return Returns if the notification listener is enabled.
      */

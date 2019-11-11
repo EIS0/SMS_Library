@@ -1,8 +1,7 @@
 /**
  * This class allows the User to:
  * => create a custom name for the file inside whom the Poll will be saved, based upon the Poll ID
- * => convert TernaryPoll Objects in .jar files, and vice versa
- * => save and load .jar files in and from the Internal Storage
+ * => convert TernaryPoll Objects in .jar files, and vice versa*
  *
  * @author Enrico Cestaro
  */

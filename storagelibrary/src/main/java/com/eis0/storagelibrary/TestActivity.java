@@ -18,7 +18,7 @@ public class TestActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test);
 
-        SaveAndLoadPoll storage = new SaveAndLoadPoll();
+        PollStoring storage = new PollStoring();
         /**TODO inizializing the TernaryPoll object
          * TernaryPoll = new TernaryPoll();
          */
@@ -29,14 +29,14 @@ public class TestActivity extends AppCompatActivity {
         Log.d("Data_management_process", "File name: " + fileName);
 
         //Converting the TernaryPoll object into a .json file
-        String jason = storage.fromPollToJson(added);
+        String jason = storage.convertToJson(added);
 
         //Saving and loading from the Internal Storage
         storage.saveJsonToInternal(this, fileName, jason);
         String jasonReturned = storage.loadJsonFromInternal(this, fileName);
 
         //Converting the .json file into a TernaryPoll object
-        TernaryPoll restituito = storage.fromJsonToPoll(jasonReturned);
+        TernaryPoll restituito = storage.convertFromJson(jasonReturned);
 
         //Checking for the correct transfer of the file, visualizing a representative value of the object
         Log.d("Data_management_process", "Poll ID: " + restituito.getPollId());

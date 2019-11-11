@@ -19,7 +19,7 @@ import com.eis0.smslibrary.SMSPeer;
 import java.util.HashMap;
 import java.util.Map;
 
-class TernaryPoll extends Poll {
+public class TernaryPoll extends Poll {
     private enum PollResult {
         YES("Yes"), NO("No"), UNAVAILABLE("Unavailable");
         private String answer;
@@ -42,7 +42,7 @@ class TernaryPoll extends Poll {
      * Creates an empty poll given the author
      * @param author the user creating the poll
      */
-    TernaryPoll(SMSPeer author) {
+    public TernaryPoll(SMSPeer author) {
         pollAuthor = author;
         pollId = ++TernaryPoll.pollCount;
         pollQuestion = "";
@@ -55,7 +55,7 @@ class TernaryPoll extends Poll {
      * @param users users to include in the poll
      * @param activity context of the application creating the poll, needed by SMSManager
      */
-    TernaryPoll(String question, SMSPeer[] users, Context activity) {
+    public TernaryPoll(String question, SMSPeer[] users, Context activity) {
         pollId = ++TernaryPoll.pollCount;
         pollQuestion = question;
         pollUsers = new HashMap<>();
@@ -123,7 +123,7 @@ class TernaryPoll extends Poll {
     /**
      * @return poll ID.
      */
-    protected int getPollId() {
+    public int getPollId() {
         return this.pollId;
     }
 

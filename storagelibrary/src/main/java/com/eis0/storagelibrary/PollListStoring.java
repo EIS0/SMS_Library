@@ -18,7 +18,11 @@ public class PollListStoring extends StoringJsons implements JsonConverter<Array
     public final String receivedListName = "receivedPollList.json";
     private ArrayList<String> receivedPollList;
 
-
+    /**
+     *
+     * @param listOfFiles
+     * @return
+     */
     public String convertToJson(ArrayList<String> listOfFiles) {
         Gson gson = new Gson();
         String json = gson.toJson(listOfFiles);
@@ -26,6 +30,11 @@ public class PollListStoring extends StoringJsons implements JsonConverter<Array
         return json;
     }
 
+    /**
+     *
+     * @param json
+     * @return
+     */
     public ArrayList<String> convertFromJson(String json) {
         Gson gson = new Gson();
         ArrayList<String> listOfFiles = gson.fromJson(json, ArrayList.class);
@@ -33,14 +42,31 @@ public class PollListStoring extends StoringJsons implements JsonConverter<Array
         return listOfFiles;
     }
 
+    /**
+     *
+     * @param context
+     * @param listName
+     * @param json
+     */
     public void savePollList(Context context, String listName, String json) {
         saveJsonToInternal(context, listName, json);
     }
 
+    /**
+     *
+     * @param context
+     * @param fileName
+     * @return
+     */
     public String loadPollList(Context context, String fileName) {
         return loadJsonFromInternal(context, fileName);
     }
 
+    /**
+     *
+     * @param fileName
+     * @param listName
+     */
     public void removeFromPollList(String fileName, String listName) {
         switch(listName) {
             case pendingListName:
@@ -54,6 +80,11 @@ public class PollListStoring extends StoringJsons implements JsonConverter<Array
 
     }
 
+    /**
+     *
+     * @param fileName
+     * @param listName
+     */
     public void addToPollList(String fileName, String listName) {
         switch (listName) {
             case pendingListName:
