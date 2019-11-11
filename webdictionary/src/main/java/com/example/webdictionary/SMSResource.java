@@ -1,6 +1,5 @@
 package com.example.webdictionary;
 
-import com.eis0.smslibrary.SMSPeer;
 
 public class SMSResource implements Resource<String> {
     private String resource;
