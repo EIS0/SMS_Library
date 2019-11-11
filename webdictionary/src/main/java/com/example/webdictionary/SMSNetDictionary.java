@@ -54,8 +54,7 @@ public class SMSNetDictionary implements NetworkDictionary<SMSPeer,SMSResource> 
         for (Map.Entry <SMSPeer, SMSResource[]> entry : NetDict.entrySet()){
             allAvailablePeers[i++] = entry.getKey();
         }
-        if(allAvailablePeers.length != 0) return allAvailablePeers;
-        return null;
+        return allAvailablePeers;
     }
 
     /**

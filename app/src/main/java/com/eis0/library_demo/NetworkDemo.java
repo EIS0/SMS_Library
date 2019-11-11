@@ -21,8 +21,6 @@ import com.eis0.smslibrary.SMSPeer;
 import com.example.webdictionary.NetworkConnection;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -36,9 +34,9 @@ public class NetworkDemo extends AppCompatActivity {
             Manifest.permission.READ_SMS
     };
     private EditText t1;
-    private List<SMSPeer> UserList = new ArrayList<>();
-    private ListView AddressesList;
-    ArrayAdapter<SMSPeer> adapter;
+    private ArrayList<String> userList;
+    private ListView addressesList;
+    ArrayAdapter<String> adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,25 +44,39 @@ public class NetworkDemo extends AppCompatActivity {
         setContentView(R.layout.activity_network_demo);
         Button btn = findViewById(R.id.button);
         t1 = findViewById(R.id.editText);
-        AddressesList = findViewById(R.id.ListView);
+        addressesList = findViewById(R.id.ListView);
 
         requestPermissions();
+        //list containing user's number inside the network
+        userList = getPeersAsStrings();
+        //adapter array that will provide addressesList's information
+        adapter = new ArrayAdapter<> ( this,android.R.layout.simple_list_item_1, userList);
+        addressesList.setAdapter(adapter); //insert information to addressesList
         Timer timer = new Timer();
         timer.schedule(new UpdateList(this), 0,500);
-        //list containing user's number inside the network
-        UserList = Arrays.asList(NetworkConnection.getInstance(this, null).getOnlinePeers());
-        //adapter array that will provide AddressesList's information
-        adapter = new ArrayAdapter<> ( this,android.R.layout.simple_list_item_1, UserList );
-        AddressesList.setAdapter(adapter); //insert information to AddressesList
     }
 
     /**
      * Function called every 500ms to update the view
      */
     public void updateList(){
-        UserList = Arrays.asList(NetworkConnection.getInstance(this, null).getOnlinePeers());
-        Log.d("Demo", "updating list " + UserList.toString());
+        userList = getPeersAsStrings();
+        Log.d("Demo", "updating list " + userList.toString());
+        adapter.clear();
+        adapter.addAll(userList);
         adapter.notifyDataSetChanged();
+    }
+
+    /**
+     * Returns online peers as an ArrayList of Strings
+     */
+    private ArrayList<String> getPeersAsStrings(){
+        SMSPeer[] peers = NetworkConnection.getInstance(this, getPhoneNumber()).getOnlinePeers();
+        ArrayList<String> peersAsStrings = new ArrayList<>();
+        for(SMSPeer peer : peers){
+            peersAsStrings.add(peer.getAddress());
+        }
+        return peersAsStrings;
     }
 
     /**
@@ -102,6 +114,19 @@ public class NetworkDemo extends AppCompatActivity {
      */
     public void buttonClick(View arg0){
         SMSPeer peer = new SMSPeer(t1.getText().toString());
+
+        if(peer.isValid()){
+            NetworkConnection.getInstance(this, getPhoneNumber()).askToJoin(peer);
+        }
+        else{
+            Toast.makeText(getApplicationContext(),"Please insert a valid SMSPeer!",Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /**
+     * Returns the telephone number of this phone as an SMSPeer
+     */
+    private SMSPeer getPhoneNumber(){
         TelephonyManager tMgr = (TelephonyManager)this.getSystemService(Context.TELEPHONY_SERVICE);
         String phoneNumber = "";
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
@@ -110,11 +135,6 @@ public class NetworkDemo extends AppCompatActivity {
                 phoneNumber = phoneNumber.substring(phoneNumber.length() - 4);
             }
         }
-        if(peer.isValid()){
-            NetworkConnection.getInstance(this, new SMSPeer(phoneNumber)).askToJoin(peer);
-        }
-        else{
-            Toast.makeText(getApplicationContext(),"Please insert a valid SMSPeer!",Toast.LENGTH_SHORT).show();
-        }
+        return new SMSPeer(phoneNumber);
     }
 }
