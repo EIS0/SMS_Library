@@ -1,5 +1,5 @@
 /**
- * Debugging class, a showcase of the library abilities
+ * Debugging class, a showcase of the library methods
  *
  * @author Enrico Cestaro
  */

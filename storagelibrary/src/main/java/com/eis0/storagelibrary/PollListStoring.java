@@ -1,3 +1,10 @@
+/**
+ * This class allows the user to save, load and modify three different lists containing TernaryPoll
+ * objects
+ *
+ * @author Enrico Cestaro
+ */
+
 package com.eis0.storagelibrary;
 
 import android.content.Context;
@@ -19,7 +26,6 @@ public class PollListStoring extends StoringJsons implements JsonConverter<Array
     private ArrayList<String> receivedPollList;
 
     /**
-     *
      * @param listOfFiles
      * @return
      */
@@ -31,7 +37,6 @@ public class PollListStoring extends StoringJsons implements JsonConverter<Array
     }
 
     /**
-     *
      * @param json
      * @return
      */
@@ -43,7 +48,6 @@ public class PollListStoring extends StoringJsons implements JsonConverter<Array
     }
 
     /**
-     *
      * @param context
      * @param listName
      * @param json
@@ -53,7 +57,6 @@ public class PollListStoring extends StoringJsons implements JsonConverter<Array
     }
 
     /**
-     *
      * @param context
      * @param fileName
      * @return
@@ -63,25 +66,24 @@ public class PollListStoring extends StoringJsons implements JsonConverter<Array
     }
 
     /**
-     *
      * @param fileName
      * @param listName
      */
     public void removeFromPollList(String fileName, String listName) {
-        switch(listName) {
+        switch (listName) {
             case pendingListName:
                 break;
             case closedListName:
                 break;
             case receivedListName:
                 break;
-            default: Log.d("Data_mamagement_process","No list correspond to the one specified");
+            default:
+                Log.d("Data_mamagement_process", "No list correspond to the one specified");
         }
 
     }
 
     /**
-     *
      * @param fileName
      * @param listName
      */

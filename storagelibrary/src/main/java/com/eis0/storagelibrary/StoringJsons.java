@@ -1,3 +1,8 @@
+/**
+ * This interface allows the user to save, load and delete files to and from the Internal Storage
+ *
+ * @author Enrico Cestaro
+ */
 package com.eis0.storagelibrary;
 
 import android.content.Context;
@@ -12,7 +17,7 @@ import java.io.InputStreamReader;
 
 import static android.content.Context.MODE_PRIVATE;
 
-public class StoringJsons implements InternalMemoryStorage<TernaryPoll> {
+public class StoringJsons implements InternalMemoryStorage {
     /**
      * This method converts and saves the content of the poll inside of the corresponding file
      * in the .json format
