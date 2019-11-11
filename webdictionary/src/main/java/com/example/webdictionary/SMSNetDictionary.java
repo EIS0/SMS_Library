@@ -60,8 +60,7 @@ public class SMSNetDictionary implements NetworkDictionary<SMSPeer,SMSResource> 
             //Dictionary scanner
             allAvailablePeers[i++] = entry.getKey();
         }
-        if(allAvailablePeers.length != 0) return allAvailablePeers;
-        return null;
+        return allAvailablePeers;
     }
 
     /**
