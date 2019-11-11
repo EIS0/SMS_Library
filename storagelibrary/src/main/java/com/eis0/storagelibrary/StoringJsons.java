@@ -1,17 +1,7 @@
-/**
- * This class allows the User to:
- * => create a custom name for the file inside whom the Poll will be saved, based upon the Poll ID
- * => convert TernaryPoll Objects in .jar files, and vice versa
- * => save and load .jar files in and from the Internal Storage
- *
- * @author Enrico Cestaro
- */
 package com.eis0.storagelibrary;
 
 import android.content.Context;
 import android.util.Log;
-
-import com.google.gson.Gson;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -20,52 +10,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-
 import static android.content.Context.MODE_PRIVATE;
 
-public class SaveAndLoadPoll implements PollStorage<TernaryPoll> {
-
-    /**
-     * This method makes use of the google library GSON to convert a TernaryPoll object in the
-     * corresponding JSON String
-     *
-     * @param ternaryPoll the TernaryPoll object to convert
-     * @return Returns a String containing the corresponding .jar value
-     */
-    public String fromPollToJson(TernaryPoll ternaryPoll) {
-        Gson gson = new Gson();
-        String json = gson.toJson(ternaryPoll);
-        Log.d("Data_management_process", json);
-        return json;
-    }
-
-    /**
-     * This method makes use of the google library GSON to convert a String value (representing a
-     * .json file) into a TernaryPoll object
-     *
-     * @param json The String value containing the .json format file
-     * @return
-     */
-    public TernaryPoll fromJsonToPoll(String json) {
-        Gson gson = new Gson();
-        TernaryPoll ternaryPollReturned = gson.fromJson(json, TernaryPoll.class);
-        Log.d("Data_management_process", json);
-        return ternaryPollReturned;
-    }
-
-    /**
-     * This method allows the User to create custom names for the files which will be used to store
-     * in the Internal Storage the content of the specified TernaryPoll objects
-     *
-     * @param poll Contains the TernaryPoll object of which must be created a name
-     * @return Returns the name of the file inside to whom the corresponding poll is being saved
-     * (in the .json format)
-     */
-    public String setFileName(TernaryPoll poll) {
-        int pollID = poll.getPollId();
-        return "Poll_" + pollID + ".json";
-    }
-
+public class StoringJsons implements InternalMemoryStorage<TernaryPoll> {
     /**
      * This method converts and saves the content of the poll inside of the corresponding file
      * in the .json format
@@ -135,7 +82,6 @@ public class SaveAndLoadPoll implements PollStorage<TernaryPoll> {
         return json;
     }
 
-
     /**
      * Receive the context and the file to delete from the Internal Storage
      *
@@ -145,5 +91,4 @@ public class SaveAndLoadPoll implements PollStorage<TernaryPoll> {
     public void deleteInternalFile(Context context, String fileName) {
         context.deleteFile(fileName);
     }
-
 }
