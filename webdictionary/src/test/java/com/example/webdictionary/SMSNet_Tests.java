@@ -99,4 +99,18 @@ public class SMSNet_Tests {
         assertEquals(net.findPeerWithResource(resource2), peer1);
     }
 
+    @Test
+    public void addReosurcesToAnExistingPeer(){
+        SMSNetDictionary net = new SMSNetDictionary();
+        SMSPeer peer = new SMSPeer("12345");
+        SMSResource resource1 = new SMSResource("photo.png");
+        SMSResource resource2 = new SMSResource("home.jpg");
+        SMSResource[] resources1 = {resource1};
+        SMSResource[] resources2 = {resource2};
+        net.add(peer, resources1);
+        net.add(peer, resources2);
+        SMSPeer[] peers = net.getAvailablePeers();
+        assertEquals(peers.length, 1);
+    }
+
 }
