@@ -10,4 +10,9 @@
     <string name="poll_li_dash">-</string>
     <string name="poll_li_no">NO</string>
     <string name="poll_li_percentage">%</string>
+
+    <!-- Create Poll strings-->
+    <string name="question_input">Ask a question!</string>
+    <string name="peer_number">Send me a poll!</string>
+    <string name="button_send">Send</string>
 </resources>
