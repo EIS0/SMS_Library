@@ -8,9 +8,11 @@ import com.eis0.smslibrary.SMSManager;
 import com.eis0.smslibrary.SMSMessage;
 import com.eis0.smslibrary.SMSPeer;
 
+import java.security.InvalidParameterException;
+import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Creates and modifies TernaryPoll objects based on inputs from Activities and SMS Messages.
@@ -23,7 +25,8 @@ class PollManager implements ReceivedMessageListener<SMSMessage> {
     private static PollManager instance = null; // must always be static for getInstance to work
     private static final char fieldSeparator = '\r';
     private static final int authorIndex = 1;
-    private Map<Pair<SMSPeer, Integer>, TernaryPoll> polls = new HashMap<>();
+    // TODO: write to disk when the program is reset
+    private HashMap<Pair<SMSPeer, Integer>, TernaryPoll> polls = new HashMap<>();
     private PollListener pollListener;
     private Context context;
     private SMSManager smsManager;
@@ -37,7 +40,7 @@ class PollManager implements ReceivedMessageListener<SMSMessage> {
      * Returns a new instance of PollManager if none exist, otherwise the one already created as per
      * the Singleton Design Patter.
      * @param context Context of the application requesting a PollManager.
-     * @return Single instance of this class.
+     * @return The only instance of this class.
      */
     static PollManager getInstance(Context context) {
         if(instance == null) instance = new PollManager();
@@ -53,12 +56,55 @@ class PollManager implements ReceivedMessageListener<SMSMessage> {
         pollListener = listener;
     }
 
-    void createPoll(String question, SMSPeer author, ArrayList<SMSPeer> users) {
-        // TODO: create Poll, add it to map of polls and send it to all users
+    /**
+     * Returns a poll given the author and the id.
+     * @param author The creator of the poll.
+     * @param id The creator's unique id of the poll.
+     * @return The requested poll.
+     * @throws InvalidParameterException When the given author and id are not associated to any poll.
+     */
+    TernaryPoll getPoll(SMSPeer author, int id) throws InvalidParameterException {
+        Pair<SMSPeer, Integer> key = new Pair<>(author, id);
+        if (polls.containsKey(key)) return polls.get(key);
+        else throw new InvalidParameterException(MessageFormat.format("Missing value for key {0}, {1}", author, id));
     }
 
+    /**
+     * @return A collection containing all polls managed by PollManager.
+     */
+    Collection<TernaryPoll> getAllPolls() {
+        // TODO: throw an exception when polls is empty?
+        return polls.values();
+    }
+
+    /**
+     * Creates a new poll and sends it to all included users.
+     * @param question The question to ask users.
+     * @param author The current user of the app.
+     * @param users Users to which the question should be asked.
+     */
+    void createPoll(String question, SMSPeer author, ArrayList<SMSPeer> users) {
+        TernaryPoll poll = new TernaryPoll(question, author, users);
+        polls.put(new Pair<SMSPeer, Integer>(poll.pollAuthor, poll.pollId), poll);
+        sendNewPoll(poll);
+    }
+
+    /**
+     * Sets the answer of the user in the local copy of the poll and sends the updated poll to
+     * the author.
+     * @param author The author of the poll.
+     * @param id ID of the poll.
+     * @param user The current user of the application.
+     * @param answer The user's answer, true equals "Yes" and false equals "No".
+     */
     void answerPoll(SMSPeer author, int id, SMSPeer user, boolean answer) {
-        // TODO: update local copy of poll, send answer to author
+        // TODO: if user is the same as the author, he shouldn't waste a message to himself
+        Pair<SMSPeer, Integer> key = new Pair<>(author, id);
+        TernaryPoll poll = polls.get(key);
+        if (answer) poll.setYes(user);
+        else poll.setNo(user);
+        polls.put(key, poll);
+        sendAnswer(poll, author);
     }
 
     /**
@@ -183,7 +229,7 @@ class PollManager implements ReceivedMessageListener<SMSMessage> {
             // sends modified poll to all users (except for the voter)
             ArrayList<SMSPeer> destinations = new ArrayList<>();
             for (SMSPeer user : poll.pollUsers.keySet()){
-                if (!user.equals(pollUser)) destinations.add(user);
+                if (!user.equals(pollUser)) destinations.add(user); // pollUser is the voter
             }
             this.sendUpdatedPoll(poll, destinations);
 
@@ -192,6 +238,18 @@ class PollManager implements ReceivedMessageListener<SMSMessage> {
         }
     }
 
+    /**
+     * Sends a new poll as a text message to each pollUser.
+     * @author Giovanni Velludo
+     */
+    private void sendNewPoll(TernaryPoll poll) {
+        String message = newPollToMessage(poll);
+        for (SMSPeer user : poll.pollUsers.keySet()) {
+            if (!user.equals(poll.pollAuthor)) {
+                smsManager.sendMessage(new SMSMessage(user, message));
+            }
+        }
+    }
 
     /**
      * Converts a new poll to the following String:
@@ -209,30 +267,33 @@ class PollManager implements ReceivedMessageListener<SMSMessage> {
      * @author Giovanni Velludo
      */
     private static String newPollToMessage(TernaryPoll poll) {
+        // TODO: write getters in TernaryPoll and use those instead of accessing variables directly
         String message = "0" + poll.pollAuthor + "\r" + poll.pollId + "\r" + poll.pollQuestion + "\r";
         // adds each pollUser to the end of the message
         for (SMSPeer user : poll.pollUsers.keySet()) {
-            message = message + "\r" + user;
+            message = message + user + "\r";
         }
         return message;
     }
 
     /**
-     * Sends a new poll as a text message to each pollUser.
+     * Sends an updated poll as a text message from the author to the target users.
      * @author Giovanni Velludo
      */
-    private void sendNewPoll(TernaryPoll poll) {
-        String message = newPollToMessage(poll);
-        for (SMSPeer user : poll.pollUsers.keySet()) {
+    private void sendUpdatedPoll(TernaryPoll poll, ArrayList<SMSPeer> users) {
+        String message = updatedPollToMessage(poll);
+        for (SMSPeer user : users) {
             smsManager.sendMessage(new SMSMessage(user, message));
         }
     }
 
     /**
-     * Sends an updated poll as a text message to the target users.
+     * Sends an answer as a text message from a user to the author.
      * @author Giovanni Velludo
      */
-    private void sendUpdatedPoll(TernaryPoll poll, ArrayList<SMSPeer> users) {
-
+    private void sendAnswer(TernaryPoll poll, SMSPeer author) {
+        String message = answerToMessage(poll);
+        smsManager.sendMessage(new SMSMessage(author, message));
+        }
     }
 }

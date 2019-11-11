@@ -29,7 +29,7 @@ class TernaryPoll extends Poll {
             return answer;
         }
     }
-    private static int pollCount = 0;
+    private static int pollCount = 0; // TODO: save this value when the program is shutdown
     int pollId;
     SMSPeer pollAuthor;
     String pollQuestion;
@@ -38,9 +38,9 @@ class TernaryPoll extends Poll {
 
     /**
      * Creates a local copy of a poll coming from another device.
-     * @param question the question to ask all users.
-     * @param author the user creating the poll.
-     * @param users users to include in the poll.
+     * @param question the question asked to all users.
+     * @param author the user who created the poll.
+     * @param users users included in the poll.
      * @param id the id of the poll.
      */
     TernaryPoll(String question, SMSPeer author, ArrayList<SMSPeer> users, int id) {
