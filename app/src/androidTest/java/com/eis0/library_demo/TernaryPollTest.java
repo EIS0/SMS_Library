@@ -1,10 +1,9 @@
 package com.eis0.library_demo;
 
 import com.eis0.smslibrary.SMSPeer;
+import com.eis0.storagelibrary.TernaryPoll;
 
 import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 public class TernaryPollTest {
 

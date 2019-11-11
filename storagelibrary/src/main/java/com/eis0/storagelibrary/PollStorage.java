@@ -1,7 +1,7 @@
 package com.eis0.storagelibrary;
 
 import android.content.Context;
-    public interface PollStorage <T extends TernaryPoll>{
+    public interface PollStorage <T extends Poll>{
         String setFileName(T poll);
         String fromPollToJson(T ternaryPoll);
         T fromJsonToPoll(String content);

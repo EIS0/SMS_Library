@@ -20,6 +20,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+
 import static android.content.Context.MODE_PRIVATE;
 
 public class SaveAndLoadPoll implements PollStorage<TernaryPoll> {
@@ -33,7 +34,6 @@ public class SaveAndLoadPoll implements PollStorage<TernaryPoll> {
      */
     public String fromPollToJson(TernaryPoll ternaryPoll) {
         Gson gson = new Gson();
-        ternaryPoll = new TernaryPoll();
         String json = gson.toJson(ternaryPoll);
         Log.d("Data_management_process", json);
         return json;
@@ -62,7 +62,7 @@ public class SaveAndLoadPoll implements PollStorage<TernaryPoll> {
      * (in the .json format)
      */
     public String setFileName(TernaryPoll poll) {
-        int pollID = poll.pollId;
+        int pollID = poll.getPollId();
         return "Poll_" + pollID + ".json";
     }
 

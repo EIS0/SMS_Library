@@ -19,7 +19,10 @@ public class TestActivity extends AppCompatActivity {
         setContentView(R.layout.activity_test);
 
         SaveAndLoadPoll storage = new SaveAndLoadPoll();
-        TernaryPoll added = new TernaryPoll();
+        /**TODO inizializing the TernaryPoll object
+         * TernaryPoll = new TernaryPoll();
+         */
+        TernaryPoll added = null;
 
         //Creating a custom fileName for the TernaryPoll object
         String fileName = storage.setFileName(added);
@@ -36,7 +39,7 @@ public class TestActivity extends AppCompatActivity {
         TernaryPoll restituito = storage.fromJsonToPoll(jasonReturned);
 
         //Checking for the correct transfer of the file, visualizing a representative value of the object
-        Log.d("Data_management_process", "Poll ID: " + restituito.pollId);
+        Log.d("Data_management_process", "Poll ID: " + restituito.getPollId());
 
     }
 }
