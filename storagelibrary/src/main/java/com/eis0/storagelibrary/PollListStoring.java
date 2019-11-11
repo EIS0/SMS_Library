@@ -25,6 +25,18 @@ public class PollListStoring extends StoringJsons implements JsonConverter<Array
     public final String receivedListName = "receivedPollList.json";
     private ArrayList<String> receivedPollList;
 
+    /**TODO Make it better
+     *
+     */
+    private static int pollIdCounter;
+    public void setPollIdCounter(int pollIdCounter) {
+    this.pollIdCounter = pollIdCounter;
+    }
+    public int getPollIdCounter() {
+        return pollIdCounter;
+    }
+
+
     /**
      * @param listOfFiles
      * @return
@@ -50,9 +62,10 @@ public class PollListStoring extends StoringJsons implements JsonConverter<Array
     /**
      * @param context
      * @param listName
-     * @param json
+     * @param pollList
      */
-    public void savePollList(Context context, String listName, String json) {
+    public void savePollList(Context context, String listName, ArrayList<String> pollList) {
+        String json = this.convertToJson(pollList);
         saveJsonToInternal(context, listName, json);
     }
 
@@ -61,44 +74,48 @@ public class PollListStoring extends StoringJsons implements JsonConverter<Array
      * @param fileName
      * @return
      */
-    public String loadPollList(Context context, String fileName) {
-        return loadJsonFromInternal(context, fileName);
+    public ArrayList<String> loadPollList(Context context, String fileName) {
+        String json = loadJsonFromInternal(context, fileName);
+        return this.convertFromJson(json);
     }
 
     /**
-     * @param fileName
      * @param listName
+     * @param fileName
      */
-    public void removeFromPollList(String fileName, String listName) {
+    public void removeFromPollList(String listName, String fileName) {
         switch (listName) {
             case pendingListName:
+                pendingPollList.remove(fileName);
                 break;
             case closedListName:
+                closedPollList.remove(fileName);
                 break;
             case receivedListName:
-                break;
-            default:
-                Log.d("Data_mamagement_process", "No list correspond to the one specified");
-        }
-
-    }
-
-    /**
-     * @param fileName
-     * @param listName
-     */
-    public void addToPollList(String fileName, String listName) {
-        switch (listName) {
-            case pendingListName:
-                break;
-            case closedListName:
-                break;
-            case receivedListName:
+                receivedPollList.remove(fileName);
                 break;
             default:
                 Log.d("Data_mamagement_process", "No list correspond to the one specified");
         }
     }
 
-
+    /**
+     * @param listName
+     * @param fileName
+     */
+    public void addToPollList(String listName, String fileName) {
+        switch (listName) {
+            case pendingListName:
+                pendingPollList.add(fileName);
+                break;
+            case closedListName:
+                closedPollList.add(fileName);
+                break;
+            case receivedListName:
+                receivedPollList.add(fileName);
+                break;
+            default:
+                Log.d("Data_mamagement_process", "No list correspond to the one specified");
+        }
+    }
 }
