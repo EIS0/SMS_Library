@@ -98,4 +98,5 @@ public class SMSNet_Tests {
         net.add(peer2, resources2);
         assertEquals(net.findPeerWithResource(resource2), peer1);
     }
+
 }
