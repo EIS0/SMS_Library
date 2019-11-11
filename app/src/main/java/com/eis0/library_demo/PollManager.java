@@ -25,7 +25,7 @@ class PollManager implements ReceivedMessageListener<SMSMessage> {
     private static PollManager instance = null; // must always be static for getInstance to work
     private static final char fieldSeparator = '\r';
     private static final int authorIndex = 1;
-    // TODO: write to disk when the program is reset
+    // TODO: write to disk when the program is removed from memory
     private HashMap<Pair<SMSPeer, Integer>, TernaryPoll> polls = new HashMap<>();
     private PollListener pollListener;
     private Context context;
@@ -234,7 +234,7 @@ class PollManager implements ReceivedMessageListener<SMSMessage> {
             for (SMSPeer user : poll.pollUsers.keySet()){
                 if (!user.equals(pollUser)) destinations.add(user); // pollUser is the voter
             }
-            this.sendUpdatedPoll(poll, destinations);
+            this.sendUpdatedPoll(poll, destinations, pollUser);
 
 
         } else if (messageCode == '2') {
@@ -329,11 +329,35 @@ class PollManager implements ReceivedMessageListener<SMSMessage> {
      * Sends an updated poll as a text message from the author to the target users.
      * @author Giovanni Velludo
      */
-    private void sendUpdatedPoll(TernaryPoll poll, ArrayList<SMSPeer> users) {
-        String message = updatedPollToMessage(poll);
+    private void sendUpdatedPoll(TernaryPoll poll, ArrayList<SMSPeer> users, SMSPeer voter) {
+        String message = updatedPollToMessage(poll, voter);
         for (SMSPeer user : users) {
             smsManager.sendMessage(new SMSMessage(user, message));
         }
+    }
+
+    /**
+     * Converts a poll update to the following String:
+     * messageCode + pollAuthor + pollId + pollUser + pollResult
+     * Fields are separated by the character CR, except for messageCode
+     * and pollAuthor because the first is always only the first character.
+     *
+     * messageCode assumes the following values:
+     * 0 when the message contains a new poll
+     * 1 when the message is sent from a user to the author and contains an answer
+     * 2 when the message is sent from the author to users and contains updated poll data
+     *
+     * @param poll The updated poll.
+     * @return Message to send to poll users.
+     * @author Giovanni Velludo
+     */
+    private static String updatedPollToMessage(TernaryPoll poll, SMSPeer voter) {
+        // TODO: write getters in TernaryPoll and use those instead of accessing variables directly
+        String message = "2" + poll.pollAuthor + "\r" + poll.pollId + "\r" + voter + "\r";
+        int result;
+        if (poll.getAnswer(voter).equals("Yes")) result = 1;
+        else result = 0;
+        return message + result;
     }
 
     /**
@@ -343,6 +367,5 @@ class PollManager implements ReceivedMessageListener<SMSMessage> {
     private void sendAnswer(TernaryPoll poll, SMSPeer author) {
         String message = answerToMessage(poll);
         smsManager.sendMessage(new SMSMessage(author, message));
-        }
     }
 }
