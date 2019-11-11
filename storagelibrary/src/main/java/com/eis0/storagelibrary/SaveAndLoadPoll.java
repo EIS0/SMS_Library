@@ -136,11 +136,14 @@ public class SaveAndLoadPoll implements PollStorage<TernaryPoll> {
     }
 
 
-    /*TODO
-    Complete this class
+    /**
+     * Receive the context and the file to delete from the Internal Storage
+     *
+     * @param context
+     * @param fileName Name of the file to delete
      */
-    public void deleteInternalFile(String fileName) {
-
+    public void deleteInternalFile(Context context, String fileName) {
+        context.deleteFile(fileName);
     }
 
 }
