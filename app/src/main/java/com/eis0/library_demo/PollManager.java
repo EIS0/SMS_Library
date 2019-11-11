@@ -18,14 +18,14 @@ import java.util.HashMap;
  * Creates and modifies TernaryPoll objects based on inputs from Activities and SMS Messages.
  * To be notified of changes to polls, your class must implement PollListener, and you must pass it
  * to an instance of PollManager with addPollListener(PollListener).
- * @author Giovanni Velludo
+ * @author Giovanni Velludo, except where specified otherwise
  */
 class PollManager implements ReceivedMessageListener<SMSMessage> {
 
     private static PollManager instance = null; // must always be static for getInstance to work
     private static final char fieldSeparator = '\r';
     private static final int authorIndex = 1;
-    // TODO: write to disk when the program is removed from memory
+    // TODO: write polls to disk when the program is removed from memory
     private HashMap<Pair<SMSPeer, Integer>, TernaryPoll> polls = new HashMap<>();
     private PollListener pollListener;
     private Context context;
@@ -130,7 +130,7 @@ class PollManager implements ReceivedMessageListener<SMSMessage> {
             /* Received a new TernaryPoll.
              *
              * SMSMessage fields:
-             * messageCode + pollAuthor + pollId + pollQuestion + pollUsers + CR
+             * messageCode + pollAuthor + pollId + pollQuestion + pollUsers
              * Fields are separated by the character CR, except for messageCode
              * and pollAuthor because the first is always only the first character.
              * Different pollUsers are separated by the character CR.
@@ -168,8 +168,8 @@ class PollManager implements ReceivedMessageListener<SMSMessage> {
             // TODO: test these two cycles
             int userIndex = questionEndIndex + 1;
             int userEndIndex = userIndex;
-            while (userEndIndex < data.length()) {
-                while (data.charAt(userEndIndex) != fieldSeparator) {
+            while (userEndIndex < data.length() - 1) {
+                while (data.charAt(userEndIndex) != fieldSeparator && userEndIndex < data.length() - 1) {
                     userEndIndex++;
                     }
                 pollUsers.add(new SMSPeer(data.substring(userIndex, userEndIndex)));
@@ -322,10 +322,10 @@ class PollManager implements ReceivedMessageListener<SMSMessage> {
      */
     private static String newPollToMessage(TernaryPoll poll) {
         // TODO: write getters in TernaryPoll and use those instead of accessing variables directly
-        String message = "0" + poll.pollAuthor + "\r" + poll.pollId + "\r" + poll.pollQuestion + "\r";
+        String message = "0" + poll.pollAuthor + "\r" + poll.pollId + "\r" + poll.pollQuestion;
         // adds each pollUser to the end of the message
         for (SMSPeer user : poll.pollUsers.keySet()) {
-            message = message + user + "\r";
+            message = message + "\r" + user;
         }
         return message;
     }
