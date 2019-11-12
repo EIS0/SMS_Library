@@ -1,10 +1,6 @@
 package com.eis0.smslibrary;
 
-import android.util.Log;
-
 import androidx.annotation.Nullable;
-
-import java.util.Objects;
 
 public class SMSPeer implements Peer {
     private String address;

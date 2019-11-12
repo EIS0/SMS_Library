@@ -80,7 +80,7 @@ class TernaryPoll extends Poll {
      * @param user the user to insert in the poll
      */
     void addUser(SMSPeer user){
-        // at the beginning we have no feedback by the user
+        // At the beginning we have no feedback by the user
         PollResult result = PollResult.UNAVAILABLE;
         pollUsers.put(user, result);
     }
@@ -90,11 +90,11 @@ class TernaryPoll extends Poll {
      * @param user user who answered yes.
      */
     void setYes(SMSPeer user) {
-        if (hasUser(user)) {
+        if(hasUser(user)) {
             PollResult result = PollResult.YES;
             pollUsers.put(user, result);
         }
-        else Log.i(LOG_KEY, "trying to manage an inexistent user");
+        else Log.e(LOG_KEY, "Trying to manage an inexistent user");
     }
 
     /**
@@ -106,7 +106,7 @@ class TernaryPoll extends Poll {
             PollResult result = PollResult.NO;
             pollUsers.put(user, result);
         }
-        else Log.i(LOG_KEY, "trying to manage an inexistent user");
+        else Log.e(LOG_KEY, "Trying to manage an inexistent user");
     }
 
     /**
@@ -116,10 +116,8 @@ class TernaryPoll extends Poll {
      * @throws IllegalArgumentException when the user is not included in the poll
      */
     String getAnswer(SMSPeer user) throws IllegalArgumentException {
-        if (hasUser(user))
-            return pollUsers.get(user).toString();
-        else
-            throw new IllegalArgumentException("The user is not part of the poll");
+        if(hasUser(user)) return pollUsers.get(user).toString();
+        else throw new IllegalArgumentException("The user is not part of the poll");
     }
 
     /**

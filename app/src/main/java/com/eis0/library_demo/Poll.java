@@ -19,7 +19,6 @@ abstract class Poll {
      */
     abstract boolean hasUser(SMSPeer user);
 
-
     /**
      * Insert an user in the poll.
      * @param user the user to insert in the poll

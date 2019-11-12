@@ -3,110 +3,64 @@ package com.eis0.library_demo;
 import android.content.Context;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.eis0.smslibrary.SMSManager;
-import com.eis0.smslibrary.SMSMessage;
 import com.eis0.smslibrary.SMSPeer;
 
 import java.util.ArrayList;
 
 public class CreatePollActivity extends AppCompatActivity {
 
-    private EditText questionEditText;
-    private EditText peerEditText1;
-    private EditText peerEditText2;
-    private EditText peerEditText3;
+    private EditText pollQuestionTxt;
+    private EditText peer1Txt;
+    private EditText peer2Txt;
+    private EditText peer3Txt;
     private ArrayList<SMSPeer> peers = new ArrayList<>();
-    private PollManager pollManager = PollManager.getInstance(this);
+    private PollManager pollManager = PollManager.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_poll);
 
-        questionEditText = findViewById(R.id.questionText);
-        peerEditText1 = findViewById(R.id.peerText1);
-        peerEditText2 = findViewById(R.id.peerText2);
-        peerEditText3 = findViewById(R.id.peerText3);
+        pollQuestionTxt = findViewById(R.id.pollQuestionTxt);
+        peer1Txt = findViewById(R.id.peer1Txt);
+        peer2Txt = findViewById(R.id.peer2Txt);
+        peer3Txt = findViewById(R.id.peer3Txt);
     }
 
     /**
-     * Function called when the "Send" button to send a poll is clicked
+     * Function called when the "Send" button is clicked
      * @param view View of the Create Poll Activity
      */
     public void sendPollOnClick(View view) {
-        //check if the question is empty
-        String question = questionEditText.getText().toString();
-        if(question.isEmpty()){
-            Toast.makeText(this, getString(R.string.empty_to_field_message), Toast.LENGTH_SHORT).show();
+        // Check if the question is empty
+        String question = pollQuestionTxt.getText().toString();
+        if(question.isEmpty()) {
+            Toast.makeText(this, getString(R.string.empty_question_message), Toast.LENGTH_SHORT).show();
             return;
         }
 
-        //add peers to process
-        peers.add(new SMSPeer(peerEditText1.getText().toString()));
-        peers.add(new SMSPeer(peerEditText2.getText().toString()));
-        peers.add(new SMSPeer(peerEditText3.getText().toString()));
+        // Add peers to process
+        SMSPeer peer1 = new SMSPeer(peer1Txt.getText().toString());
+        SMSPeer peer2 = new SMSPeer(peer2Txt.getText().toString());
+        SMSPeer peer3 = new SMSPeer(peer3Txt.getText().toString());
+        if(peer1.isValid()) peers.add(peer1);
+        if(peer2.isValid()) peers.add(peer2);
+        if(peer3.isValid()) peers.add(peer3);
 
-        //at least one Peer is required
-        removeEmptyPeers();
-        if(peers.isEmpty()){
-            Toast.makeText(this, "At least one Peer is required!", Toast.LENGTH_SHORT).show();
+        // At least one Peer is required
+        if(peers.isEmpty()) {
+            Toast.makeText(this, getString(R.string.invalid_peers_message), Toast.LENGTH_SHORT).show();
             return;
         }
-        //remove useless peers from the list
-        //every Peer must be valid
-        if(!isEachPeerValid()){
-            Toast.makeText(this, "Every Peer must be valid!", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        //if I'm here I have at least one Peer, and they're all valid
 
-        //create and send each SMS
-        //for(SMSPeer peer : peers){
-        //    SMSMessage sms = new SMSMessage(peer, question);
-        //    SMSManager.getInstance(this).sendMessage(sms);
-        //}
+        // If I'm here I have at least one Peer, and they're all valid
 
-        String mPhoneNumber = "";
-        try {
-            TelephonyManager tMgr = (TelephonyManager)this.getSystemService(Context.TELEPHONY_SERVICE);
-            mPhoneNumber = tMgr.getLine1Number();
-        } catch(SecurityException e) {
-            throw e;
-        }
-
-        pollManager.createPoll(question, new SMSPeer(mPhoneNumber), peers);
-    }
-
-    /**
-     * Returns true if every Peer is valid, false otherwise
-     */
-    private boolean isEachPeerValid(){
-        //assume every input is valid
-        boolean isValid = true;
-        //check if they're all valid
-        for(SMSPeer peer : peers){
-            if(!peer.isValid())
-                isValid = false;
-        }
-
-        return isValid;
-    }
-
-    /**
-     * Removes empty Peers from the peers list
-     */
-    private void removeEmptyPeers() {
-        for(SMSPeer peer : peers){
-            if(peer.isEmpty()){
-                peers.remove(peer);
-            }
-        }
+        pollManager.createPoll(question, peers);
     }
 }

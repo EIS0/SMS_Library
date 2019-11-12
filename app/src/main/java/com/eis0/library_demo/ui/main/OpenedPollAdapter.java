@@ -36,7 +36,7 @@ public class OpenedPollAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup container) {
         if(convertView == null)
-            convertView = inflater.inflate(R.layout.opened_poll_li, null);
+            convertView = inflater.inflate(R.layout.listitem_opened_poll, null);
         TextView pollName = convertView.findViewById(R.id.pollNameTxt);
         TextView pollID = convertView.findViewById(R.id.pollIDTxt);
         ProgressBar pollProgress = convertView.findViewById(R.id.pollProgressBar);

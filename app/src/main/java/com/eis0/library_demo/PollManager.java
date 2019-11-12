@@ -1,6 +1,5 @@
 package com.eis0.library_demo;
 
-import android.content.Context;
 import android.util.Pair;
 
 import com.eis0.smslibrary.ReceivedMessageListener;
@@ -8,6 +7,7 @@ import com.eis0.smslibrary.SMSManager;
 import com.eis0.smslibrary.SMSMessage;
 import com.eis0.smslibrary.SMSPeer;
 
+import java.lang.reflect.Array;
 import java.security.InvalidParameterException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -24,29 +24,27 @@ import java.util.HashMap;
  */
 class PollManager implements ReceivedMessageListener<SMSMessage> {
 
-    private static PollManager instance = null; // must always be static for getInstance to work
-    private static final char fieldSeparator = '\r';
-    private static final int authorIndex = 1;
+    public static final SMSPeer SELF_PEER = new SMSPeer("self");
+    private static final char FIELD_SEPARATOR = '\r';
+    private static final int AUTHOR_INDEX = 1;
+    private static PollManager instance = null; // Must always be static for getInstance to work
     // TODO: write polls to disk when the program is removed from memory
     private HashMap<Pair<SMSPeer, Integer>, TernaryPoll> polls = new HashMap<>();
     private PollListener pollListener;
-    private Context context;
-    private SMSManager smsManager;
+    private SMSManager smsManager = SMSManager.getInstance();
 
     // Singleton Design Pattern
     private PollManager() {
-        smsManager = SMSManager.getInstance(context);
+        smsManager.addReceiveListener(this);
     }
 
     /**
      * Returns a new instance of PollManager if none exist, otherwise the one already created as per
      * the Singleton Design Patter.
-     * @param context Context of the application requesting a PollManager.
      * @return The only instance of this class.
      */
-    static PollManager getInstance(Context context) {
+    static PollManager getInstance() {
         if(instance == null) instance = new PollManager();
-        instance.context = context;
         return instance;
     }
 
@@ -84,26 +82,24 @@ class PollManager implements ReceivedMessageListener<SMSMessage> {
     /**
      * Creates a new poll and sends it to all included users, except for the current user.
      * @param question The question to ask users.
-     * @param author The current user of the app.
      * @param users Users to which the question should be asked.
      */
-    void createPoll(String question, SMSPeer author, ArrayList<SMSPeer> users) {
-        TernaryPoll poll = new TernaryPoll(question, author, users);
+    void createPoll(String question, ArrayList<SMSPeer> users) {
+        TernaryPoll poll = new TernaryPoll(question, PollManager.SELF_PEER, users);
         polls.put(new Pair<>(poll.pollAuthor, poll.pollId), poll);
         sendNewPoll(poll);
     }
 
     /**
      * Sets the answer of the user in the local copy of the poll and sends the updated poll to
-     * the author. If the current user is also the author of the poll, he will receive an SMS from
-     * himself and thus pollListener will be informed with onPollUpdated.
+     * the author.
      * @param author The author of the poll.
      * @param id ID of the poll.
      * @param user The current user of the application.
      * @param answer The user's answer, true equals "Yes" and false equals "No".
      */
     void answerPoll(SMSPeer author, int id, SMSPeer user, boolean answer) {
-        // TODO: if user is the same as the author, he shouldn't waste a message to himself
+        if(author.equals(SELF_PEER)) throw new IllegalArgumentException("Trying to answer an owning poll");
         Pair<SMSPeer, Integer> key = new Pair<>(author, id);
         TernaryPoll poll = polls.get(key);
         if (answer) poll.setYes(user);
@@ -146,22 +142,22 @@ class PollManager implements ReceivedMessageListener<SMSMessage> {
              *  we could use a single ArrayList for all fields and convert them later
              */
 
-            int authorEndIndex = authorIndex;
-            while (data.charAt(authorEndIndex) != fieldSeparator) {
+            int authorEndIndex = AUTHOR_INDEX;
+            while (data.charAt(authorEndIndex) != FIELD_SEPARATOR) {
                 authorEndIndex++;
             }
-            pollAuthor = new SMSPeer(data.substring(authorIndex, authorEndIndex));
+            pollAuthor = new SMSPeer(data.substring(AUTHOR_INDEX, authorEndIndex));
 
             int idIndex = authorEndIndex + 1;
             int idEndIndex = idIndex;
-            while (data.charAt(idEndIndex) != fieldSeparator) {
+            while (data.charAt(idEndIndex) != FIELD_SEPARATOR) {
                 idEndIndex++;
             }
             pollId = Integer.parseInt(data.substring(idIndex, idEndIndex));
 
             int questionIndex = idEndIndex + 1;
             int questionEndIndex = questionIndex;
-            while (data.charAt(questionEndIndex) != fieldSeparator) {
+            while (data.charAt(questionEndIndex) != FIELD_SEPARATOR) {
                 questionEndIndex++;
             }
             pollQuestion = data.substring(questionIndex, questionEndIndex);
@@ -169,7 +165,7 @@ class PollManager implements ReceivedMessageListener<SMSMessage> {
             int userIndex = questionEndIndex + 1;
             int userEndIndex = userIndex;
             while (userEndIndex < data.length() - 1) {
-                while (data.charAt(userEndIndex) != fieldSeparator
+                while (data.charAt(userEndIndex) != FIELD_SEPARATOR
                         && userEndIndex < data.length() - 1) {
                     userEndIndex++;
                     }
@@ -202,22 +198,22 @@ class PollManager implements ReceivedMessageListener<SMSMessage> {
             SMSPeer pollUser;
             boolean pollResult;
 
-            int authorEndIndex = authorIndex;
-            while (data.charAt(authorEndIndex) != fieldSeparator) {
+            int authorEndIndex = AUTHOR_INDEX;
+            while (data.charAt(authorEndIndex) != FIELD_SEPARATOR) {
                 authorEndIndex++;
             }
-            pollAuthor = new SMSPeer(data.substring(authorIndex, authorEndIndex));
+            pollAuthor = new SMSPeer(data.substring(AUTHOR_INDEX, authorEndIndex));
 
             int idIndex = authorEndIndex + 1;
             int idEndIndex = idIndex;
-            while (data.charAt(idEndIndex) != fieldSeparator) {
+            while (data.charAt(idEndIndex) != FIELD_SEPARATOR) {
                 idEndIndex++;
             }
             pollId = Integer.parseInt(data.substring(idIndex, idEndIndex));
 
             int userIndex = idEndIndex + 1;
             int userEndIndex = userIndex;
-            while (data.charAt(userEndIndex) != fieldSeparator) {
+            while (data.charAt(userEndIndex) != FIELD_SEPARATOR) {
                 userEndIndex++;
             }
             pollUser = new SMSPeer(data.substring(userIndex, userEndIndex));
@@ -253,22 +249,22 @@ class PollManager implements ReceivedMessageListener<SMSMessage> {
             SMSPeer pollUser;
             boolean pollResult;
 
-            int authorEndIndex = authorIndex;
-            while (data.charAt(authorEndIndex) != fieldSeparator) {
+            int authorEndIndex = AUTHOR_INDEX;
+            while (data.charAt(authorEndIndex) != FIELD_SEPARATOR) {
                 authorEndIndex++;
             }
-            pollAuthor = new SMSPeer(data.substring(authorIndex, authorEndIndex));
+            pollAuthor = new SMSPeer(data.substring(AUTHOR_INDEX, authorEndIndex));
 
             int idIndex = authorEndIndex + 1;
             int idEndIndex = idIndex;
-            while (data.charAt(idEndIndex) != fieldSeparator) {
+            while (data.charAt(idEndIndex) != FIELD_SEPARATOR) {
                 idEndIndex++;
             }
             pollId = Integer.parseInt(data.substring(idIndex, idEndIndex));
 
             int userIndex = idEndIndex + 1;
             int userEndIndex = userIndex;
-            while (data.charAt(userEndIndex) != fieldSeparator) {
+            while (data.charAt(userEndIndex) != FIELD_SEPARATOR) {
                 userEndIndex++;
             }
             pollUser = new SMSPeer(data.substring(userIndex, userEndIndex));

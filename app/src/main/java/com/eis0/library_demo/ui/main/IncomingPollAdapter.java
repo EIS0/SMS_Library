@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.eis0.library_demo.R;
@@ -36,7 +35,7 @@ public class IncomingPollAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup container) {
         if(convertView == null)
-            convertView = inflater.inflate(R.layout.incoming_poll_li, null);
+            convertView = inflater.inflate(R.layout.listitem_incoming_poll, null);
         TextView pollName = convertView.findViewById(R.id.pollNameTxt);
         TextView pollID = convertView.findViewById(R.id.pollIDTxt);
         TextView pollQuestion = convertView.findViewById(R.id.pollQuestionTxt);

@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity implements PollListener {
             Manifest.permission.READ_PHONE_STATE,
             Manifest.permission.READ_SMS
     };
-    PollManager pollManager = PollManager.getInstance(this);
+    PollManager pollManager = PollManager.getInstance();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -48,12 +48,6 @@ public class MainActivity extends AppCompatActivity implements PollListener {
         ActivityCompat.requestPermissions(this, PERMISSIONS, 1);
 
         pollManager.addPollListener(this);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        pollManager = PollManager.getInstance(this);
     }
 
     /**

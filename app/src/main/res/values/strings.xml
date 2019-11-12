@@ -15,5 +15,6 @@
     <string name="question_input">Ask a question!</string>
     <string name="peer_number">Send me a poll!</string>
     <string name="button_send">Send</string>
-    <string name="empty_to_field_message">"To" field cannot be empty</string>
+    <string name="empty_question_message">Please insert a question first</string>
+    <string name="invalid_peers_message">Please insert at least one valid phone number</string>
 </resources>

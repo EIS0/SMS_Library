@@ -7,7 +7,7 @@
     tools:context=".CreatePollActivity">
 
     <EditText
-        android:id="@+id/questionText"
+        android:id="@+id/pollQuestionTxt"
         android:layout_width="279dp"
         android:layout_height="93dp"
         android:layout_marginStart="64dp"
@@ -25,7 +25,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/peerText1"
+        android:id="@+id/peer1Txt"
         android:layout_width="213dp"
         android:layout_height="45dp"
         android:layout_marginTop="64dp"
@@ -34,10 +34,10 @@
         android:inputType="phone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/questionText" />
+        app:layout_constraintTop_toBottomOf="@+id/pollQuestionTxt" />
 
     <EditText
-        android:id="@+id/peerText2"
+        android:id="@+id/peer2Txt"
         android:layout_width="213dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
@@ -46,10 +46,10 @@
         android:inputType="phone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/peerText1" />
+        app:layout_constraintTop_toBottomOf="@+id/peer1Txt" />
 
     <EditText
-        android:id="@+id/peerText3"
+        android:id="@+id/peer3Txt"
         android:layout_width="213dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
@@ -58,10 +58,10 @@
         android:inputType="phone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/peerText2" />
+        app:layout_constraintTop_toBottomOf="@+id/peer2Txt" />
 
     <Button
-        android:id="@+id/sendButton"
+        android:id="@+id/sendBtn"
         android:layout_width="88dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="64dp"
@@ -70,5 +70,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/peerText3" />
+        app:layout_constraintTop_toBottomOf="@+id/peer3Txt" />
 </androidx.constraintlayout.widget.ConstraintLayout>
