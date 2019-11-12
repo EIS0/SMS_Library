@@ -7,12 +7,12 @@ package com.eis0.storagelibrary;
 
 public interface JsonConverter<T> {
     /**
-     * Convert the object
+     * Converts the object
      */
     String convertToJson(T objectToConvert);
 
     /**
-     * Convert the .json
+     * Converts the .json
      */
     T convertFromJson(String json);
 }

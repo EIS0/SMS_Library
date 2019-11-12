@@ -1,5 +1,7 @@
 /**
  * Debugging class, a showcase of the library methods
+ * This is a demonstration of how the methods of the Storage Library should be used in the launcher
+ * activity
  *
  * @author Enrico Cestaro
  */
@@ -20,7 +22,7 @@ public class TestActivity extends AppCompatActivity {
 
         PollStoring storage = new PollStoring();
         /**TODO inizializing the TernaryPoll object
-         * TernaryPoll = new TernaryPoll();
+         * TernaryPoll = new TernaryPoll(SMSPeer smsPeer);
          */
         TernaryPoll added = null;
 

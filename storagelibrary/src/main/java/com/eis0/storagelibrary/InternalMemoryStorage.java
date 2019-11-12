@@ -14,14 +14,19 @@ public interface InternalMemoryStorage {
     void saveJsonToInternal(Context context, String fileName, String json);
 
     /**
-     * Load the content of the .json file specified by name
+     * Loads the content of the .json file specified by name
      */
     String loadJsonFromInternal(Context context, String fileName);
 
     /**
-     * Delete the file specified by name
+     * Deletes the file specified by name
      */
     void deleteInternalFile(Context context, String fileName);
+
+    /**
+     * Verifies if the file exists in the Internal Storage
+     */
+    boolean doesFileExist(Context context, String fileName);
 }
 
 

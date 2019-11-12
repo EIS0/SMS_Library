@@ -9,6 +9,7 @@ import android.content.Context;
 import android.util.Log;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -95,5 +96,10 @@ public class StoringJsons implements InternalMemoryStorage {
      */
     public void deleteInternalFile(Context context, String fileName) {
         context.deleteFile(fileName);
+    }
+
+    public boolean doesFileExist(Context context, String fileName) {
+        File file = context.getFileStreamPath(fileName);
+        return file.exists();
     }
 }

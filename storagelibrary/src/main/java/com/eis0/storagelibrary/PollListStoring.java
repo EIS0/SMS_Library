@@ -17,7 +17,7 @@ import java.util.ArrayList;
 
 public class PollListStoring extends StoringJsons implements JsonConverter<ArrayList<String>> {
 
-    //List for the pending polls, waiting to be closed
+    //List for the sent polls, waiting to be closed/waiting for an answer
     public final String pendingListName = "pendingPollList.json";
     private ArrayList<String> pendingPollList;
 
@@ -25,9 +25,40 @@ public class PollListStoring extends StoringJsons implements JsonConverter<Array
     public final String closedListName = "closedPollList.json";
     private ArrayList<String> closedPollList;
 
-    //List for the received polls
+    //List for the received polls, waiting to be closed
     public final String receivedListName = "receivedPollList.json";
     private ArrayList<String> receivedPollList;
+
+
+    /**
+     * Initialize the three lists only if they don't already exist in the Internal Storage
+     * If they do exist, they are loaded from the Internal Storage
+     */
+    public PollListStoring(Context context) {
+        if (!doesFileExist(context, pendingListName))
+            pendingPollList = new ArrayList<>();
+        if (!doesFileExist(context, closedListName))
+            closedPollList = new ArrayList<>();
+        if (!doesFileExist(context, receivedListName))
+            receivedPollList = new ArrayList<>();
+        else {
+            pendingPollList = loadPollList(context, pendingListName);
+            closedPollList = loadPollList(context, closedListName);
+            receivedPollList = loadPollList(context, receivedListName);
+        }
+
+    }
+
+    /**
+     * This method saves the three lists in the Internal Storage
+     *
+     * @param context
+     */
+    public void saveCurrentStatus(Context context) {
+        savePollList(context, pendingListName, pendingPollList);
+        savePollList(context, closedListName, closedPollList);
+        savePollList(context, receivedListName, receivedPollList);
+    }
 
 
     /**
@@ -43,6 +74,7 @@ public class PollListStoring extends StoringJsons implements JsonConverter<Array
     public int getPollIdCounter() {
         return pollIdCounter;
     }
+
 
     /**
      * This method converts an ArrayList<String> object into the corresponding .json file
