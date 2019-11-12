@@ -50,12 +50,14 @@ public class SMSPeer implements Peer {
         try {
             int maxLength = 15;
             if (!isEmpty() && address.length() < maxLength) {
-                if (hasPrefix()) Integer.parseInt(address.substring(1)); // To verify exceptions
-                else Integer.parseInt(address);
+                if (hasPrefix()) Long.parseLong(address.substring(1));
+                else Long.parseLong(address);
                 return true;
             }
         }
-        catch(Exception e) { }
+        catch(Exception e) {
+            return false;
+        }
         return false;
     }
 
