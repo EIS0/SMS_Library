@@ -1,6 +1,6 @@
 package com.eis0.smslibrary;
 
-import android.util.Log;
+import androidx.annotation.Nullable;
 
 public class SMSPeer implements Peer {
     private String address;
@@ -57,5 +57,19 @@ public class SMSPeer implements Peer {
         }
         catch(Exception e) { }
         return false;
+    }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        if((obj == null) || (obj.getClass() != this.getClass())) {
+            return false;
+        }
+        SMSPeer other = (SMSPeer)obj;
+        return other.getAddress().equals(this.address);
+    }
+
+    @Override
+    public int hashCode() {
+        return address.hashCode();
     }
 }

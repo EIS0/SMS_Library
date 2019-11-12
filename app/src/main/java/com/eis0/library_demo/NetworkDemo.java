@@ -131,9 +131,13 @@ public class NetworkDemo extends AppCompatActivity {
         String phoneNumber = "";
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
             phoneNumber = tMgr.getLine1Number();
-            if(phoneNumber.contains("+1555521")){
-                phoneNumber = phoneNumber.substring(phoneNumber.length() - 4);
+            if(phoneNumber.equals("+15555215554")){
+                phoneNumber = "5556";
             }
+            else if(phoneNumber.equals("+15555215556")){
+                phoneNumber = "5554";
+            }
+            Log.d("NetDemo", "Found my Phone: " + phoneNumber);
         }
         return new SMSPeer(phoneNumber);
     }

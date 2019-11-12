@@ -108,10 +108,9 @@ public class NetworkConnection {
      */
     private void updateNet(String peersInNet){
         String[] peers = peersInNet.split(" ");
-        //I start from one, not checking the first code, because I know it's not a Peer
-        for(int i = 1; i < peers.length; i++){
-            SMSPeer peer = new SMSPeer(peers[i]);
-            netDict.add(peer, null);
+        Log.d(LOG_KEY, "Adding this new Peers: " + peersInNet);
+        for(String peer : peers){
+            netDict.add(new SMSPeer(peer), null);
         }
     }
 

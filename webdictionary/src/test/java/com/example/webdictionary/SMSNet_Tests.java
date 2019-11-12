@@ -4,15 +4,17 @@ import com.eis0.smslibrary.SMSPeer;
 
 import org.junit.Test;
 
+import java.util.HashMap;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Example local unit test, which will execute on the development machine (host).
  *
- * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
- *
  * @author Edoardo Raimondi
+ * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
 public class SMSNet_Tests {
     @Test
@@ -56,7 +58,8 @@ public class SMSNet_Tests {
         SMSResource[] resources = {resource};
         net.add(peer, resources);
         net.remove(peer);
-        assertNull(net.getAvailablePeers());
+        SMSResource[] emptyArr;
+        assertEquals(net.getAvailablePeers().length, 0);
     }
 
     @Test
@@ -79,7 +82,7 @@ public class SMSNet_Tests {
         SMSResource resource3 = new SMSResource("test.jpg");
         SMSResource[] resources = {resource1, resource2, resource3};
         net.add(peer, resources);
-        for(int i = 0; i < resources.length; i++){
+        for (int i = 0; i < resources.length; i++) {
             assertEquals(net.findPeerResources(peer)[i], resources[i]);
         }
     }
@@ -100,7 +103,7 @@ public class SMSNet_Tests {
     }
 
     @Test
-    public void addReosurcesToAnExistingPeer(){
+    public void addResourcesToAnExistingPeer() {
         SMSNetDictionary net = new SMSNetDictionary();
         SMSPeer peer = new SMSPeer("12345");
         SMSResource resource1 = new SMSResource("photo.png");
@@ -113,4 +116,32 @@ public class SMSNet_Tests {
         assertEquals(peers.length, 1);
     }
 
+    @Test
+    public void addMultiplePeers(){
+        SMSNetDictionary net = new SMSNetDictionary();
+        SMSPeer peer1 = new SMSPeer("12345");
+        SMSPeer peer2 = new SMSPeer("12345");
+        net.add(peer1, null);
+        net.add(peer2, null);
+        SMSPeer[] peers = net.getAvailablePeers();
+        assertEquals(peers.length, 1);
+    }
+
+    @Test
+    public void testHashMapWithSMSPeersEquals1(){
+        HashMap<SMSPeer, String> hash = new HashMap<>();
+        SMSPeer peer1 = new SMSPeer("12345");
+        SMSPeer peer2 = new SMSPeer("12345");
+        hash.put(peer1, "");
+        assertTrue(hash.containsKey(peer1));
+    }
+
+    @Test
+    public void testHashMapWithSMSPeersEquals2(){
+        HashMap<SMSPeer, String> hash = new HashMap<>();
+        SMSPeer peer1 = new SMSPeer("12345");
+        SMSPeer peer2 = new SMSPeer("12345");
+        hash.put(peer1, "");
+        assertTrue(hash.containsKey(peer2));
+    }
 }

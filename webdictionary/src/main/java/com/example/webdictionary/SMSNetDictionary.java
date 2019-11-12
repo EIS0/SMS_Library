@@ -97,8 +97,9 @@ public class SMSNetDictionary implements NetworkDictionary<SMSPeer,SMSResource> 
      * @param resources A list of Resources to add to the dictionary
      */
     public void add(SMSPeer peer, SMSResource[] resources){
-        if(!NetDict.containsKey(peer)) NetDict.put(peer, resources);
-
+        if(!NetDict.containsKey(peer)){
+            NetDict.put(peer, resources);
+        }
         else { //if already present, add the new resources
             SMSResource[] current = findPeerResources(peer);
             NetDict.put(peer, concatAll(current, resources));
@@ -123,15 +124,18 @@ public class SMSNetDictionary implements NetworkDictionary<SMSPeer,SMSResource> 
     }
 
     /**
-     *  Concatenates two arrays
+     *  Concatenates two arrays. If only one of them is null the other is returned, if both
+     *  are null, null is returned
      * @param array1 to concatenates with array2
      * @param array2 to concatenates with array1
-     * @return Array containing all the elements of param's arrays
+     * @return Array containing all the elements of param's arrays; null if both arrays are null,
+     * the other array if only one is null
      */
     public SMSResource[] concatAll(SMSResource[] array1, SMSResource[] array2) {
-        int totalLength = array1.length;
-            totalLength += array2.length;
-
+        if(array1 == null && array2 == null) return null;
+        if(array1 == null) return array2;
+        if(array2 == null) return array1;
+        int totalLength = array1.length + array2.length;
         SMSResource[] result = Arrays.copyOf(array1, totalLength);
 
         int offset = array1.length;
