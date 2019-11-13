@@ -4,7 +4,6 @@ import android.util.Log;
 
 import com.eis0.smslibrary.SMSPeer;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -77,7 +76,7 @@ public class SMSNetDictionary implements NetworkDictionary<SMSPeer,SMSResource> 
                 int index = i + cont;
                 //check if full
                 if(allAvailableResources.length == index) {
-                    allAvailableResources = doubleArraySize(allAvailableResources);
+                    allAvailableResources = SMSNetDictionarySupport.doubleArraySize(allAvailableResources);
                 }
                 allAvailableResources[index] = entry.getValue()[i];
             }
@@ -91,6 +90,7 @@ public class SMSNetDictionary implements NetworkDictionary<SMSPeer,SMSResource> 
 
     }
 
+
     /**
      * Adds a valid Peer-Resources[] couple to the network dictionary
      * @param peer A peer to add to the dictionary
@@ -102,7 +102,7 @@ public class SMSNetDictionary implements NetworkDictionary<SMSPeer,SMSResource> 
         }
         else { //if already present, add the new resources
             SMSResource[] current = findPeerResources(peer);
-            NetDict.put(peer, concatAll(current, resources));
+            NetDict.put(peer, SMSNetDictionarySupport.concatAll(current, resources));
         }
     }
 
@@ -114,34 +114,5 @@ public class SMSNetDictionary implements NetworkDictionary<SMSPeer,SMSResource> 
         NetDict.remove(peer);
     }
 
-    /**
-     * Doubles array size
-     * @param array to expand
-     * @return Same array with double size
-     */
-    public SMSResource[] doubleArraySize(SMSResource[] array) {
-        return java.util.Arrays.copyOf(array, array.length * 2);
-    }
-
-    /**
-     *  Concatenates two arrays. If only one of them is null the other is returned, if both
-     *  are null, null is returned
-     * @param array1 to concatenates with array2
-     * @param array2 to concatenates with array1
-     * @return Array containing all the elements of param's arrays; null if both arrays are null,
-     * the other array if only one is null
-     */
-    public SMSResource[] concatAll(SMSResource[] array1, SMSResource[] array2) {
-        if(array1 == null && array2 == null) return null;
-        if(array1 == null) return array2;
-        if(array2 == null) return array1;
-        int totalLength = array1.length + array2.length;
-        SMSResource[] result = Arrays.copyOf(array1, totalLength);
-
-        int offset = array1.length;
-
-            System.arraycopy(array2, 0, result, offset, array2.length);
-        return result;
-    }
 }
 
