@@ -8,19 +8,28 @@ import com.eis0.smslibrary.SMSPeer;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.ArrayList;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.verify;
 
-public class PollManagerTest implements PollListener {
+@RunWith(MockitoJUnitRunner.class)
+public class PollManagerTest {
     private static Context fakeContext;
     private static PollManager pollManager;
+
+    @Mock
+    private static PollListener fakePollListener;
 
     @BeforeClass
     public static void classSetUp() {
         fakeContext = ApplicationProvider.getApplicationContext();
         pollManager = PollManager.getInstance(fakeContext);
+        pollManager.addPollListener(fakePollListener);
     }
 
     @Test
@@ -36,7 +45,7 @@ public class PollManagerTest implements PollListener {
         // CASE 0: received new poll
 
         // registers listener which will be called by PollManager
-        pollManager.addPollListener(this);
+        pollManager.addPollListener(fakePollListener);
         SMSPeer sender = new SMSPeer("3337235485");
         String text = "03337235485\r38\rQuestion\r3493619544\r3335436782\r+396662838864";
         SMSMessage message = new SMSMessage(sender, text);
@@ -44,8 +53,10 @@ public class PollManagerTest implements PollListener {
         /* TODO: assert if onNewPollReceived() is being called (with Mockito?). If there's a way of
          *  doing it, then remove the implementation of PollListener and its methods from this class
          */
+        verify(fakePollListener).onNewPollReceived();
     }
 
+    /*
     @Override
     public void onNewPollReceived(TernaryPoll poll) {
         ArrayList<SMSPeer> users = new ArrayList<>();
@@ -57,9 +68,5 @@ public class PollManagerTest implements PollListener {
                         users, 38);
         assertThat(poll).isEqualTo(verificationPoll);
     }
-
-    @Override
-    public void onPollUpdated(TernaryPoll poll) {
-
-    }
+     */
 }
