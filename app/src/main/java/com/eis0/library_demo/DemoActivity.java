@@ -13,7 +13,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,12 +25,10 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.lifecycle.Lifecycle;
 
-import com.eis0.smslibrary.SMSMessage;
-import com.eis0.smslibrary.SMSPeer;
 import com.eis0.smslibrary.ReceivedMessageListener;
 import com.eis0.smslibrary.SMSManager;
-import com.eis0.storagelibrary.PollStoring;
-import com.eis0.storagelibrary.TernaryPoll;
+import com.eis0.smslibrary.SMSMessage;
+import com.eis0.smslibrary.SMSPeer;
 
 import java.util.ArrayList;
 import java.util.Set;
@@ -95,35 +92,6 @@ public class DemoActivity extends AppCompatActivity implements ReceivedMessageLi
                     .show();
         }
         pendingDialogs.clear();
-
-
-
-
-        /**TODO: I have to remember to tell the Boys that I changed TernaryPoll and getPollId from not-specified/protected to public
-         * P.S. I hope they don't get mad
-         */
-        String destination = "+393479281192";
-        PollStoring storage = new PollStoring();
-        TernaryPoll first = new TernaryPoll(new SMSPeer(destination));
-        TernaryPoll second = new TernaryPoll(new SMSPeer(destination));
-
-        //Creating a custom fileName for the TernaryPoll object
-        String fileName = storage.setFileName(second);
-        Log.d("Data_management_process", "File name: " + fileName);
-
-        //Converting the TernaryPoll object into a .json file
-        String jason = storage.convertToJson(second);
-
-        //Saving and loading from the Internal Storage
-        storage.saveJsonToInternal(this, fileName, jason);
-        String jasonReturned = storage.loadJsonFromInternal(this, fileName);
-
-        //Converting the .json file into a TernaryPoll object
-        TernaryPoll restituito = storage.convertFromJson(jasonReturned);
-
-        //Checking for the correct transfer of the file, visualizing a representative value of the object
-        Log.d("Data_management_process", "Poll ID: " + restituito.getPollId());
-
     }
 
     /**

@@ -32,7 +32,7 @@ public class StoringJsons implements InternalMemoryStorage {
             //Prints the String value inside of the designated file.
             fileOutputStream = context.openFileOutput(fileName, MODE_PRIVATE);
             fileOutputStream.write(json.getBytes());
-            Log.d("Data_management_process", "Poll saved successfully");
+            Log.d("Data_management_process", fileName + " saved successfully");
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -71,7 +71,7 @@ public class StoringJsons implements InternalMemoryStorage {
             }
 
             json = stringBuilder.toString();
-            Log.d("Data_management_process", "Poll loaded successfully");
+            Log.d("Data_management_process", fileName + " loaded successfully");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -88,6 +88,7 @@ public class StoringJsons implements InternalMemoryStorage {
         return json;
     }
 
+
     /**
      * Receive the context and the file to delete from the Internal Storage
      *
@@ -95,11 +96,21 @@ public class StoringJsons implements InternalMemoryStorage {
      * @param fileName Name of the file to delete
      */
     public void deleteInternalFile(Context context, String fileName) {
-        context.deleteFile(fileName);
+        //context.deleteFile(fileName);
+        File dir = context.getFilesDir();
+        File file = new File(dir, fileName);
+        file.delete();
     }
 
+
+    /**
+     * @param context
+     * @param fileName
+     * @return
+     */
     public boolean doesFileExist(Context context, String fileName) {
-        File file = context.getFileStreamPath(fileName);
+        String path = context.getFilesDir().getAbsolutePath() + "/" + fileName;
+        File file = new File(path);
         return file.exists();
     }
 }

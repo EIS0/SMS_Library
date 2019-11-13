@@ -19,15 +19,15 @@ public class PollListStoring extends StoringJsons implements JsonConverter<Array
 
     //List for the sent polls, waiting to be closed/waiting for an answer
     public final String pendingListName = "pendingPollList.json";
-    private ArrayList<String> pendingPollList;
+    private static ArrayList<String> pendingPollList;
 
     //List for the closed polls
     public final String closedListName = "closedPollList.json";
-    private ArrayList<String> closedPollList;
+    private static ArrayList<String> closedPollList;
 
     //List for the received polls, waiting to be closed
     public final String receivedListName = "receivedPollList.json";
-    private ArrayList<String> receivedPollList;
+    private static ArrayList<String> receivedPollList;
 
 
     /**
@@ -35,19 +35,9 @@ public class PollListStoring extends StoringJsons implements JsonConverter<Array
      * If they do exist, they are loaded from the Internal Storage
      */
     public PollListStoring(Context context) {
-        if (!doesFileExist(context, pendingListName))
-            pendingPollList = new ArrayList<>();
-        if (!doesFileExist(context, closedListName))
-            closedPollList = new ArrayList<>();
-        if (!doesFileExist(context, receivedListName))
-            receivedPollList = new ArrayList<>();
-        else {
-            pendingPollList = loadPollList(context, pendingListName);
-            closedPollList = loadPollList(context, closedListName);
-            receivedPollList = loadPollList(context, receivedListName);
-        }
-
+       loadCurrentStatus(context);
     }
+
 
     /**
      * This method saves the three lists in the Internal Storage
@@ -60,6 +50,38 @@ public class PollListStoring extends StoringJsons implements JsonConverter<Array
         savePollList(context, receivedListName, receivedPollList);
     }
 
+
+    /**
+     *
+     * @param context
+     */
+    public void loadCurrentStatus(Context context) {
+        //Checking pending polls list
+        if (!doesFileExist(context, pendingListName)) {
+            pendingPollList = new ArrayList<>();
+            savePollList(context, pendingListName, pendingPollList);
+            Log.d("Data_management_process", "pendingPollList created");
+        }
+        else
+            pendingPollList = loadPollList(context, pendingListName);
+        //Checking closed polls list
+        if (!doesFileExist(context, closedListName)) {
+            closedPollList = new ArrayList<>();
+            savePollList(context, closedListName, closedPollList);
+            Log.d("Data_management_process", "closedPollList created");
+        }
+        else
+            closedPollList = loadPollList(context, closedListName);
+        //Checking received polls list
+        if (!doesFileExist(context, receivedListName)) {
+            receivedPollList = new ArrayList<>();
+            savePollList(context, receivedListName, receivedPollList);
+            Log.d("Data_management_process", "receivedPollLost created");
+        }
+        else
+            receivedPollList = loadPollList(context, receivedListName);
+        Log.d("Data_management_process", "Lists loaded successfully");
+    }
 
     /**
      * TODO: add the pollIdCounter to a file to save in the Internal Memory
@@ -127,6 +149,7 @@ public class PollListStoring extends StoringJsons implements JsonConverter<Array
         return this.convertFromJson(json);
     }
 
+
     /**
      * This method removes from the specified list the String value equal to the fileName value inserted
      *
@@ -144,8 +167,6 @@ public class PollListStoring extends StoringJsons implements JsonConverter<Array
             case receivedListName:
                 receivedPollList.remove(fileName);
                 break;
-            default:
-                Log.d("Data_mamagement_process", "No list correspond to the one specified");
         }
     }
 
@@ -166,8 +187,38 @@ public class PollListStoring extends StoringJsons implements JsonConverter<Array
             case receivedListName:
                 receivedPollList.add(fileName);
                 break;
-            default:
-                Log.d("Data_mamagement_process", "No list correspond to the one specified");
+        }
+    }
+
+    /**
+     *
+     * @param listName
+     * @return
+     */
+    public String getFirstElement(String listName) {
+        switch (listName) {
+            case pendingListName:
+                return pendingPollList.get(0);
+            case closedListName:
+                return closedPollList.get(0);
+            case receivedListName:
+                return receivedPollList.get(0);
+        }
+        return listName;
+    }
+
+    /**
+     *
+     * @param listName
+     */
+    public void cleanPollList(String listName) {
+        switch (listName) {
+            case pendingListName:
+                pendingPollList.clear();
+            case closedListName:
+                closedPollList.clear();
+            case receivedListName:
+                receivedPollList.clear();
         }
     }
 }
