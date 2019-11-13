@@ -50,7 +50,8 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
 
     /**
      * Adds the listener listening for incoming TernaryPolls.
-     * @param listener The listener to wake up when a message is received.
+     * @param listener The listener to wake up when a message is received. It must implement the
+     *                 PollListener interface.
      */
     public void addPollListener(PollListener listener) {
         pollListeners.add(listener);
@@ -123,9 +124,15 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
      * messageCode is the first header, and it's always one of the following values:
      * 0 when the message contains a new poll;
      * 1 when the message is sent from a user to the author and contains an answer;
-     * 2 when the message is sent from the author to users and contains updated poll data.
+     * 2 when the message is sent from the author to users and contains updated poll data (not used
+     * in this first version of the app).
      *
-     * @param message The SMS messaged passed by SMSHandler
+     * @param message The SMS messaged passed by SMSHandler. SMSHandler already checks if the
+     *                message is meant for our app and strips it of its identification section, so
+     *                we don't perform any checks on the validity of the message here. We could
+     *                implement them in the future for added security.
+     * @author Giovanni Velludo
+     * @author Matteo Carnelos
      */
     public void onMessageReceived(SMSMessage message) {
         String data = message.getData();
@@ -145,8 +152,8 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
                 break;
             // You have received an answer for your poll
             case "1":
-                boolean isYes = fields[3].equals("1");
-                SMSPeer voter = new SMSPeer(fields[2]);
+                boolean isYes = fields[2].equals("1");
+                SMSPeer voter = message.getPeer();
                 TernaryPoll answeredPoll = sentPolls.get(pollID);
                 if(isYes) answeredPoll.setYes(voter);
                 else answeredPoll.setNo(voter);
@@ -171,17 +178,9 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
 
     /**
      * Converts a new poll to the following String:
-     * messageCode + pollAuthor + pollId + pollQuestion + pollUsers + CR
-     * Fields are separated by the character CR, except for messageCode
-     * and pollAuthor because the first is always only the first character.
-     * Different pollUsers are separated by the character CR.
-     *
-     * messageCode assumes the following values:
-     * 0 when the message contains a new poll
-     * 1 when the message is sent from a user to the author and contains an answer
-     * 2 when the message is sent from the author to users and contains updated poll data
-     *
-     * @param poll The poll to convert to a String.
+     * messageCode + pollId + pollQuestion + pollUsers
+     * Fields and different pollUsers are separated by FIELD_SEPARATOR.
+     * @param poll The new poll to convert to a String.
      * @return The message to send to poll users.
      */
     private static String newPollToMessage(TernaryPoll poll) {
@@ -204,22 +203,15 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
 
     /**
      * Converts a poll answer to the following String:
-     * messageCode + pollAuthor + pollId + pollUser + pollResult
-     * Fields are separated by the character CR, except for messageCode
-     * and pollAuthor because the first is always only the first character.
-     *
-     * messageCode assumes the following values:
-     * 0 when the message contains a new poll
-     * 1 when the message is sent from a user to the author and contains an answer
-     * 2 when the message is sent from the author to users and contains updated poll data
-     *
+     * messageCode + pollId + pollResult
+     * Fields are separated by FIELD_SEPARATOR.
      * @param poll The updated poll.
      * @param voter The current user, who casted their vote.
      * @return Message to send to poll users.
      */
     private static String answerToMessage(TernaryPoll poll, SMSPeer voter) {
         // TODO: write getters in TernaryPoll and use those instead of accessing variables directly
-        String message = "1" + FIELD_SEPARATOR + poll.pollId + FIELD_SEPARATOR + voter + FIELD_SEPARATOR;
+        String message = "1" + FIELD_SEPARATOR + poll.pollId + FIELD_SEPARATOR;
         int result;
         if (poll.getAnswer(voter).equals("Yes")) result = 1;
         else result = 0;
