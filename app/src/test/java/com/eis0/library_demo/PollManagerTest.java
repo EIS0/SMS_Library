@@ -6,10 +6,18 @@ import androidx.test.core.app.ApplicationProvider;
 import com.eis0.smslibrary.SMSMessage;
 import com.eis0.smslibrary.SMSPeer;
 
+import org.junit.Before;
 import org.junit.Test;
 
 public class PollManagerTest {
-    private Context context = ApplicationProvider.getApplicationContext();
+    private Context fakeContext;
+    private PollManager pollManager;
+
+    @Before
+    public void setUp() {
+        fakeContext = ApplicationProvider.getApplicationContext();
+        pollManager = PollManager.getInstance(fakeContext);
+    }
 
     @Test
     public void createPoll() {
@@ -20,10 +28,10 @@ public class PollManagerTest {
     }
 
     @Test
-    public void onMessageReceived() {
-        PollManager pollManager = PollManager.getInstance(context);
-        String text = "03331727754\r38\rQuestion\r3493619544"
-        SMSMessage message = new SMSMessage(new SMSPeer("3337235485"), text);
+    public void onNewPollReceived() {
+        SMSPeer sender = new SMSPeer("3337235485");
+        String text = "03331727754\r38\rQuestion\r3493619544\r3335436782\r+396662838864";
+        SMSMessage message = new SMSMessage(sender, text);
         pollManager.onMessageReceived(message);
 
 
