@@ -1,8 +1,9 @@
 package com.eis0.library_demo;
 
-import org.junit.Test;
+import android.content.Context;
+import androidx.test.core.app.ApplicationProvider;
 
-import static org.junit.Assert.*;
+import org.junit.Test;
 
 public class PollManagerTest {
 
@@ -16,5 +17,12 @@ public class PollManagerTest {
 
     @Test
     public void onMessageReceived() {
+        private Context context = ApplicationProvider.getApplicationContext();
+        PollManager pollManager = PollManager.getInstance(context);
+        String message = "";
+        pollManager.onMessageReceived(message);
+
+
+
     }
 }

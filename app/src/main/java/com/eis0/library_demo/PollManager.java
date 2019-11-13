@@ -28,14 +28,22 @@ class PollManager implements ReceivedMessageListener<SMSMessage> {
     private static final char fieldSeparator = '\r';
     private static final int authorIndex = 1;
     // TODO: write polls to disk when the program is removed from memory
+    // TODO: stop using pollAuthor and pollId fields in TernaryPoll as they're redundant
     private HashMap<Pair<SMSPeer, Integer>, TernaryPoll> polls = new HashMap<>();
     private PollListener pollListener;
     private Context context;
     private SMSManager smsManager;
+    private SMSPeer currentUser;
 
     // Singleton Design Pattern
-    private PollManager() {
-        smsManager = SMSManager.getInstance(context);
+
+    /**
+     * Creates a new instance of PollManager.
+     * @param context Context of the application requesting a PollManager.
+     */
+    private PollManager(Context context) {
+        this.context = context;
+        smsManager = SMSManager.getInstance(this.context);
     }
 
     /**
@@ -45,8 +53,7 @@ class PollManager implements ReceivedMessageListener<SMSMessage> {
      * @return The only instance of this class.
      */
     static PollManager getInstance(Context context) {
-        if(instance == null) instance = new PollManager();
-        instance.context = context;
+        if(instance == null) instance = new PollManager(context);
         return instance;
     }
 
@@ -87,6 +94,7 @@ class PollManager implements ReceivedMessageListener<SMSMessage> {
      * @param author The current user of the app.
      * @param users Users to which the question should be asked.
      */
+    // TODO: use pollAuthor = 0 for polls where the current user is the author
     void createPoll(String question, SMSPeer author, ArrayList<SMSPeer> users) {
         TernaryPoll poll = new TernaryPoll(question, author, users);
         polls.put(new Pair<>(poll.pollAuthor, poll.pollId), poll);
