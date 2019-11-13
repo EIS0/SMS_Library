@@ -40,7 +40,7 @@ public class OpenedPollAdapter extends BaseAdapter implements PollListener {
 
     @Override
     public long getItemId(int position) {
-        return openedPolls.get(position).getPollId();
+        return openedPolls.get(position).getPollID();
     }
 
     @Override
@@ -66,7 +66,7 @@ public class OpenedPollAdapter extends BaseAdapter implements PollListener {
         TextView percentage = convertView.findViewById(R.id.percentageTxt);
 
         TernaryPoll poll = openedPolls.get(position);
-        pollName.setText("POLL_NAME");
+        pollName.setText("" + poll.getPollName());
         pollID.setText("" + getItemId(position));
         int closedPercentage = poll.getClosedPercentage();
         percentage.setText("" + closedPercentage);

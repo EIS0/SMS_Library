@@ -32,8 +32,9 @@ public class TernaryPoll extends Poll {
             return answer;
         }
     }
-    int pollId;
+    int pollID;
     SMSPeer pollAuthor;
+    String pollName;
     String pollQuestion;
     Map<SMSPeer, PollResult> pollUsers;
     private static final String LOG_KEY = "APP_POLL";
@@ -45,9 +46,10 @@ public class TernaryPoll extends Poll {
      * @param users users included in the poll.
      * @param id the id of the poll.
      */
-    TernaryPoll(String question, SMSPeer author, int id, ArrayList<SMSPeer> users) {
+    TernaryPoll(String name, String question, SMSPeer author, int id, ArrayList<SMSPeer> users) {
         pollAuthor = author;
-        pollId = id;
+        pollID = id;
+        pollName = name;
         pollQuestion = question;
         pollUsers = new HashMap<>();
         for (SMSPeer user : users) this.addUser(user);
@@ -58,16 +60,25 @@ public class TernaryPoll extends Poll {
      * @param question the question to ask all users.
      * @param users users to include in the poll.
      */
-    TernaryPoll(String question, ArrayList<SMSPeer> users) {
-        pollId = ++TernaryPoll.pollCount;
+    TernaryPoll(String name, String question, ArrayList<SMSPeer> users) {
+        pollID = ++TernaryPoll.pollCount;
+        pollName = name;
         pollQuestion = question;
         pollAuthor = SELF_PEER;
         pollUsers = new HashMap<>();
         for (SMSPeer user : users) this.addUser(user);
     }
 
+    public String getPollName() {
+        return pollName;
+    }
+
     public String getPollQuestion() {
         return pollQuestion;
+    }
+
+    public SMSPeer getPollAuthor() {
+        return pollAuthor;
     }
 
     public boolean isClosed() {
@@ -75,7 +86,9 @@ public class TernaryPoll extends Poll {
     }
 
     public int getClosedPercentage() {
-        return ((countYes() + countNo())/pollUsers.size())*100;
+        float answerCount = countYes() + countNo();
+        float ratio = answerCount/(float)pollUsers.size();
+        return Math.round(ratio * 100);
     }
 
     public int countYes() {
@@ -149,7 +162,7 @@ public class TernaryPoll extends Poll {
     /**
      * @return poll ID.
      */
-    public int getPollId() {
-        return this.pollId;
+    public int getPollID() {
+        return this.pollID;
     }
 }

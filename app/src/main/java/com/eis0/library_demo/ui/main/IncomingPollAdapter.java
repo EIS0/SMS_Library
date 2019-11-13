@@ -5,18 +5,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.TextView;
 
-import com.eis0.library_demo.Poll;
 import com.eis0.library_demo.PollListener;
 import com.eis0.library_demo.PollManager;
 import com.eis0.library_demo.R;
 import com.eis0.library_demo.TernaryPoll;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
-public class IncomingPollAdapter extends BaseAdapter implements PollListener  {
+public class IncomingPollAdapter extends BaseAdapter implements PollListener {
 
     private static LayoutInflater inflater = null;
     private static ArrayList<TernaryPoll> incomingPolls = new ArrayList<>();
@@ -36,7 +35,7 @@ public class IncomingPollAdapter extends BaseAdapter implements PollListener  {
 
     @Override
     public long getItemId(int position) {
-        return incomingPolls.get(position).getPollId();
+        return incomingPolls.get(position).getPollID();
     }
 
     @Override
@@ -56,9 +55,31 @@ public class IncomingPollAdapter extends BaseAdapter implements PollListener  {
         TextView pollName = convertView.findViewById(R.id.pollNameTxt);
         TextView pollID = convertView.findViewById(R.id.pollIDTxt);
         TextView pollQuestion = convertView.findViewById(R.id.pollQuestionTxt);
-        pollName.setText("POLL_NAME");
-        pollID.setText("" + getItemId(position));
-        pollQuestion.setText(incomingPolls.get(position).getPollQuestion());
+        Button yesBtn = convertView.findViewById(R.id.yesBtn);
+        Button noBtn = convertView.findViewById(R.id.noBtn);
+
+        final TernaryPoll poll = incomingPolls.get(position);
+
+        yesBtn.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                pollManager.answerPoll(poll, true);
+                incomingPolls.remove(poll);
+                notifyDataSetChanged();
+            }
+        });
+
+        noBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pollManager.answerPoll(poll, false);
+                incomingPolls.remove(poll);
+                notifyDataSetChanged();
+            }
+        });
+
+        pollName.setText("" + poll.getPollName());
+        pollID.setText("" + poll.getPollID());
+        pollQuestion.setText(poll.getPollQuestion());
         return convertView;
     }
 }

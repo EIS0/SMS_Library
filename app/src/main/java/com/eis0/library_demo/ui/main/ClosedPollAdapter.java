@@ -36,7 +36,7 @@ public class ClosedPollAdapter extends BaseAdapter implements PollListener {
 
     @Override
     public long getItemId(int position) {
-        return closedPolls.get(position).getPollId();
+        return closedPolls.get(position).getPollID();
     }
 
     @Override
@@ -59,12 +59,11 @@ public class ClosedPollAdapter extends BaseAdapter implements PollListener {
         TextView noNum = convertView.findViewById(R.id.noNumTxt);
         TextView pollQuestion = convertView.findViewById(R.id.pollQuestionTxt);
 
-
         TernaryPoll poll = closedPolls.get(position);
-        pollName.setText("POLL_NAME");
+        pollName.setText("" + poll.getPollName());
         pollID.setText("" + getItemId(position));
-        noNum.setText(poll.countNo());
-        yesNum.setText(poll.countYes());
+        noNum.setText("" + poll.countNo());
+        yesNum.setText("" + poll.countYes());
         pollQuestion.setText(poll.getPollQuestion());
         return convertView;
     }

@@ -10,7 +10,7 @@ public abstract class Poll {
     /**
      * @return Int representing poll ID
      */
-    abstract int getPollId();
+    abstract int getPollID();
 
     /**
      * Check if the user is in the poll

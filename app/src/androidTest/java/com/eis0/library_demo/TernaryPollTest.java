@@ -76,6 +76,6 @@ public class TernaryPollTest {
     public void getPollId() {
         SMSPeer author = new SMSPeer("1234567");
         TernaryPoll test = new TernaryPoll(author);
-        assertEquals(test.getPollId(), 6 );
+        assertEquals(test.getPollID(), 6 );
     }
 }

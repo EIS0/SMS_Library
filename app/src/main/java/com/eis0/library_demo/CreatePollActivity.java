@@ -15,6 +15,7 @@ import java.util.ArrayList;
 
 public class CreatePollActivity extends AppCompatActivity {
 
+    private EditText pollNameTxt;
     private EditText pollQuestionTxt;
     private EditText peer1Txt;
     private EditText peer2Txt;
@@ -25,6 +26,7 @@ public class CreatePollActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_poll);
 
+        pollNameTxt = findViewById(R.id.pollNameTxt);
         pollQuestionTxt = findViewById(R.id.pollQuestionTxt);
         peer1Txt = findViewById(R.id.peer1Txt);
         peer2Txt = findViewById(R.id.peer2Txt);
@@ -37,6 +39,7 @@ public class CreatePollActivity extends AppCompatActivity {
      */
     public void sendPollOnClick(View view) {
         // Check if the question is empty
+        String name = pollNameTxt.getText().toString();
         String question = pollQuestionTxt.getText().toString();
         if(question.isEmpty()) {
             Toast.makeText(this, getString(R.string.empty_question_message), Toast.LENGTH_SHORT).show();
@@ -59,8 +62,8 @@ public class CreatePollActivity extends AppCompatActivity {
         }
 
         // If I'm here I have at least one Peer, and they're all valid
-        String[] peerDestinations = {peer1.toString(), peer2.toString(), peer3.toString()};
         Intent returnIntent = new Intent()
+                .putExtra("poll_name", name)
                 .putExtra("poll_question", question)
                 .putExtra("peers", peers);
         setResult(Activity.RESULT_OK, returnIntent);

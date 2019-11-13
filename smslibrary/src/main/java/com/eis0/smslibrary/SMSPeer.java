@@ -35,12 +35,18 @@ public class SMSPeer implements Peer, java.io.Serializable {
 
 
     /**
-     * Returns true if SMSPeer has prefix
+     * Checks if the address has prefix
+     * @return Returns true if the address has the prefix sign
      */
 
     public boolean hasPrefix() {
         char prefixSign = '+';
         return address.charAt(0) == prefixSign;
+    }
+
+    public SMSPeer withoutPrefix() {
+        if(!hasPrefix()) return this;
+        return new SMSPeer(this.address.substring(1));
     }
 
     /**
@@ -50,7 +56,7 @@ public class SMSPeer implements Peer, java.io.Serializable {
         try {
             int maxLength = 15;
             if (!isEmpty() && address.length() < maxLength) {
-                if (hasPrefix()) Integer.parseInt(address.substring(1)); // To verify exceptions
+                if (hasPrefix()) Long.parseLong(withoutPrefix().address);
                 else Long.parseLong(address);
                 return true;
             }

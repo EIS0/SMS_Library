@@ -61,10 +61,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 0) {
-            if(resultCode == Activity.RESULT_OK){
+            if(resultCode == Activity.RESULT_OK) {
+                String name = data.getStringExtra("poll_name");
                 String question = data.getStringExtra("poll_question");
                 ArrayList<SMSPeer> peers = (ArrayList<SMSPeer>)data.getSerializableExtra("peers");
-                pollManager.createPoll(question, peers);
+                pollManager.createPoll(name, question, peers);
             }
         }
     }
