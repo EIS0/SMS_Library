@@ -35,7 +35,7 @@ public class PollListStoring extends StoringJsons implements JsonConverter<Array
      * If they do exist, they are loaded from the Internal Storage
      */
     public PollListStoring(Context context) {
-       loadCurrentStatus(context);
+        loadCurrentStatus(context);
     }
 
 
@@ -52,6 +52,7 @@ public class PollListStoring extends StoringJsons implements JsonConverter<Array
 
 
     /**
+     * Loads the content of the three ArrayLists containing the polls, from the Internal Storage
      *
      * @param context
      */
@@ -61,24 +62,21 @@ public class PollListStoring extends StoringJsons implements JsonConverter<Array
             pendingPollList = new ArrayList<>();
             savePollList(context, pendingListName, pendingPollList);
             Log.d("Data_management_process", "pendingPollList created");
-        }
-        else
+        } else
             pendingPollList = loadPollList(context, pendingListName);
         //Checking closed polls list
         if (!doesFileExist(context, closedListName)) {
             closedPollList = new ArrayList<>();
             savePollList(context, closedListName, closedPollList);
             Log.d("Data_management_process", "closedPollList created");
-        }
-        else
+        } else
             closedPollList = loadPollList(context, closedListName);
         //Checking received polls list
         if (!doesFileExist(context, receivedListName)) {
             receivedPollList = new ArrayList<>();
             savePollList(context, receivedListName, receivedPollList);
             Log.d("Data_management_process", "receivedPollLost created");
-        }
-        else
+        } else
             receivedPollList = loadPollList(context, receivedListName);
         Log.d("Data_management_process", "Lists loaded successfully");
     }
@@ -191,9 +189,10 @@ public class PollListStoring extends StoringJsons implements JsonConverter<Array
     }
 
     /**
+     * This method returns the first element of the ArrayList
      *
-     * @param listName
-     * @return
+     * @param listName The name of the list
+     * @return Returns the first String value of the ArrayList
      */
     public String getFirstElement(String listName) {
         switch (listName) {
@@ -208,8 +207,9 @@ public class PollListStoring extends StoringJsons implements JsonConverter<Array
     }
 
     /**
+     * This method cleans the content of an ArrayList
      *
-     * @param listName
+     * @param listName The name of the ArrayList
      */
     public void cleanPollList(String listName) {
         switch (listName) {

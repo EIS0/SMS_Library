@@ -90,10 +90,10 @@ public class StoringJsons implements InternalMemoryStorage {
 
 
     /**
-     * Receive the context and the file to delete from the Internal Storage
+     * This method deletes the specified file to delete
      *
      * @param context
-     * @param fileName Name of the file to delete
+     * @param fileName Name of the file to delete from the Internal Storage
      */
     public void deleteInternalFile(Context context, String fileName) {
         //context.deleteFile(fileName);
@@ -104,9 +104,11 @@ public class StoringJsons implements InternalMemoryStorage {
 
 
     /**
+     * This method verifies if a specified file exists in the Internal Storage
+     *
      * @param context
-     * @param fileName
-     * @return
+     * @param fileName Name of the file to verify
+     * @return Returns a boolean value, representing the presence of a file in the Internal Storage
      */
     public boolean doesFileExist(Context context, String fileName) {
         String path = context.getFilesDir().getAbsolutePath() + "/" + fileName;
