@@ -14,6 +14,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.util.ArrayList;
 
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class PollManagerTest {
@@ -40,6 +41,10 @@ public class PollManagerTest {
     @Test
     public void onMessageReceived() {
         // CASE 0: received new poll
+
+        when(fakePollListener.onNewPollReceived(TernaryPoll poll))
+                .thenReturn(poll);
+
 
         // registers listener which will be called by PollManager
         pollManager.addPollListener(fakePollListener);
