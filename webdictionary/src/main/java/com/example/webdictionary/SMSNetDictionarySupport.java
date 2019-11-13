@@ -2,6 +2,12 @@ package com.example.webdictionary;
 
 import java.util.Arrays;
 
+/**
+ * This class contains support methods for
+ * SMSNetDictionary
+ */
+
+
 public class SMSNetDictionarySupport {
     /**
      * Doubles array size

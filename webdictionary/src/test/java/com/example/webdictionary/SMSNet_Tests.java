@@ -117,6 +117,27 @@ public class SMSNet_Tests {
     }
 
     @Test
+    public void addResourcesToAnExistingPeer_checkResources() {
+       SMSNetDictionary net = new SMSNetDictionary();
+       SMSPeer peer = new SMSPeer("12345");
+       SMSResource resource1 = new SMSResource("photo.png");
+       SMSResource resource2 = new SMSResource("home.jpg");
+       SMSResource[] resources1 = {resource1};
+       SMSResource[] resources2 = {resource2};
+       net.add(peer, resources1);
+       net.add(peer, resources2);
+       SMSResource[] resources = net.getAvailableResources();
+       int cont=0;
+       String[] shouldResources = new String[2];
+        for (SMSResource resource : resources) {
+            shouldResources[cont++] = resource.getResource();
+        }
+       String[] trueResources = {resource1.getResource(), resource2.getResource()};
+       assertEquals(shouldResources[0], trueResources[0]);
+       assertEquals(shouldResources[1], trueResources[1]);
+}
+
+    @Test
     public void addMultiplePeers(){
         SMSNetDictionary net = new SMSNetDictionary();
         SMSPeer peer1 = new SMSPeer("12345");

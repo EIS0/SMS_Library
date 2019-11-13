@@ -84,9 +84,7 @@ public class SMSNetDictionary implements NetworkDictionary<SMSPeer,SMSResource> 
         }
 
         // Need 38 seconds working with 50000 elements. Is there a better way?
-        if(allAvailableResources[0] != null) return allAvailableResources;
-        //If the first element is null, the others will be null for sure
-        return null;
+        return allAvailableResources;
 
     }
 
