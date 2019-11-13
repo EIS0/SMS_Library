@@ -18,7 +18,7 @@ public class NetworkConnection {
     private NetworkConnection(Context context, SMSPeer myPeer){
         netDict = new SMSNetDictionary();
         Log.d(LOG_KEY, "Found myPeer: " + myPeer.getAddress());
-        if(myPeer != null && myPeer.isValid()){
+        if(myPeer.isValid()){
             Log.d(LOG_KEY, "Added myPeer: " + myPeer.getAddress());
             netDict.add(myPeer, null);
         }
@@ -39,6 +39,8 @@ public class NetworkConnection {
     public enum RequestType{
         JoinPermission,
         AcceptJoin,
+        AddPeers,
+        RemovePeers,
         UpdatePeers,
         LeavePermission,
         Ping
@@ -62,19 +64,19 @@ public class NetworkConnection {
         String[] newPeersOnNet = text.split(" ");
         String oldPeersInNet = peersInNetwork();
         //add new peers to my net
-        updateNet(text);
-        updateNet(oldPeersInNet);
+        addToNet(text);
+        addToNet(oldPeersInNet);
         //notify new peers of my old peers
         for(String newPeerAddress: newPeersOnNet){
             Log.d(LOG_KEY, "New Peer: " + newPeerAddress);
             SMSPeer newPeer = new SMSPeer(newPeerAddress);
-            SMSManager.getInstance(context).sendMessage(new SMSMessage(newPeer, RequestType.UpdatePeers.ordinal() + " " + oldPeersInNet));
+            SMSManager.getInstance(context).sendMessage(new SMSMessage(newPeer, RequestType.AddPeers.ordinal() + " " + oldPeersInNet));
         }
         //notify my old peers about the new ones
         for(String oldPeerAddress : oldPeersInNet.split(" ")){
             Log.d(LOG_KEY, "Old Peer: " + oldPeerAddress);
             SMSPeer oldPeer = new SMSPeer(oldPeerAddress);
-            SMSManager.getInstance(context).sendMessage(new SMSMessage(oldPeer, RequestType.UpdatePeers.ordinal() + " " + text));
+            SMSManager.getInstance(context).sendMessage(new SMSMessage(oldPeer, RequestType.AddPeers.ordinal() + " " + text));
         }
     }
 
@@ -84,7 +86,7 @@ public class NetworkConnection {
     private String peersInNetwork(){
         String netPeers = "";
         for(SMSPeer netPeer : netDict.getAvailablePeers()){
-            netPeers += netPeer + " ";
+            netPeers = netPeers.concat(netPeer.getAddress()).concat(" ");
         }
         return netPeers;
     }
@@ -104,14 +106,35 @@ public class NetworkConnection {
     }
 
     /**
-     * Updates the current Network State given a String of peers in the network to update
+     * Adds a given String list of peers to the current network
      */
-    private void updateNet(String peersInNet){
+    private void addToNet(String peersInNet){
+        Log.d(LOG_KEY, "Adding these new Peers: " + peersInNet);
         String[] peers = peersInNet.split(" ");
-        Log.d(LOG_KEY, "Adding this new Peers: " + peersInNet);
         for(String peer : peers){
             netDict.add(new SMSPeer(peer), null);
         }
+    }
+
+    /**
+     * Removes a given String list of peers from the current network
+     */
+    private void removeFromNet(String peersInNet){
+        Log.d(LOG_KEY, "Removing these Peers: " + peersInNet);
+        String[] peers = peersInNet.split(" ");
+        for(String peer : peers){
+            netDict.remove(new SMSPeer(peer));
+        }
+    }
+
+    /**
+     * Updates the current Network State given a peer in the network to update and it's resources
+     */
+    private void updateNet(String peer, SMSResource[] resources){
+        Log.d(LOG_KEY, "Updating this Peer: " + peer);
+        SMSPeer peerToUpdate = new SMSPeer(peer);
+        netDict.remove(peerToUpdate);
+        netDict.add(peerToUpdate, resources);
     }
 
     /**
@@ -126,7 +149,7 @@ public class NetworkConnection {
      */
     private class NetworkListener implements ReceivedMessageListener<SMSMessage>{
         NetworkConnection net;
-        public NetworkListener(NetworkConnection net){
+        private NetworkListener(NetworkConnection net){
             this.net = net;
         }
 
@@ -144,11 +167,11 @@ public class NetworkConnection {
             }
             else if(incomingRequest == RequestType.AcceptJoin){
                 Log.d(LOG_KEY, "Received Join Accepted: updating net...");
-                net.updateNet(text.substring(2));
+                net.addToNet(text.substring(2));
             }
-            else if(incomingRequest == RequestType.UpdatePeers){
+            else if(incomingRequest == RequestType.AddPeers){
                 Log.d(LOG_KEY, "Received Update Net Request: updating net...");
-                net.updateNet(text.substring(2));
+                net.addToNet(text.substring(2));
             }
         }
     }
