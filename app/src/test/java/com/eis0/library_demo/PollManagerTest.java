@@ -45,15 +45,10 @@ public class PollManagerTest {
         when(fakePollListener.onNewPollReceived(TernaryPoll poll))
                 .thenReturn(poll);
 
-
-        // registers listener which will be called by PollManager
         pollManager.addPollListener(fakePollListener);
         SMSPeer sender = new SMSPeer("3337235485");
         String text = "03337235485\r38\rQuestion\r3493619544\r3335436782\r+396662838864";
         SMSMessage message = new SMSMessage(sender, text);
-        pollManager.onMessageReceived(message);
-        /* TODO: assert if onNewPollReceived() is being called (with Mockito?)
-         */
 
         ArrayList<SMSPeer> users = new ArrayList<>();
         users.add(new SMSPeer("3493619544"));
@@ -62,6 +57,11 @@ public class PollManagerTest {
         TernaryPoll verificationPoll =
                 new TernaryPoll("Question", new SMSPeer("3337235485"),
                         users, 38);
+
+        pollManager.onMessageReceived(message);
+        /* TODO: assert if onNewPollReceived() is being called (with Mockito?)
+         */
+
         verify(fakePollListener).onNewPollReceived(verificationPoll);
     }
 }
