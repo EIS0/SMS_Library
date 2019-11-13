@@ -1,8 +1,8 @@
 package com.eis0.library_demo;
 
-import android.content.Context;
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
-import android.telephony.TelephonyManager;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -19,8 +19,6 @@ public class CreatePollActivity extends AppCompatActivity {
     private EditText peer1Txt;
     private EditText peer2Txt;
     private EditText peer3Txt;
-    private ArrayList<SMSPeer> peers = new ArrayList<>();
-    private PollManager pollManager = PollManager.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +47,7 @@ public class CreatePollActivity extends AppCompatActivity {
         SMSPeer peer1 = new SMSPeer(peer1Txt.getText().toString());
         SMSPeer peer2 = new SMSPeer(peer2Txt.getText().toString());
         SMSPeer peer3 = new SMSPeer(peer3Txt.getText().toString());
+        ArrayList<SMSPeer> peers = new ArrayList<>();
         if(peer1.isValid()) peers.add(peer1);
         if(peer2.isValid()) peers.add(peer2);
         if(peer3.isValid()) peers.add(peer3);
@@ -60,7 +59,11 @@ public class CreatePollActivity extends AppCompatActivity {
         }
 
         // If I'm here I have at least one Peer, and they're all valid
-
-        pollManager.createPoll(question, peers);
+        String[] peerDestinations = {peer1.toString(), peer2.toString(), peer3.toString()};
+        Intent returnIntent = new Intent()
+                .putExtra("poll_question", question)
+                .putExtra("peers", peers);
+        setResult(Activity.RESULT_OK, returnIntent);
+        finish();
     }
 }

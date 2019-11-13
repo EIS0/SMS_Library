@@ -7,29 +7,46 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.eis0.library_demo.PollListener;
+import com.eis0.library_demo.PollManager;
 import com.eis0.library_demo.R;
+import com.eis0.library_demo.TernaryPoll;
 
-public class ClosedPollAdapter extends BaseAdapter {
+import java.util.ArrayList;
+
+public class ClosedPollAdapter extends BaseAdapter implements PollListener {
 
     private static LayoutInflater inflater = null;
+    private static ArrayList<TernaryPoll> closedPolls = new ArrayList<>();
+    PollManager pollManager = PollManager.getInstance();
 
     public ClosedPollAdapter(Context context) {
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        pollManager.addPollListener(this);
+    }
+
+    public void onIncomingPoll(TernaryPoll poll) {}
+
+    public void onSentPollUpdate(TernaryPoll poll) {
+        if(poll.isClosed()) {
+            closedPolls.add(poll);
+            notifyDataSetChanged();
+        }
     }
 
     @Override
     public long getItemId(int position) {
-        return 0;
+        return closedPolls.get(position).getPollId();
     }
 
     @Override
     public Object getItem(int position) {
-        return null;
+        return closedPolls.get(position);
     }
 
     @Override
     public int getCount() {
-        return 5;
+        return closedPolls.size();
     }
 
     @Override
@@ -41,11 +58,14 @@ public class ClosedPollAdapter extends BaseAdapter {
         TextView yesNum = convertView.findViewById(R.id.yesNumTxt);
         TextView noNum = convertView.findViewById(R.id.noNumTxt);
         TextView pollQuestion = convertView.findViewById(R.id.pollQuestionTxt);
-        pollName.setText("Sushi Poll");
-        pollID.setText("1234");
-        noNum.setText("29");
-        yesNum.setText("2");
-        pollQuestion.setText("Sushi tonight?");
+
+
+        TernaryPoll poll = closedPolls.get(position);
+        pollName.setText("POLL_NAME");
+        pollID.setText("" + getItemId(position));
+        noNum.setText(poll.countNo());
+        yesNum.setText(poll.countYes());
+        pollQuestion.setText(poll.getPollQuestion());
         return convertView;
     }
 }

@@ -2,7 +2,7 @@ package com.eis0.smslibrary;
 
 import androidx.annotation.Nullable;
 
-public class SMSPeer implements Peer {
+public class SMSPeer implements Peer, java.io.Serializable {
     private String address;
 
     /**
@@ -51,7 +51,7 @@ public class SMSPeer implements Peer {
             int maxLength = 15;
             if (!isEmpty() && address.length() < maxLength) {
                 if (hasPrefix()) Integer.parseInt(address.substring(1)); // To verify exceptions
-                else Integer.parseInt(address);
+                else Long.parseLong(address);
                 return true;
             }
         }

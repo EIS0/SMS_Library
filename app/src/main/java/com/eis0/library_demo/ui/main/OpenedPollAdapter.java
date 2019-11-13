@@ -8,29 +8,49 @@ import android.widget.BaseAdapter;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.eis0.library_demo.PollListener;
+import com.eis0.library_demo.PollManager;
 import com.eis0.library_demo.R;
+import com.eis0.library_demo.TernaryPoll;
 
-public class OpenedPollAdapter extends BaseAdapter {
+import java.util.ArrayList;
+
+public class OpenedPollAdapter extends BaseAdapter implements PollListener {
 
     private static LayoutInflater inflater = null;
+    private static ArrayList<TernaryPoll> openedPolls = new ArrayList<>();
+    PollManager pollManager = PollManager.getInstance();
 
     public OpenedPollAdapter(Context context) {
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        pollManager.addPollListener(this);
+    }
+
+    public void onIncomingPoll(TernaryPoll poll) {}
+
+    public void onSentPollUpdate(TernaryPoll poll) {
+        if(poll.isClosed()) openedPolls.remove(poll);
+        else {
+            int pollIndex = openedPolls.indexOf(poll);
+            if(pollIndex == -1) openedPolls.add(poll);
+            else openedPolls.set(pollIndex, poll);
+        }
+        notifyDataSetChanged();
     }
 
     @Override
     public long getItemId(int position) {
-        return 0;
+        return openedPolls.get(position).getPollId();
     }
 
     @Override
     public Object getItem(int position) {
-        return null;
+        return openedPolls.get(position);
     }
 
     @Override
     public int getCount() {
-        return 50;
+        return openedPolls.size();
     }
 
     @Override
@@ -44,13 +64,16 @@ public class OpenedPollAdapter extends BaseAdapter {
         TextView noNum = convertView.findViewById(R.id.noNumTxt);
         TextView pollQuestion = convertView.findViewById(R.id.pollQuestionTxt);
         TextView percentage = convertView.findViewById(R.id.percentageTxt);
-        pollName.setText("Pizza Poll");
-        pollID.setText("45378");
-        percentage.setText("66");
-        pollProgress.setProgress(Integer.parseInt(percentage.getText().toString()));
-        noNum.setText("2");
-        yesNum.setText("4");
-        pollQuestion.setText("Do you want to eat pizza tonight?");
+
+        TernaryPoll poll = openedPolls.get(position);
+        pollName.setText("POLL_NAME");
+        pollID.setText("" + getItemId(position));
+        int closedPercentage = poll.getClosedPercentage();
+        percentage.setText("" + closedPercentage);
+        pollProgress.setProgress(closedPercentage);
+        noNum.setText("" + poll.countNo());
+        yesNum.setText("" + poll.countYes());
+        pollQuestion.setText(poll.getPollQuestion());
         return convertView;
     }
 }

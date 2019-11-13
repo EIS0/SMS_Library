@@ -5,7 +5,7 @@ import com.eis0.smslibrary.SMSPeer;
 /**
  * Class to extend to create a poll
  */
-abstract class Poll {
+public abstract class Poll {
 
     /**
      * @return Int representing poll ID

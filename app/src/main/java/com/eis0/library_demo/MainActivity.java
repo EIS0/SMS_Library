@@ -1,10 +1,13 @@
 package com.eis0.library_demo;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.eis0.library_demo.ui.main.IncomingPollAdapter;
+import com.eis0.smslibrary.SMSPeer;
 import com.google.android.material.tabs.TabLayout;
 
 import androidx.core.app.ActivityCompat;
@@ -18,9 +21,10 @@ import android.view.View;
 
 import com.eis0.library_demo.ui.main.SectionsPagerAdapter;
 
+import java.util.ArrayList;
 import java.util.Set;
 
-public class MainActivity extends AppCompatActivity implements PollListener {
+public class MainActivity extends AppCompatActivity {
 
     private static final String[] PERMISSIONS = {
             Manifest.permission.SEND_SMS,
@@ -46,29 +50,23 @@ public class MainActivity extends AppCompatActivity implements PollListener {
 
         // Request app permissions, if not already granted
         ActivityCompat.requestPermissions(this, PERMISSIONS, 1);
-
-        pollManager.addPollListener(this);
-    }
-
-    /**
-     * Called by PollManager whenever a new poll is received.
-     * @param poll The poll received.
-     */
-    public void onNewPollReceived(TernaryPoll poll) {
-        Log.d("POLL", "New poll received");
-    }
-
-    /**
-     * Called by PollManager whenever a poll is updated.
-     * @param poll The poll updated.
-     */
-    public void onPollUpdated(TernaryPoll poll) {
-        Log.d("POLL", "Poll updated");
     }
 
     public void newPollOnClick(View view) {
         Intent newPollIntent = new Intent(this, CreatePollActivity.class);
-        startActivity(newPollIntent);
+        startActivityForResult(newPollIntent, 0);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 0) {
+            if(resultCode == Activity.RESULT_OK){
+                String question = data.getStringExtra("poll_question");
+                ArrayList<SMSPeer> peers = (ArrayList<SMSPeer>)data.getSerializableExtra("peers");
+                pollManager.createPoll(question, peers);
+            }
+        }
     }
 
     /**
