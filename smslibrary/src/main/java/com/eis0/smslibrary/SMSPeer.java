@@ -45,13 +45,15 @@ public class SMSPeer implements Peer {
 
     /**
      * Returns true if the SMSPeer is valid
+     * @author Edoardo Raimondi
      */
     public boolean isValid() {
         try {
             int maxLength = 15;
             if (!isEmpty() && address.length() < maxLength) {
-                if (hasPrefix()) Integer.parseInt(address.substring(1)); // To verify exceptions
-                else Integer.parseInt(address);
+                if (hasPrefix()) { Long.parseLong(address.substring(1)); //to verify exception
+                }
+                 else Long.parseLong(address);
                 return true;
             }
         }

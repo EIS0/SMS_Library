@@ -25,7 +25,13 @@ public class SMSPeerTest {
     }
 
     @Test
-    public void isValid() {
+    public void isValid(){
+        SMSPeer test = new SMSPeer("+3408140326");
+        assertEquals(test.isValid(), true);
+    }
+
+    @Test
+    public void isValid1() {
         SMSPeer test = new SMSPeer("+1234567823445827373662");
         assertEquals(test.isValid(), false );
     }
