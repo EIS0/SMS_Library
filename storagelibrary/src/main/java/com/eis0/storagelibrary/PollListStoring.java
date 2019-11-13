@@ -75,7 +75,7 @@ public class PollListStoring extends StoringJsons implements JsonConverter<Array
         if (!doesFileExist(context, receivedListName)) {
             receivedPollList = new ArrayList<>();
             savePollList(context, receivedListName, receivedPollList);
-            Log.d("Data_management_process", "receivedPollLost created");
+            Log.d("Data_management_process", "receivedPollList created");
         } else
             receivedPollList = loadPollList(context, receivedListName);
         Log.d("Data_management_process", "Lists loaded successfully");
