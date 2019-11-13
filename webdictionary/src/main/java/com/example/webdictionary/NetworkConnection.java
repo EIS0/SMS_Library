@@ -9,7 +9,7 @@ import com.eis0.smslibrary.SMSMessage;
 import com.eis0.smslibrary.SMSPeer;
 
 /**
- * @author Marco Cognolato
+ * @author Marco Cognolato except where otherwise indicated
  */
 public class NetworkConnection {
 
@@ -43,12 +43,13 @@ public class NetworkConnection {
         RemovePeers,
         UpdatePeers,
         LeavePermission,
+        AcceptLeave,
         Ping
-    }
 
+        }
     /**
-     * Sends a given valid peer a request to join his network,
-     * It also sends the current network state
+     * Sends to a given valid peer a request to join his network.
+     * It also sends the current network state.
      * @param peer The peer to send the message to.
      */
     public void askToJoin(SMSPeer peer){
@@ -77,6 +78,35 @@ public class NetworkConnection {
             Log.d(LOG_KEY, "Old Peer: " + oldPeerAddress);
             SMSPeer oldPeer = new SMSPeer(oldPeerAddress);
             SMSManager.getInstance(context).sendMessage(new SMSMessage(oldPeer, RequestType.AddPeers.ordinal() + " " + text));
+        }
+    }
+
+    /**
+     * @author Edoardo Raimondi
+     * Sends to a given valid peer a request to leave his network
+     * It also send the current network state
+     * @param peer The peer to send a message to.
+     */
+
+    private void askToLeave(SMSPeer peer){
+        SMSManager.getInstance(context).sendMessage(new SMSMessage(peer, RequestType.LeavePermission.ordinal()+" " + peersInNetwork()));
+    }
+
+    /**
+     * @author Edoardo Raimondi
+     * Sends an exit notification to a given peer that will remove it
+     * @param linkPeer The Peer asking to join this network, working as a link between 2 nets now joined
+     * @param text The message received with the sender's network state
+     */
+    private void acceptLeave(SMSPeer linkPeer, String text){
+        //remove the peer
+        removeFromNet(text);
+        String newPeersInNet = peersInNetwork();
+        //notify my old peers about the exit
+        for(String oldPeerAddress : newPeersInNet.split(" ")){
+            Log.d(LOG_KEY, "Old Peer: " + oldPeerAddress);
+            SMSPeer oldPeer = new SMSPeer(oldPeerAddress);
+            SMSManager.getInstance(context).sendMessage(new SMSMessage(oldPeer, RequestType.RemovePeers.ordinal() + " " + text));
         }
     }
 
@@ -172,6 +202,14 @@ public class NetworkConnection {
             else if(incomingRequest == RequestType.AddPeers){
                 Log.d(LOG_KEY, "Received Update Net Request: updating net...");
                 net.addToNet(text.substring(2));
+            }
+            else if(incomingRequest == RequestType.LeavePermission){
+                Log.d(LOG_KEY, "Received Leave Permission: ...");
+                net.acceptLeave(peer, text.substring(2));
+            }
+            else if(incomingRequest == RequestType.AcceptLeave){
+                Log.d(LOG_KEY, "Received Leave Accepted: updating net...");
+                net.removeFromNet(text.substring(2));
             }
         }
     }
