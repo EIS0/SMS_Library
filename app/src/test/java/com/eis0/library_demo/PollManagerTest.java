@@ -42,7 +42,7 @@ public class PollManagerTest {
     public void onMessageReceived() {
         // CASE 0: received new poll
 
-        when(fakePollListener.onNewPollReceived(TernaryPoll poll))
+        when(fakePollListener.onNewPollReceived())
                 .thenReturn(poll);
 
         pollManager.addPollListener(fakePollListener);

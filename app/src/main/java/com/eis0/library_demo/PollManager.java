@@ -50,7 +50,7 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
      * @param listener The listener to wake up when a message is received. It must implement the
      *                 PollListener interface.
      */
-    public void setPollListener(PollListener listener) {
+    void setPollListener(PollListener listener) {
         pollListener = listener;
     }
 
@@ -61,7 +61,7 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
      */
     void createPoll(String name, String question, ArrayList<SMSPeer> users) {
         TernaryPoll poll = new TernaryPoll(name, question, users);
-        sentPolls.put(poll.pollID, poll);
+        sentPolls.put(poll.getPollID(), poll);
         sendNewPoll(poll);
         pollListener.onSentPollUpdate(poll);
     }
@@ -72,7 +72,7 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
      * @param answer The user's answer, true equals "Yes" and false equals "No".
      */
     public void answerPoll(TernaryPoll poll, boolean answer) {
-        if(poll.getPollAuthor().equals(TernaryPoll.SELF_PEER)) throw new IllegalArgumentException("Trying to answer an owning poll");
+        if(poll.getPollAuthor().equals(TernaryPoll.SELF_PEER)) throw new IllegalArgumentException("Trying to answer an owned poll");
         Pair<SMSPeer, Integer> key = new Pair<>(poll.getPollAuthor(), poll.getPollID());
         sendAnswer(poll, answer);
         incomingPolls.remove(key);
@@ -128,7 +128,7 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
      */
     private void sendNewPoll(TernaryPoll poll) {
         String message = newPollToMessage(poll);
-        for(SMSPeer user : poll.pollUsers.keySet())
+        for(SMSPeer user : poll.getPollUsers().keySet())
             smsManager.sendMessage(new SMSMessage(user, message));
     }
 
@@ -145,7 +145,7 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
                 + poll.getPollName() + FIELD_SEPARATOR
                 + poll.getPollQuestion();
         // Adds each pollUser to the end of the message
-        for (SMSPeer user : poll.pollUsers.keySet()) message += FIELD_SEPARATOR + user;
+        for (SMSPeer user : poll.getPollUsers().keySet()) message += FIELD_SEPARATOR + user;
         return message;
     }
 
