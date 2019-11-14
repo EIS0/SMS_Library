@@ -22,147 +22,138 @@ public class SMSNet_Tests {
         SMSNetDictionary net = new SMSNetDictionary();
     }
 
+    public class ObjectTest{
+        public String text;
+        public int num;
+        public ObjectTest(){
+            text = "test";
+            num = 0;
+        }
+    }
+    ObjectTest t = new ObjectTest();
+    ObjectTest m = new ObjectTest();
+    SMSKey key = new SMSKey(t);
+    SMSKey key2 = new SMSKey(m);
+    SMSKey key3 = new SMSKey(t);
     @Test
-    public void addPeer_CheckIfAdded() {
+    public void addKey_CheckIfAdded() {
         SMSNetDictionary net = new SMSNetDictionary();
-        SMSPeer peer = new SMSPeer("3423541601");
         SMSResource resource = new SMSResource("photo.png");
         SMSResource[] resources = {resource};
-        net.add(peer, resources);
-        assertEquals(net.getAvailablePeers()[0], peer);
+        net.add(key, resources);
+        assertEquals(net.getAvailableKeys()[0], t);
     }
 
     @Test
-    public void addPeer_NoResource_CheckIfAdded() {
+    public void addKey_NoResource_CheckIfAdded() {
         SMSNetDictionary net = new SMSNetDictionary();
-        SMSPeer peer = new SMSPeer("3423541601");
-        net.add(peer, null);
-        assertEquals(net.getAvailablePeers()[0], peer);
+        net.add(key, null);
+        assertEquals(net.getAvailableKeys()[0], key);
     }
 
     @Test
     public void addResource_CheckIfAdded() {
         SMSNetDictionary net = new SMSNetDictionary();
-        SMSPeer peer = new SMSPeer("3423541601");
         SMSResource resource = new SMSResource("photo.png");
         SMSResource[] resources = {resource};
-        net.add(peer, resources);
+        net.add(key, resources);
         assertEquals(net.getAvailableResources()[0], resource);
     }
 
     @Test
-    public void removePeer_CheckNoPeer() {
+    public void removeKey_CheckNoPeer() {
         SMSNetDictionary net = new SMSNetDictionary();
-        SMSPeer peer = new SMSPeer("3423541601");
         SMSResource resource = new SMSResource("photo.png");
         SMSResource[] resources = {resource};
-        net.add(peer, resources);
-        net.remove(peer);
-        SMSResource[] emptyArr;
-        assertEquals(net.getAvailablePeers().length, 0);
+        net.add(key, resources);
+        net.remove(key);
+        assertEquals(net.getAvailableKeys().length, 0);
     }
 
     @Test
-    public void removePeer_CheckNoResources() {
+    public void removeKey_CheckNoResources() {
         SMSNetDictionary net = new SMSNetDictionary();
-        SMSPeer peer = new SMSPeer("3423541601");
         SMSResource resource = new SMSResource("photo.png");
         SMSResource[] resources = {resource};
-        net.add(peer, resources);
-        net.remove(peer);
+        net.add(key, resources);
+        net.remove(key);
         assertNull(net.getAvailableResources());
     }
 
     @Test
-    public void addResources_CheckPeerResources() {
+    public void addResources_CheckKeyResources() {
         SMSNetDictionary net = new SMSNetDictionary();
-        SMSPeer peer = new SMSPeer("3423541601");
         SMSResource resource1 = new SMSResource("photo.png");
-        SMSResource resource2 = new SMSResource("home.jpg");
+        SMSResource resource2 = new SMSResource(t);
         SMSResource resource3 = new SMSResource("test.jpg");
         SMSResource[] resources = {resource1, resource2, resource3};
-        net.add(peer, resources);
+        net.add(key, resources);
         for (int i = 0; i < resources.length; i++) {
-            assertEquals(net.findPeerResources(peer)[i], resources[i]);
+            assertEquals(net.findPeerResources(key)[i], resources[i]);
         }
     }
 
     @Test
-    public void findPeerWithResource() {
+    public void findKeyWithResource() {
         SMSNetDictionary net = new SMSNetDictionary();
-        SMSPeer peer1 = new SMSPeer("3423541601");
-        SMSPeer peer2 = new SMSPeer("5554");
         SMSResource resource1 = new SMSResource("photo.png");
         SMSResource resource2 = new SMSResource("home.jpg");
         SMSResource resource3 = new SMSResource("test.jpg");
         SMSResource[] resources1 = {resource1, resource2};
         SMSResource[] resources2 = {resource3};
-        net.add(peer1, resources1);
-        net.add(peer2, resources2);
-        assertEquals(net.findPeerWithResource(resource2), peer1);
+        net.add(key, resources1);
+        net.add(key2, resources2);
+        assertEquals(net.findKeyWithResource(resource2), key);
     }
 
     @Test
-    public void addResourcesToAnExistingPeer() {
+    public void addResourcesToAnExistingKey() {
         SMSNetDictionary net = new SMSNetDictionary();
-        SMSPeer peer = new SMSPeer("12345");
         SMSResource resource1 = new SMSResource("photo.png");
         SMSResource resource2 = new SMSResource("home.jpg");
         SMSResource[] resources1 = {resource1};
         SMSResource[] resources2 = {resource2};
-        net.add(peer, resources1);
-        net.add(peer, resources2);
-        SMSPeer[] peers = net.getAvailablePeers();
-        assertEquals(peers.length, 1);
+        net.add(key, resources1);
+        net.add(key, resources2);
+        SMSKey[] keys = net.getAvailableKeys();
+        assertEquals(keys.length, 1);
     }
 
     @Test
-    public void addResourcesToAnExistingPeer_checkResources() {
+    public void addResourcesToAnExistingKey_checkResources() {
        SMSNetDictionary net = new SMSNetDictionary();
-       SMSPeer peer = new SMSPeer("12345");
        SMSResource resource1 = new SMSResource("photo.png");
        SMSResource resource2 = new SMSResource("home.jpg");
        SMSResource[] resources1 = {resource1};
        SMSResource[] resources2 = {resource2};
-       net.add(peer, resources1);
-       net.add(peer, resources2);
+       net.add(key, resources1);
+       net.add(key, resources2);
        SMSResource[] resources = net.getAvailableResources();
        int cont=0;
-       String[] shouldResources = new String[2];
+       Object[] shouldResources = new Object[2];
         for (SMSResource resource : resources) {
             shouldResources[cont++] = resource.getResource();
         }
-       String[] trueResources = {resource1.getResource(), resource2.getResource()};
+       Object[] trueResources = {resource1.getResource(), resource2.getResource()};
        assertEquals(shouldResources[0], trueResources[0]);
        assertEquals(shouldResources[1], trueResources[1]);
 }
 
     @Test
-    public void addMultiplePeers(){
+    public void addMultipleKeys(){
         SMSNetDictionary net = new SMSNetDictionary();
-        SMSPeer peer1 = new SMSPeer("12345");
-        SMSPeer peer2 = new SMSPeer("12345");
-        net.add(peer1, null);
-        net.add(peer2, null);
-        SMSPeer[] peers = net.getAvailablePeers();
-        assertEquals(peers.length, 1);
+        net.add(key, null);
+        net.add(key2, null);
+        SMSKey[] keys = net.getAvailableKeys();
+        assertEquals(keys.length, 1);
     }
 
     @Test
-    public void testHashMapWithSMSPeersEquals1(){
-        HashMap<SMSPeer, String> hash = new HashMap<>();
-        SMSPeer peer1 = new SMSPeer("12345");
-        SMSPeer peer2 = new SMSPeer("12345");
-        hash.put(peer1, "");
-        assertTrue(hash.containsKey(peer1));
+    public void testHashMapWithSMSkeysEquals1(){
+        HashMap<SMSKey, String> hash = new HashMap<>();
+        hash.put(key,"" );
+        assertTrue(hash.containsKey(key3));
     }
 
-    @Test
-    public void testHashMapWithSMSPeersEquals2(){
-        HashMap<SMSPeer, String> hash = new HashMap<>();
-        SMSPeer peer1 = new SMSPeer("12345");
-        SMSPeer peer2 = new SMSPeer("12345");
-        hash.put(peer1, "");
-        assertTrue(hash.containsKey(peer2));
-    }
+
 }
