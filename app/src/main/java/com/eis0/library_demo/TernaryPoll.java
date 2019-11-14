@@ -7,6 +7,7 @@ import com.eis0.smslibrary.SMSPeer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  *
@@ -67,6 +68,10 @@ public class TernaryPoll extends Poll {
         pollAuthor = SELF_PEER;
         pollUsers = new HashMap<>();
         for (SMSPeer user : users) this.addUser(user);
+    }
+
+    public Set<SMSPeer> getPollUsers() {
+        return pollUsers.keySet();
     }
 
     public String getPollName() {
