@@ -9,7 +9,7 @@ public class SMSHandlerTest {
     @Test
     public void isPendingMessagesEmpty() {
             boolean result;
-            SMSHandler.addReceiveListener(null);
+            SMSHandler.setReceiveListener(null);
             result = SMSHandler.isPendingMessagesEmpty();
             assertEquals(result, true);
 

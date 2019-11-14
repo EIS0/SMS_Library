@@ -1,17 +1,17 @@
 package com.example.webdictionary;
 
 
-public class SMSResource implements Resource<String> {
-    private String resource;
+public class SMSResource implements Resource<Object> {
+    private Object resource;
 
-    public SMSResource(String resource){
+    public SMSResource(Object resource){
         this.resource = resource;
     }
 
     /**
      * Returns the Resource data (String in this case)
      */
-    public String getResource(){
+    public Object getResource(){
         return resource;
     }
 
@@ -20,7 +20,7 @@ public class SMSResource implements Resource<String> {
      * has to be serialized as a String to be able to be sent as an SMS
      * @return A String definition of an SMSResource, to identify this object
      */
-    public String serialize(){
+    public Object serialize(){
         return resource;
     }
 }

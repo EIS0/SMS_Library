@@ -2,17 +2,15 @@ package com.example.webdictionary;
 
 import android.util.Log;
 
-import com.eis0.smslibrary.SMSPeer;
-
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * @author Edoardo Raimondi
  */
-public class SMSNetDictionary implements NetworkDictionary<SMSPeer,SMSResource> {
+public class SMSNetDictionary implements NetworkDictionary<SMSKey,SMSResource> {
 
-    private Map<SMSPeer, SMSResource[]> NetDict;
+    private Map <SMSKey, SMSResource[]> NetDict;
     private String LOG_KEY = "NET_DICTIONARY";
 
     public SMSNetDictionary(){
@@ -22,10 +20,10 @@ public class SMSNetDictionary implements NetworkDictionary<SMSPeer,SMSResource> 
     /**
      * If available, it finds the first Peer that has a given valid resource, else it returns null
      * @param resource
-     * @return Peer having that resource
+     * @return key having that resource
      */
-    public SMSPeer findPeerWithResource(SMSResource resource) {
-        for (Map.Entry <SMSPeer, SMSResource[]> entry : NetDict.entrySet())
+    public SMSKey findKeyWithResource(SMSResource resource) {
+        for (Map.Entry <SMSKey, SMSResource[]> entry : NetDict.entrySet())
         {
             for(int i = 0; i <= entry.getValue().length - 1; i++) { //Scanner of a single array resource
                 if ( entry.getValue()[i].equals(resource) ) return entry.getKey();
@@ -36,12 +34,12 @@ public class SMSNetDictionary implements NetworkDictionary<SMSPeer,SMSResource> 
 
     /**
      * If present, it returns the list of resources of a given Peer, else it returns null
-     * @param peer having resources we want
+     * @param key having resources we want
      * @return SMSResources[] containing all resources' peer
      */
-    public SMSResource[] findPeerResources(SMSPeer peer){
+    public SMSResource[] findPeerResources(SMSKey key){
         try{
-           return NetDict.get(peer);
+           return NetDict.get(key);
         }
         catch(Exception e){
             Log.i(LOG_KEY, "User not present.");
@@ -52,10 +50,10 @@ public class SMSNetDictionary implements NetworkDictionary<SMSPeer,SMSResource> 
     /**
      * @return List of Peers currently on the network dictionary
      */
-    public SMSPeer[] getAvailablePeers(){
-        SMSPeer[] allAvailablePeers = new SMSPeer[NetDict.size()];
+    public SMSKey[] getAvailableKeys(){
+        SMSKey[] allAvailablePeers = new SMSKey[NetDict.size()];
         int i = 0;
-        for (Map.Entry <SMSPeer, SMSResource[]> entry : NetDict.entrySet()){
+        for (Map.Entry <SMSKey, SMSResource[]> entry : NetDict.entrySet()){
             //Dictionary scanner
             allAvailablePeers[i++] = entry.getKey();
         }
@@ -69,7 +67,7 @@ public class SMSNetDictionary implements NetworkDictionary<SMSPeer,SMSResource> 
         int cont = 0; //to keep the return array (allAvailableResource) absolute position
         SMSResource[] allAvailableResources = new SMSResource[1]; //array to return
 
-        for (Map.Entry <SMSPeer, SMSResource[]> entry : NetDict.entrySet()) //Dictionary scanner
+        for (Map.Entry <SMSKey, SMSResource[]> entry : NetDict.entrySet()) //Dictionary scanner
         {
             int indexToAdd = entry.getValue().length;
             for(int i = 0; i <= entry.getValue().length - 1; i++) { //Single array resource scanner
@@ -91,25 +89,25 @@ public class SMSNetDictionary implements NetworkDictionary<SMSPeer,SMSResource> 
 
     /**
      * Adds a valid Peer-Resources[] couple to the network dictionary
-     * @param peer A peer to add to the dictionary
+     * @param key A peer to add to the dictionary
      * @param resources A list of Resources to add to the dictionary
      */
-    public void add(SMSPeer peer, SMSResource[] resources){
-        if(!NetDict.containsKey(peer)){
-            NetDict.put(peer, resources);
+    public void add(SMSKey key, SMSResource[] resources){
+        if(!NetDict.containsKey(key)){
+            NetDict.put(key, resources);
         }
         else { //if already present, add the new resources
-            SMSResource[] current = findPeerResources(peer);
-            NetDict.put(peer, SMSNetDictionarySupport.concatAll(current, resources));
+            SMSResource[] current = findPeerResources(key);
+            NetDict.put(key, SMSNetDictionarySupport.concatAll(current, resources));
         }
     }
 
     /**
      * Removes a given valid Peer (and all its Resources) from the network dictionary
-     * @param peer to remove
+     * @param key to remove
      */
-    public void remove(SMSPeer peer) {
-        NetDict.remove(peer);
+    public void remove(SMSKey key) {
+        NetDict.remove(key);
     }
 
 }

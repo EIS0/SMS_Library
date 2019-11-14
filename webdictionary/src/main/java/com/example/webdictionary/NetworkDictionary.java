@@ -1,28 +1,27 @@
 package com.example.webdictionary;
 
-import com.eis0.smslibrary.Peer;
 
 /**
  * Extend this class to extend your type of NetworkDictionary,
  * Simply instantiate this to use it
  * @author Marco Cognolato
  */
-interface NetworkDictionary<K extends Peer, V extends Resource> {
+interface NetworkDictionary<K extends Key, V extends Resource> {
 
     /**
      * Finds the Peer that has a given valid resource, if available, else returns null
      */
-    K findPeerWithResource(V resource);
+    K findKeyWithResource(V resource);
 
     /**
      * Returns the list of resources of a given peer if present, else returns null
      */
-    V[] findPeerResources(K peer);
+    V[] findPeerResources(K key);
 
     /**
      * Returns the list of Peers currently on the network dictionary
      */
-    K[] getAvailablePeers();
+    K[] getAvailableKeys();
 
     /**
      * Returns the list of resources currently on the network dictionary
