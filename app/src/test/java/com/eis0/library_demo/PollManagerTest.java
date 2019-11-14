@@ -22,13 +22,9 @@ import static org.mockito.Mockito.when;
 public class PollManagerTest {
     private static PollManager pollManager;
 
-    @Mock
-    private static PollListener fakePollListener;
-
     @BeforeClass
     public static void classSetUp() {
         pollManager = PollManager.getInstance();
-        pollManager.setPollListener(fakePollListener);
     }
 
     @Test
@@ -42,7 +38,8 @@ public class PollManagerTest {
     @Test
     public void onMessageReceived() {
         // CASE 0: received new poll
-        PollListener pollListener = mock(PollListener.class);
+        PollListener mockListener = mock(PollListener.class);
+        pollManager.setPollListener(mockListener);
 
         String sep = PollManager.FIELD_SEPARATOR;
         SMSPeer sender = new SMSPeer("3337235485");
@@ -61,7 +58,7 @@ public class PollManagerTest {
         pollManager.onMessageReceived(message);
         /* TODO: assert if onNewPollReceived() is being called (with Mockito?)
          */
-        verify(pollListener, times(1)).onIncomingPoll(verificationPoll);
+        verify(mockListener, times(1)).onIncomingPoll(verificationPoll);
 
     }
 }
