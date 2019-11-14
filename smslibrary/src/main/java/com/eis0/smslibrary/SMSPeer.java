@@ -1,8 +1,8 @@
 package com.eis0.smslibrary;
 
-import android.util.Log;
+import androidx.annotation.Nullable;
 
-public class SMSPeer implements Peer {
+public class SMSPeer implements Peer, java.io.Serializable {
     private String address;
 
     /**
@@ -35,12 +35,18 @@ public class SMSPeer implements Peer {
 
 
     /**
-     * Returns true if SMSPeer has prefix
+     * Checks if the address has prefix
+     * @return Returns true if the address has the prefix sign
      */
 
     public boolean hasPrefix() {
         char prefixSign = '+';
         return address.charAt(0) == prefixSign;
+    }
+
+    public SMSPeer withoutPrefix() {
+        if(!hasPrefix()) return this;
+        return new SMSPeer(this.address.substring(1));
     }
 
     /**
@@ -51,13 +57,32 @@ public class SMSPeer implements Peer {
         try {
             int maxLength = 15;
             if (!isEmpty() && address.length() < maxLength) {
-                if (hasPrefix()) { Long.parseLong(address.substring(1)); //to verify exception
-                }
-                 else Long.parseLong(address);
+                if (hasPrefix()) Long.parseLong(withoutPrefix().address);
+                else Long.parseLong(address);
                 return true;
             }
         }
         catch(Exception e) { }
         return false;
+    }
+
+    /**
+     * @author Giovanni Velludo
+     */
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        if (obj == this) return true;
+        if (!(obj instanceof SMSPeer)) return false;
+
+        SMSPeer peer = (SMSPeer) obj;
+        return peer.address.equals(this.address);
+    }
+
+    /**
+     * @author Giovanni Velludo
+     */
+    @Override
+    public int hashCode() {
+        return address.hashCode();
     }
 }

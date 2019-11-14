@@ -10,17 +10,14 @@ public class SMSManager extends CommunicationHandler<SMSMessage> {
     // Singleton Design Pattern
     private SMSManager() { }
     private static SMSManager instance = null;
-    private Context context;
 
     /**
      * Returns an instance of SMSManager if none exist, otherwise the one instance already created
      * as per the Singleton Design Patter, gets also the context of the application for future use
-     * @param context Context of the application to use when needed
      * @return Single instance of this class
      */
-    public static SMSManager getInstance(Context context) {
+    public static SMSManager getInstance() {
         if(instance == null) instance = new SMSManager();
-        instance.context = context;
         return instance;
     }
 
@@ -57,8 +54,9 @@ public class SMSManager extends CommunicationHandler<SMSMessage> {
      * Sends a given valid message and sets a listener for message sent
      * @param message Valid message to send
      * @param listener Listener watching for message sent event
+     * @param context Context needed for the intent
      */
-    public void sendMessage(SMSMessage message, SentMessageListener listener) {
+    public void sendMessage(SMSMessage message, SentMessageListener listener, Context context) {
         setSentIntent(message, context, listener);
         SMSHandler.sendMessage(message, sent, null);
     }
@@ -67,8 +65,9 @@ public class SMSManager extends CommunicationHandler<SMSMessage> {
      * Sends a given valid message and sets a listener for message delivery
      * @param message Valid message to send
      * @param listener Listener watching for message delivered event
+     * @param context Context needed for the intent
      */
-    public void sendMessage(SMSMessage message, DeliveredMessageListener listener) {
+    public void sendMessage(SMSMessage message, DeliveredMessageListener listener, Context context) {
         setDeliveredIntent(message, context, listener);
         SMSHandler.sendMessage(message, null, delivered);
     }
@@ -78,10 +77,11 @@ public class SMSManager extends CommunicationHandler<SMSMessage> {
      * @param message Valid message to send
      * @param sendListener Listener watching for message sent event
      * @param deliveredListener Listener watching for message delivered event
+     * @param context Context needed for the intents
      */
     public void sendMessage(SMSMessage message,
                             SentMessageListener sendListener,
-                            DeliveredMessageListener deliveredListener) {
+                            DeliveredMessageListener deliveredListener, Context context) {
         setSentIntent(message, context, sendListener);
         setDeliveredIntent(message, context, deliveredListener);
         SMSHandler.sendMessage(message, sent, delivered);
@@ -94,10 +94,10 @@ public class SMSManager extends CommunicationHandler<SMSMessage> {
      * @param listener the specific listener to link to the message
      */
     private void setSentIntent(final SMSMessage message, final Context cont, SentMessageListener listener) {
-        if(onSend != null) context.unregisterReceiver(onSend);
+        if(onSend != null) cont.unregisterReceiver(onSend);
         smsSentListener = listener;
         String action = "SMS_SENT";
-        sent = PendingIntent.getBroadcast(context, 0, new Intent(action), 0);
+        sent = PendingIntent.getBroadcast(cont, 0, new Intent(action), 0);
         onSend = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -105,7 +105,7 @@ public class SMSManager extends CommunicationHandler<SMSMessage> {
                 cont.unregisterReceiver(onSend);
             }
         };
-        context.registerReceiver(onSend, new IntentFilter(action));
+        cont.registerReceiver(onSend, new IntentFilter(action));
     }
 
     /**
@@ -115,10 +115,10 @@ public class SMSManager extends CommunicationHandler<SMSMessage> {
      * @param listener the specific listener to link to the message
      */
     private void setDeliveredIntent(final SMSMessage message, final Context cont, DeliveredMessageListener listener) {
-        if(onDeliver != null) context.unregisterReceiver(onDeliver);
+        if(onDeliver != null) cont.unregisterReceiver(onDeliver);
         smsDeliveredListener = listener;
         String action = "SMS_DELIVERED";
-        delivered = PendingIntent.getBroadcast(context, 0, new Intent(action), 0);
+        delivered = PendingIntent.getBroadcast(cont, 0, new Intent(action), 0);
         onDeliver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -126,6 +126,6 @@ public class SMSManager extends CommunicationHandler<SMSMessage> {
                 cont.unregisterReceiver(onDeliver);
             }
         };
-        context.registerReceiver(onDeliver, new IntentFilter(action));
+        cont.registerReceiver(onDeliver, new IntentFilter(action));
     }
 }

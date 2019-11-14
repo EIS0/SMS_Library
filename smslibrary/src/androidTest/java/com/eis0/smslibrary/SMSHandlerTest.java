@@ -12,6 +12,5 @@ public class SMSHandlerTest {
             SMSHandler.setReceiveListener(null);
             result = SMSHandler.isPendingMessagesEmpty();
             assertEquals(result, true);
-
         }
     }
