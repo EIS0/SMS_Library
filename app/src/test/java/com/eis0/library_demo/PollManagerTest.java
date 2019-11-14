@@ -1,7 +1,5 @@
 package com.eis0.library_demo;
 
-import android.content.Context;
-
 import com.eis0.smslibrary.SMSMessage;
 import com.eis0.smslibrary.SMSPeer;
 
@@ -13,6 +11,10 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.ArrayList;
 
+import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -21,13 +23,12 @@ public class PollManagerTest {
     private static PollManager pollManager;
 
     @Mock
-    private static Context fakeContext;
     private static PollListener fakePollListener;
 
     @BeforeClass
     public static void classSetUp() {
-        pollManager = PollManager.getInstance(fakeContext);
-        pollManager.addPollListener(fakePollListener);
+        pollManager = PollManager.getInstance();
+        pollManager.setPollListener(fakePollListener);
     }
 
     @Test
@@ -41,13 +42,12 @@ public class PollManagerTest {
     @Test
     public void onMessageReceived() {
         // CASE 0: received new poll
+        PollListener pollListener = mock(PollListener.class);
 
-        when(fakePollListener.onNewPollReceived())
-                .thenReturn(poll);
-
-        pollManager.addPollListener(fakePollListener);
+        String sep = PollManager.FIELD_SEPARATOR;
         SMSPeer sender = new SMSPeer("3337235485");
-        String text = "03337235485\r38\rQuestion\r3493619544\r3335436782\r+396662838864";
+        String text = "0" + sep +"38" + sep + "Pizza" + sep + "Should we get takeout pizza for" +
+                "dinner?" + sep + "3493619544" + sep + "3335436782" + sep + "+396662838864";
         SMSMessage message = new SMSMessage(sender, text);
 
         ArrayList<SMSPeer> users = new ArrayList<>();
@@ -55,13 +55,13 @@ public class PollManagerTest {
         users.add(new SMSPeer("3335436782"));
         users.add(new SMSPeer("+396662838864"));
         TernaryPoll verificationPoll =
-                new TernaryPoll("Question", new SMSPeer("3337235485"),
-                        users, 38);
+                new TernaryPoll("Pizza", "Should we get takeout pizza for dinner?",
+                        sender, 38, users);
 
         pollManager.onMessageReceived(message);
         /* TODO: assert if onNewPollReceived() is being called (with Mockito?)
          */
+        verify(pollListener, times(1)).onIncomingPoll(verificationPoll);
 
-        verify(fakePollListener).onNewPollReceived(verificationPoll);
     }
 }

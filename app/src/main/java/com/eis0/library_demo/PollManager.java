@@ -21,7 +21,8 @@ import java.util.HashMap;
  */
 public class PollManager implements ReceivedMessageListener<SMSMessage> {
 
-    private static final String FIELD_SEPARATOR = ":";
+    // must not be private for tests to work, not a big deal since it's final
+    static final String FIELD_SEPARATOR = ":";
     private static PollManager instance = null; // Must always be static for getInstance to work
     // TODO: write polls to disk when the program is removed from memory
     private HashMap<Pair<SMSPeer, Integer>, TernaryPoll> incomingPolls = new HashMap<>();
@@ -69,6 +70,7 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
     /**
      * Sets the answer of the user in the local copy of the poll and sends the updated poll to
      * the author.
+     * @param poll The poll to answer.
      * @param answer The user's answer, true equals "Yes" and false equals "No".
      */
     public void answerPoll(TernaryPoll poll, boolean answer) {

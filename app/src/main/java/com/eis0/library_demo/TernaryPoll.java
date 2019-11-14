@@ -16,7 +16,7 @@ import java.util.HashMap;
  * @author Edoardo Raimondi with some advice from Giovanni Velludo, except where specified
  * otherwise.
  */
-class TernaryPoll extends Poll {
+public class TernaryPoll extends Poll {
 
     private static int pollCount = 0; // TODO: save this value when the program is shutdown
     static final SMSPeer SELF_PEER = new SMSPeer("self");
@@ -40,10 +40,11 @@ class TernaryPoll extends Poll {
 
     /**
      * Creates a local copy of a poll coming from another device.
-     * @param question the question asked to all users.
-     * @param author the user who created the poll.
-     * @param users users included in the poll.
-     * @param id the id of the poll.
+     * @param name The name of the poll.
+     * @param question The question asked to all users.
+     * @param author The user who created the poll.
+     * @param users Users included in the poll.
+     * @param id The id of the poll.
      */
     TernaryPoll(String name, String question, SMSPeer author, int id, ArrayList<SMSPeer> users) {
         pollAuthor = author;
@@ -56,8 +57,9 @@ class TernaryPoll extends Poll {
 
     /**
      * Creates a new poll from this device.
-     * @param question the question to ask all users.
-     * @param users users to include in the poll.
+     * @param name The name of the poll.
+     * @param question The question to ask all users.
+     * @param users Users to include in the poll.
      */
     TernaryPoll(String name, String question, ArrayList<SMSPeer> users) {
         pollID = ++TernaryPoll.pollCount;
@@ -68,11 +70,11 @@ class TernaryPoll extends Poll {
         for (SMSPeer user : users) this.addUser(user);
     }
 
-    String getPollName() {
+    public String getPollName() {
         return pollName;
     }
 
-    String getPollQuestion() {
+    public String getPollQuestion() {
         return pollQuestion;
     }
 
@@ -88,20 +90,20 @@ class TernaryPoll extends Poll {
         return !pollUsers.containsValue(PollResult.UNAVAILABLE);
     }
 
-    int getClosedPercentage() {
+    public int getClosedPercentage() {
         float answerCount = countYes() + countNo();
         float ratio = answerCount/(float)pollUsers.size();
         return Math.round(ratio * 100);
     }
 
-    int countYes() {
+    public int countYes() {
         int count = 0;
         for (PollResult result: pollUsers.values())
             if(result == PollResult.YES) count++;
         return count;
     }
 
-    int countNo() {
+    public int countNo() {
         int count = 0;
         for (PollResult result: pollUsers.values())
             if(result == PollResult.NO) count++;
@@ -165,7 +167,7 @@ class TernaryPoll extends Poll {
     /**
      * @return poll ID.
      */
-    int getPollID() {
+    public int getPollID() {
         return this.pollID;
     }
 }
