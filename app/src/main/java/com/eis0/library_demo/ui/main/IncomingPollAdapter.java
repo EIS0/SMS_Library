@@ -8,48 +8,42 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.eis0.library_demo.DataProvider;
 import com.eis0.library_demo.PollListener;
 import com.eis0.library_demo.PollManager;
 import com.eis0.library_demo.R;
 import com.eis0.library_demo.TernaryPoll;
 
 import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
 
-public class IncomingPollAdapter extends BaseAdapter implements PollListener {
+public class IncomingPollAdapter extends BaseAdapter implements Observer {
 
     private static LayoutInflater inflater = null;
-    private static ArrayList<TernaryPoll> incomingPolls = new ArrayList<>();
     PollManager pollManager = PollManager.getInstance();
 
     public IncomingPollAdapter(Context context) {
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        pollManager.addPollListener(this);
     }
 
-    public void removeListener() {
-        pollManager.removePollListener(this);
-    }
-
-    public void onIncomingPoll(TernaryPoll poll) {
-        incomingPolls.add(poll);
+    public void update(Observable o, Object arg) {
         notifyDataSetChanged();
     }
 
-    public void onSentPollUpdate(TernaryPoll poll) {}
-
     @Override
     public long getItemId(int position) {
-        return incomingPolls.get(position).getPollID();
+        return DataProvider.getIncomingPolls().get(position).getPollID();
     }
 
     @Override
     public Object getItem(int position) {
-        return incomingPolls.get(position);
+        return DataProvider.getIncomingPolls().get(position);
     }
 
     @Override
     public int getCount() {
-        return incomingPolls.size();
+        return DataProvider.getIncomingPolls().size();
     }
 
     @Override
@@ -62,12 +56,12 @@ public class IncomingPollAdapter extends BaseAdapter implements PollListener {
         Button yesBtn = convertView.findViewById(R.id.yesBtn);
         Button noBtn = convertView.findViewById(R.id.noBtn);
 
-        final TernaryPoll poll = incomingPolls.get(position);
+        final TernaryPoll poll = DataProvider.getIncomingPolls().get(position);
 
         yesBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 pollManager.answerPoll(poll, true);
-                incomingPolls.remove(poll);
+                DataProvider.getIncomingPolls().remove(poll);
                 notifyDataSetChanged();
             }
         });
@@ -76,7 +70,7 @@ public class IncomingPollAdapter extends BaseAdapter implements PollListener {
             @Override
             public void onClick(View v) {
                 pollManager.answerPoll(poll, false);
-                incomingPolls.remove(poll);
+                DataProvider.getIncomingPolls().remove(poll);
                 notifyDataSetChanged();
             }
         });

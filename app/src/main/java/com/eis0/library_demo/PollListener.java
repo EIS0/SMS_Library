@@ -17,6 +17,4 @@ public interface PollListener {
      * @param poll The poll updated.
      */
     void onSentPollUpdate(TernaryPoll poll);
-
-    void removeListener();
 }

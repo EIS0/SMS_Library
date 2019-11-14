@@ -27,7 +27,7 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
     private HashMap<Pair<SMSPeer, Integer>, TernaryPoll> incomingPolls = new HashMap<>();
     private HashMap<Integer, TernaryPoll> sentPolls = new HashMap<>();
 
-    private static ArrayList<PollListener> pollListeners = new ArrayList<>();
+    private static PollListener pollListener;
     private SMSManager smsManager = SMSManager.getInstance();
 
     // Singleton Design Pattern
@@ -50,12 +50,8 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
      * @param listener The listener to wake up when a message is received. It must implement the
      *                 PollListener interface.
      */
-    public void addPollListener(PollListener listener) {
-        if(!pollListeners.contains(listener)) pollListeners.add(listener);
-    }
-
-    public void removePollListener(PollListener listener) {
-        pollListeners.remove(listener);
+    public void setPollListener(PollListener listener) {
+        pollListener = listener;
     }
 
     /**
@@ -67,7 +63,7 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
         TernaryPoll poll = new TernaryPoll(name, question, users);
         sentPolls.put(poll.pollID, poll);
         sendNewPoll(poll);
-        for (PollListener pollListener : pollListeners) pollListener.onSentPollUpdate(poll);
+        pollListener.onSentPollUpdate(poll);
     }
 
     /**
@@ -88,8 +84,6 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
      * messageCode is the first header, and it's always one of the following values:
      * 0 when the message contains a new poll;
      * 1 when the message is sent from a user to the author and contains an answer;
-     * 2 when the message is sent from the author to users and contains updated poll data (not used
-     * in this first version of the app).
      *
      * @param message The SMS messaged passed by SMSHandler. SMSHandler already checks if the
      *                message is meant for our app and strips it of its identification section, so
@@ -113,7 +107,7 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
                     peers.add(new SMSPeer(destination));
                 TernaryPoll receivedPoll = new TernaryPoll(pollName, pollQuestion, pollAuthor, pollID, peers);
                 incomingPolls.put(new Pair<>(pollAuthor, pollID), receivedPoll);
-                for (PollListener pollListener : pollListeners) pollListener.onIncomingPoll(receivedPoll);
+                pollListener.onIncomingPoll(receivedPoll);
                 break;
             // You have received an answer for your poll
             case "1":
@@ -123,7 +117,7 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
                 if(isYes) answeredPoll.setYes(voter);
                 else answeredPoll.setNo(voter);
                 sentPolls.put(pollID, answeredPoll);
-                for (PollListener pollListener : pollListeners) pollListener.onSentPollUpdate(answeredPoll);
+                pollListener.onSentPollUpdate(answeredPoll);
                 break;
         }
     }

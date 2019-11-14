@@ -8,53 +8,41 @@ import android.widget.BaseAdapter;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.eis0.library_demo.DataProvider;
 import com.eis0.library_demo.PollListener;
 import com.eis0.library_demo.PollManager;
 import com.eis0.library_demo.R;
 import com.eis0.library_demo.TernaryPoll;
 
 import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
 
-public class OpenedPollAdapter extends BaseAdapter implements PollListener {
+public class OpenedPollAdapter extends BaseAdapter implements Observer {
 
     private static LayoutInflater inflater = null;
-    private static ArrayList<TernaryPoll> openedPolls = new ArrayList<>();
-    PollManager pollManager = PollManager.getInstance();
 
     public OpenedPollAdapter(Context context) {
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        pollManager.addPollListener(this);
     }
 
-    public void removeListener() {
-        pollManager.removePollListener(this);
-    }
-
-    public void onIncomingPoll(TernaryPoll poll) {}
-
-    public void onSentPollUpdate(TernaryPoll poll) {
-        if(poll.isClosed()) openedPolls.remove(poll);
-        else {
-            int pollIndex = openedPolls.indexOf(poll);
-            if(pollIndex == -1) openedPolls.add(poll);
-            else openedPolls.set(pollIndex, poll);
-        }
+    public void update(Observable o, Object arg) {
         notifyDataSetChanged();
     }
 
     @Override
     public long getItemId(int position) {
-        return openedPolls.get(position).getPollID();
+        return DataProvider.getOpenedPolls().get(position).getPollID();
     }
 
     @Override
     public Object getItem(int position) {
-        return openedPolls.get(position);
+        return DataProvider.getOpenedPolls().get(position);
     }
 
     @Override
     public int getCount() {
-        return openedPolls.size();
+        return DataProvider.getOpenedPolls().size();
     }
 
     @Override
@@ -69,7 +57,7 @@ public class OpenedPollAdapter extends BaseAdapter implements PollListener {
         TextView pollQuestion = convertView.findViewById(R.id.pollQuestionTxt);
         TextView percentage = convertView.findViewById(R.id.percentageTxt);
 
-        TernaryPoll poll = openedPolls.get(position);
+        TernaryPoll poll = DataProvider.getOpenedPolls().get(position);
         pollName.setText("" + poll.getPollName());
         pollID.setText("" + getItemId(position));
         int closedPercentage = poll.getClosedPercentage();

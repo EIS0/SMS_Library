@@ -7,50 +7,41 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.eis0.library_demo.DataProvider;
 import com.eis0.library_demo.PollListener;
 import com.eis0.library_demo.PollManager;
 import com.eis0.library_demo.R;
 import com.eis0.library_demo.TernaryPoll;
 
 import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
 
-public class ClosedPollAdapter extends BaseAdapter implements PollListener {
+public class ClosedPollAdapter extends BaseAdapter implements Observer {
 
     private static LayoutInflater inflater = null;
-    private static ArrayList<TernaryPoll> closedPolls = new ArrayList<>();
-    PollManager pollManager = PollManager.getInstance();
 
     public ClosedPollAdapter(Context context) {
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        pollManager.addPollListener(this);
     }
 
-    public void removeListener() {
-        pollManager.removePollListener(this);
-    }
-
-    public void onIncomingPoll(TernaryPoll poll) {}
-
-    public void onSentPollUpdate(TernaryPoll poll) {
-        if(poll.isClosed()) {
-            closedPolls.add(poll);
-            notifyDataSetChanged();
-        }
+    public void update(Observable o, Object arg) {
+        notifyDataSetChanged();
     }
 
     @Override
     public long getItemId(int position) {
-        return closedPolls.get(position).getPollID();
+        return DataProvider.getClosedPolls().get(position).getPollID();
     }
 
     @Override
     public Object getItem(int position) {
-        return closedPolls.get(position);
+        return DataProvider.getClosedPolls().get(position);
     }
 
     @Override
     public int getCount() {
-        return closedPolls.size();
+        return DataProvider.getClosedPolls().size();
     }
 
     @Override
@@ -63,7 +54,7 @@ public class ClosedPollAdapter extends BaseAdapter implements PollListener {
         TextView noNum = convertView.findViewById(R.id.noNumTxt);
         TextView pollQuestion = convertView.findViewById(R.id.pollQuestionTxt);
 
-        TernaryPoll poll = closedPolls.get(position);
+        TernaryPoll poll = DataProvider.getClosedPolls().get(position);
         pollName.setText("" + poll.getPollName());
         pollID.setText("" + getItemId(position));
         noNum.setText("" + poll.countNo());
