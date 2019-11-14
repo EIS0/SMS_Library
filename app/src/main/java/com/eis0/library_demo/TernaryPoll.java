@@ -44,16 +44,13 @@ public class TernaryPoll extends Poll {
      * Creates a local copy of a poll coming from another device.
      * @param question the question asked to all users.
      * @param author the user who created the poll.
-     * @param users users included in the poll.
      * @param id the id of the poll.
      */
-    TernaryPoll(String name, String question, SMSPeer author, int id, ArrayList<SMSPeer> users) {
+    TernaryPoll(int id, String name, String question, SMSPeer author) {
         pollAuthor = author;
         pollID = id;
         pollName = name;
         pollQuestion = question;
-        pollUsers = new HashMap<>();
-        for (SMSPeer user : users) this.addUser(user);
     }
 
     /**

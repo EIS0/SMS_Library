@@ -9,7 +9,6 @@ import com.eis0.smslibrary.SMSMessage;
 import com.eis0.smslibrary.SMSPeer;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 
 /**
@@ -90,7 +89,7 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
 
     /**
      * Converts a new poll to the following String:
-     * NEW_POLL_MSG_CODE + pollID + pollName + pollQuestion + [pollUsers]
+     * NEW_POLL_MSG_CODE + pollID + pollName + pollQuestion
      * Fields and different pollUsers are separated by the FIELD_SEPARATOR.
      * @param poll The poll to convert.
      * @return The message to send to poll users.
@@ -101,8 +100,6 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
                 + poll.getPollID() + FIELD_SEPARATOR
                 + poll.getPollName() + FIELD_SEPARATOR
                 + poll.getPollQuestion();
-        // Adds each pollUser to the end of the message
-        for (SMSPeer user : poll.pollUsers.keySet()) message += FIELD_SEPARATOR + user;
         return message;
     }
 
@@ -126,16 +123,13 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
         switch(fields[0]) {
             // New poll received
             // Structure of the message (each filed is separated by the FIELD_SEPARATOR):
-            // NEW_POLL_MSG_CODE + pollID + pollName + pollQuestion + [pollUsers]
-            //        [0]           [1]       [2]           [3]         [4...]
+            // NEW_POLL_MSG_CODE + pollID + pollName + pollQuestion
+            //        [0]           [1]       [2]          [3]
             case NEW_POLL_MSG_CODE:
                 String pollName = fields[2];
                 String pollQuestion = fields[3];
                 SMSPeer pollAuthor = message.getPeer();
-                ArrayList<SMSPeer> peers = new ArrayList<>();
-                for (String destination: Arrays.copyOfRange(fields, 4, fields.length))
-                    peers.add(new SMSPeer(destination));
-                TernaryPoll receivedPoll = new TernaryPoll(pollName, pollQuestion, pollAuthor, pollID, peers);
+                TernaryPoll receivedPoll = new TernaryPoll(pollID, pollName, pollQuestion, pollAuthor);
                 receivedPolls.put(new Pair<>(pollAuthor, pollID), receivedPoll);
                 pollListener.onReceivePoll(receivedPoll);
                 break;
@@ -145,7 +139,7 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
             //        [0]          [1]       [2]
             case ANSWER_MSG_CODE:
                 boolean isYes = fields[2].equals(YES_ANSWER_CODE);
-                SMSPeer voter = message.getPeer().withoutPrefix();
+                SMSPeer voter = message.getPeer();
                 TernaryPoll answeredPoll = sentPolls.get(pollID);
                 if(isYes) answeredPoll.setYes(voter);
                 else answeredPoll.setNo(voter);
