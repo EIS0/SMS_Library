@@ -58,7 +58,7 @@ public class PollManagerTest {
         pollManager.onMessageReceived(message);
         /* TODO: assert if onNewPollReceived() is being called (with Mockito?)
          */
-        verify(mockListener, times(1)).onIncomingPoll(verificationPoll);
+        verify(mockListener).onIncomingPoll(verificationPoll);
 
     }
 }
