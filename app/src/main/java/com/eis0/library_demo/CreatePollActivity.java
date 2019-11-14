@@ -41,6 +41,10 @@ public class CreatePollActivity extends AppCompatActivity {
         // Check if the question is empty
         String name = pollNameTxt.getText().toString();
         String question = pollQuestionTxt.getText().toString();
+        if(name.isEmpty()) {
+            Toast.makeText(this, getString(R.string.empty_name_message), Toast.LENGTH_SHORT).show();
+            return;
+        }
         if(question.isEmpty()) {
             Toast.makeText(this, getString(R.string.empty_question_message), Toast.LENGTH_SHORT).show();
             return;

@@ -25,6 +25,10 @@ public class ClosedPollAdapter extends BaseAdapter implements PollListener {
         pollManager.addPollListener(this);
     }
 
+    public void removeListener() {
+        pollManager.removePollListener(this);
+    }
+
     public void onIncomingPoll(TernaryPoll poll) {}
 
     public void onSentPollUpdate(TernaryPoll poll) {

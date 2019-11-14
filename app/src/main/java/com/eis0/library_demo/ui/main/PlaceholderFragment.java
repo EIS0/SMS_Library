@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.ListFragment;
 
+import com.eis0.library_demo.PollListener;
+
 /**
  * A placeholder fragment containing a simple view.
  */
@@ -40,5 +42,11 @@ public class PlaceholderFragment extends ListFragment {
                 break;
         }
         return super.onCreateView(inflater, container, savedInstanceState);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ((PollListener)getListAdapter()).removeListener();
     }
 }

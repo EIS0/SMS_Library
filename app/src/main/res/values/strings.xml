@@ -19,6 +19,7 @@
     <string name="peer3_hint">Third number</string>
     <string name="button_send">Send</string>
     <string name="empty_question_message">Please insert a question first</string>
+    <string name="empty_name_message">Please insert a poll name</string>
     <string name="invalid_peers_message">Please insert at least one valid phone number</string>
     <string name="poll_name">Poll Name</string>
     <string name="poll_question">Poll Question</string>

@@ -27,7 +27,7 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
     private HashMap<Pair<SMSPeer, Integer>, TernaryPoll> incomingPolls = new HashMap<>();
     private HashMap<Integer, TernaryPoll> sentPolls = new HashMap<>();
 
-    private ArrayList<PollListener> pollListeners = new ArrayList<>();
+    private static ArrayList<PollListener> pollListeners = new ArrayList<>();
     private SMSManager smsManager = SMSManager.getInstance();
 
     // Singleton Design Pattern
@@ -52,6 +52,10 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
      */
     public void addPollListener(PollListener listener) {
         if(!pollListeners.contains(listener)) pollListeners.add(listener);
+    }
+
+    public void removePollListener(PollListener listener) {
+        pollListeners.remove(listener);
     }
 
     /**
