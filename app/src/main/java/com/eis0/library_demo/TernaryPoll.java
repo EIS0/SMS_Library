@@ -6,6 +6,7 @@ import com.eis0.smslibrary.SMSPeer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
 
 /**
  *
@@ -169,5 +170,17 @@ public class TernaryPoll extends Poll {
      */
     public int getPollID() {
         return this.pollID;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TernaryPoll that = (TernaryPoll) o;
+        return pollID == that.pollID &&
+                pollAuthor.equals(that.pollAuthor) &&
+                pollName.equals(that.pollName) &&
+                pollQuestion.equals(that.pollQuestion) &&
+                pollUsers.equals(that.pollUsers);
     }
 }
