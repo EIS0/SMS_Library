@@ -17,14 +17,10 @@ import static org.junit.Assert.fail;
 @RunWith(AndroidJUnit4.class)
 public class SMSCore_Tests {
 
-    @Rule
-    public GrantPermissionRule sendSMSRule = GrantPermissionRule.grant(Manifest.permission.SEND_SMS);
-    @Rule
-    public GrantPermissionRule receiveSMSRule = GrantPermissionRule.grant(Manifest.permission.RECEIVE_SMS);
-    @Rule
-    public GrantPermissionRule readPhoneStateRule = GrantPermissionRule.grant(Manifest.permission.READ_PHONE_STATE);
-    @Rule
-    public GrantPermissionRule readSMSRule = GrantPermissionRule.grant(Manifest.permission.READ_SMS);
+    @Rule public GrantPermissionRule sendSMSRule = GrantPermissionRule.grant(Manifest.permission.SEND_SMS);
+    @Rule public GrantPermissionRule receiveSMSRule = GrantPermissionRule.grant(Manifest.permission.RECEIVE_SMS);
+    @Rule public GrantPermissionRule readPhoneStateRule = GrantPermissionRule.grant(Manifest.permission.READ_PHONE_STATE);
+    @Rule public GrantPermissionRule readSMSRule = GrantPermissionRule.grant(Manifest.permission.READ_SMS);
 
     @Test
     public void useAppContext() {

@@ -19,11 +19,12 @@ public class NetworkConnection {
     private static NetworkConnection net;
     private NetworkConnection(Context context, SMSPeer myPeer){
         netDict = new SMSNetDictionary();
-        Log.d(LOG_KEY, "Found myPeer: " + myPeer.getAddress());
-        if(myPeer.isValid()){
-            Log.d(LOG_KEY, "Added myPeer: " + myPeer.getAddress());
-            subscribers.add(myPeer);
-            //netDict.add(myPeer, null);
+        if(myPeer != null){
+            Log.d(LOG_KEY, "Found myPeer: " + myPeer.getAddress());
+            if(myPeer.isValid()){
+                Log.d(LOG_KEY, "Added myPeer: " + myPeer.getAddress());
+                subscribers.add(myPeer);
+            }
         }
         NetworkListener listener = new NetworkListener(this);
         SMSManager.getInstance(context).addReceiveListener(listener);
@@ -54,9 +55,15 @@ public class NetworkConnection {
      * Sends to a given valid peer a request to join his network.
      * It also sends the current network state.
      * @param peer The peer to send the message to.
+     * @throws IllegalArgumentException If the peer is invalid
      */
     public void askToJoin(SMSPeer peer){
-        SMSManager.getInstance(context).sendMessage(new SMSMessage(peer, RequestType.JoinPermission.ordinal()+" " + peersInNetwork()));
+        String textRequest = RequestType.JoinPermission.ordinal() + " " + peersInNetwork();
+        SMSMessage message = new SMSMessage(peer, textRequest);
+        if(peer == null || !peer.isValid())
+            throw new IllegalArgumentException();
+        else
+            SMSManager.getInstance(context).sendMessage(message);
     }
 
     /**
@@ -86,12 +93,11 @@ public class NetworkConnection {
 
     /**
      * Sends to a given valid peer a request to leave his network
-     * It also send the current network state
      * @param peer The peer to send a message to.
      * @author Edoardo Raimondi
      */
-    private void askToLeave(SMSPeer peer){
-        SMSManager.getInstance(context).sendMessage(new SMSMessage(peer, RequestType.LeavePermission.ordinal()+" " + peersInNetwork()));
+    public void askToLeave(SMSPeer peer){
+        SMSManager.getInstance(context).sendMessage(new SMSMessage(peer, RequestType.LeavePermission.ordinal()+""));
     }
 
     /**
@@ -126,32 +132,57 @@ public class NetworkConnection {
     /**
      * Sends a given SMSPeer a request to Join this network
      */
-    private void inviteToJoin(SMSPeer peer){
+    public void inviteToJoin(SMSPeer peer){
 
     }
 
     /**
      * Sends a ping to notify that the user is still online
      */
-    private void sendPing(){
+    public void sendPing(){
 
     }
 
     /**
-     * Adds a given String list of peers to the current network
+     * Adds a given String list of peers (separated by a space) to the current network
+     * @param peersToAdd The peers to add to the net
+     * @throws IllegalArgumentException If at least one of the peers is invalid
+     * or if the string is empty or null
      */
-    private void addToNet(String peersInNet){
-        Log.d(LOG_KEY, "Adding these new Peers: " + peersInNet);
-        String[] peers = peersInNet.split(" ");
+    public void addToNet(String peersToAdd){
+        if(peersToAdd == null || peersToAdd.equals("")) throw new IllegalArgumentException();
+        String[] peers = peersToAdd.split(" ");
         for(String peer : peers){
-            subscribers.add(new SMSPeer(peer));
+            addToNet(new SMSPeer(peer));
         }
+    }
+
+    /**
+     * Adds a given valid peer to the network, if the SMSPeer is already
+     * present, it's not added again
+     * @param peer The SMSPeer to add to the net
+     * @throws IllegalArgumentException If the peer is null or invalid
+     */
+    public void addToNet(SMSPeer peer){
+        if(peer == null || !peer.isValid()) throw new IllegalArgumentException();
+        if(!subscribers.contains(peer)) subscribers.add(peer);
+    }
+
+    /**
+     * Adds a given array of valid peers to the network
+     * @param peers the SMSPeer array to add to the net
+     * @throws IllegalArgumentException If at least one peer is null or invalid,
+     * or if the array is null
+     */
+    public void addToNet(SMSPeer[] peers){
+        if(peers == null) throw new IllegalArgumentException();
+        for(SMSPeer peer: peers) addToNet(peer);
     }
 
     /**
      * Removes a given String list of peers from the current network
      */
-    private void removeFromNet(String peersInNet){
+    public void removeFromNet(String peersInNet){
         Log.d(LOG_KEY, "Removing these Peers: " + peersInNet);
         String[] peers = peersInNet.split(" ");
         for(String peer : peers){
@@ -160,9 +191,31 @@ public class NetworkConnection {
     }
 
     /**
+     * Removes every online peer from the net
+     * N.B. it doesn't notify anyone about the net, just clears it
+     */
+    public void clearNet(){
+        subscribers.clear();
+    }
+
+    /**
+     * Returns true if there is no online Peer in the net
+     */
+    public boolean isNetEmpty(){
+        return subscribers.isEmpty();
+    }
+
+    /**
+     * Returns how many SMSPeers are currently online
+     */
+    public int networkSize(){
+        return subscribers.size();
+    }
+
+    /**
      * Updates the current Network State given a peer in the network to update and it's resources
      */
-    private void updateNet(String peer, SMSResource[] resources){
+    public void updateNet(String peer, SMSResource[] resources){
         Log.d(LOG_KEY, "Updating this Peer: " + peer);
         SMSPeer peerToUpdate = new SMSPeer(peer);
         subscribers.remove(peerToUpdate);
