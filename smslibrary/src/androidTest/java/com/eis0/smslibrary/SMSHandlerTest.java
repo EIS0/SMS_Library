@@ -25,4 +25,13 @@ public class SMSHandlerTest {
         SMSMessage message = new SMSMessage(new SMSPeer("jkasgk1"), "Message to send");
         SMSHandler.sendMessage(message, null, null);
     }
+
+    @Test //test to Handle message (case smsListener null)
+    public void testArrayList(){
+        boolean isEmpty = true;
+        boolean result;
+        SMSHandler.setReceiveListener(null);
+        result = SMSHandler.isPendingMessagesEmpty();
+        assertEquals(isEmpty, result);
+    }
 }

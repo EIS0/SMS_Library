@@ -195,6 +195,7 @@ public class NetworkConnection {
             }
             //convert the code number in the message to the related enum
             RequestType incomingRequest = RequestType.values()[Integer.parseInt(text.split(" ")[0])];
+            //starts a specific action based on the action received from the other user
             if(incomingRequest == RequestType.JoinPermission){
                 Log.d(LOG_KEY, "Received Join Permission: accepting...");
                 net.acceptJoin(peer, text.substring(2));

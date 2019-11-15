@@ -65,5 +65,4 @@ public class SMSCore_Tests {
         SMSCore.sendMessage(messageTest, null, null);
         fail();
     }
-
 }
