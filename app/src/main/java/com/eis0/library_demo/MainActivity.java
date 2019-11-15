@@ -27,7 +27,7 @@ import java.util.Set;
  * Main Activity view controller, it basically manages permissions granting and initializes tabs.
  * @author Matteo Carnelos, execpt where specified otherwise.
  */
-class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity {
 
     private static final int NEW_POLL_REQUEST_CODE = 0;
     private static final String[] PERMISSIONS = {
@@ -71,7 +71,7 @@ class MainActivity extends AppCompatActivity {
      * @param view The view on which the onClick event is coming from.
      * @author Matteo Carnelos.
      */
-    protected void newPollOnClick(View view) {
+    public void newPollOnClick(View view) {
         Intent newPollIntent = new Intent(this, CreatePollActivity.class);
         startActivityForResult(newPollIntent, NEW_POLL_REQUEST_CODE);
     }

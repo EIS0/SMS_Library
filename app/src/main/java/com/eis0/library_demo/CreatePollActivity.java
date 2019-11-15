@@ -19,7 +19,7 @@ import java.util.ArrayList;
  * new poll (e.g. name, question, user1, ...).
  * @author Marco Cognolato, modified by Matteo Carnelos.
  */
-class CreatePollActivity extends AppCompatActivity {
+public class CreatePollActivity extends AppCompatActivity {
 
     static final String ARG_POLL_NAME = "poll_name";
     static final String ARG_POLL_QUESTION = "poll_question";
@@ -55,7 +55,7 @@ class CreatePollActivity extends AppCompatActivity {
      * @param view The view on which the onClick event is coming from.
      * @author Marco Cognolato, modified by Matteo Carnelos.
      */
-    protected void sendPollOnClick(View view) {
+    public void sendPollOnClick(View view) {
         // Check if the name and/or the question is empty, in case show a Toast.
         String name = pollNameTxt.getText().toString();
         String question = pollQuestionTxt.getText().toString();

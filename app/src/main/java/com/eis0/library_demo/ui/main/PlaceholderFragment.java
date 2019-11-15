@@ -20,6 +20,9 @@ import java.util.Observer;
 public class PlaceholderFragment extends ListFragment {
 
     private static final String ARG_SECTION_NUMBER = "section_number";
+    private static final int INCOMING_SECTION_NUMBER = 1;
+    private static final int OPENED_SECTION_NUMBER = 2;
+    private static final int CLOSED_SECTION_NUMBER = 3;
     private DataProvider dataProvider = DataProvider.getInstance();
 
     /**
@@ -55,17 +58,17 @@ public class PlaceholderFragment extends ListFragment {
                              ViewGroup container, Bundle savedInstanceState) {
         int sectionNumber = getArguments().getInt(ARG_SECTION_NUMBER);
         switch(sectionNumber) {
-            case 1:
+            case INCOMING_SECTION_NUMBER:
                 ListAdapter incomingPollAdapter = new IncomingPollAdapter(inflater.getContext());
                 setListAdapter(incomingPollAdapter);
                 dataProvider.addObserver((Observer)incomingPollAdapter);
                 break;
-            case 2:
+            case OPENED_SECTION_NUMBER:
                 ListAdapter openedPollAdapter = new OpenedPollAdapter(inflater.getContext());
                 setListAdapter(openedPollAdapter);
                 dataProvider.addObserver((Observer)openedPollAdapter);
                 break;
-            case 3:
+            case CLOSED_SECTION_NUMBER:
                 ListAdapter closedPollAdapter = new ClosedPollAdapter(inflater.getContext());
                 setListAdapter(closedPollAdapter);
                 dataProvider.addObserver((Observer)closedPollAdapter);
