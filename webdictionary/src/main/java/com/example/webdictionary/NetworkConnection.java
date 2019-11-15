@@ -8,6 +8,8 @@ import com.eis0.smslibrary.SMSManager;
 import com.eis0.smslibrary.SMSMessage;
 import com.eis0.smslibrary.SMSPeer;
 
+import java.util.ArrayList;
+
 /**
  * @author Marco Cognolato except where otherwise indicated
  */
@@ -20,7 +22,8 @@ public class NetworkConnection {
         Log.d(LOG_KEY, "Found myPeer: " + myPeer.getAddress());
         if(myPeer.isValid()){
             Log.d(LOG_KEY, "Added myPeer: " + myPeer.getAddress());
-            netDict.add(myPeer, null);
+            subscribers.add(myPeer);
+            //netDict.add(myPeer, null);
         }
         NetworkListener listener = new NetworkListener(this);
         SMSManager.getInstance(context).addReceiveListener(listener);
@@ -34,6 +37,7 @@ public class NetworkConnection {
     }
 
     private SMSNetDictionary netDict;
+    private ArrayList<SMSPeer> subscribers = new ArrayList<>();
     private Context context;
     private final String LOG_KEY = "NetCon";
     public enum RequestType{
@@ -115,7 +119,7 @@ public class NetworkConnection {
      */
     private String peersInNetwork(){
         String netPeers = "";
-        for(SMSPeer netPeer : netDict.getAvailablePeers()){
+        for(SMSPeer netPeer : subscribers){
             netPeers = netPeers.concat(netPeer.getAddress()).concat(" ");
         }
         return netPeers;
@@ -142,7 +146,7 @@ public class NetworkConnection {
         Log.d(LOG_KEY, "Adding these new Peers: " + peersInNet);
         String[] peers = peersInNet.split(" ");
         for(String peer : peers){
-            netDict.add(new SMSPeer(peer), null);
+            subscribers.add(new SMSPeer(peer));
         }
     }
 
@@ -153,7 +157,7 @@ public class NetworkConnection {
         Log.d(LOG_KEY, "Removing these Peers: " + peersInNet);
         String[] peers = peersInNet.split(" ");
         for(String peer : peers){
-            netDict.remove(new SMSPeer(peer));
+            subscribers.remove(new SMSPeer(peer));
         }
     }
 
@@ -163,15 +167,15 @@ public class NetworkConnection {
     private void updateNet(String peer, SMSResource[] resources){
         Log.d(LOG_KEY, "Updating this Peer: " + peer);
         SMSPeer peerToUpdate = new SMSPeer(peer);
-        netDict.remove(peerToUpdate);
-        netDict.add(peerToUpdate, resources);
+        subscribers.remove(peerToUpdate);
+        subscribers.add(peerToUpdate);
     }
 
     /**
      * Returns currently online SMSPeers
      */
     public SMSPeer[] getOnlinePeers(){
-        return netDict.getAvailablePeers();
+        return (SMSPeer[])subscribers.toArray();
     }
 
     /**
