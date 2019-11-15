@@ -13,7 +13,17 @@ import com.eis0.smslibrary.SMSPeer;
 
 import java.util.ArrayList;
 
-public class CreatePollActivity extends AppCompatActivity {
+/**
+ * Create Poll Activity view controller, it checks and sends back data insered from the user.
+ * In the Create Poll Activity the user can insert all the informations for the creation of a
+ * new poll (e.g. name, question, user1, ...).
+ * @author Marco Cognolato, modified by Matteo Carnelos.
+ */
+class CreatePollActivity extends AppCompatActivity {
+
+    static final String ARG_POLL_NAME = "poll_name";
+    static final String ARG_POLL_QUESTION = "poll_question";
+    static final String ARG_POLL_PEERS = "poll_peers";
 
     private EditText pollNameTxt;
     private EditText pollQuestionTxt;
@@ -21,6 +31,12 @@ public class CreatePollActivity extends AppCompatActivity {
     private EditText peer2Txt;
     private EditText peer3Txt;
 
+    /**
+     * Called when the activity is being created.
+     * Initializes and links all the UI elements.
+     * @param savedInstanceState Instance saved from a previous activity destruction.
+     * @autor Marco Cognolato, modified by Matteo Carnelos.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,11 +50,13 @@ public class CreatePollActivity extends AppCompatActivity {
     }
 
     /**
-     * Function called when the "Send" button is clicked
-     * @param view View of the Create Poll Activity
+     * Function called when the "Send" button is clicked. It gets and checks data insered from the
+     * user and sends them back to the starting activity (i.e. Main Activity).
+     * @param view The view on which the onClick event is coming from.
+     * @author Marco Cognolato, modified by Matteo Carnelos.
      */
-    public void sendPollOnClick(View view) {
-        // Check if the question is empty
+    protected void sendPollOnClick(View view) {
+        // Check if the name and/or the question is empty, in case show a Toast.
         String name = pollNameTxt.getText().toString();
         String question = pollQuestionTxt.getText().toString();
         if(name.isEmpty()) {
@@ -49,6 +67,8 @@ public class CreatePollActivity extends AppCompatActivity {
             Toast.makeText(this, getString(R.string.empty_question_message), Toast.LENGTH_SHORT).show();
             return;
         }
+
+        // TODO: Advanced telephone number checking using Android APIs
 
         // Add peers to process
         SMSPeer peer1 = new SMSPeer(peer1Txt.getText().toString());
@@ -67,9 +87,9 @@ public class CreatePollActivity extends AppCompatActivity {
 
         // If I'm here I have at least one Peer, and they're all valid
         Intent returnIntent = new Intent()
-                .putExtra("poll_name", name)
-                .putExtra("poll_question", question)
-                .putExtra("peers", peers);
+                .putExtra(ARG_POLL_NAME, name)
+                .putExtra(ARG_POLL_QUESTION, question)
+                .putExtra(ARG_POLL_PEERS, peers);
         setResult(Activity.RESULT_OK, returnIntent);
         finish();
     }
