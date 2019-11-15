@@ -6,7 +6,6 @@ import com.eis0.smslibrary.SMSPeer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Objects;
 
 /**
  *
@@ -172,6 +171,9 @@ public class TernaryPoll extends Poll {
         return this.pollID;
     }
 
+    /**
+     * @author Giovanni Velludo
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
