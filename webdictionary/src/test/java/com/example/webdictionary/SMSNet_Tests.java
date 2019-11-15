@@ -7,6 +7,7 @@ import org.junit.Test;
 import java.util.HashMap;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
@@ -24,10 +25,8 @@ public class SMSNet_Tests {
 
     public class ObjectTest{
         public String text;
-        public int num;
         public ObjectTest(){
             text = "test";
-            num = 0;
         }
     }
     ObjectTest t = new ObjectTest();
@@ -38,10 +37,12 @@ public class SMSNet_Tests {
     @Test
     public void addKey_CheckIfAdded() {
         SMSNetDictionary net = new SMSNetDictionary();
+        ObjectTest r = new ObjectTest();
+        SMSKey key = new SMSKey(r);
         SMSResource resource = new SMSResource("photo.png");
         SMSResource[] resources = {resource};
         net.add(key, resources);
-        assertEquals(net.getAvailableKeys()[0], t);
+        assertEquals(net.getAvailableKeys()[0], key);
     }
 
     @Test
@@ -77,7 +78,7 @@ public class SMSNet_Tests {
         SMSResource[] resources = {resource};
         net.add(key, resources);
         net.remove(key);
-        assertNull(net.getAvailableResources());
+        assertEquals(net.getAvailableResources()[0], null);
     }
 
     @Test
@@ -145,14 +146,14 @@ public class SMSNet_Tests {
         net.add(key, null);
         net.add(key2, null);
         SMSKey[] keys = net.getAvailableKeys();
-        assertEquals(keys.length, 1);
+        assertEquals(keys.length, 2);
     }
 
     @Test
     public void testHashMapWithSMSkeysEquals1(){
         HashMap<SMSKey, String> hash = new HashMap<>();
         hash.put(key,"" );
-        assertTrue(hash.containsKey(key3));
+        assertFalse(hash.containsKey(key3));
     }
 
 

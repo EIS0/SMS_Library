@@ -1,5 +1,6 @@
 package com.example.webdictionary;
 
+
 /**
  * @author Edoardo Raimondi
  */
@@ -7,6 +8,7 @@ package com.example.webdictionary;
 public class SMSKey implements Key<Object> {
 
     private Object key;
+    private volatile int hash = 0; //to manage hashCode
 
     public SMSKey(Object key) { this.key = key; }
 
@@ -15,4 +17,17 @@ public class SMSKey implements Key<Object> {
      */
     public Object getKey() { return key; }
 
+    /**
+     * Override hashCode method to have the same hashCode.
+     * @return hashCode
+     */
+    @Override
+    public int hashCode() {
+        int h = hash;
+        if (h == 0) {
+            h = key.hashCode();
+            hash = h;
+        }
+        return h;
+    }
 }

@@ -48,7 +48,7 @@ public class SMSNetDictionary implements NetworkDictionary<SMSKey,SMSResource> {
     }
 
     /**
-     * @return List of Peers currently on the network dictionary
+     * @return List of Keys on the network dictionary
      */
     public SMSKey[] getAvailableKeys(){
         SMSKey[] allAvailablePeers = new SMSKey[NetDict.size()];
@@ -74,6 +74,7 @@ public class SMSNetDictionary implements NetworkDictionary<SMSKey,SMSResource> {
                 int index = i + cont;
                 //check if full
                 if(allAvailableResources.length == index) {
+                    //double size
                     allAvailableResources = SMSNetDictionarySupport.doubleArraySize(allAvailableResources);
                 }
                 allAvailableResources[index] = entry.getValue()[i];
