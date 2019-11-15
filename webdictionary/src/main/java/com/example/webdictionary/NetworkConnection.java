@@ -49,8 +49,7 @@ public class NetworkConnection {
         LeavePermission,
         AcceptLeave,
         Ping
-
-        }
+    }
     /**
      * Sends to a given valid peer a request to join his network.
      * It also sends the current network state.
@@ -86,21 +85,20 @@ public class NetworkConnection {
     }
 
     /**
-     * @author Edoardo Raimondi
      * Sends to a given valid peer a request to leave his network
      * It also send the current network state
      * @param peer The peer to send a message to.
+     * @author Edoardo Raimondi
      */
-
     private void askToLeave(SMSPeer peer){
         SMSManager.getInstance(context).sendMessage(new SMSMessage(peer, RequestType.LeavePermission.ordinal()+" " + peersInNetwork()));
     }
 
     /**
-     * @author Edoardo Raimondi
      * Sends an exit notification to a given peer that will remove it
      * @param linkPeer The Peer asking to join this network, working as a link between 2 nets now joined
      * @param text The message received with the sender's network state
+     * @author Edoardo Raimondi
      */
     private void acceptLeave(SMSPeer linkPeer, String text){
         //remove the peer
@@ -191,9 +189,11 @@ public class NetworkConnection {
         public void onMessageReceived(SMSMessage message) {
             String text = message.getData();
             SMSPeer peer = message.getPeer();
+            //if I'm using simulators I only need to get the last 4 digits of the number
             if(peer.toString().contains("+1555521")){
                 peer = new SMSPeer(peer.toString().substring(peer.toString().length() - 4));
             }
+            //convert the code number in the message to the related enum
             RequestType incomingRequest = RequestType.values()[Integer.parseInt(text.split(" ")[0])];
             if(incomingRequest == RequestType.JoinPermission){
                 Log.d(LOG_KEY, "Received Join Permission: accepting...");

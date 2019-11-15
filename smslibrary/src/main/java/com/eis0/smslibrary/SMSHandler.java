@@ -19,7 +19,7 @@ public class SMSHandler extends NotificationListenerService {
     private static ReceivedMessageListener smsReceivedListener;
 
     /**
-     * Sends a valid SMSmessage, with sent and delivery confirmation.
+     * Sends a valid SMSMessage, with sent and delivery confirmation.
      * @param message SMSMessage to send to the SMSPeer.
      * @param sent PendingIntent listening for message sent
      * @param delivered PendingIntent listening for message delivery
