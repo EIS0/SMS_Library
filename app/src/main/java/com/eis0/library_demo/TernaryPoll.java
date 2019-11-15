@@ -6,6 +6,7 @@ import com.eis0.smslibrary.SMSPeer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Set;
 
 /**
  *
@@ -43,16 +44,13 @@ public class TernaryPoll extends Poll {
      * @param name The name of the poll.
      * @param question The question asked to all users.
      * @param author The user who created the poll.
-     * @param users Users included in the poll.
      * @param id The id of the poll.
      */
-    TernaryPoll(String name, String question, SMSPeer author, int id, ArrayList<SMSPeer> users) {
+    TernaryPoll(int id, String name, String question, SMSPeer author) {
         pollAuthor = author;
         pollID = id;
         pollName = name;
         pollQuestion = question;
-        pollUsers = new HashMap<>();
-        for (SMSPeer user : users) this.addUser(user);
     }
 
     /**
@@ -68,6 +66,10 @@ public class TernaryPoll extends Poll {
         pollAuthor = SELF_PEER;
         pollUsers = new HashMap<>();
         for (SMSPeer user : users) this.addUser(user);
+    }
+
+    public Set<SMSPeer> getPollUsers() {
+        return pollUsers.keySet();
     }
 
     public String getPollName() {

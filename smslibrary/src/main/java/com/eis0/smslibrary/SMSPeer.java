@@ -38,26 +38,23 @@ public class SMSPeer implements Peer, java.io.Serializable {
      * Checks if the address has prefix
      * @return Returns true if the address has the prefix sign
      */
-
     public boolean hasPrefix() {
-        char prefixSign = '+';
-        return address.charAt(0) == prefixSign;
-    }
-
-    public SMSPeer withoutPrefix() {
-        if(!hasPrefix()) return this;
-        return new SMSPeer(this.address.substring(1));
+        String[] prefixSigns = {"+", "00"};
+        for(String prefixSign : prefixSigns)
+            if(getAddress().startsWith(prefixSign)) return true;
+        return false;
     }
 
     /**
      * Returns true if the SMSPeer is valid
+     * @author Edoardo Raimondi
      */
     public boolean isValid() {
         try {
             int maxLength = 15;
-            if (!isEmpty() && address.length() < maxLength) {
-                if (hasPrefix()) Long.parseLong(withoutPrefix().address);
-                else Long.parseLong(address);
+            if (!isEmpty() && getAddress().length() < maxLength) {
+                if (hasPrefix()) Long.parseLong(getAddress().substring(1));
+                else Long.parseLong(getAddress());
                 return true;
             }
         }
@@ -72,9 +69,8 @@ public class SMSPeer implements Peer, java.io.Serializable {
     public boolean equals(@Nullable Object obj) {
         if (obj == this) return true;
         if (!(obj instanceof SMSPeer)) return false;
-
         SMSPeer peer = (SMSPeer) obj;
-        return peer.address.equals(this.address);
+        return peer.getAddress().equals(getAddress());
     }
 
     /**
@@ -82,6 +78,6 @@ public class SMSPeer implements Peer, java.io.Serializable {
      */
     @Override
     public int hashCode() {
-        return address.hashCode();
+        return getAddress().hashCode();
     }
 }
