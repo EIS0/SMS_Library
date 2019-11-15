@@ -45,21 +45,46 @@ class OpenedPollAdapter extends BaseAdapter implements Observer {
         notifyDataSetChanged();
     }
 
+    /**
+     * Get the opened poll id associated with the given position. Required by BaseAdapter.
+     * @param position The position of the item in the data set.
+     * @return The unique ID as a long value.
+     * @author Matteo Carnelos.
+     */
     @Override
     public long getItemId(int position) {
-        return DataProvider.getOpenedPolls().get(position).getPollID();
+        return DataProvider.getOpenedPolls().get(position).getPollId();
     }
 
+    /**
+     * Get the poll item associated with the given position. Required by BaseAdapter.
+     * @param position The position of the item in the data set.
+     * @return The object in the given position.
+     * @author Matteo Carnelos.
+     */
     @Override
     public Object getItem(int position) {
         return DataProvider.getOpenedPolls().get(position);
     }
 
+    /**
+     * How many opened polls are in the list. Required by BaseAdapter.
+     * @return The number of opened polls.
+     * @author Matteo Carnelos.
+     */
     @Override
     public int getCount() {
         return DataProvider.getOpenedPolls().size();
     }
 
+    /**
+     * Get a View that displays the poll data accordingly to their position in the ListItem view.
+     * @param position The position in the List.
+     * @param convertView The ListItem view on which the UI elements are placed.
+     * @param container The ViewGroup containing all the List views.
+     * @return A View with all the poll data placed correctly.
+     * @author Matteo Carnelos.
+     */
     @Override
     public View getView(int position, View convertView, ViewGroup container) {
         if(convertView == null)
