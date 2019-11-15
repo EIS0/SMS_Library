@@ -175,7 +175,7 @@ public class NetworkConnection {
      * Returns currently online SMSPeers
      */
     public SMSPeer[] getOnlinePeers(){
-        return (SMSPeer[])subscribers.toArray();
+        return subscribers.toArray(new SMSPeer[0]);
     }
 
     /**
