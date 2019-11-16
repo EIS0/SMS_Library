@@ -11,7 +11,7 @@ public interface PollListener {
      * @param poll The poll received.
      * @author Giovanni Velludo
      */
-    void onReceivePoll(TernaryPoll poll);
+    void onPollReceived(TernaryPoll poll);
 
     /**
      * Called by PollManager whenever a poll is updated or created.

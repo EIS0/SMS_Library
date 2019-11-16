@@ -21,8 +21,9 @@ import java.util.ArrayList;
 public class PollManager implements ReceivedMessageListener<SMSMessage> {
 
     // NOTE: FIELD_SEPARATOR is a regex, there are some illegal values (e.g. "*")
+    // must not be private for tests to work, not a big deal since it's final
     // TODO: Find a stronger FIELD_SEPARATOR (e.g. Escape Char)
-    private static final String FIELD_SEPARATOR = "\r";
+    static final String FIELD_SEPARATOR = "\r";
     private static final String NEW_POLL_MSG_CODE = "0";
     private static final String ANSWER_MSG_CODE = "1";
     private static final String YES_ANSWER_CODE = "1";
@@ -58,7 +59,7 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
 
     /**
      * Set the listener that will be called when a new poll or an answer is received.
-     * @param listener The listener to wake up. It must implements the PollListener interface.
+     * @param listener The listener to wake up. It must implement the PollListener interface.
      * @author Giovanni Velludo
      * @author Matteo Carnelos
      */
@@ -67,14 +68,17 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
     }
 
     /**
-     * Creates a new poll and sends it to all the included users. Finally it wakes the listener.
+     * Creates a new poll and sends it to all the included users, it eventually wakes the listener.
      * @param name The name given to the poll.
      * @param question The question to ask users.
      * @param users Users to which the question should be asked.
+     * @throws IllegalArgumentException When users is empty
      * @author Giovanni Velludo
      * @author Matteo Carnelos
      */
-    void createPoll(String name, String question, ArrayList<SMSPeer> users) {
+    void createPoll(String name, String question, ArrayList<SMSPeer> users)
+            throws  IllegalArgumentException {
+        if (users.isEmpty()) throw new IllegalArgumentException("Can't create poll with no users");
         TernaryPoll poll = new TernaryPoll(name, question, users);
         sentPolls.put(poll.getPollId(), poll);
         sendNewPoll(poll);
@@ -136,8 +140,9 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
                 String pollName = fields[2];
                 String pollQuestion = fields[3];
                 SMSPeer pollAuthor = message.getPeer();
-                TernaryPoll receivedPoll = new TernaryPoll(pollId, pollName, pollQuestion, pollAuthor);
-                pollListener.onReceivePoll(receivedPoll);
+                TernaryPoll receivedPoll =
+                        new TernaryPoll(pollAuthor, pollId, pollName, pollQuestion);
+                pollListener.onPollReceived(receivedPoll);
                 break;
             // You have received an answer for your poll
             // Structure of the message (each filed is separated by the FIELD_SEPARATOR):
@@ -157,13 +162,15 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
 
     /**
      * Sends the answer to the author and remove the poll from the receivedPolls map.
+     * @param poll The poll to answer.
      * @param answer The user's answer, true equals "Yes" and false equals "No".
-     * @throws IllegalArgumentException If the author of the poll is yourself.
+     * @throws IllegalArgumentException When `poll` was created by the user answering it.
      * @author Giovanni Velludo
      * @author Matteo Carnelos
      */
-    public void answerPoll(TernaryPoll poll, boolean answer) {
-        if(poll.getPollAuthor().equals(TernaryPoll.SELF_PEER)) throw new IllegalArgumentException("Trying to answer an owned poll");
+    public void answerPoll(TernaryPoll poll, boolean answer) throws IllegalArgumentException {
+        if(poll.getPollAuthor().equals(TernaryPoll.SELF_PEER))
+            throw new IllegalArgumentException("Trying to answer an owned poll");
         sendAnswer(poll, answer);
     }
 

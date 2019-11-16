@@ -4,7 +4,6 @@ import com.eis0.smslibrary.SMSPeer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -27,31 +26,33 @@ public class TernaryPoll extends Poll {
     private enum PollResult {
         YES("Yes"), NO("No"), UNAVAILABLE("Unavailable");
         private String answer;
-        PollResult(String pollAnswer){
+        PollResult(String pollAnswer) {
             this.answer = pollAnswer;
         }
         @Override
-        public String toString(){
+        public String toString() {
             return answer;
         }
     }
 
-    private Map<SMSPeer, PollResult> pollUsers;
+    private HashMap<SMSPeer, PollResult> pollUsers;
 
     /**
      * Creates a local copy of a poll coming from another device.
-     * @param question the question asked to all users.
-     * @param author the user who created the poll.
-     * @param id the id of the poll.
+     * @param author The user who created the poll.
+     * @param id The id of the poll.
+     * @param name The name of the poll.
+     * @param question The question asked to all users.
      */
-    TernaryPoll(int id, String name, String question, SMSPeer author) {
+    TernaryPoll(SMSPeer author, int id, String name, String question) {
         super(id, name, question, author);
     }
 
     /**
      * Creates a new poll from this device.
-     * @param question the question to ask all users.
-     * @param users users to include in the poll.
+     * @param name The name of the poll.
+     * @param question The question to ask all users.
+     * @param users Users to include in the poll.
      */
     TernaryPoll(String name, String question, ArrayList<SMSPeer> users) {
         super(++pollCount, name, question, SELF_PEER);
@@ -59,15 +60,15 @@ public class TernaryPoll extends Poll {
         for (SMSPeer user : users) addUser(user);
     }
 
-    public Set<SMSPeer> getPollUsers() {
+    Set<SMSPeer> getPollUsers() {
         return pollUsers.keySet();
     }
 
-    public boolean isClosed() {
+    boolean isClosed() {
         return !pollUsers.containsValue(PollResult.UNAVAILABLE);
     }
 
-    public  int getClosedPercentage() {
+    public int getClosedPercentage() {
         float answerCount = countYes() + countNo();
         float ratio = answerCount/(float)pollUsers.size();
         return Math.round(ratio * 100);
@@ -139,5 +140,35 @@ public class TernaryPoll extends Poll {
     String getAnswer(SMSPeer user) throws IllegalArgumentException {
         if(hasUser(user)) return pollUsers.get(user).toString();
         else throw new IllegalArgumentException("The user is not part of the poll");
+    }
+
+    /**
+     * @return poll ID.
+     */
+    public int getPollId() {
+        return this.pollId;
+    }
+
+    /**
+     * @author Giovanni Velludo
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TernaryPoll that = (TernaryPoll) o;
+
+        // when comparing polls with no users, as they were received from another device
+        if (that.pollUsers == null && this.pollUsers == null) {
+            return pollId == that.pollId &&
+                    pollAuthor.equals(that.pollAuthor) &&
+                    pollName.equals(that.pollName) &&
+                    pollQuestion.equals(that.pollQuestion);
+        }
+        return pollId == that.pollId &&
+                pollAuthor.equals(that.pollAuthor) &&
+                pollName.equals(that.pollName) &&
+                pollQuestion.equals(that.pollQuestion) &&
+                pollUsers.equals(that.pollUsers);
     }
 }

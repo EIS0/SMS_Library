@@ -5,6 +5,7 @@ import com.eis0.smslibrary.SMSPeer;
 /**
  * Abstract class to extend to create a poll, it contains all the basics actions that a generic
  * poll could have.
+ * @author Edoardo Raimondi
  * @author Giovanni Velludo
  * @author Matteo Carnelos
  */
