@@ -41,6 +41,8 @@ public class TernaryPoll extends Poll {
      * @param id The id of the poll.
      * @param name The name of the poll.
      * @param question The question asked to all users.
+     * @author Giovanni Velludo
+     * @author Matteo Carnelos
      */
     TernaryPoll(SMSPeer author, int id, String name, String question) {
         super(id, name, question, author);
@@ -64,6 +66,7 @@ public class TernaryPoll extends Poll {
      * Get all the users in the poll.
      * @return A Set representing all the users.
      * @author Giovanni Velludo
+     * @author Matteo Carnelos
      */
     Set<SMSPeer> getPollUsers() {
         return pollUsers.keySet();
@@ -119,7 +122,7 @@ public class TernaryPoll extends Poll {
      * Check if the user is in the poll.
      * @param user The user for which the check is being requested.
      * @return True if the user is in the poll, false otherwise.
-     * @author Giovanni Velludo
+     * @author Edoardo Raimondi
      */
     boolean hasUser(SMSPeer user){
         return pollUsers.containsKey(user);
@@ -128,7 +131,7 @@ public class TernaryPoll extends Poll {
     /**
      * Insert an user in the poll.
      * @param user The user to insert in the poll
-     * @author Giovanni Velludo
+     * @author Edoardo Raimondi
      */
     void addUser(SMSPeer user){
         // At the beginning we have no feedback by the user
@@ -140,7 +143,7 @@ public class TernaryPoll extends Poll {
      * Set user's answer to "Yes".
      * @param user User who answered "Yes".
      * @throws IllegalArgumentException If the specified user isn't in the poll.
-     * @author Giovanni Velludo
+     * @author Edoardo Raimondi
      * @author Matteo Carnelos
      */
     void setYes(SMSPeer user) {
@@ -155,7 +158,7 @@ public class TernaryPoll extends Poll {
      * Set user's answer to "No".
      * @param user user who answered "No".
      * @throws IllegalArgumentException If the specified user isn't in the poll.
-     * @author Giovanni Velludo
+     * @author Edoardo Raimondi
      * @author Matteo Carnelos
      */
     void setNo(SMSPeer user) {
@@ -171,7 +174,7 @@ public class TernaryPoll extends Poll {
      * @param user The user whose answer is being requested.
      * @return A string representing the answer.
      * @throws IllegalArgumentException when the user is not included in the poll.
-     * @author Giovanni Velludo
+     * @author Edoardo Raimondi
      */
     String getAnswer(SMSPeer user) throws IllegalArgumentException {
         if(hasUser(user)) return pollUsers.get(user).toString();
@@ -179,6 +182,9 @@ public class TernaryPoll extends Poll {
     }
 
     /**
+     * @param   o the reference object with which to compare.
+     * @return  {@code true} if this object is the same as the o
+     *          argument; {@code false} otherwise.
      * @author Giovanni Velludo
      */
     @Override
