@@ -17,7 +17,8 @@ import java.util.ArrayList;
  * Create Poll Activity view controller, it checks and sends back data insered from the user.
  * In the Create Poll Activity the user can insert all the informations for the creation of a
  * new poll (e.g. name, question, user1, ...).
- * @author Marco Cognolato, modified by Matteo Carnelos.
+ * @author Marco Cognolato
+ * @author Matteo Carnelos
  */
 public class CreatePollActivity extends AppCompatActivity {
 
@@ -35,7 +36,8 @@ public class CreatePollActivity extends AppCompatActivity {
      * Called when the activity is being created.
      * Initializes and links all the UI elements.
      * @param savedInstanceState Instance saved from a previous activity destruction.
-     * @autor Marco Cognolato, modified by Matteo Carnelos.
+     * @author Marco Cognolato
+     * @author Matteo Carnelos
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +55,8 @@ public class CreatePollActivity extends AppCompatActivity {
      * Function called when the "Send" button is clicked. It gets and checks data insered from the
      * user and sends them back to the starting activity (i.e. Main Activity).
      * @param view The view on which the onClick event is coming from.
-     * @author Marco Cognolato, modified by Matteo Carnelos.
+     * @author Marco Cognolato
+     * @author Matteo Carnelos
      */
     public void sendPollOnClick(View view) {
         // Check if the name and/or the question is empty, in case show a Toast.

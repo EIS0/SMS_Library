@@ -17,7 +17,7 @@ import java.util.Observer;
 /**
  * ListAdapter that adapts data coming from the DataProvider class into the graphical UI elements
  * of the closed poll ListItem view.
- * @author Matteo Carnelos.
+ * @author Matteo Carnelos
  */
 public class ClosedPollAdapter extends BaseAdapter implements Observer {
 
@@ -26,7 +26,7 @@ public class ClosedPollAdapter extends BaseAdapter implements Observer {
     /**
      * Constructor of the ClosedPollAdapter, it sets the LayoutInflater.
      * @param context The context of the ListFragment.
-     * @author Matteo Carnelos.
+     * @author Matteo Carnelos
      */
     ClosedPollAdapter(Context context) {
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -38,7 +38,7 @@ public class ClosedPollAdapter extends BaseAdapter implements Observer {
      * @param o The object that called the update, in this case is a DataProvider object.
      * @param arg The object that is being added/removed/updated, in this case is the Poll
      *            object coming from the PollManager.
-     * @author Matteo Carnelos.
+     * @author Matteo Carnelos
      */
     public void update(Observable o, Object arg) {
         notifyDataSetChanged();
@@ -48,7 +48,7 @@ public class ClosedPollAdapter extends BaseAdapter implements Observer {
      * Get the closed poll unique id associated with the given position. Required by BaseAdapter.
      * @param position The position of the item in the data set.
      * @return The unique id as a long value.
-     * @author Matteo Carnelos.
+     * @author Matteo Carnelos
      */
     @Override
     public long getItemId(int position) {
@@ -59,7 +59,7 @@ public class ClosedPollAdapter extends BaseAdapter implements Observer {
      * Get the poll item associated with the given position. Required by BaseAdapter.
      * @param position The position of the item in the data set.
      * @return The object in the given position.
-     * @author Matteo Carnelos.
+     * @author Matteo Carnelos
      */
     @Override
     public Object getItem(int position) {
@@ -69,7 +69,7 @@ public class ClosedPollAdapter extends BaseAdapter implements Observer {
     /**
      * How many closed polls are in the list. Required by BaseAdapter.
      * @return The number of closed polls.
-     * @author Matteo Carnelos.
+     * @author Matteo Carnelos
      */
     @Override
     public int getCount() {
@@ -88,7 +88,7 @@ public class ClosedPollAdapter extends BaseAdapter implements Observer {
      * @param convertView The ListItem view on which the UI elements are placed.
      * @param container The ViewGroup containing all the List views.
      * @return A View with all the poll data placed correctly.
-     * @author Matteo Carnelos.
+     * @author Matteo Carnelos
      */
     @Override
     public View getView(int position, View convertView, ViewGroup container) {

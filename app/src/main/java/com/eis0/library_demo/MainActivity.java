@@ -24,7 +24,8 @@ import java.util.Set;
 
 /**
  * Main Activity view controller, it basically manages permissions granting and initializes tabs.
- * @author Matteo Carnelos, execpt where specified otherwise.
+ * @author Matteo Carnelos
+ * @author Marco Cognolato
  */
 public class MainActivity extends AppCompatActivity {
 
@@ -42,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
      * Called on the creation of the activity.
      * Asks for permissions and initialize UI elements.
      * @param savedInstanceState Instance saved from a previous activity destruction.
-     * @author Matteo Carnelos.
+     * @author Matteo Carnelos
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
      * Called when the fab button in the main activity is pressed.
      * Opens the new poll activity as ActivityForResult.
      * @param view The view on which the onClick event is coming from.
-     * @author Matteo Carnelos.
+     * @author Matteo Carnelos
      */
     public void newPollOnClick(View view) {
         Intent newPollIntent = new Intent(this, CreatePollActivity.class);
@@ -82,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
      * @param resultCode An integer representing the result of the operations.
      * @param data An intent with all the data sent from the ActivityForResult back to the starting
      *             activity (i.e. MainActivity).
-     * @author Matteo Carnelos.
+     * @author Matteo Carnelos
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -102,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
      * Checks if the notification listener is enabled.
      * @param context Context where the notification listener should be active.
      * @return Returns if the notification listener is enabled.
-     * @author Marco Cognolato.
+     * @author Marco Cognolato
      */
     private boolean isNotificationListenerEnabled(Context context) {
         Set<String> packageNames = NotificationManagerCompat.getEnabledListenerPackages(this);
@@ -111,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Opens the notification settings menu for the user to enable notifications.
-     * @author Marco Cognolato.
+     * @author Marco Cognolato
      */
     private void openNotificationListenSettings() {
         Intent intent = new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS);

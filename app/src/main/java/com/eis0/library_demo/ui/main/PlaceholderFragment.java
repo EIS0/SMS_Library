@@ -30,7 +30,7 @@ public class PlaceholderFragment extends ListFragment {
      * specified in the index parameter.
      * @param index The index of the PlaceholderFragment section.
      * @return A PlaceholderFragment instance with the bundle containing the section number.
-     * @author Matteo Carnelos.
+     * @author Matteo Carnelos
      */
     static PlaceholderFragment newInstance(int index) {
         PlaceholderFragment fragment = new PlaceholderFragment();
@@ -51,7 +51,7 @@ public class PlaceholderFragment extends ListFragment {
      * @param container The ViewGroup containing all the List views.
      * @param savedInstanceState Instance saved from a previous View destruction.
      * @return The view containing the List connected with its adapter.
-     * @author Matteo Carnelos.
+     * @author Matteo Carnelos
      */
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -80,7 +80,7 @@ public class PlaceholderFragment extends ListFragment {
     /**
      * Called when the view of the ListFragment is destroyed. It removes the ListAdapter associated
      * with the ListFragment from the observers list of the dataProvider object.
-     * @author Matteo Carnelos.
+     * @author Matteo Carnelos
      */
     @Override
     public void onDestroyView() {

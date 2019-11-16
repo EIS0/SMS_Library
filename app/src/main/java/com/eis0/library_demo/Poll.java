@@ -3,14 +3,47 @@ package com.eis0.library_demo;
 import com.eis0.smslibrary.SMSPeer;
 
 /**
- * Class to extend to create a poll
+ * Abstract class to extend to create a poll, it contains all the basics actions that a generic
+ * poll could have.
+ * @author Giovanni Velludo
+ * @author Matteo Carnelos
  */
-public abstract class Poll {
+abstract class Poll {
+
+    private int pollId;
+    private String pollName;
+    private String pollQuestion;
+    private SMSPeer pollAuthor;
+
+    Poll(int id, String name, String question, SMSPeer author) {
+        pollId = id;
+        pollName = name;
+        pollQuestion = question;
+        pollAuthor = author;
+    }
 
     /**
      * @return Int representing poll id
      */
-    abstract int getPollId();
+    int getPollId() {
+        return pollId;
+    }
+
+    String getPollName() {
+        return pollName;
+    }
+
+    String getPollQuestion() {
+        return pollQuestion;
+    }
+
+    SMSPeer getPollAuthor() {
+        return pollAuthor;
+    }
+
+    abstract boolean isClosed();
+
+    abstract int getClosedPercentage();
 
     /**
      * Check if the user is in the poll

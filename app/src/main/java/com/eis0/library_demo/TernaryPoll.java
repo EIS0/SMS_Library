@@ -1,7 +1,5 @@
 package com.eis0.library_demo;
 
-import android.util.Log;
-
 import com.eis0.smslibrary.SMSPeer;
 
 import java.util.ArrayList;
@@ -15,13 +13,17 @@ import java.util.Set;
  * Users involved in a specific poll can only
  * reply "Yes" or "No".
  *
- * @author Edoardo Raimondi with some advice from Giovanni Velludo, except where specified
- * otherwise.
+ * @author Edoardo Raimondi
+ * @author Giovanni Velludo
+ * @author Matteo Carnelos
  */
 public class TernaryPoll extends Poll {
 
-    private static int pollCount = 0; // TODO: save this value when the program is shutdown
-    public static final SMSPeer SELF_PEER = new SMSPeer("self");
+    static final SMSPeer SELF_PEER = new SMSPeer("self");
+
+    // TODO: save this value when the program is shutdown
+    private static int pollCount = 0;
+
     private enum PollResult {
         YES("Yes"), NO("No"), UNAVAILABLE("Unavailable");
         private String answer;
@@ -33,12 +35,8 @@ public class TernaryPoll extends Poll {
             return answer;
         }
     }
-    int pollId;
-    SMSPeer pollAuthor;
-    String pollName;
-    String pollQuestion;
-    Map<SMSPeer, PollResult> pollUsers;
-    private static final String LOG_KEY = "APP_POLL";
+
+    private Map<SMSPeer, PollResult> pollUsers;
 
     /**
      * Creates a local copy of a poll coming from another device.
@@ -47,10 +45,7 @@ public class TernaryPoll extends Poll {
      * @param id the id of the poll.
      */
     TernaryPoll(int id, String name, String question, SMSPeer author) {
-        pollAuthor = author;
-        pollId = id;
-        pollName = name;
-        pollQuestion = question;
+        super(id, name, question, author);
     }
 
     /**
@@ -59,35 +54,20 @@ public class TernaryPoll extends Poll {
      * @param users users to include in the poll.
      */
     TernaryPoll(String name, String question, ArrayList<SMSPeer> users) {
-        pollId = ++TernaryPoll.pollCount;
-        pollName = name;
-        pollQuestion = question;
-        pollAuthor = SELF_PEER;
+        super(++pollCount, name, question, SELF_PEER);
         pollUsers = new HashMap<>();
-        for (SMSPeer user : users) this.addUser(user);
+        for (SMSPeer user : users) addUser(user);
     }
 
     public Set<SMSPeer> getPollUsers() {
         return pollUsers.keySet();
     }
 
-    public String getPollName() {
-        return pollName;
-    }
-
-    public String getPollQuestion() {
-        return pollQuestion;
-    }
-
-    public SMSPeer getPollAuthor() {
-        return pollAuthor;
-    }
-
     public boolean isClosed() {
         return !pollUsers.containsValue(PollResult.UNAVAILABLE);
     }
 
-    public int getClosedPercentage() {
+    public  int getClosedPercentage() {
         float answerCount = countYes() + countNo();
         float ratio = answerCount/(float)pollUsers.size();
         return Math.round(ratio * 100);
@@ -135,7 +115,7 @@ public class TernaryPoll extends Poll {
             PollResult result = PollResult.YES;
             pollUsers.put(user, result);
         }
-        else Log.e(LOG_KEY, "Trying to manage an inexistent user");
+        else throw new IllegalArgumentException("Trying to manage an inexistent user");
     }
 
     /**
@@ -147,7 +127,7 @@ public class TernaryPoll extends Poll {
             PollResult result = PollResult.NO;
             pollUsers.put(user, result);
         }
-        else Log.e(LOG_KEY, "Trying to manage an inexistent user");
+        else throw new IllegalArgumentException("Trying to manage an inexistent user");
     }
 
     /**
@@ -159,12 +139,5 @@ public class TernaryPoll extends Poll {
     String getAnswer(SMSPeer user) throws IllegalArgumentException {
         if(hasUser(user)) return pollUsers.get(user).toString();
         else throw new IllegalArgumentException("The user is not part of the poll");
-    }
-
-    /**
-     * @return poll id.
-     */
-    public int getPollId() {
-        return this.pollId;
     }
 }

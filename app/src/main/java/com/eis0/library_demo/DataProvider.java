@@ -20,7 +20,7 @@ public class DataProvider extends Observable implements PollListener {
     /**
      * DataProvider constructor, sets this as the PollManager listener.
      * It cannot be accessed from outside the class because this follows the Singleton Design Pattern.
-     * @author Matteo Carnelos.
+     * @author Matteo Carnelos
      */
     private DataProvider() {
         PollManager.getInstance().setPollListener(this);
@@ -30,7 +30,7 @@ public class DataProvider extends Observable implements PollListener {
      * Returns a new instance of DataProvider if none exist, otherwise the one already created as per
      * the Singleton Design Patter.
      * @return The only instance of this class.
-     * @author Matteo Carnelos.
+     * @author Matteo Carnelos
      */
     public static DataProvider getInstance() {
         if(instance == null) instance = new DataProvider();
@@ -40,7 +40,7 @@ public class DataProvider extends Observable implements PollListener {
     /**
      * Get all the incoming polls.
      * @return The incoming polls ArrayList.
-     * @author Matteo Carnelos.
+     * @author Matteo Carnelos
      */
     public static ArrayList<TernaryPoll> getIncomingPolls() {
         return incomingPolls;
@@ -49,7 +49,7 @@ public class DataProvider extends Observable implements PollListener {
     /**
      * Get all the opened polls.
      * @return The opened polls ArrayList.
-     * @author Matteo Carnelos.
+     * @author Matteo Carnelos
      */
     public static ArrayList<TernaryPoll> getOpenedPolls() {
         return openedPolls;
@@ -58,7 +58,7 @@ public class DataProvider extends Observable implements PollListener {
     /**
      * Get all the closed polls.
      * @return The closed polls ArrayList.
-     * @author Matteo Carnelos.
+     * @author Matteo Carnelos
      */
     public static ArrayList<TernaryPoll> getClosedPolls() {
         return closedPolls;
@@ -68,7 +68,7 @@ public class DataProvider extends Observable implements PollListener {
      * Called whenever a new poll is received by other users, adds it to the incomingPoll list and
      * notifies all the observers.
      * @param poll The poll received.
-     * @author Matteo Carnelos.
+     * @author Matteo Carnelos
      */
     public void onReceivePoll(TernaryPoll poll) {
         incomingPolls.add(poll);
@@ -80,9 +80,9 @@ public class DataProvider extends Observable implements PollListener {
      * Called whenever a sent poll is created or receives an update (after an answer). When a poll
      * receives all the answers it is considered closed, so it will be moved to the closedPolls list.
      * @param poll The poll created or updated.
-     * @author Matteo Carnelos.
+     * @author Matteo Carnelos
      */
-    public void onSentPollUpdate(TernaryPoll poll) {
+     public void onSentPollUpdate(TernaryPoll poll) {
         // Two scenarios:
         // Poll Closed, move it from the openedPolls to the closedPolls list
         // Poll Opened, it can be either a new poll or an update to an existing one
