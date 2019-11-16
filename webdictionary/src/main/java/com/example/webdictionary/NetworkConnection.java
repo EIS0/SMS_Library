@@ -51,19 +51,38 @@ public class NetworkConnection {
         AcceptLeave,
         Ping
     }
+
     /**
      * Sends to a given valid peer a request to join his network.
      * It also sends the current network state.
      * @param peer The peer to send the message to.
-     * @throws IllegalArgumentException If the peer is invalid
+     * @throws IllegalArgumentException If the peer is invalid or null
      */
     public void askToJoin(SMSPeer peer){
+        if(peer == null || !peer.isValid()) throw new IllegalArgumentException();
         String textRequest = RequestType.JoinPermission.ordinal() + " " + peersInNetwork();
         SMSMessage message = new SMSMessage(peer, textRequest);
-        if(peer == null || !peer.isValid())
-            throw new IllegalArgumentException();
-        else
-            SMSManager.getInstance(context).sendMessage(message);
+
+        SMSManager.getInstance(context).sendMessage(message);
+    }
+
+    /**
+     * Sends a given SMSPeer a request to Join this network,
+     * It also sends the current network state
+     * @param peer The peer to send the message to.
+     * @throws IllegalArgumentException If the peer is invalid or null
+     */
+    public void inviteToJoin(SMSPeer peer){
+        /*
+        A net request connection is one of two types:
+        1. A asks B to join B's network
+        2. A invites B to join A's network
+
+        Since either case is valid they can be supported in a simple way:
+        being the same type of request, so an invite to join a network is the same as
+        asking to enter the other's network, so I simply call the other function
+         */
+        askToJoin(peer);
     }
 
     /**
@@ -97,7 +116,9 @@ public class NetworkConnection {
      * @author Edoardo Raimondi
      */
     public void askToLeave(SMSPeer peer){
-        SMSManager.getInstance(context).sendMessage(new SMSMessage(peer, RequestType.LeavePermission.ordinal()+""));
+        if(peer == null || !peer.isValid()) throw new IllegalArgumentException();
+        SMSMessage message = new SMSMessage(peer, RequestType.LeavePermission.ordinal()+"");
+        SMSManager.getInstance(context).sendMessage(message);
     }
 
     /**
@@ -130,17 +151,23 @@ public class NetworkConnection {
     }
 
     /**
-     * Sends a given SMSPeer a request to Join this network
+     * Sends to a valid peer a ping to notify that the user is still online
+     * @param peer The peer to send the ping to
+     * @throws IllegalArgumentException If the peer is null or not valid
      */
-    public void inviteToJoin(SMSPeer peer){
-
+    public void sendPing(SMSPeer peer){
+        if(peer == null || !peer.isValid()) throw new IllegalArgumentException();
+        SMSMessage message = new SMSMessage(peer, RequestType.Ping.ordinal()+"");
+        SMSManager.getInstance(context).sendMessage(message);
     }
 
     /**
-     * Sends a ping to notify that the user is still online
+     * Function called when a Ping is received from an SMSPeer,
+     * Resets the Ping timer before considering that peer offline
+     * @param peer The peer who sent the ping
      */
-    public void sendPing(){
-
+    private void incomingPing(SMSPeer peer){
+        //TODO: implement this (using timers?)
     }
 
     /**
@@ -268,6 +295,10 @@ public class NetworkConnection {
             else if(incomingRequest == RequestType.AcceptLeave){
                 Log.d(LOG_KEY, "Received Leave Accepted: updating net...");
                 net.removeFromNet(text.substring(2));
+            }
+            else if(incomingRequest == RequestType.Ping){
+                Log.d(LOG_KEY, "Received Ping...");
+                net.incomingPing(peer);
             }
         }
     }
