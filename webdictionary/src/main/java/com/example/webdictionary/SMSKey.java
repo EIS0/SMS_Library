@@ -18,8 +18,8 @@ public class SMSKey implements Key<Object> {
     public Object getKey() { return key; }
 
     /**
-     * Override hashCode method to have the same hashCode.
-     * @return hashCode
+     * Override hashCode method to have the same hashCode everywhere
+     * @return integer representing the key hashCode
      */
     @Override
     public int hashCode() {

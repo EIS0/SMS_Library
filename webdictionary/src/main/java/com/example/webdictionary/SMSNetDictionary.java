@@ -18,9 +18,9 @@ public class SMSNetDictionary implements NetworkDictionary<SMSKey,SMSResource> {
     }
 
     /**
-     * If available, it finds the first Peer that has a given valid resource, else it returns null
+     * If available, it finds the first Key that has a given valid resource, else it returns null
      * @param resource
-     * @return key having that resource
+     * @return Key having that resource
      */
     public SMSKey findKeyWithResource(SMSResource resource) {
         for (Map.Entry <SMSKey, SMSResource[]> entry : NetDict.entrySet())
@@ -33,7 +33,7 @@ public class SMSNetDictionary implements NetworkDictionary<SMSKey,SMSResource> {
     }
 
     /**
-     * If present, it returns the list of resources of a given Peer, else it returns null
+     * If present, it returns the list of resources of a given Key, else it returns null
      * @param key having resources we want
      * @return SMSResources[] containing all resources' peer
      */
@@ -82,15 +82,15 @@ public class SMSNetDictionary implements NetworkDictionary<SMSKey,SMSResource> {
             cont += indexToAdd;
         }
 
-        // Need 38 seconds working with 50000 elements. Is there a better way?
+        // Needs 30 seconds working with 50000 elements. Is there a better way?
         return allAvailableResources;
 
     }
 
 
     /**
-     * Adds a valid Peer-Resources[] couple to the network dictionary
-     * @param key A peer to add to the dictionary
+     * Adds a valid Key-Resources[] couple to the network dictionary
+     * @param key A key to add to the dictionary
      * @param resources A list of Resources to add to the dictionary
      */
     public void add(SMSKey key, SMSResource[] resources){
@@ -104,7 +104,7 @@ public class SMSNetDictionary implements NetworkDictionary<SMSKey,SMSResource> {
     }
 
     /**
-     * Removes a given valid Peer (and all its Resources) from the network dictionary
+     * Removes a given valid Key (and all its Resources) from the network dictionary
      * @param key to remove
      */
     public void remove(SMSKey key) {

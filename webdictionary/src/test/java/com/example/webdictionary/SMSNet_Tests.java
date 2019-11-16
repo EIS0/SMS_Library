@@ -23,17 +23,23 @@ public class SMSNet_Tests {
         SMSNetDictionary net = new SMSNetDictionary();
     }
 
-    public class ObjectTest{
+    //Generic object representing the key
+    public class ObjectTest {
         public String text;
-        public ObjectTest(){
+        public int num;
+
+        public ObjectTest() {
             text = "test";
+            num = 1;
         }
     }
+    //creation of the the keys
     ObjectTest t = new ObjectTest();
     ObjectTest m = new ObjectTest();
     SMSKey key = new SMSKey(t);
     SMSKey key2 = new SMSKey(m);
     SMSKey key3 = new SMSKey(t);
+
     @Test
     public void addKey_CheckIfAdded() {
         SMSNetDictionary net = new SMSNetDictionary();

@@ -5,6 +5,7 @@ import java.util.Arrays;
 /**
  * This class contains support methods for
  * SMSNetDictionary
+ * @author Edoardo Raimondi
  */
 
 
