@@ -41,6 +41,8 @@ public class TernaryPoll extends Poll {
      * @param id The id of the poll.
      * @param name The name of the poll.
      * @param question The question asked to all users.
+     * @author Giovanni Velludo
+     * @author Matteo Carnelos
      */
     TernaryPoll(SMSPeer author, int id, String name, String question) {
         super(id, name, question, author);
@@ -187,7 +189,7 @@ public class TernaryPoll extends Poll {
         if (o == null || getClass() != o.getClass()) return false;
         TernaryPoll that = (TernaryPoll) o;
 
-        // when comparing polls with no users, as they were received from another device
+        // When comparing polls with no users, as they were received from another device
         if (that.pollUsers == null && this.pollUsers == null) {
             return this.getPollId() == that.getPollId() &&
                     this.getPollAuthor().equals(that.getPollAuthor()) &&
