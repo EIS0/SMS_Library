@@ -31,7 +31,7 @@ public class ClosedPollAdapter extends BaseAdapter implements Observer {
 
     @Override
     public long getItemId(int position) {
-        return DataProvider.getClosedPolls().get(position).getPollID();
+        return DataProvider.getClosedPolls().get(position).getPollId();
     }
 
     @Override

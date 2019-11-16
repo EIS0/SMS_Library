@@ -33,7 +33,7 @@ public class DataProvider extends Observable implements PollListener {
         return closedPolls;
     }
 
-    public void onReceivePoll(TernaryPoll poll) {
+    public void onPollReceived(TernaryPoll poll) {
         incomingPolls.add(poll);
         setChanged();
         notifyObservers(poll);

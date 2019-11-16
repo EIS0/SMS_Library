@@ -33,7 +33,7 @@ public class IncomingPollAdapter extends BaseAdapter implements Observer {
 
     @Override
     public long getItemId(int position) {
-        return DataProvider.getIncomingPolls().get(position).getPollID();
+        return DataProvider.getIncomingPolls().get(position).getPollId();
     }
 
     @Override
@@ -76,7 +76,7 @@ public class IncomingPollAdapter extends BaseAdapter implements Observer {
         });
 
         pollName.setText("" + poll.getPollName());
-        pollID.setText("" + poll.getPollID());
+        pollID.setText("" + poll.getPollId());
         pollQuestion.setText(poll.getPollQuestion());
         return convertView;
     }

@@ -8,8 +8,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.util.ArrayList;
-
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -30,10 +28,11 @@ public class PollManagerTest {
     public void answerPoll() {
     }
 
-    @Test
     /**
+     * Tests handling of messages received by the application.
      * @author Giovanni Velludo
      */
+    @Test
     public void onMessageReceived() {
         // CASE 0: received new poll
         PollListener mockListener = mock(PollListener.class);
@@ -45,21 +44,14 @@ public class PollManagerTest {
         int pollId = 38;
         String pollName = "Pizza";
         String pollQuestion = "Should we get takeout pizza for dinner?";
-        ArrayList<SMSPeer> pollUsers = new ArrayList<>(3);
-        pollUsers.add(new SMSPeer("3493619544"));
-        pollUsers.add(new SMSPeer("3335436782"));
-        pollUsers.add(new SMSPeer("+396662838864"));
 
         String text = messageCode + sep + pollId + sep + pollName + sep + pollQuestion;
-        for (SMSPeer user : pollUsers) {
-            text += sep + user;
-        }
         SMSMessage message = new SMSMessage(pollAuthor, text);
 
         TernaryPoll verificationPoll =
-                new TernaryPoll(pollName, pollQuestion, pollAuthor, pollId, pollUsers);
+                new TernaryPoll(pollAuthor, pollId, pollName, pollQuestion);
 
         pollManager.onMessageReceived(message);
-        verify(mockListener).onIncomingPoll(verificationPoll);
+        verify(mockListener).onPollReceived(verificationPoll);
     }
 }

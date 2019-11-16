@@ -32,7 +32,7 @@ public class TernaryPoll extends Poll {
             return answer;
         }
     }
-    private int pollID;
+    private int pollId;
     private SMSPeer pollAuthor;
     private String pollName;
     private String pollQuestion;
@@ -41,14 +41,14 @@ public class TernaryPoll extends Poll {
 
     /**
      * Creates a local copy of a poll coming from another device.
-     * @param name The name of the poll.
-     * @param question The question asked to all users.
      * @param author The user who created the poll.
      * @param id The id of the poll.
+     * @param name The name of the poll.
+     * @param question The question asked to all users.
      */
-    TernaryPoll(int id, String name, String question, SMSPeer author) {
+    TernaryPoll(SMSPeer author, int id, String name, String question) {
         pollAuthor = author;
-        pollID = id;
+        pollId = id;
         pollName = name;
         pollQuestion = question;
     }
@@ -60,7 +60,7 @@ public class TernaryPoll extends Poll {
      * @param users Users to include in the poll.
      */
     TernaryPoll(String name, String question, ArrayList<SMSPeer> users) {
-        pollID = ++TernaryPoll.pollCount;
+        pollId = ++TernaryPoll.pollCount;
         pollName = name;
         pollQuestion = question;
         pollAuthor = SELF_PEER;
@@ -68,7 +68,7 @@ public class TernaryPoll extends Poll {
         for (SMSPeer user : users) this.addUser(user);
     }
 
-    public Set<SMSPeer> getPollUsers() {
+    Set<SMSPeer> getPollUsers() {
         return pollUsers.keySet();
     }
 
@@ -82,10 +82,6 @@ public class TernaryPoll extends Poll {
 
     SMSPeer getPollAuthor() {
         return pollAuthor;
-    }
-
-    HashMap<SMSPeer, PollResult> getPollUsers() {
-        return pollUsers;
     }
 
     boolean isClosed() {
@@ -170,7 +166,7 @@ public class TernaryPoll extends Poll {
      * @return poll ID.
      */
     public int getPollId() {
-        return this.pollID;
+        return this.pollId;
     }
 
     /**
@@ -181,7 +177,15 @@ public class TernaryPoll extends Poll {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         TernaryPoll that = (TernaryPoll) o;
-        return pollID == that.pollID &&
+
+        // when comparing polls with no users, as they were received from another device
+        if (that.pollUsers == null && this.pollUsers == null) {
+            return pollId == that.pollId &&
+                    pollAuthor.equals(that.pollAuthor) &&
+                    pollName.equals(that.pollName) &&
+                    pollQuestion.equals(that.pollQuestion);
+        }
+        return pollId == that.pollId &&
                 pollAuthor.equals(that.pollAuthor) &&
                 pollName.equals(that.pollName) &&
                 pollQuestion.equals(that.pollQuestion) &&

@@ -70,10 +70,13 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
      * @param name The name given to the poll.
      * @param question The question to ask users.
      * @param users Users to which the question should be asked.
+     * @throws IllegalArgumentException When users is empty
      * @author Giovanni Velludo
      * @author Matteo Carnelos
      */
-    void createPoll(String name, String question, ArrayList<SMSPeer> users) {
+    void createPoll(String name, String question, ArrayList<SMSPeer> users)
+            throws  IllegalArgumentException {
+        if (users.isEmpty()) throw new IllegalArgumentException("Can't create poll with no users");
         TernaryPoll poll = new TernaryPoll(name, question, users);
         sentPolls.put(poll.getPollId(), poll);
         sendNewPoll(poll);
@@ -94,7 +97,7 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
 
     /**
      * Converts a new poll to the following String:
-     * NEW_POLL_MSG_CODE + pollID + pollName + pollQuestion
+     * NEW_POLL_MSG_CODE + pollId + pollName + pollQuestion
      * Fields and different pollUsers are separated by the FIELD_SEPARATOR.
      * @param poll The poll to convert.
      * @return The message to send to poll users.
@@ -125,31 +128,32 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
     public void onMessageReceived(SMSMessage message) {
         String data = message.getData();
         String[] fields = data.split(FIELD_SEPARATOR);
-        int pollID = Integer.parseInt(fields[1]);
+        int pollId = Integer.parseInt(fields[1]);
         switch(fields[0]) {
             // New poll received
             // Structure of the message (each filed is separated by the FIELD_SEPARATOR):
-            // NEW_POLL_MSG_CODE + pollID + pollName + pollQuestion
+            // NEW_POLL_MSG_CODE + pollId + pollName + pollQuestion
             //        [0]           [1]       [2]          [3]
             case NEW_POLL_MSG_CODE:
                 String pollName = fields[2];
                 String pollQuestion = fields[3];
                 SMSPeer pollAuthor = message.getPeer();
-                TernaryPoll receivedPoll = new TernaryPoll(pollID, pollName, pollQuestion, pollAuthor);
-                receivedPolls.put(new Pair<>(pollAuthor, pollID), receivedPoll);
-                pollListener.onReceivePoll(receivedPoll);
+                TernaryPoll receivedPoll =
+                        new TernaryPoll(pollAuthor, pollId, pollName, pollQuestion);
+                receivedPolls.put(new Pair<>(pollAuthor, pollId), receivedPoll);
+                pollListener.onPollReceived(receivedPoll);
                 break;
             // You have received an answer for your poll
             // Structure of the message (each filed is separated by the FIELD_SEPARATOR):
-            // ANSWER_MSG_CODE + pollID + answerCode
+            // ANSWER_MSG_CODE + pollId + answerCode
             //        [0]          [1]       [2]
             case ANSWER_MSG_CODE:
                 boolean isYes = fields[2].equals(YES_ANSWER_CODE);
                 SMSPeer voter = message.getPeer();
-                TernaryPoll answeredPoll = sentPolls.get(pollID);
+                TernaryPoll answeredPoll = sentPolls.get(pollId);
                 if(isYes) answeredPoll.setYes(voter);
                 else answeredPoll.setNo(voter);
-                sentPolls.put(pollID, answeredPoll);
+                sentPolls.put(pollId, answeredPoll);
                 pollListener.onSentPollUpdate(answeredPoll);
                 break;
         }
@@ -157,12 +161,15 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
 
     /**
      * Sends the answer to the author and remove the poll from the receivedPolls map.
+     * @param poll The poll to answer.
      * @param answer The user's answer, true equals "Yes" and false equals "No".
+     * @throws IllegalArgumentException When the poll answered was created by the user answering it.
      * @author Giovanni Velludo
      * @author Matteo Carnelos
      */
-    public void answerPoll(TernaryPoll poll, boolean answer) {
-        if(poll.getPollAuthor().equals(TernaryPoll.SELF_PEER)) throw new IllegalArgumentException("Trying to answer an owned poll");
+    public void answerPoll(TernaryPoll poll, boolean answer) throws IllegalArgumentException {
+        if(poll.getPollAuthor().equals(TernaryPoll.SELF_PEER))
+            throw new IllegalArgumentException("Trying to answer an owned poll");
         Pair<SMSPeer, Integer> key = new Pair<>(poll.getPollAuthor(), poll.getPollId());
         sendAnswer(poll, answer);
         receivedPolls.remove(key);
@@ -180,7 +187,7 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
 
     /**
      * Converts a poll answer to the following String:
-     * ANSWER_MSG_CODE + pollID + answerCode
+     * ANSWER_MSG_CODE + pollId + answerCode
      * Fields are separated by FIELD_SEPARATOR.
      * @return Message to send to poll users.
      * @author Giovanni Velludo

@@ -10,10 +10,10 @@ public interface PollListener {
      * Called by PollManager whenever a new poll is received.
      * @param poll The poll received.
      */
-    void onReceivePoll(TernaryPoll poll);
+    void onPollReceived(TernaryPoll poll);
 
     /**
-     * Called by PollManager whenever a poll is updated.
+     * Called by PollManager whenever a poll created by this device is updated.
      * @param poll The poll updated.
      */
     void onSentPollUpdate(TernaryPoll poll);
