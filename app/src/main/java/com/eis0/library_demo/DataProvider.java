@@ -36,7 +36,7 @@ public class DataProvider extends Observable implements PollListener {
     public void onReceivePoll(TernaryPoll poll) {
         incomingPolls.add(poll);
         setChanged();
-        notifyObservers();
+        notifyObservers(poll);
     }
 
     public void onSentPollUpdate(TernaryPoll poll) {
@@ -50,6 +50,6 @@ public class DataProvider extends Observable implements PollListener {
             else openedPolls.set(pollIndex, poll);
         }
         setChanged();
-        notifyObservers();
+        notifyObservers(poll);
     }
 }

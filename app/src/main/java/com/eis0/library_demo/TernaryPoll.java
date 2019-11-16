@@ -169,7 +169,7 @@ public class TernaryPoll extends Poll {
     /**
      * @return poll ID.
      */
-    public int getPollID() {
+    public int getPollId() {
         return this.pollID;
     }
 

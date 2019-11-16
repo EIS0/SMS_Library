@@ -23,5 +23,5 @@
     <string name="invalid_peers_message">Please insert at least one valid phone number</string>
     <string name="poll_name">Poll Name</string>
     <string name="poll_question">Poll Question</string>
-    <string name="destinations">Destinations</string>
+    <string name="users">Users</string>
 </resources>

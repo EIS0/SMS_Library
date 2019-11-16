@@ -75,7 +75,7 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
      */
     void createPoll(String name, String question, ArrayList<SMSPeer> users) {
         TernaryPoll poll = new TernaryPoll(name, question, users);
-        sentPolls.put(poll.getPollID(), poll);
+        sentPolls.put(poll.getPollId(), poll);
         sendNewPoll(poll);
         pollListener.onSentPollUpdate(poll);
     }
@@ -103,7 +103,7 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
      */
     private static String newPollToMessage(TernaryPoll poll) {
         return NEW_POLL_MSG_CODE + FIELD_SEPARATOR
-                + poll.getPollID() + FIELD_SEPARATOR
+                + poll.getPollId() + FIELD_SEPARATOR
                 + poll.getPollName() + FIELD_SEPARATOR
                 + poll.getPollQuestion();
     }
@@ -163,7 +163,7 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
      */
     public void answerPoll(TernaryPoll poll, boolean answer) {
         if(poll.getPollAuthor().equals(TernaryPoll.SELF_PEER)) throw new IllegalArgumentException("Trying to answer an owned poll");
-        Pair<SMSPeer, Integer> key = new Pair<>(poll.getPollAuthor(), poll.getPollID());
+        Pair<SMSPeer, Integer> key = new Pair<>(poll.getPollAuthor(), poll.getPollId());
         sendAnswer(poll, answer);
         receivedPolls.remove(key);
     }
@@ -174,7 +174,7 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
      * @author Giovanni Velludo
      */
     private void sendAnswer(TernaryPoll poll, boolean answer) {
-        String message = answerToMessage(poll.getPollID(), answer);
+        String message = answerToMessage(poll.getPollId(), answer);
         smsManager.sendMessage(new SMSMessage(poll.getPollAuthor(), message));
     }
 
