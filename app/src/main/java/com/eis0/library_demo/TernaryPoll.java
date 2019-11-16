@@ -1,5 +1,7 @@
 package com.eis0.library_demo;
 
+import androidx.annotation.NonNull;
+
 import com.eis0.smslibrary.SMSPeer;
 
 import java.util.ArrayList;
@@ -8,11 +10,8 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- *
- * This class provides the creation of polls.
- * Users involved in a specific poll can only
- * reply "Yes" or "No".
- *
+ * This class provides the creation of polls with two simple answers. Users involved in a
+ * specific poll can only reply "Yes" or "No".
  * @author Edoardo Raimondi
  * @author Giovanni Velludo
  * @author Matteo Carnelos
@@ -21,37 +20,39 @@ public class TernaryPoll extends Poll {
 
     static final SMSPeer SELF_PEER = new SMSPeer("self");
 
-    // TODO: save this value when the program is shutdown
     private static int pollCount = 0;
-
     private enum PollResult {
         YES("Yes"), NO("No"), UNAVAILABLE("Unavailable");
         private String answer;
         PollResult(String pollAnswer){
             this.answer = pollAnswer;
         }
+        @NonNull
         @Override
         public String toString(){
             return answer;
         }
     }
-
     private Map<SMSPeer, PollResult> pollUsers;
 
     /**
      * Creates a local copy of a poll coming from another device.
-     * @param question the question asked to all users.
-     * @param author the user who created the poll.
-     * @param id the id of the poll.
+     * @param question The question asked to all users.
+     * @param author The user who created the poll.
+     * @param id The id of the poll.
+     * @author Giovanni Velludo
+     * @author Matteo Carnelos
      */
     TernaryPoll(int id, String name, String question, SMSPeer author) {
         super(id, name, question, author);
     }
 
     /**
-     * Creates a new poll from this device.
-     * @param question the question to ask all users.
-     * @param users users to include in the poll.
+     * Creates a new poll from this device, the id assignement is automated by this class.
+     * @param question The question to ask all users.
+     * @param users Users to include in the poll.
+     * @author Giovanni Velludo
+     * @author Matteo Carnelos
      */
     TernaryPoll(String name, String question, ArrayList<SMSPeer> users) {
         super(++pollCount, name, question, SELF_PEER);
@@ -59,20 +60,42 @@ public class TernaryPoll extends Poll {
         for (SMSPeer user : users) addUser(user);
     }
 
-    public Set<SMSPeer> getPollUsers() {
+    /**
+     * Get all the users in the poll.
+     * @return A Set representing all the users.
+     * @author Giovanni Velludo
+     */
+    Set<SMSPeer> getPollUsers() {
         return pollUsers.keySet();
     }
 
-    public boolean isClosed() {
+    /**
+     * Tell if a poll is closed, a poll is closed when there aren't users without a given answer
+     * associated.
+     * @return True if the poll is closed, false otherwise.
+     * @author Matteo Carnelos
+     */
+    boolean isClosed() {
         return !pollUsers.containsValue(PollResult.UNAVAILABLE);
     }
 
-    public  int getClosedPercentage() {
+    /**
+     * Returns a percentage value representing the quantity of answers received in relationship
+     * with the total number of users that have to answer.
+     * @return The closed percentage as an integer value.
+     * @author Matteo Carnelos
+     */
+    public int getClosedPercentage() {
         float answerCount = countYes() + countNo();
         float ratio = answerCount/(float)pollUsers.size();
         return Math.round(ratio * 100);
     }
 
+    /**
+     * Get the number of answer "Yes".
+     * @return An integer value representing the number of "Yes".
+     * @author Matteo Carnelos
+     */
     public int countYes() {
         int count = 0;
         for (PollResult result: pollUsers.values())
@@ -80,6 +103,11 @@ public class TernaryPoll extends Poll {
         return count;
     }
 
+    /**
+     * Get the number of answer "No".
+     * @return An integer value representing the number of "No".
+     * @author Matteo Carnelos
+     */
     public int countNo() {
         int count = 0;
         for (PollResult result: pollUsers.values())
@@ -88,9 +116,10 @@ public class TernaryPoll extends Poll {
     }
 
     /**
-     * Check if the user is in the poll
-     * @param user the user for which the check is being requested
-     * @return true if the user is in the poll, false otherwise
+     * Check if the user is in the poll.
+     * @param user The user for which the check is being requested.
+     * @return True if the user is in the poll, false otherwise.
+     * @author Giovanni Velludo
      */
     boolean hasUser(SMSPeer user){
         return pollUsers.containsKey(user);
@@ -98,7 +127,8 @@ public class TernaryPoll extends Poll {
 
     /**
      * Insert an user in the poll.
-     * @param user the user to insert in the poll
+     * @param user The user to insert in the poll
+     * @author Giovanni Velludo
      */
     void addUser(SMSPeer user){
         // At the beginning we have no feedback by the user
@@ -107,8 +137,11 @@ public class TernaryPoll extends Poll {
     }
 
     /**
-     * Set user's answer to yes.
-     * @param user user who answered yes.
+     * Set user's answer to "Yes".
+     * @param user User who answered "Yes".
+     * @throws IllegalArgumentException If the specified user isn't in the poll.
+     * @author Giovanni Velludo
+     * @author Matteo Carnelos
      */
     void setYes(SMSPeer user) {
         if(hasUser(user)) {
@@ -119,8 +152,11 @@ public class TernaryPoll extends Poll {
     }
 
     /**
-     * Set user's answer to no.
-     * @param user user who answered no.
+     * Set user's answer to "No".
+     * @param user user who answered "No".
+     * @throws IllegalArgumentException If the specified user isn't in the poll.
+     * @author Giovanni Velludo
+     * @author Matteo Carnelos
      */
     void setNo(SMSPeer user) {
         if (hasUser(user)) {
@@ -131,10 +167,11 @@ public class TernaryPoll extends Poll {
     }
 
     /**
-     * Return the answer of the specific user
-     * @param user the user whose answer is being requested
-     * @return String representing answer
-     * @throws IllegalArgumentException when the user is not included in the poll
+     * Return the answer of the specific user.
+     * @param user The user whose answer is being requested.
+     * @return A string representing the answer.
+     * @throws IllegalArgumentException when the user is not included in the poll.
+     * @author Giovanni Velludo
      */
     String getAnswer(SMSPeer user) throws IllegalArgumentException {
         if(hasUser(user)) return pollUsers.get(user).toString();

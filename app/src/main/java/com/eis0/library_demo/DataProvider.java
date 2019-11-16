@@ -10,7 +10,6 @@ import java.util.Observable;
  */
 public class DataProvider extends Observable implements PollListener {
 
-    // TODO: write polls to disk when the program is removed from memory
     // Must always be static for getInstance to work
     private static DataProvider instance = null;
     private static ArrayList<TernaryPoll> incomingPolls = new ArrayList<>();

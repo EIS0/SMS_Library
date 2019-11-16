@@ -2,6 +2,7 @@ package com.eis0.library_demo.ui.main;
 
 import android.content.Context;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
@@ -23,7 +24,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
     /**
      * Constructor for the SectionsPageAdapter.
-     * Calls the FragmentPagerAdapter constructor and sets the context.
+     * Call the FragmentPagerAdapter constructor and sets the context.
      * @param context Context given from the activity.
      * @param fm Fragment manager that manage FragmentPagerAdapter behaviour.
      * @author Matteo Carnelos
@@ -39,6 +40,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
      * @return The associated Fragment.
      * @author Matteo Carnelos
      */
+    @NonNull
     @Override
     public Fragment getItem(int position) {
         // getItem is called to instantiate the fragment for the given page

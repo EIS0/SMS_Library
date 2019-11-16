@@ -100,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Checks if the notification listener is enabled.
+     * Check if the notification listener is enabled.
      * @param context Context where the notification listener should be active.
      * @return Returns if the notification listener is enabled.
      * @author Marco Cognolato
@@ -111,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Opens the notification settings menu for the user to enable notifications.
+     * Open the notification settings menu for the user to enable notifications.
      * @author Marco Cognolato
      */
     private void openNotificationListenSettings() {

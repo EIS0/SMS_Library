@@ -21,7 +21,6 @@ import java.util.ArrayList;
 public class PollManager implements ReceivedMessageListener<SMSMessage> {
 
     // NOTE: FIELD_SEPARATOR is a regex, there are some illegal values (e.g. "*")
-    // TODO: Find a stronger FIELD_SEPARATOR (e.g. Escape Char)
     private static final String FIELD_SEPARATOR = "\r";
     private static final String NEW_POLL_MSG_CODE = "0";
     private static final String ANSWER_MSG_CODE = "1";
@@ -82,7 +81,7 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
     }
 
     /**
-     * Sends a new poll as a text message to each pollUser.
+     * Send a new poll as a text message to each pollUser.
      * @param poll The poll to send.
      * @author Giovanni Velludo
      * @author Matteo Carnelos
@@ -94,7 +93,7 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
     }
 
     /**
-     * Converts a new poll to the following String:
+     * Convert a new poll to the following String:
      * NEW_POLL_MSG_CODE + pollId + pollName + pollQuestion
      * Fields and different pollUsers are separated by the FIELD_SEPARATOR.
      * @param poll The poll to convert.
@@ -156,7 +155,7 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
     }
 
     /**
-     * Sends the answer to the author and remove the poll from the receivedPolls map.
+     * Send the answer to the author and remove the poll from the receivedPolls map.
      * @param answer The user's answer, true equals "Yes" and false equals "No".
      * @throws IllegalArgumentException If the author of the poll is yourself.
      * @author Giovanni Velludo
@@ -168,7 +167,7 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
     }
 
     /**
-     * Sends an answer as a text message from a user to the author.
+     * Send an answer as a text message from a user to the author.
      * @param poll The poll which was answered.
      * @author Giovanni Velludo
      * @author Matteo Carnelos
@@ -179,7 +178,7 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
     }
 
     /**
-     * Converts a poll answer to the following String:
+     * Convert a poll answer to the following String:
      * ANSWER_MSG_CODE + pollId + answerCode
      * Fields are separated by FIELD_SEPARATOR.
      * @return Message to send to poll users.
