@@ -19,7 +19,6 @@ import android.view.View;
 
 import com.eis0.library_demo.ui.main.SectionsPagerAdapter;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Set;
 

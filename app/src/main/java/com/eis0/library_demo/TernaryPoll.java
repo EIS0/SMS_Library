@@ -33,7 +33,7 @@ public class TernaryPoll extends Poll {
             return answer;
         }
     }
-    int pollID;
+    int pollId;
     SMSPeer pollAuthor;
     String pollName;
     String pollQuestion;
@@ -48,7 +48,7 @@ public class TernaryPoll extends Poll {
      */
     TernaryPoll(int id, String name, String question, SMSPeer author) {
         pollAuthor = author;
-        pollID = id;
+        pollId = id;
         pollName = name;
         pollQuestion = question;
     }
@@ -59,7 +59,7 @@ public class TernaryPoll extends Poll {
      * @param users users to include in the poll.
      */
     TernaryPoll(String name, String question, ArrayList<SMSPeer> users) {
-        pollID = ++TernaryPoll.pollCount;
+        pollId = ++TernaryPoll.pollCount;
         pollName = name;
         pollQuestion = question;
         pollAuthor = SELF_PEER;
@@ -162,9 +162,9 @@ public class TernaryPoll extends Poll {
     }
 
     /**
-     * @return poll ID.
+     * @return poll id.
      */
     public int getPollId() {
-        return this.pollID;
+        return this.pollId;
     }
 }

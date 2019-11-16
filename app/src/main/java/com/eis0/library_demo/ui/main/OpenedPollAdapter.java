@@ -25,7 +25,7 @@ class OpenedPollAdapter extends BaseAdapter implements Observer {
     private static LayoutInflater inflater = null;
 
     /**
-     * Constructor of the OpenedPollAdapter, it sets the inflater value.
+     * Constructor of the OpenedPollAdapter, it sets the LayoutInflater.
      * @param context The context of the ListFragment.
      * @author Matteo Carnelos.
      */
@@ -46,9 +46,9 @@ class OpenedPollAdapter extends BaseAdapter implements Observer {
     }
 
     /**
-     * Get the opened poll id associated with the given position. Required by BaseAdapter.
+     * Get the opened poll unique id associated with the given position. Required by BaseAdapter.
      * @param position The position of the item in the data set.
-     * @return The unique ID as a long value.
+     * @return The unique id as a long value.
      * @author Matteo Carnelos.
      */
     @Override
@@ -79,6 +79,14 @@ class OpenedPollAdapter extends BaseAdapter implements Observer {
 
     /**
      * Get a View that displays the poll data accordingly to their position in the ListItem view.
+     * An opened poll ListItem View has these assignements:
+     * - Poll Name TextView         ->  Poll Name
+     * - Poll Id TextView           ->  Poll Id
+     * - Poll Question TextView     ->  Poll Question
+     * - Poll Percentage TextView   ->  Poll completed percentage
+     * - Poll ProgressBar           ->  Poll completed percentage
+     * - Number of Yes TextView     ->  Number of Yes answers
+     * - Number of No TextView      ->  Number of No answers
      * @param position The position in the List.
      * @param convertView The ListItem view on which the UI elements are placed.
      * @param container The ViewGroup containing all the List views.
@@ -89,24 +97,28 @@ class OpenedPollAdapter extends BaseAdapter implements Observer {
     public View getView(int position, View convertView, ViewGroup container) {
         if(convertView == null)
             convertView = inflater.inflate(R.layout.listitem_opened_poll, null);
+
         // Linking UI elements to objects
         TextView pollNameTxt = convertView.findViewById(R.id.pollNameTxt);
-        TextView pollIDTxt = convertView.findViewById(R.id.pollIDTxt);
+        TextView pollIdTxt = convertView.findViewById(R.id.pollIdTxt);
+        TextView pollQuestionTxt = convertView.findViewById(R.id.pollQuestionTxt);
+        TextView percentageTxt = convertView.findViewById(R.id.percentageTxt);
         ProgressBar pollProgressBar = convertView.findViewById(R.id.pollProgressBar);
         TextView yesNumTxt = convertView.findViewById(R.id.yesNumTxt);
         TextView noNumTxt = convertView.findViewById(R.id.noNumTxt);
-        TextView pollQuestionTxt = convertView.findViewById(R.id.pollQuestionTxt);
-        TextView percentageTxt = convertView.findViewById(R.id.percentageTxt);
-        // Assigning poll display values to UI objects
+
         TernaryPoll poll = DataProvider.getOpenedPolls().get(position);
+
+        // Assigning poll display values to UI objects
         pollNameTxt.setText(poll.getPollName());
-        pollIDTxt.setText(String.valueOf(getItemId(position)));
+        pollIdTxt.setText(String.valueOf(getItemId(position)));
+        pollQuestionTxt.setText(poll.getPollQuestion());
         int closedPercentage = poll.getClosedPercentage();
         percentageTxt.setText(String.valueOf(closedPercentage));
         pollProgressBar.setProgress(closedPercentage);
-        noNumTxt.setText(String.valueOf(poll.countNo()));
         yesNumTxt.setText(String.valueOf(poll.countYes()));
-        pollQuestionTxt.setText(poll.getPollQuestion());
+        noNumTxt.setText(String.valueOf(poll.countNo()));
+
         return convertView;
     }
 }

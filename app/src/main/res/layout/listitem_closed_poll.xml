@@ -15,7 +15,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginLeft="16dp"
             android:layout_marginTop="16dp"
             android:textAppearance="?attr/textAppearanceListItem"
             android:textStyle="bold"
@@ -27,17 +26,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
-            android:layout_marginLeft="4dp"
             android:text="@string/poll_li_colon"
             app:layout_constraintBaseline_toBaselineOf="@+id/pollNameTxt"
             app:layout_constraintStart_toEndOf="@+id/pollNameTxt" />
 
         <TextView
-            android:id="@+id/pollIDTxt"
+            android:id="@+id/pollIdTxt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
-            android:layout_marginLeft="4dp"
             app:layout_constraintBaseline_toBaselineOf="@+id/pollNameTxt"
             app:layout_constraintStart_toEndOf="@+id/colonTxt" />
 
@@ -46,7 +43,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="4dp"
-            android:layout_marginRight="4dp"
             android:textAppearance="?attr/textAppearanceListItem"
             android:textColor="@android:color/holo_green_dark"
             app:layout_constraintBaseline_toBaselineOf="@+id/yesTxt"
@@ -57,7 +53,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
             android:text="@string/poll_li_yes"
             android:textAppearance="?attr/textAppearanceListItem"
             android:textColor="@android:color/holo_green_dark"
@@ -69,7 +64,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
             android:text="@string/poll_li_dash"
             android:textAppearance="?attr/textAppearanceListItem"
             app:layout_constraintBaseline_toBaselineOf="@+id/noNumTxt"
@@ -80,7 +74,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="4dp"
-            android:layout_marginRight="4dp"
             android:textAppearance="?attr/textAppearanceListItem"
             android:textColor="@android:color/holo_red_light"
             app:layout_constraintBaseline_toBaselineOf="@+id/noTxt"
@@ -93,7 +86,7 @@
             android:text="@string/poll_li_no"
             android:textAppearance="?attr/textAppearanceListItem"
             android:textColor="@android:color/holo_red_light"
-            app:layout_constraintBaseline_toBaselineOf="@+id/pollIDTxt"
+            app:layout_constraintBaseline_toBaselineOf="@+id/pollIdTxt"
             app:layout_constraintEnd_toEndOf="@+id/pollQuestionTxt" />
 
         <TextView
@@ -102,7 +95,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"
-            android:layout_marginRight="16dp"
             android:layout_marginBottom="16dp"
             android:textAppearance="?attr/textAppearanceListItem"
             app:layout_constraintBottom_toBottomOf="parent"
