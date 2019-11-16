@@ -34,7 +34,7 @@ public class CreatePollActivity extends AppCompatActivity {
 
     /**
      * Called when the activity is being created.
-     * Initializes and links all the UI elements.
+     * Initialize and links all the UI elements.
      * @param savedInstanceState Instance saved from a previous activity destruction.
      * @author Marco Cognolato
      * @author Matteo Carnelos
@@ -70,8 +70,6 @@ public class CreatePollActivity extends AppCompatActivity {
             Toast.makeText(this, getString(R.string.empty_question_message), Toast.LENGTH_SHORT).show();
             return;
         }
-
-        // TODO: Advanced telephone number checking using Android APIs
 
         // Add peers to process
         SMSPeer peer1 = new SMSPeer(peer1Txt.getText().toString());
