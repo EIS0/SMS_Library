@@ -143,13 +143,6 @@ public class TernaryPoll extends Poll {
     }
 
     /**
-     * @return poll ID.
-     */
-    public int getPollId() {
-        return this.pollId;
-    }
-
-    /**
      * @author Giovanni Velludo
      */
     @Override
@@ -160,15 +153,15 @@ public class TernaryPoll extends Poll {
 
         // when comparing polls with no users, as they were received from another device
         if (that.pollUsers == null && this.pollUsers == null) {
-            return pollId == that.pollId &&
-                    pollAuthor.equals(that.pollAuthor) &&
-                    pollName.equals(that.pollName) &&
-                    pollQuestion.equals(that.pollQuestion);
+            return this.getPollId() == that.getPollId() &&
+                    this.getPollAuthor().equals(that.getPollAuthor()) &&
+                    this.getPollName().equals(that.getPollName()) &&
+                    this.getPollQuestion().equals(that.getPollQuestion());
         }
-        return pollId == that.pollId &&
-                pollAuthor.equals(that.pollAuthor) &&
-                pollName.equals(that.pollName) &&
-                pollQuestion.equals(that.pollQuestion) &&
+        return this.getPollId() == that.getPollId() &&
+                this.getPollAuthor().equals(that.getPollAuthor()) &&
+                this.getPollName().equals(that.getPollName()) &&
+                this.getPollQuestion().equals(that.getPollQuestion()) &&
                 pollUsers.equals(that.pollUsers);
     }
 }

@@ -26,15 +26,15 @@ abstract class Poll {
     /**
      * @return Int representing poll id
      */
-    int getPollId() {
+    public int getPollId() {
         return pollId;
     }
 
-    String getPollName() {
+    public String getPollName() {
         return pollName;
     }
 
-    String getPollQuestion() {
+    public String getPollQuestion() {
         return pollQuestion;
     }
 

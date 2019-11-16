@@ -70,7 +70,7 @@ public class DataProvider extends Observable implements PollListener {
      * @param poll The poll received.
      * @author Matteo Carnelos
      */
-    public void onReceivePoll(TernaryPoll poll) {
+    public void onPollReceived(TernaryPoll poll) {
         incomingPolls.add(poll);
         setChanged();
         notifyObservers(poll);
