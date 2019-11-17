@@ -13,7 +13,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -55,7 +55,7 @@ public class PollManagerTest {
             /* exception launched because PollManager tries to send the poll with an SMS to all
              * pollUsers, but this is not possible in unit tests
              */
-            verify(mockListener).onSentPollUpdate((TernaryPoll) pollCapture.capture());
+            verify(mockListener, atLeastOnce()).onSentPollUpdate((TernaryPoll) pollCapture.capture());
         }
         TernaryPoll verificationPoll = (TernaryPoll) pollCapture.getValue();
         assertEquals(verificationPoll.getPollName(), pollName);
@@ -75,7 +75,7 @@ public class PollManagerTest {
      */
     @Test
     public void onMessageContainingNewPollReceived() {
-        int messageCode = Integer.parseInt(PollManager.NEW_POLL_MSG_CODE);
+        String messageCode = PollManager.NEW_POLL_MSG_CODE;
         SMSPeer pollAuthor = new SMSPeer("3337235485");
         int pollId = 38;
         String pollName = "Pizza";
@@ -88,7 +88,7 @@ public class PollManagerTest {
                 new TernaryPoll(pollAuthor, pollId, pollName, pollQuestion);
 
         pollManager.onMessageReceived(message);
-        verify(mockListener).onPollReceived(verificationPoll);
+        verify(mockListener, atLeastOnce()).onPollReceived(verificationPoll);
     }
 
     /**
@@ -98,13 +98,13 @@ public class PollManagerTest {
      */
     @Test
     public void onMessageContainingAnswerReceived() {
-        int messageCode = Integer.parseInt(PollManager.ANSWER_MSG_CODE);
+        String messageCode = PollManager.ANSWER_MSG_CODE;
         String pollName = "Pizza";
         String pollQuestion = "Should we get takeout pizza for dinner?";
         ArrayList<SMSPeer> pollUsers = new ArrayList<>(1);
         SMSPeer voter = new SMSPeer("3498257155");
         pollUsers.add(voter);
-        int answer = 0;
+        int answer = 0; // 1 == Yes, 0 == No
 
         /* Creates a poll with the above arguments and captures the poll given by PollManager to
          * listeners.
@@ -117,7 +117,7 @@ public class PollManagerTest {
             /* exception launched because PollManager tries to send the poll with an SMS to all
              * pollUsers, but this is not possible in unit tests
              */
-            verify(mockListener).onSentPollUpdate((TernaryPoll) pollCapture.capture());
+            verify(mockListener, atLeastOnce()).onSentPollUpdate((TernaryPoll) pollCapture.capture());
         }
         TernaryPoll verificationPoll = (TernaryPoll) pollCapture.getValue();
 
@@ -129,6 +129,6 @@ public class PollManagerTest {
 
         pollManager.onMessageReceived(message);
         // verifies that PollManager has correctly updated the poll by registering the new vote
-        verify(mockListener, times(2)).onSentPollUpdate(verificationPoll);
+        verify(mockListener, atLeastOnce()).onSentPollUpdate(verificationPoll);
     }
 }
