@@ -31,7 +31,7 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
 
     // Must always be static for getInstance to work
     private static PollManager instance = null;
-    private static PollListener pollListener;
+    private PollListener pollListener;
     private SMSManager smsManager = SMSManager.getInstance();
 
     private SparseArray<TernaryPoll> sentPolls = new SparseArray<>();
