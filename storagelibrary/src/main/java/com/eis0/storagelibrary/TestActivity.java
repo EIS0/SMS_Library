@@ -24,27 +24,25 @@ public class TestActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test);
 
-        /**TODO: Hi there, I'm not a TODO, I'm here to remind you that I'm here
-         * P.S. I hope they don't get mad
-         */
+
         String destination = "+393479281192";
         PollStoring storage = new PollStoring();
 
-        //Creazione delle tre liste
+        //Creation of the three lists
         PollListStoring listStorage = new PollListStoring(this);
         String receivedListName = listStorage.receivedListName;
 
 
-        //Verifico che nella lista vi sia un elemento "Poll_2.json"
+        //Searching in the list for one element named "Poll_2.json"
         boolean exist = listStorage.doesFileExist(this, "Poll_2.json");
 
 
-        //Aggiungo alla lista
+        //Adding to the list
         listStorage.addToPollList(receivedListName, "Poll_2.json");
         String firstElementOfThePollList = listStorage.getFirstElement(listStorage.receivedListName);
         Log.d("Data_management_process", firstElementOfThePollList + " " + exist);
 
-        //Creo 2 poll
+        //Creating 2 polls
         TernaryPoll firstPoll = new TernaryPoll(new SMSPeer(destination));
         TernaryPoll secondPoll = new TernaryPoll(new SMSPeer(destination));
 
@@ -67,7 +65,7 @@ public class TestActivity extends AppCompatActivity {
         Log.d("Data_management_process", "Poll ID: " + restituito.getPollId());
 
 
-        //Does the file Poll_2.json exist?
+        //Does the file Poll_2.json exist? Verify
         exist = listStorage.doesFileExist(this, fileName);
         Log.d("Data_management_process", fileName + " " + exist);
 
