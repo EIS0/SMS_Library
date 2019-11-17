@@ -1,13 +1,5 @@
 package com.eis0.library_demo;
 
-import com.eis0.smslibrary.SMSPeer;
-
-import org.junit.Test;
-
-import java.util.ArrayList;
-
-import static org.junit.Assert.*;
-
 public class TernaryPollTest {/*
 
     @Test
@@ -90,6 +82,7 @@ public class TernaryPollTest {/*
         SMSPeer author = new SMSPeer("1234567");
         ArrayList<SMSPeer> users = new ArrayList<>();
         TernaryPoll test = new TernaryPoll("", author, users);
-        assertEquals(test.getPollId(), 1 );
+        assertEquals(test.getPollId(), 1);
     }
-*/}
+    */
+}

@@ -135,7 +135,7 @@ public class TernaryPoll extends Poll {
      * @return True if the user is in the poll, false otherwise.
      * @author Giovanni Velludo
      */
-    boolean hasUser(SMSPeer user) {
+    public boolean hasUser(SMSPeer user) {
         return pollUsers.containsKey(user);
     }
 
@@ -189,7 +189,7 @@ public class TernaryPoll extends Poll {
      * @throws IllegalArgumentException when the user is not included in the poll.
      * @author Giovanni Velludo
      */
-    String getAnswer(SMSPeer user) throws IllegalArgumentException {
+    public String getAnswer(SMSPeer user) throws IllegalArgumentException {
         if (hasUser(user)) return pollUsers.get(user).toString();
         else throw new IllegalArgumentException("The user is not part of the poll");
     }
