@@ -1,11 +1,12 @@
+package com.eis0.storagelibrary;
+
+import android.content.Context;
+
 /**
  * Interface to implement to save, load and delete files
  *
  * @author Enrico Cestaro
  */
-package com.eis0.storagelibrary;
-
-import android.content.Context;
 
 public interface InternalMemoryStorage {
     /**

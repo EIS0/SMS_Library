@@ -1,11 +1,3 @@
-/**
- * This class allows the user to save, load and modify three different lists containing the names of
- * the file saved in the Internal Storage
- * The three lists differ only for their ultimate purpose
- *
- * @author Enrico Cestaro
- */
-
 package com.eis0.storagelibrary;
 
 import android.content.Context;
@@ -14,6 +6,14 @@ import android.util.Log;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
+
+/**
+ * This class allows the user to save, load and modify three different lists containing the names of
+ * the file saved in the Internal Storage
+ * The three lists differ only for their ultimate purpose
+ *
+ * @author Enrico Cestaro
+ */
 
 public class PollListStoring extends StoringJsons implements JsonConverter<ArrayList<String>> {
 
