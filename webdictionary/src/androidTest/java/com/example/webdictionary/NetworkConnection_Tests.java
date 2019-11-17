@@ -16,6 +16,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 /**
@@ -191,6 +192,161 @@ public class NetworkConnection_Tests {
     public void addListPeerToNet_emptyOne(){
         SMSPeer toNet = new SMSPeer(null);
         instance.addToNet((SMSPeer[])null);
+        fail();
+    }
+
+
+
+    /*
+    Remove from net checks
+     */
+    @Test
+    public void removePeerFromNet(){
+        instance.clearNet();
+        SMSPeer peer = new SMSPeer("5554");
+        instance.addToNet(peer);
+        instance.removeFromNet(peer);
+        assertTrue(instance.isNetEmpty());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void removePeerFromNet_invalid(){
+        instance.clearNet();
+        SMSPeer peer = new SMSPeer("asdf");
+        instance.addToNet(peer);
+        instance.removeFromNet(peer);
+        fail();
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void removePeerFromNet_nullPeer(){
+        instance.clearNet();
+        SMSPeer peer = new SMSPeer(null);
+        instance.addToNet(peer);
+        instance.removeFromNet(peer);
+        fail();
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void removePeerFromNet_null(){
+        instance.clearNet();
+        SMSPeer peer = new SMSPeer("5554");
+        instance.addToNet((SMSPeer)null);
+        instance.removeFromNet(peer);
+        fail();
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void removePeerFromNet_empty(){
+        instance.clearNet();
+        SMSPeer peer = new SMSPeer("");
+        instance.addToNet(peer);
+        instance.removeFromNet(peer);
+        fail();
+    }
+
+    /*
+    Remove String Peer from net
+     */
+    @Test
+    public void removeStringPeerFromNet(){
+        instance.clearNet();
+        String peer = "5554";
+        instance.addToNet(peer);
+        instance.removeFromNet(peer);
+        assertTrue(instance.isNetEmpty());
+    }
+
+    @Test
+    public void removeStringPeerArrayFromNet(){
+        instance.clearNet();
+        String peer = "5554 5556";
+        instance.addToNet(peer);
+        instance.removeFromNet(peer);
+        assertTrue(instance.isNetEmpty());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void removeStringPeerFromNet_invalid(){
+        instance.clearNet();
+        String peer = "asdf";
+        instance.addToNet(peer);
+        instance.removeFromNet(peer);
+        fail();
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void removeStringPeerFromNet_nullPeer(){
+        instance.clearNet();
+        String peer = null;
+        instance.addToNet(peer);
+        instance.removeFromNet(peer);
+        fail();
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void removeStringPeerFromNet_empty(){
+        instance.clearNet();
+        String peer = "";
+        instance.addToNet(peer);
+        instance.removeFromNet(peer);
+        fail();
+    }
+
+    /*
+    Remove Array Peer from net
+     */
+    @Test
+    public void removeArrayPeerFromNet(){
+        instance.clearNet();
+        SMSPeer[] peers = {new SMSPeer("5554")};
+        instance.addToNet(peers);
+        instance.removeFromNet(peers);
+        assertTrue(instance.isNetEmpty());
+    }
+
+    @Test
+    public void removeArrayPeerFromNet_moreThanOne(){
+        instance.clearNet();
+        SMSPeer[] peers = {new SMSPeer("5554"), new SMSPeer("5556")};
+        instance.addToNet(peers);
+        instance.removeFromNet(peers);
+        assertTrue(instance.isNetEmpty());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void removeArrayPeerFromNet_invalid(){
+        instance.clearNet();
+        SMSPeer[] peers = {new SMSPeer("asdf"), new SMSPeer("5556")};
+        instance.addToNet(peers);
+        instance.removeFromNet(peers);
+        fail();
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void removeArrayPeerFromNet_nullPeer(){
+        instance.clearNet();
+        SMSPeer[] peer = null;
+        instance.addToNet(peer);
+        instance.removeFromNet(peer);
+        fail();
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void removeArrayPeerFromNet_empty(){
+        instance.clearNet();
+        SMSPeer[] peers = {new SMSPeer(""), new SMSPeer("5556")};
+        instance.addToNet(peers);
+        instance.removeFromNet(peers);
+        fail();
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void removeArrayPeerFromNet_null(){
+        instance.clearNet();
+        SMSPeer[] peers = {null, new SMSPeer("5556")};
+        instance.addToNet(peers);
+        instance.removeFromNet(peers);
         fail();
     }
 }

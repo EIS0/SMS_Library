@@ -3,7 +3,6 @@ package com.example.webdictionary;
 import android.content.Context;
 import android.util.Log;
 
-import com.eis0.smslibrary.ReceivedMessageListener;
 import com.eis0.smslibrary.SMSManager;
 import com.eis0.smslibrary.SMSMessage;
 import com.eis0.smslibrary.SMSPeer;
@@ -15,7 +14,7 @@ import java.util.ArrayList;
  */
 public class NetworkConnection {
 
-    //Singleton Design Pattern
+    //Singleton Design Pattern https://refactoring.guru/design-patterns/singleton
     private static NetworkConnection net;
     private NetworkConnection(Context context, SMSPeer myPeer){
         netDict = new SMSNetDictionary();
@@ -41,17 +40,8 @@ public class NetworkConnection {
     private ArrayList<SMSPeer> subscribers = new ArrayList<>();
     private Context context;
     private final String LOG_KEY = "NetCon";
-    public enum RequestType{
-        JoinPermission,
-        AcceptJoin,
-        AddPeers,
-        RemovePeers,
-        UpdatePeers,
-        LeavePermission,
-        AcceptLeave,
-        Ping
-    }
 
+    //region JoinMethods
     /**
      * Sends to a given valid peer a request to join his network.
      * It also sends the current network state.
@@ -90,9 +80,9 @@ public class NetworkConnection {
      * @param linkPeer The Peer asking to join this network, working as a link between 2 nets now joined
      * @param text The message received with the sender's network state
      */
-    private void acceptJoin(SMSPeer linkPeer, String text){
+    void acceptJoin(SMSPeer linkPeer, String text){
         String[] newPeersOnNet = text.split(" ");
-        String oldPeersInNet = peersInNetwork();
+        SMSPeer[] oldPeersInNet = subscribers.toArray(new SMSPeer[0]);
         //add new peers to my net
         addToNet(text);
         addToNet(oldPeersInNet);
@@ -103,13 +93,15 @@ public class NetworkConnection {
             SMSManager.getInstance(context).sendMessage(new SMSMessage(newPeer, RequestType.AddPeers.ordinal() + " " + oldPeersInNet));
         }
         //notify my old peers about the new ones
-        for(String oldPeerAddress : oldPeersInNet.split(" ")){
-            Log.d(LOG_KEY, "Old Peer: " + oldPeerAddress);
-            SMSPeer oldPeer = new SMSPeer(oldPeerAddress);
+        for(SMSPeer oldPeer : oldPeersInNet){
+            Log.d(LOG_KEY, "Old Peer: " + oldPeer.getAddress());
             SMSManager.getInstance(context).sendMessage(new SMSMessage(oldPeer, RequestType.AddPeers.ordinal() + " " + text));
         }
     }
 
+    //endregion
+
+    //region LeaveMethods
     /**
      * Sends to a given valid peer a request to leave his network
      * @param peer The peer to send a message to.
@@ -122,22 +114,20 @@ public class NetworkConnection {
     }
 
     /**
-     * Sends an exit notification to a given peer that will remove it
-     * @param linkPeer The Peer asking to join this network, working as a link between 2 nets now joined
-     * @param text The message received with the sender's network state
-     * @author Edoardo Raimondi
+     * Sends to the network a notification that a given valid SMSPeer exited the network
+     * @param peer The Peer who just left this network
      */
-    private void acceptLeave(SMSPeer linkPeer, String text){
+    void acceptLeave(SMSPeer peer){
         //remove the peer
-        removeFromNet(text);
-        String newPeersInNet = peersInNetwork();
+        removeFromNet(peer.getAddress());
         //notify my old peers about the exit
-        for(String oldPeerAddress : newPeersInNet.split(" ")){
-            Log.d(LOG_KEY, "Old Peer: " + oldPeerAddress);
-            SMSPeer oldPeer = new SMSPeer(oldPeerAddress);
-            SMSManager.getInstance(context).sendMessage(new SMSMessage(oldPeer, RequestType.RemovePeers.ordinal() + " " + text));
+        for(SMSPeer oldPeer : subscribers){
+            Log.d(LOG_KEY, "Old Peer: " + oldPeer.getAddress());
+            SMSManager.getInstance(context).sendMessage(new SMSMessage(oldPeer, RequestType.RemovePeers.ordinal() + " " + peer.getAddress()));
         }
     }
+
+    //endregion
 
     /**
      * Returns a space separated String with all the Peers in my Network
@@ -166,10 +156,11 @@ public class NetworkConnection {
      * Resets the Ping timer before considering that peer offline
      * @param peer The peer who sent the ping
      */
-    private void incomingPing(SMSPeer peer){
+    void incomingPing(SMSPeer peer){
         //TODO: implement this (using timers?)
     }
 
+    //region addToNet
     /**
      * Adds a given String list of peers (separated by a space) to the current network
      * @param peersToAdd The peers to add to the net
@@ -205,18 +196,48 @@ public class NetworkConnection {
         if(peers == null) throw new IllegalArgumentException();
         for(SMSPeer peer: peers) addToNet(peer);
     }
+    //endregion
 
+    //region removeFromNet
     /**
      * Removes a given String list of peers from the current network
+     * @param peersInNet a space separated string of valid SMSPeers
+     * @throws IllegalArgumentException if peersInNet is null or if at least
+     * one SMSPeer is null or invalid
      */
     public void removeFromNet(String peersInNet){
+        if(peersInNet == null) throw new IllegalArgumentException();
         Log.d(LOG_KEY, "Removing these Peers: " + peersInNet);
         String[] peers = peersInNet.split(" ");
         for(String peer : peers){
-            subscribers.remove(new SMSPeer(peer));
+            removeFromNet(new SMSPeer(peer));
         }
     }
 
+    /**
+     * Removes a given SMSPeer from the current network
+     * @param peer The SMSPeer to remove from the net
+     * @throws IllegalArgumentException if peer is null or invalid
+     */
+    public void removeFromNet(SMSPeer peer){
+        if(peer == null || !peer.isValid()) throw new IllegalArgumentException();
+        Log.d(LOG_KEY, "Removing this Peer: " + peer);
+        subscribers.remove(peer);
+    }
+
+    /**
+     * Removes an array of valid SMSPeers from the current network
+     * @param peers The list of Peers to remove
+     * @throws IllegalArgumentException if peers is null, or if at least one SMSPeer
+     * is null or invalid
+     */
+    public void removeFromNet(SMSPeer[] peers){
+        if(peers == null) throw new IllegalArgumentException();
+        for (SMSPeer peer : peers) removeFromNet(peer);
+    }
+    //endregion
+
+    //region helperMethods
     /**
      * Removes every online peer from the net
      * N.B. it doesn't notify anyone about the net, just clears it
@@ -240,6 +261,15 @@ public class NetworkConnection {
     }
 
     /**
+     * Returns an array of currently online SMSPeers
+     */
+    public SMSPeer[] getOnlinePeers(){
+        return subscribers.toArray(new SMSPeer[0]);
+    }
+
+    //endregion
+
+    /**
      * Updates the current Network State given a peer in the network to update and it's resources
      */
     public void updateNet(String peer, SMSResource[] resources){
@@ -247,59 +277,5 @@ public class NetworkConnection {
         SMSPeer peerToUpdate = new SMSPeer(peer);
         subscribers.remove(peerToUpdate);
         subscribers.add(peerToUpdate);
-    }
-
-    /**
-     * Returns currently online SMSPeers
-     */
-    public SMSPeer[] getOnlinePeers(){
-        return subscribers.toArray(new SMSPeer[0]);
-    }
-
-    /**
-     * Network listener listening for incoming Network-related Events
-     */
-    private class NetworkListener implements ReceivedMessageListener<SMSMessage>{
-        NetworkConnection net;
-        private NetworkListener(NetworkConnection net){
-            this.net = net;
-        }
-
-        @Override
-        public void onMessageReceived(SMSMessage message) {
-            String text = message.getData();
-            SMSPeer peer = message.getPeer();
-            //if I'm using simulators I only need to get the last 4 digits of the number
-            if(peer.toString().contains("+1555521")){
-                peer = new SMSPeer(peer.toString().substring(peer.toString().length() - 4));
-            }
-            //convert the code number in the message to the related enum
-            RequestType incomingRequest = RequestType.values()[Integer.parseInt(text.split(" ")[0])];
-            //starts a specific action based on the action received from the other user
-            if(incomingRequest == RequestType.JoinPermission){
-                Log.d(LOG_KEY, "Received Join Permission: accepting...");
-                net.acceptJoin(peer, text.substring(2));
-            }
-            else if(incomingRequest == RequestType.AcceptJoin){
-                Log.d(LOG_KEY, "Received Join Accepted: updating net...");
-                net.addToNet(text.substring(2));
-            }
-            else if(incomingRequest == RequestType.AddPeers){
-                Log.d(LOG_KEY, "Received Update Net Request: updating net...");
-                net.addToNet(text.substring(2));
-            }
-            else if(incomingRequest == RequestType.LeavePermission){
-                Log.d(LOG_KEY, "Received Leave Permission: ...");
-                net.acceptLeave(peer, text.substring(2));
-            }
-            else if(incomingRequest == RequestType.AcceptLeave){
-                Log.d(LOG_KEY, "Received Leave Accepted: updating net...");
-                net.removeFromNet(text.substring(2));
-            }
-            else if(incomingRequest == RequestType.Ping){
-                Log.d(LOG_KEY, "Received Ping...");
-                net.incomingPing(peer);
-            }
-        }
     }
 }
