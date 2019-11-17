@@ -1,3 +1,9 @@
+package com.eis0.storagelibrary;
+
+import android.util.Log;
+
+import com.google.gson.Gson;
+
 /**
  * This class allows the User to:
  * => create a custom name for the file inside whom the Poll will be saved, based upon the Poll ID
@@ -5,11 +11,6 @@
  *
  * @author Enrico Cestaro
  */
-package com.eis0.storagelibrary;
-
-import android.util.Log;
-
-import com.google.gson.Gson;
 
 public class PollStoring extends StoringJsons implements JsonConverter<TernaryPoll> {
 

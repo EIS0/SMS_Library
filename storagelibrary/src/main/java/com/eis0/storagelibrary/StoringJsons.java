@@ -1,8 +1,3 @@
-/**
- * This interface allows the user to save, load and delete files to and from the Internal Storage
- *
- * @author Enrico Cestaro
- */
 package com.eis0.storagelibrary;
 
 import android.content.Context;
@@ -17,6 +12,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 import static android.content.Context.MODE_PRIVATE;
+
+/**
+ * This interface allows the user to save, load and delete files to and from the Internal Storage
+ *
+ * @author Enrico Cestaro
+ */
 
 public class StoringJsons implements InternalMemoryStorage {
     /**
