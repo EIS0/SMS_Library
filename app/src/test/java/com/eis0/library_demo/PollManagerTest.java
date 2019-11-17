@@ -11,8 +11,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.ArrayList;
 
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -97,6 +96,6 @@ public class PollManagerTest {
 
         pollManager.onMessageReceived(message);
         // verifies that PollManager has correctly updated the poll by registering the new vote
-        verify(mockListener).onSentPollUpdate(verificationPoll);
+        verify(mockListener, times(2)).onSentPollUpdate(verificationPoll);
     }
 }
