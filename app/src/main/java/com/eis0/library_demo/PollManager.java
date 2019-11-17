@@ -8,6 +8,7 @@ import com.eis0.smslibrary.SMSMessage;
 import com.eis0.smslibrary.SMSPeer;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Creates and modifies TernaryPoll objects based on inputs from Activities and SMS Messages.
@@ -29,12 +30,12 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
     private static final String YES_ANSWER_CODE = "1";
     private static final String NO_ANSWER_CODE = "0";
 
-    // Must always be static for getInstance to work
+    // Must always be static, because PollManager is a singleton
     private static PollManager instance = null;
     private PollListener pollListener;
     private SMSManager smsManager = SMSManager.getInstance();
 
-    private SparseArray<TernaryPoll> sentPolls = new SparseArray<>();
+    private static HashMap<Integer, TernaryPoll> sentPolls = new HashMap<>();
 
     /**
      * PollManager constructor, sets this as the SMSManager listener.
@@ -81,8 +82,11 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
         if (users.isEmpty()) throw new IllegalArgumentException("Can't create poll with no users");
         TernaryPoll poll = new TernaryPoll(name, question, users);
         sentPolls.put(poll.getPollId(), poll);
-        sendNewPoll(poll);
         pollListener.onSentPollUpdate(poll);
+        /* needs to be last in order for pollListener to be called during unit tests, otherwise they
+         * will fail because SMS messages can't be sent.
+         */
+        sendNewPoll(poll);
     }
 
     /**

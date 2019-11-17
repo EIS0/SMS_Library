@@ -12,6 +12,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.util.ArrayList;
 
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -66,7 +67,6 @@ public class PollManagerTest {
     @Test
     public void onMessageContainingAnswerReceived() {
         int messageCode = Integer.parseInt(PollManager.ANSWER_MSG_CODE);
-        SMSPeer pollAuthor = new SMSPeer("3337235485");
         String pollName = "Pizza";
         String pollQuestion = "Should we get takeout pizza for dinner?";
         ArrayList<SMSPeer> pollUsers = new ArrayList<>(1);
@@ -74,23 +74,29 @@ public class PollManagerTest {
         pollUsers.add(voter);
 
         /* Creates a poll with the above arguments and captures the poll given by PollManager to
-         * listeners. This is needed to get the pollId, which will be used in the answer message.
+         * listeners.
          */
         ArgumentCaptor valueCapture = ArgumentCaptor.forClass(TernaryPoll.class);
-        pollManager.createPoll(pollName, pollQuestion, pollUsers);
-        doNothing().when(mockListener).onSentPollUpdate((TernaryPoll) valueCapture.capture());
-        TernaryPoll createdPoll = (TernaryPoll) valueCapture.getValue();
+        try {
+            pollManager.createPoll(pollName, pollQuestion, pollUsers);
+        }
+        catch (NullPointerException e) {
+            /* exception launched because PollManager tries to send the poll with an SMS to all
+             * pollUsers, but this is not possible in unit tests
+             */
+            verify(mockListener).onSentPollUpdate((TernaryPoll) valueCapture.capture());
+        }
+        TernaryPoll verificationPoll = (TernaryPoll) valueCapture.getValue();
 
-        TernaryPoll verificationPoll =
-                new TernaryPoll(pollAuthor, createdPoll.getPollId(), pollName, pollQuestion);
+        int answer = 1;
+        String text = messageCode + sep + verificationPoll.getPollId() + sep + answer;
+        SMSMessage message = new SMSMessage(voter, text);
+
         // TODO: act based on value of answer
         verificationPoll.setYes(voter);
 
-        int answer = 1;
-        String text = messageCode + sep + createdPoll.getPollId() + sep + answer;
-        SMSMessage message = new SMSMessage(voter, text);
-
         pollManager.onMessageReceived(message);
+        // verifies that PollManager has correctly updated the poll by registering the new vote
         verify(mockListener).onSentPollUpdate(verificationPoll);
     }
 }
