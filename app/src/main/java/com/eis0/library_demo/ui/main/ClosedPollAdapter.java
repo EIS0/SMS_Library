@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import com.eis0.library_demo.DataProvider;
 import com.eis0.library_demo.R;
-import com.eis0.library_demo.TernaryPoll;
+import com.eis0.storagelibrary.TernaryPoll;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -17,6 +17,7 @@ import java.util.Observer;
 /**
  * ListAdapter that adapts data coming from the DataProvider class into the graphical UI elements
  * of the closed poll ListItem view.
+ *
  * @author Matteo Carnelos
  */
 public class ClosedPollAdapter extends BaseAdapter implements Observer {
@@ -25,6 +26,7 @@ public class ClosedPollAdapter extends BaseAdapter implements Observer {
 
     /**
      * Constructor of the ClosedPollAdapter, it sets the LayoutInflater.
+     *
      * @param context The context of the ListFragment.
      * @author Matteo Carnelos
      */
@@ -35,7 +37,8 @@ public class ClosedPollAdapter extends BaseAdapter implements Observer {
     /**
      * Called whenever there is an update in the DataProvider class. It refreshes the views
      * accordingly to the new data.
-     * @param o The object that called the update, in this case is a DataProvider object.
+     *
+     * @param o   The object that called the update, in this case is a DataProvider object.
      * @param arg The object that is being added/removed/updated, in this case is the Poll
      *            object coming from the PollManager.
      * @author Matteo Carnelos
@@ -46,6 +49,7 @@ public class ClosedPollAdapter extends BaseAdapter implements Observer {
 
     /**
      * Get the closed poll unique id associated with the given position. Required by BaseAdapter.
+     *
      * @param position The position of the item in the data set.
      * @return The unique id as a long value.
      * @author Matteo Carnelos
@@ -57,6 +61,7 @@ public class ClosedPollAdapter extends BaseAdapter implements Observer {
 
     /**
      * Get the poll item associated with the given position. Required by BaseAdapter.
+     *
      * @param position The position of the item in the data set.
      * @return The object in the given position.
      * @author Matteo Carnelos
@@ -68,6 +73,7 @@ public class ClosedPollAdapter extends BaseAdapter implements Observer {
 
     /**
      * How many closed polls are in the list. Required by BaseAdapter.
+     *
      * @return The number of closed polls.
      * @author Matteo Carnelos
      */
@@ -84,15 +90,16 @@ public class ClosedPollAdapter extends BaseAdapter implements Observer {
      * - Poll Question TextView     ->  Poll Question
      * - Number of Yes TextView     ->  Number of Yes answers
      * - Number of No TextView      ->  Number of No answers
-     * @param position The position in the List.
+     *
+     * @param position    The position in the List.
      * @param convertView The ListItem view on which the UI elements are placed.
-     * @param container The ViewGroup containing all the List views.
+     * @param container   The ViewGroup containing all the List views.
      * @return A View with all the poll data placed correctly.
      * @author Matteo Carnelos
      */
     @Override
     public View getView(int position, View convertView, ViewGroup container) {
-        if(convertView == null)
+        if (convertView == null)
             convertView = inflater.inflate(R.layout.listitem_closed_poll, null);
 
         // Linking UI elements to objects

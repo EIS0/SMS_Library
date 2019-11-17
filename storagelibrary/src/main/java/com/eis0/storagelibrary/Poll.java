@@ -1,4 +1,4 @@
-package com.eis0.library_demo;
+package com.eis0.storagelibrary;
 
 import com.eis0.smslibrary.SMSPeer;
 
@@ -63,7 +63,7 @@ abstract class Poll {
      * @return An SMSPeer representing the poll author.
      * @author Matteo Carnelos
      */
-    SMSPeer getPollAuthor() {
+    public SMSPeer getPollAuthor() {
         return pollAuthor;
     }
 

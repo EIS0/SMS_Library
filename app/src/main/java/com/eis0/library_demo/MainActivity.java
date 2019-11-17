@@ -5,25 +5,24 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-
-import com.eis0.smslibrary.SMSPeer;
-import com.google.android.material.tabs.TabLayout;
-
-import androidx.core.app.ActivityCompat;
-import androidx.core.app.NotificationManagerCompat;
-import androidx.viewpager.widget.ViewPager;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.provider.Settings;
 import android.view.View;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationManagerCompat;
+import androidx.viewpager.widget.ViewPager;
+
 import com.eis0.library_demo.ui.main.SectionsPagerAdapter;
+import com.eis0.smslibrary.SMSPeer;
+import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
 import java.util.Set;
 
 /**
  * Main Activity view controller, it basically manages permissions granting and initializes tabs.
+ *
  * @author Matteo Carnelos
  * @author Marco Cognolato
  */
@@ -42,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Called on the creation of the activity.
      * Asks for permissions and initialize UI elements.
+     *
      * @param savedInstanceState Instance saved from a previous activity destruction.
      * @author Matteo Carnelos
      */
@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
         tabs.setupWithViewPager(viewPager);
 
         // Asks the user the permission to catch notifications, if not already granted
-        if(!isNotificationListenerEnabled(getApplicationContext()))
+        if (!isNotificationListenerEnabled(getApplicationContext()))
             openNotificationListenSettings();
 
         // Requests app permissions, if not already granted
@@ -68,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Called when the fab button in the main activity is pressed.
      * Opens the new poll activity as ActivityForResult.
+     *
      * @param view The view on which the onClick event is coming from.
      * @author Matteo Carnelos
      */
@@ -79,21 +80,22 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Called when an ActivityForResult calls the finish() method.
      * Checks the requestCode and the resultCode, and in case creates a new poll.
+     *
      * @param requestCode The request code linked with the startActivityForResult(...) method.
-     * @param resultCode An integer representing the result of the operations.
-     * @param data An intent with all the data sent from the ActivityForResult back to the starting
-     *             activity (i.e. MainActivity).
+     * @param resultCode  An integer representing the result of the operations.
+     * @param data        An intent with all the data sent from the ActivityForResult back to the starting
+     *                    activity (i.e. MainActivity).
      * @author Matteo Carnelos
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == NEW_POLL_REQUEST_CODE) {
-            if(resultCode == Activity.RESULT_OK) {
+        if (requestCode == NEW_POLL_REQUEST_CODE) {
+            if (resultCode == Activity.RESULT_OK) {
                 String name = data.getStringExtra(CreatePollActivity.ARG_POLL_NAME);
                 String question = data.getStringExtra(CreatePollActivity.ARG_POLL_QUESTION);
                 // There's no need for a checked cast, see CreatePollActivity
-                ArrayList<SMSPeer> peers = (ArrayList<SMSPeer>)data.getSerializableExtra(CreatePollActivity.ARG_POLL_PEERS);
+                ArrayList<SMSPeer> peers = (ArrayList<SMSPeer>) data.getSerializableExtra(CreatePollActivity.ARG_POLL_PEERS);
                 pollManager.createPoll(name, question, peers);
             }
         }
@@ -101,6 +103,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Check if the notification listener is enabled.
+     *
      * @param context Context where the notification listener should be active.
      * @return Returns if the notification listener is enabled.
      * @author Marco Cognolato
@@ -112,6 +115,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Open the notification settings menu for the user to enable notifications.
+     *
      * @author Marco Cognolato
      */
     private void openNotificationListenSettings() {

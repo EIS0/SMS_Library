@@ -15,8 +15,6 @@ import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.eis0.smslibrary.SMSPeer;
-
 public class TestActivity extends AppCompatActivity {
 
     @Override
@@ -42,18 +40,20 @@ public class TestActivity extends AppCompatActivity {
         String firstElementOfThePollList = listStorage.getFirstElement(listStorage.receivedListName);
         Log.d("Data_management_process", firstElementOfThePollList + " " + exist);
 
-        //Creating 2 polls
+        /*Creating 2 polls
         TernaryPoll firstPoll = new TernaryPoll(new SMSPeer(destination));
         TernaryPoll secondPoll = new TernaryPoll(new SMSPeer(destination));
-
+         */
 
         //Creating a custom fileName for the TernaryPoll object
-        String fileName = storage.setFileName(secondPoll);
+        //String fileName = storage.setFileName(secondPoll);
+        String fileName = "";   //Per correggere l'errore generato dal merge
         Log.d("Data_management_process", "File name: " + fileName);
 
 
         //Converting and saving the TernaryPoll object as a .json file
-        String jason = storage.convertToJson(secondPoll);
+        //String jason = storage.convertToJson(secondPoll);
+        String jason = "";
         storage.saveJsonToInternal(this, fileName, jason);
 
         //Loading and converting the Ternary object from .json format

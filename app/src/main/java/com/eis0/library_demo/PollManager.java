@@ -6,6 +6,7 @@ import com.eis0.smslibrary.ReceivedMessageListener;
 import com.eis0.smslibrary.SMSManager;
 import com.eis0.smslibrary.SMSMessage;
 import com.eis0.smslibrary.SMSPeer;
+import com.eis0.storagelibrary.TernaryPoll;
 
 import java.util.ArrayList;
 
@@ -15,6 +16,7 @@ import java.util.ArrayList;
  * to an instance of PollManager with setPollListener(PollListener listener).
  * Right now it communicates directly with SMSManager, but in the future it will send messages to a
  * class handling messages longer than a single SMS.
+ *
  * @author Giovanni Velludo
  * @author Matteo Carnelos
  */
@@ -39,6 +41,7 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
     /**
      * PollManager constructor, sets this as the SMSManager listener.
      * It cannot be accessed from outside the class because this follows the Singleton Design Pattern.
+     *
      * @author Giovanni Velludo
      * @author Matteo Carnelos
      */
@@ -49,16 +52,18 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
     /**
      * Returns a new instance of PollManager if none exist, otherwise the one already created as per
      * the Singleton Design Patter.
+     *
      * @return The only instance of this class.
      * @author Giovanni Velludo
      */
     public static PollManager getInstance() {
-        if(instance == null) instance = new PollManager();
+        if (instance == null) instance = new PollManager();
         return instance;
     }
 
     /**
      * Set the listener that will be called when a new poll or an answer is received.
+     *
      * @param listener The listener to wake up. It must implement the PollListener interface.
      * @author Giovanni Velludo
      * @author Matteo Carnelos
@@ -69,15 +74,16 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
 
     /**
      * Creates a new poll and sends it to all the included users, it eventually wakes the listener.
-     * @param name The name given to the poll.
+     *
+     * @param name     The name given to the poll.
      * @param question The question to ask users.
-     * @param users Users to which the question should be asked.
+     * @param users    Users to which the question should be asked.
      * @throws IllegalArgumentException When users is empty
      * @author Giovanni Velludo
      * @author Matteo Carnelos
      */
     void createPoll(String name, String question, ArrayList<SMSPeer> users)
-            throws  IllegalArgumentException {
+            throws IllegalArgumentException {
         if (users.isEmpty()) throw new IllegalArgumentException("Can't create poll with no users");
         TernaryPoll poll = new TernaryPoll(name, question, users);
         sentPolls.put(poll.getPollId(), poll);
@@ -87,13 +93,14 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
 
     /**
      * Sends a new poll as a text message to each pollUser.
+     *
      * @param poll The poll to send.
      * @author Giovanni Velludo
      * @author Matteo Carnelos
      */
     private void sendNewPoll(TernaryPoll poll) {
         String message = newPollToMessage(poll);
-        for(SMSPeer user : poll.getPollUsers())
+        for (SMSPeer user : poll.getPollUsers())
             smsManager.sendMessage(new SMSMessage(user, message));
     }
 
@@ -101,6 +108,7 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
      * Converts a new poll to the following String:
      * NEW_POLL_MSG_CODE + pollId + pollName + pollQuestion
      * Fields and different pollUsers are separated by the FIELD_SEPARATOR.
+     *
      * @param poll The poll to convert.
      * @return The message to send to poll users.
      * @author Giovanni Velludo
@@ -115,7 +123,7 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
 
     /**
      * Receives an SMSMessage and updates poll data accordingly.
-     *
+     * <p>
      * messageCode is the first header, and it's always one of the following values:
      * [NEW_POLL_MSG_CODE] when the message contains a new poll;
      * [ANSWER_MSG_CODE] when the message is sent from a user to the author and contains an answer;
@@ -131,7 +139,7 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
         String data = message.getData();
         String[] fields = data.split(FIELD_SEPARATOR);
         int pollId = Integer.parseInt(fields[1]);
-        switch(fields[0]) {
+        switch (fields[0]) {
             // New poll received
             // Structure of the message (each filed is separated by the FIELD_SEPARATOR):
             // NEW_POLL_MSG_CODE + pollId + pollName + pollQuestion
@@ -152,7 +160,7 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
                 boolean isYes = fields[2].equals(YES_ANSWER_CODE);
                 SMSPeer voter = message.getPeer();
                 TernaryPoll answeredPoll = sentPolls.get(pollId);
-                if(isYes) answeredPoll.setYes(voter);
+                if (isYes) answeredPoll.setYes(voter);
                 else answeredPoll.setNo(voter);
                 sentPolls.put(pollId, answeredPoll);
                 pollListener.onSentPollUpdate(answeredPoll);
@@ -162,20 +170,22 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
 
     /**
      * Sends the answer to the author and remove the poll from the receivedPolls map.
-     * @param poll The poll to answer.
+     *
+     * @param poll   The poll to answer.
      * @param answer The user's answer, true equals "Yes" and false equals "No".
      * @throws IllegalArgumentException When `poll` was created by the user answering it.
      * @author Giovanni Velludo
      * @author Matteo Carnelos
      */
     public void answerPoll(TernaryPoll poll, boolean answer) throws IllegalArgumentException {
-        if(poll.getPollAuthor().equals(TernaryPoll.SELF_PEER))
+        if (poll.getPollAuthor().equals(TernaryPoll.SELF_PEER))
             throw new IllegalArgumentException("Trying to answer an owned poll");
         sendAnswer(poll, answer);
     }
 
     /**
      * Sends an answer as a text message from a user to the author.
+     *
      * @param poll The poll which was answered.
      * @author Giovanni Velludo
      * @author Matteo Carnelos
@@ -189,6 +199,7 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
      * Converts a poll answer to the following String:
      * ANSWER_MSG_CODE + pollId + answerCode
      * Fields are separated by FIELD_SEPARATOR.
+     *
      * @return Message to send to poll users.
      * @author Giovanni Velludo
      * @author Matteo Carnelos
