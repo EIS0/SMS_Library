@@ -11,7 +11,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.ArrayList;
 
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -60,7 +59,8 @@ public class PollManagerTest {
     }
 
     /**
-     * Creates a new poll with only one user and simulates an answer from the user.
+     * Tests the handling of a message containing an answer to a poll created by the current user.
+     * The poll must first be created.
      * @author Giovanni Velludo
      */
     @Test
@@ -73,6 +73,9 @@ public class PollManagerTest {
         SMSPeer voter = new SMSPeer("3498257155");
         pollUsers.add(voter);
 
+        /* Creates a poll with the above arguments and captures the poll given by PollManager to
+         * listeners. This is needed to get the pollId, which will be used in the answer message.
+         */
         ArgumentCaptor valueCapture = ArgumentCaptor.forClass(TernaryPoll.class);
         pollManager.createPoll(pollName, pollQuestion, pollUsers);
         doNothing().when(mockListener).onSentPollUpdate((TernaryPoll) valueCapture.capture());
