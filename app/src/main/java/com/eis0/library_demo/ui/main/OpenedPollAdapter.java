@@ -85,7 +85,7 @@ class OpenedPollAdapter extends BaseAdapter implements Observer {
 
     /**
      * Get a View that displays the poll data accordingly to their position in the ListItem view.
-     * An opened poll ListItem View has these assignements:
+     * An opened poll ListItem View has these assignments:
      * - Poll Name TextView         ->  Poll Name
      * - Poll Id TextView           ->  Poll Id
      * - Poll Question TextView     ->  Poll Question
