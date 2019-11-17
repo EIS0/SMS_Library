@@ -72,7 +72,7 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
      * Creates a new poll and sends it to all the included users, it eventually wakes the listener.
      * @param name The name given to the poll.
      * @param question The question to ask users.
-     * @param users Users to which the question should be asked.
+     * @param users Users to which the question should be asked. They must be valid phone numbers.
      * @throws IllegalArgumentException When users is empty
      * @author Giovanni Velludo
      * @author Matteo Carnelos
@@ -84,7 +84,8 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
         sentPolls.put(poll.getPollId(), poll);
         pollListener.onSentPollUpdate(poll);
         /* needs to be last in order for pollListener to be called during unit tests, otherwise they
-         * will fail because SMS messages can't be sent.
+         * will fail because this method stops when it fails to send an SMS (can't do it in unit
+         * tests)
          */
         sendNewPoll(poll);
     }
