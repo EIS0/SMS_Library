@@ -82,7 +82,6 @@ public class PollListStoring extends StoringJsons implements JsonConverter<Array
     }
 
     /**
-     * TODO: add the pollIdCounter to a file to save in the Internal Memory
      * Right now, it's only possible to modify it, it still get reset when the app is closed
      */
     private static int pollIdCounter;

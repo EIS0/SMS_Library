@@ -14,6 +14,7 @@ import com.eis0.library_demo.R;
 /**
  * A FragmentPagerAdapter that returns a fragment corresponding to
  * one of the sections/tabs/pages.
+ *
  * @author Matteo Carnelos
  */
 public class SectionsPagerAdapter extends FragmentPagerAdapter {
@@ -25,6 +26,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
     /**
      * Constructor for the SectionsPageAdapter.
      * Call the FragmentPagerAdapter constructor and sets the context.
+     *
      * @param context Context given from the activity.
      * @param fm Fragment manager that manage FragmentPagerAdapter behaviour.
      * @author Matteo Carnelos
@@ -36,6 +38,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
     /**
      * Returns the Fragment associated with a specified position.
+     *
      * @param position The position of the item.
      * @return The associated Fragment.
      * @author Matteo Carnelos
@@ -50,6 +53,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
     /**
      * Returns the page title associated with a specified position.
+     *
      * @param position The position of the page.
      * @return The associated title as a CharSequence.
      * @author Matteo Carnelos
@@ -62,6 +66,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
     /**
      * Returns the number of tabs. In this case is the TAB_TITLES string length.
+     *
      * @return The number of sections/tabs/pages.
      * @author Matteo Carnelos
      */

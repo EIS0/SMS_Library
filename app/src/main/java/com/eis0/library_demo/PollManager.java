@@ -23,8 +23,7 @@ import java.util.ArrayList;
 public class PollManager implements ReceivedMessageListener<SMSMessage> {
 
     // NOTE: FIELD_SEPARATOR is a regex, there are some illegal values (e.g. "*")
-    // must not be private for tests to work, not a big deal since it's final
-    // TODO: Find a stronger FIELD_SEPARATOR (e.g. Escape Char)
+    // It must not be private for tests to work, not a big deal since it's final
     static final String FIELD_SEPARATOR = "\r";
     private static final String NEW_POLL_MSG_CODE = "0";
     private static final String ANSWER_MSG_CODE = "1";
@@ -123,7 +122,6 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
 
     /**
      * Receives an SMSMessage and updates poll data accordingly.
-     * <p>
      * messageCode is the first header, and it's always one of the following values:
      * [NEW_POLL_MSG_CODE] when the message contains a new poll;
      * [ANSWER_MSG_CODE] when the message is sent from a user to the author and contains an answer;
