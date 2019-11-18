@@ -15,6 +15,7 @@ import java.util.Observer;
 
 /**
  * A placeholder fragment containing one of the three list types depending on the section number.
+ *
  * @author Matteo Carnelos
  */
 public class PlaceholderFragment extends ListFragment {
@@ -28,6 +29,7 @@ public class PlaceholderFragment extends ListFragment {
     /**
      * Returns a new PlaceholderFragment instance with the bundle containing the section number
      * specified in the index parameter.
+     *
      * @param index The index of the PlaceholderFragment section.
      * @return A PlaceholderFragment instance with the bundle containing the section number.
      * @author Matteo Carnelos
@@ -46,6 +48,7 @@ public class PlaceholderFragment extends ListFragment {
      * three ListAdapters (Incoming, Opened, Closed) accordingly to the section number specified
      * in the bundle of the object and adds the associated ListAdapter to the observers list of
      * the dataProvider object.
+     *
      * @param inflater The LayoutInflater on which the ListFragment will be inflated. It contains
      *                 the activity context.
      * @param container The ViewGroup containing all the List views.
@@ -80,6 +83,7 @@ public class PlaceholderFragment extends ListFragment {
     /**
      * Called when the view of the ListFragment is destroyed. It removes the ListAdapter associated
      * with the ListFragment from the observers list of the dataProvider object.
+     *
      * @author Matteo Carnelos
      */
     @Override
