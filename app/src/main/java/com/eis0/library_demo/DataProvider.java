@@ -1,6 +1,13 @@
 package com.eis0.library_demo;
 
+import android.content.Context;
+
+import androidx.annotation.NonNull;
+
+import com.eis0.library_demo.poll.PollListStoring;
+import com.eis0.library_demo.poll.PollStoring;
 import com.eis0.library_demo.poll.TernaryPoll;
+
 import java.util.ArrayList;
 import java.util.Observable;
 
@@ -14,9 +21,21 @@ public class DataProvider extends Observable implements PollListener {
 
     // Must always be static for getInstance to work
     private static DataProvider instance = null;
-    private static ArrayList<TernaryPoll> incomingPolls = new ArrayList<>();
-    private static ArrayList<TernaryPoll> openedPolls = new ArrayList<>();
-    private static ArrayList<TernaryPoll> closedPolls = new ArrayList<>();
+    private static ArrayList<TernaryPoll> incomingPolls;
+    private static ArrayList<TernaryPoll> openedPolls;
+    private static ArrayList<TernaryPoll> closedPolls;
+
+    PollListStoring pollListStoring = new PollListStoring();
+    PollStoring pollStoring = new PollStoring();
+    String incomingPollsListName = pollListStoring.receivedListName;
+    String openedPollsListName = pollListStoring.pendingListName;
+    String closedPollsListName = pollListStoring.closedListName;
+    ArrayList<String> incomingPollsFiles = pollListStoring.getPollList(incomingPollsListName);
+    ArrayList<String> openedPollsFiles = pollListStoring.getPollList(openedPollsListName);
+    ArrayList<String> closedPollFiles = pollListStoring.getPollList(closedPollsListName);
+    for(String fileName: incomingPollsFiles) {
+        incomingPolls.add(pollStoring.loadPoll(Context.getApplicationContext(), fileName));
+    }
 
     /**
      * DataProvider constructor, sets this as the PollManager listener.

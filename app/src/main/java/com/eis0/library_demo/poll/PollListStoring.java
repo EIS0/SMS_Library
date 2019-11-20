@@ -234,4 +234,21 @@ public class PollListStoring extends StoringJsons implements JsonConverter<Array
                 receivedPollList.clear();
         }
     }
+
+    /**
+     *
+     * @param listName
+     * @return the
+     */
+    public ArrayList<String> getPollList(String listName) {
+        switch (listName) {
+            case pendingListName:
+                return pendingPollList;
+            case closedListName:
+                return closedPollList;
+            case receivedListName:
+                return receivedPollList;
+        }
+        return null;
+    }
 }

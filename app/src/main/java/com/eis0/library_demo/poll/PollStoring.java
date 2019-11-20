@@ -1,5 +1,6 @@
 package com.eis0.library_demo.poll;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -53,6 +54,30 @@ public class PollStoring extends StoringJsons implements JsonConverter<TernaryPo
     public String setFileName(TernaryPoll poll) {
         int pollID = poll.getPollId();
         return "Poll_" + pollID + ".json";
+    }
+
+    /**
+     * This method saves the specified TernaryPoll object with the specified listName
+     *
+     * @param context
+     * @param fileName The name of the list of files to save in the Internal Storage
+     * @param poll The list to save in the Internal Storage
+     */
+    public void savePoll(Context context, String fileName, TernaryPoll poll) {
+        String json = this.convertToJson(poll);
+        saveJsonToInternal(context, fileName, json);
+    }
+
+    /**
+     * This method loads the TernaryPoll object with the corresponding specified listName
+     *
+     * @param context
+     * @param fileName The name of the ArrayList<String> object to load from the Internal Storage
+     * @return
+     */
+    public TernaryPoll loadPoll(Context context, String fileName) {
+        String json = loadJsonFromInternal(context, fileName);
+        return this.convertFromJson(json);
     }
 
 }
