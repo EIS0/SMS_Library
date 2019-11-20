@@ -1,4 +1,4 @@
-package com.eis0.library_demo.poll.main;
+package com.eis0.library_demo.poll;
 
 /**
  * Interface to implement to convert .json files from and to the specified object type

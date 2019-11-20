@@ -1,4 +1,4 @@
-package com.eis0.library_demo.ui.main;
+package com.eis0.library_demo.ui;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.eis0.library_demo.DataProvider;
 import com.eis0.library_demo.R;
-import com.eis0.library_demo.poll.main.TernaryPoll;
+import com.eis0.library_demo.poll.TernaryPoll;
 
 import java.util.Observable;
 import java.util.Observer;

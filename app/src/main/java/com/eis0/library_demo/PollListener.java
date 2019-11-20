@@ -1,15 +1,17 @@
 package com.eis0.library_demo;
 
-import com.eis0.library_demo.poll.main.TernaryPoll;
+import com.eis0.library_demo.poll.TernaryPoll;
 
 /**
  * Interface to implement to create a listener for new and modified Polls.
+ *
  * @author Giovanni Velludo
  */
 public interface PollListener {
 
     /**
      * Called by PollManager whenever a new poll is received.
+     *
      * @param poll The poll received.
      * @author Giovanni Velludo
      */
@@ -17,6 +19,7 @@ public interface PollListener {
 
     /**
      * Called by PollManager whenever a poll is updated or created.
+     *
      * @param poll The poll updated/created.
      * @author Giovanni Velludo
      */
