@@ -8,7 +8,7 @@
  * @author Enrico Cestaro
  */
 
-package com.eis0.library_demo.poll.main;
+package com.eis0.library_demo.poll;
 
 import android.os.Bundle;
 import android.util.Log;

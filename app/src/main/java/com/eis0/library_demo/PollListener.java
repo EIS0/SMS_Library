@@ -1,6 +1,6 @@
 package com.eis0.library_demo;
 
-import com.eis0.library_demo.poll.main.TernaryPoll;
+import com.eis0.library_demo.poll.TernaryPoll;
 
 /**
  * Interface to implement to create a listener for new and modified Polls.

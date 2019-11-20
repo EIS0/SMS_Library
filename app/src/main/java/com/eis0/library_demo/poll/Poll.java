@@ -1,4 +1,4 @@
-package com.eis0.library_demo.poll.main;
+package com.eis0.library_demo.poll;
 
 import com.eis0.smslibrary.SMSPeer;
 

@@ -13,7 +13,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.viewpager.widget.ViewPager;
 
-import com.eis0.library_demo.ui.main.SectionsPagerAdapter;
+import com.eis0.library_demo.ui.SectionsPagerAdapter;
 import com.eis0.smslibrary.SMSPeer;
 import com.google.android.material.tabs.TabLayout;
 

@@ -1,4 +1,4 @@
-package com.eis0.library_demo.ui.main;
+package com.eis0.library_demo.ui;
 
 import android.content.Context;
 
