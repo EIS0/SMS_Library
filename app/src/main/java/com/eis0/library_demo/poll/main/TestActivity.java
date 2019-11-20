@@ -8,7 +8,7 @@
  * @author Enrico Cestaro
  */
 
-package com.eis0.storagelibrary;
+package com.eis0.library_demo.poll.main;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -20,8 +20,6 @@ public class TestActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_test);
-
 
         String destination = "+393479281192";
         PollStoring storage = new PollStoring();

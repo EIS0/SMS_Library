@@ -1,9 +1,10 @@
+package com.eis0.library_demo.poll.main;
+
 /**
  * Interface to implement to convert .json files from and to the specified object type
  *
  * @author Enrico Cestaro
  */
-package com.eis0.storagelibrary;
 
 public interface JsonConverter<T> {
     /**

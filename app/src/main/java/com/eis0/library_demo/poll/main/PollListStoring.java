@@ -1,3 +1,13 @@
+package com.eis0.library_demo.poll.main;
+
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.util.Log;
+
+import com.google.gson.Gson;
+
+import java.util.ArrayList;
+
 /**
  * This class allows the user to save, load and modify three different lists containing the names of
  * the file saved in the Internal Storage
@@ -5,15 +15,6 @@
  *
  * @author Enrico Cestaro
  */
-
-package com.eis0.storagelibrary;
-
-import android.content.Context;
-import android.util.Log;
-
-import com.google.gson.Gson;
-
-import java.util.ArrayList;
 
 public class PollListStoring extends StoringJsons implements JsonConverter<ArrayList<String>> {
 
@@ -82,17 +83,29 @@ public class PollListStoring extends StoringJsons implements JsonConverter<Array
     }
 
     /**
-     * TODO: add the pollIdCounter to a file to save in the Internal Memory
-     * Right now, it's only possible to modify it, it still get reset when the app is closed
+     * This method saves in the SharedPreferences the pollIdCounter, making it possible to load it
+     * later.
+     *
+     * @param context       Context in which the method is used
+     * @param pollIdCounter
      */
-    private static int pollIdCounter;
-
-    public void setPollIdCounter(int pollIdCounter) {
-        this.pollIdCounter = pollIdCounter;
+    public void setPollIdCounter(Context context, int pollIdCounter) {
+        SharedPreferences settings = context.getSharedPreferences("PollID", 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putInt("PollID", pollIdCounter);
     }
 
-    public int getPollIdCounter() {
-        return pollIdCounter;
+    /**
+     * This method loads from the SharedPreferences the pollIdCounter, needed to create, save and
+     * load polls from and to the Internal Storage
+     *
+     * @param context Context in which the method is used
+     * @return
+     */
+    public int getPollIdCounter(Context context) {
+        SharedPreferences settings = context.getSharedPreferences("PollID", 0);
+        int pollID = settings.getInt("PollID", 0);
+        return pollID;
     }
 
 

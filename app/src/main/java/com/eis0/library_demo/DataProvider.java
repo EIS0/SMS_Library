@@ -1,7 +1,6 @@
 package com.eis0.library_demo;
 
-import com.eis0.storagelibrary.TernaryPoll;
-
+import com.eis0.library_demo.poll.main.TernaryPoll;
 import java.util.ArrayList;
 import java.util.Observable;
 

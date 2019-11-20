@@ -11,7 +11,7 @@ import android.widget.TextView;
 import com.eis0.library_demo.DataProvider;
 import com.eis0.library_demo.PollManager;
 import com.eis0.library_demo.R;
-import com.eis0.storagelibrary.TernaryPoll;
+import com.eis0.library_demo.poll.main.TernaryPoll;
 
 import java.util.Observable;
 import java.util.Observer;
