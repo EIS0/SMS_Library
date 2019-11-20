@@ -1,5 +1,7 @@
 package com.eis0.smslibrary;
 
+import androidx.annotation.Nullable;
+
 public class SMSPeer implements Peer {
     private String address;
     private final String MATCH_EXPRESSION = "^\\+?\\d{4,15}$";
