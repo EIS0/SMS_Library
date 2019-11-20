@@ -6,9 +6,11 @@ public class SMSPeer implements Peer {
 
     /**
      * Creates and returns an SMSPeer given a valid destination
+     * @throws IllegalArgumentException If the destination is invalid
      */
     public SMSPeer(String destination) {
         this.address = destination;
+        if(!isValid()) throw new IllegalArgumentException();
     }
 
     /**
