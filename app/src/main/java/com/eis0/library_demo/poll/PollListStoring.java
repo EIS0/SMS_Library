@@ -19,16 +19,16 @@ import java.util.ArrayList;
 public class PollListStoring extends StoringJsons implements JsonConverter<ArrayList<String>> {
 
     //List for the sent polls, waiting to be closed/waiting for an answer
-    public final String pendingListName = "pendingPollList.json";
-    private static ArrayList<String> pendingPollList;
+    public final String openedListName = "openedPollList.json";
+    private static ArrayList<String> openedPollList;
 
     //List for the closed polls
     public final String closedListName = "closedPollList.json";
     private static ArrayList<String> closedPollList;
 
     //List for the received polls, waiting to be closed
-    public final String receivedListName = "receivedPollList.json";
-    private static ArrayList<String> receivedPollList;
+    public final String incomingListName = "incomingPollList.json";
+    private static ArrayList<String> incomingPollList;
 
 
     /**
@@ -46,9 +46,9 @@ public class PollListStoring extends StoringJsons implements JsonConverter<Array
      * @param context
      */
     public void saveCurrentStatus(Context context) {
-        savePollList(context, pendingListName, pendingPollList);
+        savePollList(context, openedListName, openedPollList);
         savePollList(context, closedListName, closedPollList);
-        savePollList(context, receivedListName, receivedPollList);
+        savePollList(context, incomingListName, incomingPollList);
     }
 
 
@@ -59,12 +59,12 @@ public class PollListStoring extends StoringJsons implements JsonConverter<Array
      */
     public void loadCurrentStatus(Context context) {
         //Checking pending polls list
-        if (!doesFileExist(context, pendingListName)) {
-            pendingPollList = new ArrayList<>();
-            savePollList(context, pendingListName, pendingPollList);
+        if (!doesFileExist(context, openedListName)) {
+            openedPollList = new ArrayList<>();
+            savePollList(context, openedListName, openedPollList);
             Log.d("Data_management_process", "pendingPollList created");
         } else
-            pendingPollList = loadPollList(context, pendingListName);
+            openedPollList = loadPollList(context, openedListName);
         //Checking closed polls list
         if (!doesFileExist(context, closedListName)) {
             closedPollList = new ArrayList<>();
@@ -73,12 +73,12 @@ public class PollListStoring extends StoringJsons implements JsonConverter<Array
         } else
             closedPollList = loadPollList(context, closedListName);
         //Checking received polls list
-        if (!doesFileExist(context, receivedListName)) {
-            receivedPollList = new ArrayList<>();
-            savePollList(context, receivedListName, receivedPollList);
+        if (!doesFileExist(context, incomingListName)) {
+            incomingPollList = new ArrayList<>();
+            savePollList(context, incomingListName, incomingPollList);
             Log.d("Data_management_process", "receivedPollList created");
         } else
-            receivedPollList = loadPollList(context, receivedListName);
+            incomingPollList = loadPollList(context, incomingListName);
         Log.d("Data_management_process", "Lists loaded successfully");
     }
 
@@ -169,14 +169,14 @@ public class PollListStoring extends StoringJsons implements JsonConverter<Array
      */
     public void removeFromPollList(String listName, String fileName) {
         switch (listName) {
-            case pendingListName:
-                pendingPollList.remove(fileName);
+            case openedListName:
+                openedPollList.remove(fileName);
                 break;
             case closedListName:
                 closedPollList.remove(fileName);
                 break;
-            case receivedListName:
-                receivedPollList.remove(fileName);
+            case incomingListName:
+                incomingPollList.remove(fileName);
                 break;
         }
     }
@@ -189,14 +189,14 @@ public class PollListStoring extends StoringJsons implements JsonConverter<Array
      */
     public void addToPollList(String listName, String fileName) {
         switch (listName) {
-            case pendingListName:
-                pendingPollList.add(fileName);
+            case openedListName:
+                openedPollList.add(fileName);
                 break;
             case closedListName:
                 closedPollList.add(fileName);
                 break;
-            case receivedListName:
-                receivedPollList.add(fileName);
+            case incomingListName:
+                incomingPollList.add(fileName);
                 break;
         }
     }
@@ -209,12 +209,12 @@ public class PollListStoring extends StoringJsons implements JsonConverter<Array
      */
     public String getFirstElement(String listName) {
         switch (listName) {
-            case pendingListName:
-                return pendingPollList.get(0);
+            case openedListName:
+                return openedPollList.get(0);
             case closedListName:
                 return closedPollList.get(0);
-            case receivedListName:
-                return receivedPollList.get(0);
+            case incomingListName:
+                return incomingPollList.get(0);
         }
         return listName;
     }
@@ -226,12 +226,12 @@ public class PollListStoring extends StoringJsons implements JsonConverter<Array
      */
     public void cleanPollList(String listName) {
         switch (listName) {
-            case pendingListName:
-                pendingPollList.clear();
+            case openedListName:
+                openedPollList.clear();
             case closedListName:
                 closedPollList.clear();
-            case receivedListName:
-                receivedPollList.clear();
+            case incomingListName:
+                incomingPollList.clear();
         }
     }
 
@@ -242,12 +242,12 @@ public class PollListStoring extends StoringJsons implements JsonConverter<Array
      */
     public ArrayList<String> getPollList(String listName) {
         switch (listName) {
-            case pendingListName:
-                return pendingPollList;
+            case openedListName:
+                return openedPollList;
             case closedListName:
                 return closedPollList;
-            case receivedListName:
-                return receivedPollList;
+            case incomingListName:
+                return incomingPollList;
         }
         return null;
     }

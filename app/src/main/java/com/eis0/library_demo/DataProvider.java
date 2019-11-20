@@ -19,10 +19,15 @@ public class DataProvider extends Observable implements PollListener {
 
     // Must always be static for getInstance to work
     private static DataProvider instance = null;
+    private static PollStoring pollStoring = null  ;
+    private static PollListStoring pollListStoring = null;
     private static ArrayList<TernaryPoll> incomingPolls = new ArrayList<>();
     private static ArrayList<TernaryPoll> openedPolls = new ArrayList<>();
     private static ArrayList<TernaryPoll> closedPolls = new ArrayList<>();
-
+    private static String incomingPollsListName = "";
+    private static String openedPollsListName = "";
+    private static String closedPollsListName = "";
+    private Context mContext = null;
 
     /**
      * DataProvider constructor, sets this as the PollManager listener.
@@ -31,23 +36,24 @@ public class DataProvider extends Observable implements PollListener {
      * @author Matteo Carnelos
      */
     private DataProvider(Context context) {
-        PollListStoring pollListStoring = new PollListStoring(context);
-        PollStoring pollStoring = new PollStoring();
-        String incomingPollsListName = pollListStoring.receivedListName;
-        String openedPollsListName = pollListStoring.pendingListName;
-        String closedPollsListName = pollListStoring.closedListName;
+        mContext = context;
+        pollListStoring = new PollListStoring(mContext);
+        pollStoring = new PollStoring();
+        incomingPollsListName = pollListStoring.incomingListName;
+        openedPollsListName = pollListStoring.openedListName;
+        closedPollsListName = pollListStoring.closedListName;
         ArrayList<String> incomingPollsFiles = pollListStoring.getPollList(incomingPollsListName);
         ArrayList<String> openedPollsFiles = pollListStoring.getPollList(openedPollsListName);
         ArrayList<String> closedPollsFiles = pollListStoring.getPollList(closedPollsListName);
         PollManager.getInstance().setPollListener(this);
         for(String fileName : incomingPollsFiles) {
-            incomingPolls.add(pollStoring.loadPoll(context, fileName));
+            incomingPolls.add(pollStoring.loadPoll(mContext, fileName));
         }
         for(String fileName :openedPollsFiles) {
-            openedPolls.add(pollStoring.loadPoll(context, fileName));
+            openedPolls.add(pollStoring.loadPoll(mContext, fileName));
         }
         for(String fileName :closedPollsFiles) {
-            closedPolls.add(pollStoring.loadPoll(context, fileName));
+            closedPolls.add(pollStoring.loadPoll(mContext, fileName));
         }
 
     }
@@ -102,8 +108,13 @@ public class DataProvider extends Observable implements PollListener {
      * @author Matteo Carnelos
      */
     public void onPollReceived(TernaryPoll poll) {
+        //Local list updated
         incomingPolls.add(poll);
-        
+        //File names list updated
+        String pollFileName = pollStoring.setFileName(poll);
+        pollListStoring.addToPollList(incomingPollsListName, pollFileName);
+        //Remote copy of the local poll object updated in the InternalStorage
+        pollStoring.savePoll(mContext, pollFileName, poll);
         setChanged();
         notifyObservers(poll);
     }
@@ -120,8 +131,14 @@ public class DataProvider extends Observable implements PollListener {
         // Poll Closed, move it from the openedPolls to the closedPolls list
         // Poll Opened, it can be either a new poll or an update to an existing one
         if (poll.isClosed()) {
+            //Local lists updated
             openedPolls.remove(poll);
             closedPolls.add(poll);
+            //File names list updated
+            String pollFileName = pollStoring.setFileName(poll);
+            pollListStoring.addToPollList(incomingPollsListName, pollFileName);
+            //Remote copy of the local poll object updated in the InternalStorage
+            pollStoring.savePoll(mContext, pollFileName, poll);
         } else {
             int pollIndex = openedPolls.indexOf(poll);
             if (pollIndex == -1) openedPolls.add(poll);

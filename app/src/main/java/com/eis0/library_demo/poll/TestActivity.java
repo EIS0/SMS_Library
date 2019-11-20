@@ -26,7 +26,7 @@ public class TestActivity extends AppCompatActivity {
 
         //Creation of the three lists
         PollListStoring listStorage = new PollListStoring(this);
-        String receivedListName = listStorage.receivedListName;
+        String receivedListName = listStorage.incomingListName;
 
 
         //Searching in the list for one element named "Poll_2.json"
@@ -35,7 +35,7 @@ public class TestActivity extends AppCompatActivity {
 
         //Adding to the list
         listStorage.addToPollList(receivedListName, "Poll_2.json");
-        String firstElementOfThePollList = listStorage.getFirstElement(listStorage.receivedListName);
+        String firstElementOfThePollList = listStorage.getFirstElement(listStorage.incomingListName);
         Log.d("Data_management_process", firstElementOfThePollList + " " + exist);
 
         /*Creating 2 polls

@@ -1,5 +1,6 @@
 package com.eis0.library_demo.ui;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,7 +25,8 @@ public class PlaceholderFragment extends ListFragment {
     private static final int INCOMING_SECTION_NUMBER = 1;
     private static final int OPENED_SECTION_NUMBER = 2;
     private static final int CLOSED_SECTION_NUMBER = 3;
-    private DataProvider dataProvider = DataProvider.getInstance();
+    private static Context mContext = null;
+    private DataProvider dataProvider = DataProvider.getInstance(mContext);
 
     /**
      * Returns a new PlaceholderFragment instance with the bundle containing the section number
@@ -35,13 +37,22 @@ public class PlaceholderFragment extends ListFragment {
      * @author Matteo Carnelos
      */
     static PlaceholderFragment newInstance(int index) {
-        PlaceholderFragment fragment = new PlaceholderFragment();
+        PlaceholderFragment fragment = new PlaceholderFragment(mContext);
         // Put the section number in the bundle, it will be used in onCreateView(...)
         Bundle bundle = new Bundle();
         bundle.putInt(ARG_SECTION_NUMBER, index);
         fragment.setArguments(bundle);
         return fragment;
     }
+
+    /**
+     * TODO Dove diavolo viene usato sto PlaceholderFragment?
+     */
+    //*****************************************
+    public PlaceholderFragment(Context context) {
+    mContext = context;
+    }
+    //*****************************************
 
     /**
      * Called when the view of the ListFragment is created. It associates one of the
