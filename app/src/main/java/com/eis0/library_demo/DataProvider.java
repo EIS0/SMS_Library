@@ -36,6 +36,7 @@ public class DataProvider extends Observable implements PollListener {
      * @author Matteo Carnelos
      */
     private DataProvider(Context context) {
+        PollManager.getInstance().setPollListener(this);
         mContext = context;
         pollListStoring = new PollListStoring(mContext);
         pollStoring = new PollStoring();
@@ -45,7 +46,6 @@ public class DataProvider extends Observable implements PollListener {
         ArrayList<String> incomingPollsFiles = pollListStoring.getPollList(incomingPollsListName);
         ArrayList<String> openedPollsFiles = pollListStoring.getPollList(openedPollsListName);
         ArrayList<String> closedPollsFiles = pollListStoring.getPollList(closedPollsListName);
-        PollManager.getInstance().setPollListener(this);
         for(String fileName : incomingPollsFiles) {
             incomingPolls.add(pollStoring.loadPoll(mContext, fileName));
         }
@@ -134,11 +134,7 @@ public class DataProvider extends Observable implements PollListener {
             //Local lists updated
             openedPolls.remove(poll);
             closedPolls.add(poll);
-            //File names list updated
-            String pollFileName = pollStoring.setFileName(poll);
-            pollListStoring.addToPollList(incomingPollsListName, pollFileName);
-            //Remote copy of the local poll object updated in the InternalStorage
-            pollStoring.savePoll(mContext, pollFileName, poll);
+            //TODO termina di modificae il metodo
         } else {
             int pollIndex = openedPolls.indexOf(poll);
             if (pollIndex == -1) openedPolls.add(poll);
