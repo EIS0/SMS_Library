@@ -8,6 +8,7 @@ import com.eis0.smslibrary.SMSMessage;
 import com.eis0.smslibrary.SMSPeer;
 
 import java.util.ArrayList;
+import java.util.Timer;
 
 /**
  * @author Marco Cognolato except where otherwise indicated
@@ -40,6 +41,8 @@ public class NetworkConnection {
     private ArrayList<SMSPeer> subscribers = new ArrayList<>();
     private Context context;
     private final String LOG_KEY = "NetCon";
+    private ArrayList<PingTracker> tracking = new ArrayList<>();
+    private final int TRACKING_TIME = 1000 * 60 * 10; //1000 ms (1s) * 60s (1min) * 10 (10mins)
 
     //region JoinMethods
     /**
@@ -157,7 +160,20 @@ public class NetworkConnection {
      * @param peer The peer who sent the ping
      */
     void incomingPing(SMSPeer peer){
-        //TODO: implement this (using timers?)
+        //search through enabled trackers if one is tracking this peer
+        for(PingTracker tracker: tracking){
+            if(tracker.isTracking(peer)){
+                //if it is, then ping received, so skip the others
+                tracker.pingReceived();
+                return;
+            }
+        }
+
+        //if I'm here it means there's no tracker for this peer, create a new one
+        PingTracker tracker = new PingTracker(this, peer, 4);
+        Timer timer = new Timer();
+        timer.schedule(tracker, 0,TRACKING_TIME);
+        tracking.add(tracker);
     }
 
     //region addToNet
