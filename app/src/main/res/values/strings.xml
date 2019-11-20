@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">SMS Library - Demo 2</string>
+    <string name="app_name">SMS Library - Demo</string>
     <string name="action_settings">Settings</string>
     <string name="to">To:</string>
     <string name="say_hi">Say hi!</string>
