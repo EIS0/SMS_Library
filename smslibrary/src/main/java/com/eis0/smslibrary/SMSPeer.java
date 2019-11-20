@@ -1,9 +1,8 @@
 package com.eis0.smslibrary;
 
-import android.util.Log;
-
 public class SMSPeer implements Peer {
     private String address;
+    private final String MATCH_EXPRESSION = "^\\+?\\d{4,15}$";
 
     /**
      * Creates and returns an SMSPeer given a valid destination
@@ -33,29 +32,18 @@ public class SMSPeer implements Peer {
         return address.equals("");
     }
 
-
     /**
      * Returns true if SMSPeer has prefix
      */
 
     public boolean hasPrefix() {
-        char prefixSign = '+';
-        return address.charAt(0) == prefixSign;
+        return address.charAt(0) == '+';
     }
 
     /**
      * Returns true if the SMSPeer is valid
      */
     public boolean isValid() {
-        try {
-            int maxLength = 15;
-            if (!isEmpty() && address.length() < maxLength) {
-                if (hasPrefix()) Integer.parseInt(address.substring(1)); // To verify exceptions
-                else Integer.parseInt(address);
-                return true;
-            }
-        }
-        catch(Exception e) { }
-        return false;
+        return address != null && address.matches(MATCH_EXPRESSION);
     }
 }
