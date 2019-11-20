@@ -2,11 +2,11 @@ package com.eis0.library_demo;
 
 import android.util.SparseArray;
 
+import com.eis0.library_demo.poll.main.TernaryPoll;
 import com.eis0.smslibrary.ReceivedMessageListener;
 import com.eis0.smslibrary.SMSManager;
 import com.eis0.smslibrary.SMSMessage;
 import com.eis0.smslibrary.SMSPeer;
-import com.eis0.storagelibrary.TernaryPoll;
 
 import java.util.ArrayList;
 
