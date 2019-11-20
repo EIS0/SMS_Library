@@ -270,7 +270,10 @@ public class NetworkConnection {
     //endregion
 
     /**
-     * Updates the current Network State given a peer in the network to update and it's resources
+     * Updates the current Network State of a Peer
+     * N.B. Since the lesson with the professor this method should not work this way
+     * @param peer The peer to update his resources
+     * @param resources The resources of the Peer
      */
     public void updateNet(String peer, SMSResource[] resources){
         Log.d(LOG_KEY, "Updating this Peer: " + peer);
