@@ -30,5 +30,5 @@ dependencies {
     androidTestImplementation 'com.android.support.test:rules:1.0.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     implementation project(path: ':smslibrary')
-    compile project(path: ':webdictionary')
+    implementation project(path: ':webdictionary')
 }
