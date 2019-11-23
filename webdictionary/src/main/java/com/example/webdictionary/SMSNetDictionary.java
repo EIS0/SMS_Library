@@ -2,18 +2,24 @@ package com.example.webdictionary;
 
 import android.util.Log;
 
+import com.eis0.smslibrary.Peer;
+import com.eis0.smslibrary.SMSPeer;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * @author Edoardo Raimondi
  */
-public class SMSNetDictionary implements NetworkDictionary<SMSKey,SMSResource> {
+public class SMSNetDictionary implements NetworkDictionary<SMSPeer, SerializableObject, SerializableObject> {
 
-    private Map <SMSKey, SMSResource[]> NetDict;
+
+    private Map <SerializableObject, SerializableObject> NetDict;
     private String LOG_KEY = "NET_DICTIONARY";
 
     public SMSNetDictionary(){
+
         NetDict = new HashMap<>();
     }
 
@@ -22,22 +28,22 @@ public class SMSNetDictionary implements NetworkDictionary<SMSKey,SMSResource> {
      * @param resource
      * @return Key having that resource
      */
-    public SMSKey findKeyWithResource(SMSResource resource) {
-        for (Map.Entry <SMSKey, SMSResource[]> entry : NetDict.entrySet())
+    public SerializableObject findKeyWithResource(SerializableObject resource) {
+        for (Map.Entry <SerializableObject, SerializableObject> entry : NetDict.entrySet())
         {
-            for(int i = 0; i <= entry.getValue().length - 1; i++) { //Scanner of a single array resource
-                if ( entry.getValue()[i].equals(resource) ) return entry.getKey();
+            if(entry.getValue().equals(resource)){
+            return entry.getKey();
             }
         }
         return null;
     }
 
     /**
-     * If present, it returns the list of resources of a given Key, else it returns null
+     * If present, it returns the given key resource, else it returns null
      * @param key having resources we want
-     * @return SMSResources[] containing all resources' peer
+     * @return key's resource
      */
-    public SMSResource[] findPeerResources(SMSKey key){
+    public SerializableObject getResource(SerializableObject key){
         try{
            return NetDict.get(key);
         }
@@ -50,10 +56,10 @@ public class SMSNetDictionary implements NetworkDictionary<SMSKey,SMSResource> {
     /**
      * @return List of Keys on the network dictionary
      */
-    public SMSKey[] getAvailableKeys(){
-        SMSKey[] allAvailablePeers = new SMSKey[NetDict.size()];
+    public SerializableObject[] getAvailableKeys(){
+        SerializableObject[] allAvailablePeers = new SerializableObject[NetDict.size()];
         int i = 0;
-        for (Map.Entry <SMSKey, SMSResource[]> entry : NetDict.entrySet()){
+        for (Map.Entry <SerializableObject, SerializableObject> entry : NetDict.entrySet()){
             //Dictionary scanner
             allAvailablePeers[i++] = entry.getKey();
         }
@@ -63,51 +69,38 @@ public class SMSNetDictionary implements NetworkDictionary<SMSKey,SMSResource> {
     /**
      * @return List of resources currently on the network dictionary
      */
-    public SMSResource[] getAvailableResources(){
-        int cont = 0; //to keep the return array (allAvailableResource) absolute position
-        SMSResource[] allAvailableResources = new SMSResource[1]; //array to return
-
-        for (Map.Entry <SMSKey, SMSResource[]> entry : NetDict.entrySet()) //Dictionary scanner
+    public SerializableObject[] getAvailableResources(){
+        SerializableObject[] allAvailableResources = new SerializableObject[1]; //array to return
+        int index = 0;
+        for (Map.Entry <SerializableObject, SerializableObject> entry : NetDict.entrySet()) //Dictionary scanner
         {
-            int indexToAdd = entry.getValue().length;
-            for(int i = 0; i <= entry.getValue().length - 1; i++) { //Single array resource scanner
-                int index = i + cont;
-                //check if full
-                if(allAvailableResources.length == index) {
-                    //double size
-                    allAvailableResources = SMSNetDictionarySupport.doubleArraySize(allAvailableResources);
-                }
-                allAvailableResources[index] = entry.getValue()[i];
+                allAvailableResources[index++] = entry.getValue();
             }
-            cont += indexToAdd;
-        }
-
-        // Needs 30 seconds working with 50000 elements. Is there a better way?
+        // Needs 24 seconds working with 50000 elements. Is there a better way?
         return allAvailableResources;
 
     }
 
 
     /**
-     * Adds a valid Key-Resources[] couple to the network dictionary
+     * Adds a valid Key-Resource couple to the network dictionary.
+     * If already presents, change the key resource
      * @param key A key to add to the dictionary
-     * @param resources A list of Resources to add to the dictionary
+     * @param resource A Resource to add to the dictionary
      */
-    public void add(SMSKey key, SMSResource[] resources){
-        if(!NetDict.containsKey(key)){
-            NetDict.put(key, resources);
-        }
-        else { //if already present, add the new resources
-            SMSResource[] current = findPeerResources(key);
-            NetDict.put(key, SMSNetDictionarySupport.concatAll(current, resources));
+    public void add(SerializableObject key, SerializableObject resource){
+        if(!NetDict.containsKey(key)) NetDict.put(key, resource);
+        else { //associate the new resource
+            NetDict.remove(key);
+            NetDict.put(key, resource); //didn't find a more elegant way
         }
     }
 
     /**
-     * Removes a given valid Key (and all its Resources) from the network dictionary
+     * Removes a given valid Key (and its Resource) from the network dictionary
      * @param key to remove
      */
-    public void remove(SMSKey key) {
+    public void remove(SerializableObject key) {
         NetDict.remove(key);
     }
 
