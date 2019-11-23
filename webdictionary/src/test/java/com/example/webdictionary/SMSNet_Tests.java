@@ -23,144 +23,105 @@ public class SMSNet_Tests {
         SMSNetDictionary net = new SMSNetDictionary();
     }
 
-    //Generic object representing the key
-    public class ObjectTest {
-        public String text;
-        public int num;
+    //SerializableObject key implementation
+    public class SerializableObjectTestKey extends SerializableObject {
+        public int key;
 
-        public ObjectTest() {
-            text = "test";
-            num = 1;
+        public SerializableObjectTestKey() {
+            key = 1;
+        }
+
+        @Override
+        public String toString() {
+            return "uno";
+        }
+
+        @Override
+        public boolean equals(Object toCompare) {
+                if((toCompare == null) || (toCompare.getClass() != this.getClass())) {
+                    return false;
+                }
+                SerializableObject other = (SerializableObject)toCompare;
+                return other.toString().equals(this.toString());
         }
     }
-    //creation of the the keys
-    ObjectTest t = new ObjectTest();
-    ObjectTest m = new ObjectTest();
-    SMSKey key = new SMSKey(t);
-    SMSKey key2 = new SMSKey(m);
-    SMSKey key3 = new SMSKey(t);
+    //SerializableObject Value implementation
+    public class SerializableObjectTestValue extends SerializableObject {
+        public String value;
 
+        public SerializableObjectTestValue() {
+            value = "test";
+        }
+
+        @Override
+        public String toString() {
+            return value;
+        }
+
+        @Override
+        public boolean equals(Object toCompare) {
+            if ((toCompare == null) || (toCompare.getClass() != this.getClass())) {
+                return false;
+            }
+            SerializableObject other = (SerializableObject) toCompare;
+            return other.toString().equals(this.toString());
+        }
+    }
+
+    //creation of the the keys
+    SerializableObjectTestKey k1 = new SerializableObjectTestKey();
+    SerializableObjectTestKey k2 = new SerializableObjectTestKey();
+
+    //creation of the values
+    SerializableObjectTestValue v1 = new SerializableObjectTestValue();
+    SerializableObjectTestValue v2 = new SerializableObjectTestValue();
     @Test
     public void addKey_CheckIfAdded() {
         SMSNetDictionary net = new SMSNetDictionary();
-        ObjectTest r = new ObjectTest();
-        SMSKey key = new SMSKey(r);
-        SMSResource resource = new SMSResource("photo.png");
-        SMSResource[] resources = {resource};
-        net.add(key, resources);
-        assertEquals(net.getAvailableKeys()[0], key);
+        net.add(k1, v2);
+        assertEquals(net.getAvailableKeys()[0], k1);
     }
 
     @Test
     public void addKey_NoResource_CheckIfAdded() {
         SMSNetDictionary net = new SMSNetDictionary();
-        net.add(key, null);
-        assertEquals(net.getAvailableKeys()[0], key);
+        net.add(k1, null);
+        assertEquals(net.getAvailableKeys()[0], k1);
     }
 
     @Test
     public void addResource_CheckIfAdded() {
         SMSNetDictionary net = new SMSNetDictionary();
-        SMSResource resource = new SMSResource("photo.png");
-        SMSResource[] resources = {resource};
-        net.add(key, resources);
-        assertEquals(net.getAvailableResources()[0], resource);
+        net.add(k1, v2);
+        assertEquals(net.getResource(k1), v2);
     }
 
     @Test
     public void removeKey_CheckNoPeer() {
         SMSNetDictionary net = new SMSNetDictionary();
-        SMSResource resource = new SMSResource("photo.png");
-        SMSResource[] resources = {resource};
-        net.add(key, resources);
-        net.remove(key);
+        net.add(k2, v1);
+        net.remove(k2);
         assertEquals(net.getAvailableKeys().length, 0);
     }
 
     @Test
     public void removeKey_CheckNoResources() {
         SMSNetDictionary net = new SMSNetDictionary();
-        SMSResource resource = new SMSResource("photo.png");
-        SMSResource[] resources = {resource};
-        net.add(key, resources);
-        net.remove(key);
-        assertEquals(net.getAvailableResources()[0], null);
+        net.add(k1, v1);
+        net.remove(k1);
+        assertEquals(net.getResource(k1), null);
     }
 
-    @Test
-    public void addResources_CheckKeyResources() {
-        SMSNetDictionary net = new SMSNetDictionary();
-        SMSResource resource1 = new SMSResource("photo.png");
-        SMSResource resource2 = new SMSResource(t);
-        SMSResource resource3 = new SMSResource("test.jpg");
-        SMSResource[] resources = {resource1, resource2, resource3};
-        net.add(key, resources);
-        for (int i = 0; i < resources.length; i++) {
-            assertEquals(net.findPeerResources(key)[i], resources[i]);
-        }
-    }
-
-    @Test
-    public void findKeyWithResource() {
-        SMSNetDictionary net = new SMSNetDictionary();
-        SMSResource resource1 = new SMSResource("photo.png");
-        SMSResource resource2 = new SMSResource("home.jpg");
-        SMSResource resource3 = new SMSResource("test.jpg");
-        SMSResource[] resources1 = {resource1, resource2};
-        SMSResource[] resources2 = {resource3};
-        net.add(key, resources1);
-        net.add(key2, resources2);
-        assertEquals(net.findKeyWithResource(resource2), key);
-    }
-
-    @Test
-    public void addResourcesToAnExistingKey() {
-        SMSNetDictionary net = new SMSNetDictionary();
-        SMSResource resource1 = new SMSResource("photo.png");
-        SMSResource resource2 = new SMSResource("home.jpg");
-        SMSResource[] resources1 = {resource1};
-        SMSResource[] resources2 = {resource2};
-        net.add(key, resources1);
-        net.add(key, resources2);
-        SMSKey[] keys = net.getAvailableKeys();
-        assertEquals(keys.length, 1);
-    }
-
-    @Test
-    public void addResourcesToAnExistingKey_checkResources() {
-       SMSNetDictionary net = new SMSNetDictionary();
-       SMSResource resource1 = new SMSResource("photo.png");
-       SMSResource resource2 = new SMSResource("home.jpg");
-       SMSResource[] resources1 = {resource1};
-       SMSResource[] resources2 = {resource2};
-       net.add(key, resources1);
-       net.add(key, resources2);
-       SMSResource[] resources = net.getAvailableResources();
-       int cont=0;
-       Object[] shouldResources = new Object[2];
-        for (SMSResource resource : resources) {
-            shouldResources[cont++] = resource.getResource();
-        }
-       Object[] trueResources = {resource1.getResource(), resource2.getResource()};
-       assertEquals(shouldResources[0], trueResources[0]);
-       assertEquals(shouldResources[1], trueResources[1]);
-}
 
     @Test
     public void addMultipleKeys(){
         SMSNetDictionary net = new SMSNetDictionary();
-        net.add(key, null);
-        net.add(key2, null);
-        SMSKey[] keys = net.getAvailableKeys();
+        net.add(k1, v1);
+        net.add(k2, v2);
+        SerializableObject[] keys = net.getAvailableKeys();
         assertEquals(keys.length, 2);
     }
 
-    @Test
-    public void testHashMapWithSMSkeysEquals1(){
-        HashMap<SMSKey, String> hash = new HashMap<>();
-        hash.put(key,"" );
-        assertFalse(hash.containsKey(key3));
-    }
 
 
 }
