@@ -12,7 +12,7 @@ import java.util.ArrayList;
 @TargetApi(21)
 public class SMSHandler extends NotificationListenerService {
 
-    private static final char APP_ID = (char)0x02;
+    private static final char APP_ID = '!';
     private static final String LOG_KEY = "SMS_HANDLER";
     private static ArrayList<SMSMessage> pendingMessages = new ArrayList<>();
 
