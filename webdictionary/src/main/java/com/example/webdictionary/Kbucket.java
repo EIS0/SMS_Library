@@ -6,8 +6,21 @@ package com.example.webdictionary;
  */
 public interface Kbucket {
 
+
     /**
      * Add a valid Node to the bucket
      */
     void addNode();
+
+
+    /**
+     *  Remove a Node from the bucket
+     */
+    void removeNode();
+
+
+    /**
+     * Return a list of the nodes currently in the bucket
+     */
+    NetworkNode[] getNodes();
 }
