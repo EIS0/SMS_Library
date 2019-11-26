@@ -41,12 +41,7 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
     private SMSManager smsManager = SMSManager.getInstance();
     private static PollStoring pollStoring = null  ;
     private static PollListStoring pollListStoring = null;
-    private static ArrayList<TernaryPoll> incomingPolls = new ArrayList<>();
-    private static ArrayList<TernaryPoll> openedPolls = new ArrayList<>();
-    private static ArrayList<TernaryPoll> closedPolls = new ArrayList<>();
-    private static String incomingPollsListName = "";
     private static String openedPollsListName = "";
-    private static String closedPollsListName = "";
     private SparseArray<TernaryPoll> sentPolls = new SparseArray<>();
 
     /**
@@ -60,21 +55,9 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
         mContext = context;
         pollListStoring = new PollListStoring(mContext);
         pollStoring = new PollStoring();
-        incomingPollsListName = pollListStoring.incomingListName;
         openedPollsListName = pollListStoring.openedListName;
-        closedPollsListName = pollListStoring.closedListName;
-        ArrayList<String> incomingPollsFiles = pollListStoring.getPollList(incomingPollsListName);
         ArrayList<String> openedPollsFiles = pollListStoring.getPollList(openedPollsListName);
-        ArrayList<String> closedPollsFiles = pollListStoring.getPollList(closedPollsListName);
-        for(String fileName : incomingPollsFiles) {
-            incomingPolls.add(pollStoring.loadPoll(mContext, fileName));
-        }
-        for(String fileName :openedPollsFiles) {
-            openedPolls.add(pollStoring.loadPoll(mContext, fileName));
-        }
-        for(String fileName :closedPollsFiles) {
-            closedPolls.add(pollStoring.loadPoll(mContext, fileName));
-        }
+
         smsManager.addReceiveListener(this);
     }
 

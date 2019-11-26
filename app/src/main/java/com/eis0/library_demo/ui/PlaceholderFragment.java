@@ -25,7 +25,7 @@ public class PlaceholderFragment extends ListFragment {
     private static final int INCOMING_SECTION_NUMBER = 1;
     private static final int OPENED_SECTION_NUMBER = 2;
     private static final int CLOSED_SECTION_NUMBER = 3;
-    private static Context mContext = null;
+    private Context mContext = null;
     private DataProvider dataProvider = DataProvider.getInstance(mContext);
 
     /**
