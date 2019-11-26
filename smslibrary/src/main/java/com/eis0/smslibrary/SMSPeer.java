@@ -4,12 +4,15 @@ import androidx.annotation.Nullable;
 
 public class SMSPeer implements Peer, java.io.Serializable {
     private String address;
+    private final String MATCH_EXPRESSION = "^\\+?\\d{4,15}$";
 
     /**
      * Creates and returns an SMSPeer given a valid destination
+     * @throws IllegalArgumentException If the destination is invalid
      */
     public SMSPeer(String destination) {
         this.address = destination;
+        if(!isValid()) throw new IllegalArgumentException();
     }
 
     /**
@@ -33,7 +36,6 @@ public class SMSPeer implements Peer, java.io.Serializable {
         return address.equals("");
     }
 
-
     /**
      * Checks if the address has prefix
      * @return Returns true if the address has the prefix sign
@@ -50,16 +52,7 @@ public class SMSPeer implements Peer, java.io.Serializable {
      * @author Edoardo Raimondi
      */
     public boolean isValid() {
-        try {
-            int maxLength = 15;
-            if (!isEmpty() && getAddress().length() < maxLength) {
-                if (hasPrefix()) Long.parseLong(getAddress().substring(1));
-                else Long.parseLong(getAddress());
-                return true;
-            }
-        }
-        catch(Exception e) { }
-        return false;
+        return address != null && address.matches(MATCH_EXPRESSION);
     }
 
     /**
