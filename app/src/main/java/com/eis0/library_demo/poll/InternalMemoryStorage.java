@@ -29,5 +29,3 @@ public interface InternalMemoryStorage {
      */
     boolean doesFileExist(Context context, String fileName);
 }
-
-

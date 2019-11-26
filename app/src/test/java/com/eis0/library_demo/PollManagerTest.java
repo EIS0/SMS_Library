@@ -1,6 +1,6 @@
 package com.eis0.library_demo;
 
-import com.eis0.storagelibrary.TernaryPoll;
+import com.eis0.library_demo.poll.TernaryPoll;
 import com.eis0.smslibrary.SMSMessage;
 import com.eis0.smslibrary.SMSPeer;
 
