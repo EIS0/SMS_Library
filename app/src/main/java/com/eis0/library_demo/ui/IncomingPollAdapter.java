@@ -23,9 +23,8 @@ import java.util.Observer;
  * @author Matteo Carnelos
  */
 public class IncomingPollAdapter extends BaseAdapter implements Observer {
-    private Context mContext;
     private static LayoutInflater inflater = null;
-    private PollManager pollManager = PollManager.getInstance(mContext);
+    private PollManager pollManager;
 
     /**
      * Constructor of the IncomingPollAdapter, it sets the LayoutInflater.
@@ -34,7 +33,7 @@ public class IncomingPollAdapter extends BaseAdapter implements Observer {
      * @author Matteo Carnelos
      */
     IncomingPollAdapter(Context context) {
-        mContext = context;
+        pollManager = PollManager.getInstance(context);
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
@@ -52,7 +51,7 @@ public class IncomingPollAdapter extends BaseAdapter implements Observer {
     }
 
     /**
-     * Get the incmoing poll unique id associated with the given position. Required by BaseAdapter.
+     * Get the incoming poll unique id associated with the given position. Required by BaseAdapter.
      *
      * @param position The position of the item in the data set.
      * @return The unique id as a long value.
