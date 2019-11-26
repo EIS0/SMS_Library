@@ -35,10 +35,10 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
     private static final String NO_ANSWER_CODE = "0";
 
     // Must always be static for getInstance to work
-    private final Context mContext;
     private static PollManager instance = null;
     private static PollListener pollListener;
     private SMSManager smsManager = SMSManager.getInstance();
+    private Context mContext;
     private static PollStoring pollStoring = null  ;
     private static PollListStoring pollListStoring = null;
     private static String openedPollsListName = "";
@@ -52,12 +52,11 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
      * @author Matteo Carnelos
      */
     private PollManager(Context context) {
-        mContext = context;
-        pollListStoring = new PollListStoring(mContext);
+        pollListStoring = new PollListStoring(context);
         pollStoring = new PollStoring();
         openedPollsListName = pollListStoring.openedListName;
-        ArrayList<String> openedPollsFiles = pollListStoring.getPollList(openedPollsListName);
 
+        mContext =context;
         smsManager.addReceiveListener(this);
     }
 
