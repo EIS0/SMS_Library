@@ -1,7 +1,10 @@
 package com.eis0.library_demo;
 
+import android.content.Context;
 import android.util.SparseArray;
 
+import com.eis0.library_demo.poll.PollListStoring;
+import com.eis0.library_demo.poll.PollStoring;
 import com.eis0.library_demo.poll.TernaryPoll;
 import com.eis0.smslibrary.ReceivedMessageListener;
 import com.eis0.smslibrary.SMSManager;
@@ -32,10 +35,18 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
     private static final String NO_ANSWER_CODE = "0";
 
     // Must always be static for getInstance to work
+    private Context mContext;
     private static PollManager instance = null;
     private static PollListener pollListener;
     private SMSManager smsManager = SMSManager.getInstance();
-
+    private static PollStoring pollStoring = null  ;
+    private static PollListStoring pollListStoring = null;
+    private static ArrayList<TernaryPoll> incomingPolls = new ArrayList<>();
+    private static ArrayList<TernaryPoll> openedPolls = new ArrayList<>();
+    private static ArrayList<TernaryPoll> closedPolls = new ArrayList<>();
+    private static String incomingPollsListName = "";
+    private static String openedPollsListName = "";
+    private static String closedPollsListName = "";
     private SparseArray<TernaryPoll> sentPolls = new SparseArray<>();
 
     /**
@@ -45,7 +56,25 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
      * @author Giovanni Velludo
      * @author Matteo Carnelos
      */
-    private PollManager() {
+    private PollManager(Context context) {
+        mContext = context;
+        pollListStoring = new PollListStoring(mContext);
+        pollStoring = new PollStoring();
+        incomingPollsListName = pollListStoring.incomingListName;
+        openedPollsListName = pollListStoring.openedListName;
+        closedPollsListName = pollListStoring.closedListName;
+        ArrayList<String> incomingPollsFiles = pollListStoring.getPollList(incomingPollsListName);
+        ArrayList<String> openedPollsFiles = pollListStoring.getPollList(openedPollsListName);
+        ArrayList<String> closedPollsFiles = pollListStoring.getPollList(closedPollsListName);
+        for(String fileName : incomingPollsFiles) {
+            incomingPolls.add(pollStoring.loadPoll(mContext, fileName));
+        }
+        for(String fileName :openedPollsFiles) {
+            openedPolls.add(pollStoring.loadPoll(mContext, fileName));
+        }
+        for(String fileName :closedPollsFiles) {
+            closedPolls.add(pollStoring.loadPoll(mContext, fileName));
+        }
         smsManager.addReceiveListener(this);
     }
 
@@ -56,8 +85,8 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
      * @return The only instance of this class.
      * @author Giovanni Velludo
      */
-    public static PollManager getInstance() {
-        if (instance == null) instance = new PollManager();
+    public static PollManager getInstance(Context context) {
+        if (instance == null) instance = new PollManager(context);
         return instance;
     }
 
@@ -86,6 +115,13 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
             throws IllegalArgumentException {
         if (users.isEmpty()) throw new IllegalArgumentException("Can't create poll with no users");
         TernaryPoll poll = new TernaryPoll(name, question, users);
+        //File names list updated
+        String pollFileName = pollStoring.setFileName(poll);
+        pollListStoring.addToPollList(openedPollsListName, pollFileName);
+        //Remote copy of the local poll object updated in the InternalStorage
+        pollStoring.savePoll(mContext, pollFileName, poll);
+        //Save the current poll lists status
+        pollListStoring.saveCurrentStatus(mContext);
         sentPolls.put(poll.getPollId(), poll);
         sendNewPoll(poll);
         pollListener.onSentPollUpdate(poll);

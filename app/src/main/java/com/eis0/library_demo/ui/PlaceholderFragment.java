@@ -36,8 +36,8 @@ public class PlaceholderFragment extends ListFragment {
      * @return A PlaceholderFragment instance with the bundle containing the section number.
      * @author Matteo Carnelos
      */
-    static PlaceholderFragment newInstance(int index) {
-        PlaceholderFragment fragment = new PlaceholderFragment(mContext);
+    static PlaceholderFragment newInstance(Context context, int index) {
+        PlaceholderFragment fragment = new PlaceholderFragment(context);
         // Put the section number in the bundle, it will be used in onCreateView(...)
         Bundle bundle = new Bundle();
         bundle.putInt(ARG_SECTION_NUMBER, index);
@@ -46,13 +46,12 @@ public class PlaceholderFragment extends ListFragment {
     }
 
     /**
-     * TODO Dove diavolo viene usato sto PlaceholderFragment?
+     * Constructor requiring the context
+     * @param context
      */
-    //*****************************************
     public PlaceholderFragment(Context context) {
     mContext = context;
     }
-    //*****************************************
 
     /**
      * Called when the view of the ListFragment is created. It associates one of the

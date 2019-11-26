@@ -23,9 +23,9 @@ import java.util.Observer;
  * @author Matteo Carnelos
  */
 public class IncomingPollAdapter extends BaseAdapter implements Observer {
-
+    private Context mContext;
     private static LayoutInflater inflater = null;
-    private PollManager pollManager = PollManager.getInstance();
+    private PollManager pollManager = PollManager.getInstance(mContext);
 
     /**
      * Constructor of the IncomingPollAdapter, it sets the LayoutInflater.
@@ -34,6 +34,7 @@ public class IncomingPollAdapter extends BaseAdapter implements Observer {
      * @author Matteo Carnelos
      */
     IncomingPollAdapter(Context context) {
+        mContext = context;
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 

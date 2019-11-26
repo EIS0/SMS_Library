@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
             Manifest.permission.READ_SMS
     };
 
-    private PollManager pollManager = PollManager.getInstance();
+    private PollManager pollManager = PollManager.getInstance(this);
 
     /**
      * Called on the creation of the activity.
