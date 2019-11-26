@@ -20,9 +20,9 @@ public class KademliaId implements Serializable {
     private byte[] keyBytes;
 
     /**
-     * Construct the NodeId from some string
+     * Construct the NodeId from a string
      *
-     * @param data The user generated key string
+     * @param data representing key string
      */
     public KademliaId(String data) {
         keyBytes = data.getBytes();
@@ -40,16 +40,19 @@ public class KademliaId implements Serializable {
     }
 
     /**
-     * Generate the NodeId from a given byte[]
+     * Generate the NodeId from a given byte array
      *
      * @param bytes
      */
-    public KademliaId(byte[] bytes) {
-        if (bytes.length != ID_LENGTH / 8) {
+    public KademliaId(byte[] bytes)
+    {
+        if (bytes.length != ID_LENGTH / 8)
+        {
             throw new IllegalArgumentException("Specified Data need to be " + (ID_LENGTH / 8) + " characters long. Data Given: '" + new String(bytes) + "'");
         }
         this.keyBytes = bytes;
     }
+
 
     /**
      * Load the NodeId from a DataInput stream
@@ -73,15 +76,15 @@ public class KademliaId implements Serializable {
     }
 
     /**
-     * Compares a NodeId to this NodeId
+     * Compares a given NodeId to this NodeId
      *
-     * @param o The NodeId to compare to this NodeId
-     * @return boolean Whether the 2 NodeIds are equal
+     * @param toCompare The NodeId to compare to this NodeId
+     * @return true if the 2 NodeIds are equal
      */
     @Override
-    public boolean equals(Object o) {
-        if (o instanceof KademliaId) {
-            KademliaId nid = (KademliaId) o;
+    public boolean equals(Object toCompare) {
+        if (toCompare instanceof KademliaId) {
+            KademliaId nid = (KademliaId) toCompare;
             return this.hashCode() == nid.hashCode();
         }
         return false;
@@ -95,7 +98,7 @@ public class KademliaId implements Serializable {
     }
 
     /**
-     * Checks the distance between this and another NodeId
+     * Checks the distance between two NodeIds
      *
      * @param nid
      * @return The distance of this NodeId from the given NodeId
@@ -140,7 +143,7 @@ public class KademliaId implements Serializable {
             bits.clear(i);
         }
         bits.flip(0, 8);        // Flip the bits since they're in reverse order
-        result[numByteZeroes] = (byte) bits.toByteArray()[0];
+        result[numByteZeroes] = bits.toByteArray()[0];
 
         /* Set the remaining bytes to Maximum value */
         for (int i = numByteZeroes + 1; i < result.length; i++) {
@@ -153,7 +156,7 @@ public class KademliaId implements Serializable {
     /**
      * Counts the number of leading 0's in this NodeId
      *
-     * @return Integer The number of leading 0's
+     * @return Integer representing the number of leading 0's
      */
     public int getFirstSetBitIndex() {
         int prefixLength = 0;

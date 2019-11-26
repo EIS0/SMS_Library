@@ -1,6 +1,5 @@
 package com.example.kademlia;
 
-import org.w3c.dom.Node;
 
 import java.math.BigInteger;
 import java.util.Comparator;
@@ -8,7 +7,7 @@ import java.util.Comparator;
 /**
  * A Comparator to compare 2 keys to a given key
  */
-public class KeyComparator implements Comparator<KademliaNode>
+public class KeyComparator implements Comparator<SMSKademliaNode>
 {
 
     private final BigInteger key;
@@ -30,7 +29,7 @@ public class KeyComparator implements Comparator<KademliaNode>
      * @param n2 Node 2 to compare distance from the key
      */
     @Override
-    public int compare(KademliaNode n1, KademliaNode n2)
+    public int compare(SMSKademliaNode n1, SMSKademliaNode n2)
     {
         BigInteger b1 = n1.getNodeId().getInt();
         BigInteger b2 = n2.getNodeId().getInt();
