@@ -27,7 +27,7 @@ public class DataProvider extends Observable implements PollListener {
     private static String incomingPollsListName = "";
     private static String openedPollsListName = "";
     private static String closedPollsListName = "";
-    private Context mContext = null;
+    private final Context mContext;
 
     /**
      * DataProvider constructor, sets this as the PollManager listener.

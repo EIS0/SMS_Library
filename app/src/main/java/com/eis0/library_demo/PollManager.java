@@ -35,7 +35,7 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
     private static final String NO_ANSWER_CODE = "0";
 
     // Must always be static for getInstance to work
-    private Context mContext;
+    private final Context mContext;
     private static PollManager instance = null;
     private static PollListener pollListener;
     private SMSManager smsManager = SMSManager.getInstance();
