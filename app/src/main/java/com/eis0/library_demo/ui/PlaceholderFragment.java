@@ -25,8 +25,7 @@ public class PlaceholderFragment extends ListFragment {
     private static final int INCOMING_SECTION_NUMBER = 1;
     private static final int OPENED_SECTION_NUMBER = 2;
     private static final int CLOSED_SECTION_NUMBER = 3;
-    private Context mContext = null;
-    private DataProvider dataProvider = DataProvider.getInstance(mContext);
+    private DataProvider dataProvider;
 
     /**
      * Returns a new PlaceholderFragment instance with the bundle containing the section number
@@ -50,7 +49,7 @@ public class PlaceholderFragment extends ListFragment {
      * @param context
      */
     public PlaceholderFragment(Context context) {
-    mContext = context;
+        dataProvider = DataProvider.getInstance(context);
     }
 
     /**
