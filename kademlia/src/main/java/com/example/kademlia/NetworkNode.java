@@ -1,4 +1,6 @@
-package com.example.webdictionary;
+package com.example.kademlia;
+
+import java.util.List;
 
 /**
  * Class to implements to create your kademlia NetoworkNode
@@ -35,6 +37,6 @@ interface NetworkNode {
     /**
      * return the closest node
      */
-    NetworkNode findClosest();
+    List<NetworkNode> findClosest(NetworkNode target, int numNodesRequired);
 
 }
