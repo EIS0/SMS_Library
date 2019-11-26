@@ -236,9 +236,13 @@ public class PollListStoring extends StoringJsons implements JsonConverter<Array
     }
 
     /**
-     *
-     * @param listName
-     * @return the
+     * This method returns the poll list with the specified listName, if the list doesn't correspond
+     * to one of the three inside of this class, the method returns null. It only works with:
+     * - openedListName
+     * - closedListName
+     * - incomingListName
+     * @param listName The name of the list
+     * @return {@link ArrayList} with the poll list specified
      */
     public ArrayList<String> getPollList(String listName) {
         switch (listName) {
