@@ -1,26 +1,27 @@
 <resources>
-    <string name="app_name">SMS Library - Demo</string>
-    <string name="action_settings">Settings</string>
-    <string name="to">To:</string>
-    <string name="say_hi">Say hi!</string>
-    <string name="says_hi">" says hi!"</string>
-    <string name="say_hi_back">Say hi back</string>
-    <string name="ok">OK</string>
-    <string name="enter_phone">Enter a phone number</string>
-    <string name="to_field_cannot_be_empty">The "To:" field cannot be empty</string>
-    <string name="message_sent">Hi sent</string>
-    <string name="send_message_error">An error occurred while sending your hi</string>
-    <string name="message_delivered">Hi delivered</string>
-    <string name="deliver_message_error">An error occurred while delivering your hi</string>
-	<string name="channel_name">Demo Notification Channel</string>
-    <string name="channel_description">Channel used for showing hi notifications.</string>
-    <string name="open_app">Tap to open application</string>
-    <string name="title_activity_settings">Settings</string>
+    <string name="app_name">Easy Poll</string>
+    <string name="tab_text_1">Incoming</string>
+    <string name="tab_text_2">Opened</string>
+    <string name="tab_text_3">Closed</string>
 
-    <!-- Preference Titles -->
-    <string name="sms_header">SMS</string>
+    <!-- Poll ListItem strings -->
+    <string name="poll_li_colon">:</string>
+    <string name="poll_li_yes">YES</string>
+    <string name="poll_li_dash">-</string>
+    <string name="poll_li_no">NO</string>
+    <string name="poll_li_percentage">%</string>
 
-    <!-- SMS Preferences -->
-    <string name="deliveryReport_title">SMS delivery reports</string>
-    <string name="deliveryReport_summary">Request a delivery report for each SMS message sent</string>
+    <!-- Create Poll strings-->
+    <string name="name_hint">What is the poll name?</string>
+    <string name="question_hint">Type the question!</string>
+    <string name="peer1_hint">First number</string>
+    <string name="peer2_hint">Second number </string>
+    <string name="peer3_hint">Third number</string>
+    <string name="button_send">Send</string>
+    <string name="empty_question_message">Please insert a question first</string>
+    <string name="empty_name_message">Please insert a poll name</string>
+    <string name="invalid_peers_message">Please insert at least one valid phone number</string>
+    <string name="poll_name">Poll Name</string>
+    <string name="poll_question">Poll Question</string>
+    <string name="users">Users</string>
 </resources>
