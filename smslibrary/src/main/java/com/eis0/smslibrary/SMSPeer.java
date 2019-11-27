@@ -73,7 +73,7 @@ public class SMSPeer implements Peer, java.io.Serializable {
      * @author Marco Cognolato
      */
     public boolean isValid() {
-        return address != null && address.matches(MATCH_EXPRESSION);
+        return address != null && !address.isEmpty() && address.matches(MATCH_EXPRESSION);
     }
 
     /**

@@ -36,7 +36,7 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
     private static PollListener pollListener;
     private SMSManager smsManager = SMSManager.getInstance();
 
-    private SparseArray<TernaryPoll> sentPolls = new SparseArray<>();
+    private static SparseArray<TernaryPoll> sentPolls = new SparseArray<>();
 
     /**
      * PollManager constructor, sets this as the SMSManager listener.
@@ -59,6 +59,16 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
     public static PollManager getInstance() {
         if (instance == null) instance = new PollManager();
         return instance;
+    }
+
+    /**
+     * Populate the sentPolls SparseArray with the new data.
+     *
+     * @author Matteo Carnelos
+     */
+    static void updateSentPolls() {
+        for(TernaryPoll openedPoll : DataProvider.getOpenedPolls())
+            sentPolls.put(openedPoll.getPollId(), openedPoll);
     }
 
     /**
@@ -160,7 +170,7 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
                 boolean isYes = fields[2].equals(YES_ANSWER_CODE);
                 SMSPeer voter = message.getPeer();
                 TernaryPoll answeredPoll = sentPolls.get(pollId);
-                if (isYes) answeredPoll.setYes(voter);
+                if(isYes) answeredPoll.setYes(voter);
                 else answeredPoll.setNo(voter);
                 sentPolls.put(pollId, answeredPoll);
                 pollListener.onSentPollUpdate(answeredPoll);

@@ -63,6 +63,22 @@ public class MainActivity extends AppCompatActivity {
 
         // Requests app permissions, if not already granted
         ActivityCompat.requestPermissions(this, PERMISSIONS, 1);
+
+        // Load previously saved data
+        //DataProvider.loadDataFromInternal(this);
+        //TernaryPoll.loadPollsCountFromInternal(this);
+    }
+
+    /**
+     * Called on the destruction of the activity. Saves data.
+     *
+     * @author Matteo Carnelos
+     */
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        //DataProvider.saveDataToInternal(this);
+        //TernaryPoll.savePollsCountToInternal(this);
     }
 
     /**

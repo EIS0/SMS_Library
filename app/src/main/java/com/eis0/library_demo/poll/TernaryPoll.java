@@ -1,5 +1,9 @@
 package com.eis0.library_demo.poll;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
+
 import androidx.annotation.NonNull;
 
 import com.eis0.smslibrary.SMSPeer;
@@ -18,9 +22,10 @@ import java.util.Set;
  */
 public class TernaryPoll extends Poll {
 
-    public static final SMSPeer SELF_PEER = new SMSPeer("self");
+    public static final SMSPeer SELF_PEER = new SMSPeer("0000000000");
+    private static final String POLLS_COUNT_KEY = "com.eis0.library_demo.polls_count_key";
 
-    private static int pollCount = 0;
+    private static int pollsCount = 0;
 
     private enum PollResult {
         YES("Yes"), NO("No"), UNAVAILABLE("Unavailable");
@@ -63,9 +68,33 @@ public class TernaryPoll extends Poll {
      * @author Matteo Carnelos
      */
     public TernaryPoll(String name, String question, ArrayList<SMSPeer> users) {
-        super(++pollCount, name, question, SELF_PEER);
+        super(++pollsCount, name, question, SELF_PEER);
         pollUsers = new HashMap<>();
         for (SMSPeer user : users) addUser(user);
+    }
+
+    /**
+     * Save the polls counter (for Ids) to the internal storage.
+     *
+     * @param activity The Activity to which the preferences will be saved.
+     * @author Matteo Carnelos
+     */
+    public static void savePollsCountToInternal(Activity activity) {
+        SharedPreferences sharedPreferences = activity.getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt(POLLS_COUNT_KEY, pollsCount);
+        editor.apply();
+    }
+
+    /**
+     * Load the polls counter (for Ids) from the internal storage.
+     *
+     * @param activity The Activity where the preferences are saved.
+     * @author Matteo Carnelos
+     */
+    public static void loadPollsCountFromInternal(Activity activity) {
+        SharedPreferences sharedPreferences = activity.getPreferences(Context.MODE_PRIVATE);
+        pollsCount = sharedPreferences.getInt(POLLS_COUNT_KEY, 0);
     }
 
     /**
@@ -195,6 +224,10 @@ public class TernaryPoll extends Poll {
     }
 
     /**
+     * Compare two TernaryPoll object and tell if they are equal.
+     *
+     * @param o The object to compare.
+     * @return True if the two objects are equal, false otherwise.
      * @author Giovanni Velludo
      */
     @Override

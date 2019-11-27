@@ -74,14 +74,26 @@ public class CreatePollActivity extends AppCompatActivity {
             return;
         }
 
-        // Add peers to process
-        SMSPeer peer1 = new SMSPeer(peer1Txt.getText().toString());
-        SMSPeer peer2 = new SMSPeer(peer2Txt.getText().toString());
-        SMSPeer peer3 = new SMSPeer(peer3Txt.getText().toString());
+        String peer1Address = peer1Txt.getText().toString();
+        String peer2Address = peer2Txt.getText().toString();
+        String peer3Address = peer3Txt.getText().toString();
+
         ArrayList<SMSPeer> peers = new ArrayList<>();
-        if(peer1.isValid()) peers.add(peer1);
-        if(peer2.isValid()) peers.add(peer2);
-        if(peer3.isValid()) peers.add(peer3);
+
+        try {
+            SMSPeer peer1 = new SMSPeer(peer1Address);
+            peers.add(peer1);
+        } catch (IllegalArgumentException e) { }
+
+        try {
+            SMSPeer peer2 = new SMSPeer(peer2Address);
+            peers.add(peer2);
+        } catch (IllegalArgumentException e) { }
+
+        try {
+            SMSPeer peer3 = new SMSPeer(peer3Address);
+            peers.add(peer3);
+        } catch (IllegalArgumentException e) { }
 
         // At least one Peer is required
         if(peers.isEmpty()) {
