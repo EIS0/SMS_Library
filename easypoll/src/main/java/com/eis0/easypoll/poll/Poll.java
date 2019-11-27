@@ -63,7 +63,7 @@ abstract class Poll {
      * @return An SMSPeer representing the poll author.
      * @author Matteo Carnelos
      */
-    public SMSPeer getPollAuthor() {
+    SMSPeer getPollAuthor() {
         return pollAuthor;
     }
 

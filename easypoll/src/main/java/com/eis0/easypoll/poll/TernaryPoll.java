@@ -22,7 +22,7 @@ import java.util.Set;
  */
 public class TernaryPoll extends Poll {
 
-    public static final SMSPeer SELF_PEER = new SMSPeer("0000000000");
+    static final SMSPeer SELF_PEER = new SMSPeer("0000000000");
     private static final String POLLS_COUNT_KEY = "com.eis0.easypoll.polls_count_key";
 
     private static int pollsCount = 0;
@@ -103,7 +103,7 @@ public class TernaryPoll extends Poll {
      * @return A Set representing all the users.
      * @author Giovanni Velludo
      */
-    public Set<SMSPeer> getPollUsers() {
+    Set<SMSPeer> getPollUsers() {
         return pollUsers.keySet();
     }
 
@@ -188,7 +188,7 @@ public class TernaryPoll extends Poll {
      * @author Giovanni Velludo
      * @author Matteo Carnelos
      */
-    public void setYes(SMSPeer user) {
+    void setYes(SMSPeer user) {
         if (hasUser(user)) {
             PollResult result = PollResult.YES;
             pollUsers.put(user, result);
@@ -203,7 +203,7 @@ public class TernaryPoll extends Poll {
      * @author Giovanni Velludo
      * @author Matteo Carnelos
      */
-    public void setNo(SMSPeer user) {
+    void setNo(SMSPeer user) {
         if (hasUser(user)) {
             PollResult result = PollResult.NO;
             pollUsers.put(user, result);
