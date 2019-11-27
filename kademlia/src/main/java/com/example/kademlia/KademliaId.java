@@ -1,6 +1,5 @@
 package com.example.kademlia;
 
-
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -13,7 +12,6 @@ import java.util.Random;
 /**
  * Class that defines a KademliaId
  */
-
 public class KademliaId implements Serializable {
 
     public final transient static int ID_LENGTH = 160;
@@ -44,10 +42,8 @@ public class KademliaId implements Serializable {
      *
      * @param bytes
      */
-    public KademliaId(byte[] bytes)
-    {
-        if (bytes.length != ID_LENGTH / 8)
-        {
+    public KademliaId(byte[] bytes) {
+        if (bytes.length != ID_LENGTH / 8) {
             throw new IllegalArgumentException("Specified Data need to be " + (ID_LENGTH / 8) + " characters long. Data Given: '" + new String(bytes) + "'");
         }
         this.keyBytes = bytes;
@@ -111,9 +107,7 @@ public class KademliaId implements Serializable {
             result[i] = (byte) (this.keyBytes[i] ^ nidBytes[i]);
         }
 
-        KademliaId resNid = new KademliaId(result);
-
-        return resNid;
+        return new KademliaId(result);
     }
 
     /**

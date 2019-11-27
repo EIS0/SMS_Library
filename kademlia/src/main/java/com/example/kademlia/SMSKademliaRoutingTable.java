@@ -7,16 +7,13 @@ import java.util.TreeSet;
 /**
  * Implementation of a Kademlia routing table
  */
-public class SMSKademliaRoutingTable implements KademliaRoutingTable
-{
+public class SMSKademliaRoutingTable implements KademliaRoutingTable {
 
     private final SMSKademliaNode localNode;  // The current node
     private transient SMSKademliaBucket[] buckets;
-
     private transient KadConfiguration config;
 
-    public SMSKademliaRoutingTable(SMSKademliaNode localNode, KadConfiguration config)
-    {
+    public SMSKademliaRoutingTable(SMSKademliaNode localNode, KadConfiguration config) {
         this.localNode = localNode;
         this.config = config;
 
@@ -31,11 +28,9 @@ public class SMSKademliaRoutingTable implements KademliaRoutingTable
      * Initialize the RoutingTable to it's default state
      */
     @Override
-    public final void initialize()
-    {
+    public final void initialize() {
         this.buckets = new SMSKademliaBucket[KademliaId.ID_LENGTH];
-        for (int i = 0; i < KademliaId.ID_LENGTH; i++)
-        {
+        for (int i = 0; i < KademliaId.ID_LENGTH; i++) {
             buckets[i] = new SMSKademliaBucket(i, this.config);
         }
     }
@@ -51,8 +46,7 @@ public class SMSKademliaRoutingTable implements KademliaRoutingTable
      * @param c The contact to add
      */
     @Override
-    public synchronized final void insert(Contact c)
-    {
+    public synchronized final void insert(Contact c) {
         this.buckets[this.getBucketId(c.getNode().getNodeId())].insert(c);
     }
 
@@ -62,8 +56,7 @@ public class SMSKademliaRoutingTable implements KademliaRoutingTable
      * @param n The node to add
      */
 
-    public synchronized final void insert(SMSKademliaNode n)
-    {
+    public synchronized final void insert(SMSKademliaNode n) {
         this.buckets[this.getBucketId(n.getNodeId())].insert(n);
     }
 
@@ -75,8 +68,7 @@ public class SMSKademliaRoutingTable implements KademliaRoutingTable
      * @return Integer The bucket ID in which the given node should be placed.
      */
     @Override
-    public final int getBucketId(KademliaId nid)
-    {
+    public final int getBucketId(KademliaId nid) {
         int bId = this.localNode.getNodeId().getDistance(nid) - 1;
 
         /* If we are trying to insert a node into it's own routing table, then the bucket ID will be -1, so let's just keep it in bucket 0 */
@@ -92,8 +84,7 @@ public class SMSKademliaRoutingTable implements KademliaRoutingTable
      * @return List A List of contacts closest to target
      */
     @Override
-    public synchronized final List<SMSKademliaNode> findClosest(KademliaId target, int numNodesRequired)
-    {
+    public synchronized final List<SMSKademliaNode> findClosest(KademliaId target, int numNodesRequired) {
         TreeSet<SMSKademliaNode> sortedSet = new TreeSet<>(new KeyComparator(target));
         sortedSet.addAll(this.getAllNodes());
 
@@ -101,11 +92,9 @@ public class SMSKademliaRoutingTable implements KademliaRoutingTable
 
         /* Now we have the sorted set, lets get the top numRequired */
         int count = 0;
-        for (SMSKademliaNode n : sortedSet)
-        {
+        for (SMSKademliaNode n : sortedSet) {
             closest.add(n);
-            if (++count == numNodesRequired)
-            {
+            if (++count == numNodesRequired) {
                 break;
             }
         }
@@ -116,14 +105,11 @@ public class SMSKademliaRoutingTable implements KademliaRoutingTable
      * @return List of all Nodes in this RoutingTable
      */
     @Override
-    public synchronized final List<SMSKademliaNode> getAllNodes()
-    {
+    public synchronized final List<SMSKademliaNode> getAllNodes() {
         List<SMSKademliaNode> nodes = new ArrayList<>();
 
-        for (KademliaBucket b : this.buckets)
-        {
-            for (Contact c : b.getContacts())
-            {
+        for (KademliaBucket b : this.buckets) {
+            for (Contact c : b.getContacts()) {
                 nodes.add(c.getNode());
             }
         }
@@ -135,12 +121,10 @@ public class SMSKademliaRoutingTable implements KademliaRoutingTable
      * @return List A List of all Nodes in this RoutingTable
      */
     @Override
-    public final List<Contact> getAllContacts()
-    {
+    public final List<Contact> getAllContacts() {
         List<Contact> contacts = new ArrayList<>();
 
-        for (KademliaBucket b : this.buckets)
-        {
+        for (KademliaBucket b : this.buckets) {
             contacts.addAll(b.getContacts());
         }
 
@@ -151,8 +135,7 @@ public class SMSKademliaRoutingTable implements KademliaRoutingTable
      * @return Bucket[] The buckets in this Kad Instance
      */
     @Override
-    public final SMSKademliaBucket[] getBuckets()
-    {
+    public final SMSKademliaBucket[] getBuckets() {
         return this.buckets;
     }
 
@@ -161,22 +144,16 @@ public class SMSKademliaRoutingTable implements KademliaRoutingTable
      *
      * @param buckets
      */
-    public final void setBuckets(SMSKademliaBucket[] buckets)
-    {
+    public final void setBuckets(SMSKademliaBucket[] buckets) {
         this.buckets = buckets;
     }
 
-
-
     @Override
-    public synchronized final String toString()
-    {
+    public synchronized final String toString() {
         StringBuilder sb = new StringBuilder("\nPrinting Routing Table Started... \n");
         int totalContacts = 0;
-        for (KademliaBucket b : this.buckets)
-        {
-            if (b.numContacts() > 0)
-            {
+        for (KademliaBucket b : this.buckets) {
+            if (b.numContacts() > 0) {
                 totalContacts += b.numContacts();
                 sb.append("# nodes in Bucket with depth ");
                 sb.append(b.getDepth());
@@ -194,5 +171,4 @@ public class SMSKademliaRoutingTable implements KademliaRoutingTable
 
         return sb.toString();
     }
-
 }

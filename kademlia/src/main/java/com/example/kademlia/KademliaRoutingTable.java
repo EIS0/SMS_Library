@@ -5,8 +5,7 @@ import java.util.List;
 /**
  * Specification for Kademlia's Routing Table
  */
-public interface KademliaRoutingTable
-{
+public interface KademliaRoutingTable {
 
     /**
      * Initialize the RoutingTable to it's default state
@@ -60,7 +59,4 @@ public interface KademliaRoutingTable
      * @return Bucket[] The buckets in this Kad Instance
      */
      KademliaBucket[] getBuckets();
-
-
-
 }

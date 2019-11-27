@@ -7,9 +7,7 @@ import java.io.File;
  * supplied and can be changed by the application as necessary.
  *
  */
-public class DefaultConfiguration implements KadConfiguration
-{
-
+public class DefaultConfiguration implements KadConfiguration {
 
     private final static int K = 5;
     private final static int RCSIZE = 3;
@@ -19,45 +17,37 @@ public class DefaultConfiguration implements KadConfiguration
     /**
      * Default constructor to support Gson Serialization
      */
-    public DefaultConfiguration()
-    {
+    public DefaultConfiguration() {
 
     }
 
-    public int k()
-    {
+    public int k() {
         return K;
     }
 
-    public int replacementCacheSize()
-    {
+    public int replacementCacheSize() {
         return RCSIZE;
     }
 
-    public int stale()
-    {
+    public int stale() {
         return STALE;
     }
 
-    public String getNodeDataFolder(String ownerId)
-    {
+    public String getNodeDataFolder(String ownerId) {
         /* Setup the main storage folder if it doesn't exist */
         String path = System.getProperty("user.home") + File.separator + DefaultConfiguration.FOLDER;
         File folder = new File(path);
-        if (!folder.isDirectory())
-        {
+        if (!folder.isDirectory()) {
             folder.mkdir();
         }
 
         /* Setup subfolder for this owner if it doesn't exist */
         File ownerFolder = new File(folder + File.separator + ownerId);
-        if (!ownerFolder.isDirectory())
-        {
+        if (!ownerFolder.isDirectory()) {
             ownerFolder.mkdir();
         }
 
         /* Return the path */
         return ownerFolder.toString();
     }
-
 }

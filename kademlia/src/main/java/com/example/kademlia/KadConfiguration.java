@@ -3,8 +3,7 @@ package com.example.kademlia;
 /**
  * Interface that defines a KadConfiguration object
  */
-public interface KadConfiguration
-{
+public interface KadConfiguration {
 
     /**
      * @return K-Value used throughout Kademlia
@@ -29,5 +28,4 @@ public interface KadConfiguration
      * @return The folder path
      */
      String getNodeDataFolder(String ownerId);
-
 }

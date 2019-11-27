@@ -1,14 +1,11 @@
 package com.example.kademlia;
 
-
-
 import java.util.List;
 
 /**
  * A bucket used to store Contacts(or SMSKademliaNode directly?) in the routing table.
  */
-public interface KademliaBucket
-{
+public interface KademliaBucket {
 
     /**
      * Adds a contact to the bucket
