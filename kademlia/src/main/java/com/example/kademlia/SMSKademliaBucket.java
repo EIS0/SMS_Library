@@ -10,8 +10,7 @@ import java.util.TreeSet;
 /**
  * A bucket in the Kademlia routing table
  */
-public class SMSKademliaBucket implements KademliaBucket
-{
+public class SMSKademliaBucket implements KademliaBucket {
 
     /* How deep is this bucket in the Routing Table */
     private final int depth;
@@ -25,10 +24,10 @@ public class SMSKademliaBucket implements KademliaBucket
     private KadConfiguration config;
 
 
-    {
+        {
         contacts = new TreeSet<>();
         replacementCache = new TreeSet<>();
-    }
+        }
 
     /**
      * @param depth  How deep in the routing tree is this bucket

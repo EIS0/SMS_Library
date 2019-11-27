@@ -3,7 +3,7 @@ package com.example.kademlia;
 
 /**
  * Keeps information about contacts of the Node;
- * Contacts are stored TODO in the Buckets in the Routing Table.
+ * Contacts are stored
  *
  */
 public class Contact implements  Comparable<Contact>{ //has to be comparable to testing it

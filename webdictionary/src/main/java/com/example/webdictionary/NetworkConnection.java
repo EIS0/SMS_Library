@@ -26,7 +26,7 @@ public class NetworkConnection {
             }
         }
         NetworkListener listener = new NetworkListener(this);
-        SMSManager.getInstance(context).addReceiveListener(listener);
+        SMSManager.getInstance().addReceiveListener(listener);
     }
     public static NetworkConnection getInstance(Context context, SMSPeer myPeer){
         if(net == null){
@@ -53,7 +53,7 @@ public class NetworkConnection {
         String textRequest = RequestType.JoinPermission.ordinal() + " " + peersInNetwork();
         SMSMessage message = new SMSMessage(peer, textRequest);
 
-        SMSManager.getInstance(context).sendMessage(message);
+        SMSManager.getInstance().sendMessage(message);
     }
 
     /**
@@ -90,12 +90,12 @@ public class NetworkConnection {
         for(String newPeerAddress: newPeersOnNet){
             Log.d(LOG_KEY, "New Peer: " + newPeerAddress);
             SMSPeer newPeer = new SMSPeer(newPeerAddress);
-            SMSManager.getInstance(context).sendMessage(new SMSMessage(newPeer, RequestType.AddPeers.ordinal() + " " + oldPeersInNet));
+            SMSManager.getInstance().sendMessage(new SMSMessage(newPeer, RequestType.AddPeers.ordinal() + " " + oldPeersInNet));
         }
         //notify my old peers about the new ones
         for(SMSPeer oldPeer : oldPeersInNet){
             Log.d(LOG_KEY, "Old Peer: " + oldPeer.getAddress());
-            SMSManager.getInstance(context).sendMessage(new SMSMessage(oldPeer, RequestType.AddPeers.ordinal() + " " + text));
+            SMSManager.getInstance().sendMessage(new SMSMessage(oldPeer, RequestType.AddPeers.ordinal() + " " + text));
         }
     }
 
@@ -110,7 +110,7 @@ public class NetworkConnection {
     public void askToLeave(SMSPeer peer){
         if(peer == null || !peer.isValid()) throw new IllegalArgumentException();
         SMSMessage message = new SMSMessage(peer, RequestType.LeavePermission.ordinal()+"");
-        SMSManager.getInstance(context).sendMessage(message);
+        SMSManager.getInstance().sendMessage(message);
     }
 
     /**
@@ -123,7 +123,7 @@ public class NetworkConnection {
         //notify my old peers about the exit
         for(SMSPeer oldPeer : subscribers){
             Log.d(LOG_KEY, "Old Peer: " + oldPeer.getAddress());
-            SMSManager.getInstance(context).sendMessage(new SMSMessage(oldPeer, RequestType.RemovePeers.ordinal() + " " + peer.getAddress()));
+            SMSManager.getInstance().sendMessage(new SMSMessage(oldPeer, RequestType.RemovePeers.ordinal() + " " + peer.getAddress()));
         }
     }
 
@@ -148,7 +148,7 @@ public class NetworkConnection {
     public void sendPing(SMSPeer peer){
         if(peer == null || !peer.isValid()) throw new IllegalArgumentException();
         SMSMessage message = new SMSMessage(peer, RequestType.Ping.ordinal()+"");
-        SMSManager.getInstance(context).sendMessage(message);
+        SMSManager.getInstance().sendMessage(message);
     }
 
     /**
@@ -272,7 +272,7 @@ public class NetworkConnection {
     /**
      * Updates the current Network State given a peer in the network to update and it's resources
      */
-    public void updateNet(String peer, SMSResource[] resources){
+    public void updateNet(String peer, SerializableObject resources){
         Log.d(LOG_KEY, "Updating this Peer: " + peer);
         SMSPeer peerToUpdate = new SMSPeer(peer);
         subscribers.remove(peerToUpdate);

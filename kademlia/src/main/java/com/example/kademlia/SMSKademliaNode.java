@@ -2,7 +2,6 @@ package com.example.kademlia;
 
 
 import java.io.Serializable;
-import java.net.InetAddress;
 
 
 /**
@@ -12,7 +11,6 @@ public class SMSKademliaNode implements Serializable
 {
 
     private KademliaId nodeId;
-    private InetAddress inetAddress;
     private int port;
     private final String strRep;
 
@@ -28,10 +26,7 @@ public class SMSKademliaNode implements Serializable
     /**
      * @return The NodeId object of this node
      */
-    public KademliaId getNodeId()
-    {
-        return this.nodeId;
-    }
+    public KademliaId getNodeId() { return this.nodeId; }
 
 
 
