@@ -61,18 +61,6 @@ public interface KademliaRoutingTable
      */
      KademliaBucket[] getBuckets();
 
-    /**
-     * Method used by operations to notify the routing table of any contacts that have been unresponsive.
-     *
-     * @param contacts The set of unresponsive contacts
-     */
-     void setUnresponsiveContacts(List<SMSKademliaNode> contacts);
 
-    /**
-     * Method used by operations to notify the routing table of any contacts that have been unresponsive.
-     *
-     * @param n
-     */
-     void setUnresponsiveContact(SMSKademliaNode n);
 
 }

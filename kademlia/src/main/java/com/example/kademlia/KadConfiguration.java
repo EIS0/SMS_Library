@@ -7,29 +7,6 @@ public interface KadConfiguration
 {
 
     /**
-     * @return Interval in milliseconds between execution of RestoreOperations.
-     */
-    public long restoreInterval();
-
-    /**
-     * If no reply received from a node in this period (in milliseconds)
-     * consider the node unresponsive.
-     *
-     * @return The time it takes to consider a node unresponsive
-     */
-    public long responseTimeout();
-
-    /**
-     * @return Maximum number of milliseconds for performing an operation.
-     */
-    public long operationTimeout();
-
-    /**
-     * @return Maximum number of concurrent messages in transit.
-     */
-    public int maxConcurrentMessagesTransiting();
-
-    /**
      * @return K-Value used throughout Kademlia
      */
     public int k();
@@ -53,8 +30,4 @@ public interface KadConfiguration
      */
     public String getNodeDataFolder(String ownerId);
 
-    /**
-     * @return Whether we're in a testing or production system.
-     */
-    public boolean isTesting();
 }

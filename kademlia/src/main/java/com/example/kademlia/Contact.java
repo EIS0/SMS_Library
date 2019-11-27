@@ -6,7 +6,7 @@ package com.example.kademlia;
  * Contacts are stored TODO in the Buckets in the Routing Table.
  *
  */
-public class Contact {
+public class Contact implements  Comparable<Contact>{ //has to be comparable to testing it
 
     private final SMSKademliaNode n;
 
@@ -69,6 +69,13 @@ public class Contact {
         this.staleCount = 0;
     }
 
+    @Override
+    public int compareTo(Contact o) {
+        if (this.getNode().equals(o.getNode())) {
+            return 0;
+        }
+        return -1;
+    }
     @Override
     public int hashCode()
     {
