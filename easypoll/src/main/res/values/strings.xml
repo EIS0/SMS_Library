@@ -1,27 +1,3 @@
 <resources>
     <string name="app_name">Easy Poll</string>
-    <string name="tab_text_1">Incoming</string>
-    <string name="tab_text_2">Opened</string>
-    <string name="tab_text_3">Closed</string>
-
-    <!-- Poll ListItem strings -->
-    <string name="poll_li_colon">:</string>
-    <string name="poll_li_yes">YES</string>
-    <string name="poll_li_dash">-</string>
-    <string name="poll_li_no">NO</string>
-    <string name="poll_li_percentage">%</string>
-
-    <!-- Create Poll strings-->
-    <string name="name_hint">What is the poll name?</string>
-    <string name="question_hint">Type the question!</string>
-    <string name="peer1_hint">First number</string>
-    <string name="peer2_hint">Second number </string>
-    <string name="peer3_hint">Third number</string>
-    <string name="button_send">Send</string>
-    <string name="empty_question_message">Please insert a question first</string>
-    <string name="empty_name_message">Please insert a poll name</string>
-    <string name="invalid_peers_message">Please insert at least one valid phone number</string>
-    <string name="poll_name">Poll Name</string>
-    <string name="poll_question">Poll Question</string>
-    <string name="users">Users</string>
 </resources>
