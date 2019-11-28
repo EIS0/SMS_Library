@@ -39,11 +39,12 @@ public class SMSManager extends CommunicationManager<SMSMessage> {
     private PendingIntent delivered;
 
     /**
-     * Adds the listener watching for incoming SMSMessages.
+     * Set the listener watching for incoming SMSMessages.
      *
      * @param listener The listener to wake up when a message is received.
      * @author Marco Cognolato
      */
+    @Override
     public void setReceiveListener(ReceivedMessageListener<SMSMessage> listener) {
         SMSHandler.setReceiveListener(listener);
     }
@@ -53,6 +54,7 @@ public class SMSManager extends CommunicationManager<SMSMessage> {
      *
      * @author Marco Cognolato
      */
+    @Override
     public void removeReceiveListener() {
         SMSHandler.removeReceiveListener();
     }
@@ -62,6 +64,7 @@ public class SMSManager extends CommunicationManager<SMSMessage> {
      *
      * @author Marco Cognolato
      */
+    @Override
     public void sendMessage(SMSMessage message) {
         SMSHandler.sendMessage(message, null, null);
     }

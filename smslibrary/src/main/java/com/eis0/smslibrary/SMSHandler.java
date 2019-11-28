@@ -43,9 +43,9 @@ public class SMSHandler extends NotificationListenerService {
      * Sets the listener, that is the object to be called when an SMS with the APP_ID is received.
      *
      * @param listener Must be an object that implements the ReceivedMessageListener<SMSMessage> interface.
-     * @author Marco Cognolato
+     * @author Matteo Carnelos
      */
-    protected static void setReceiveListener(ReceivedMessageListener<SMSMessage> listener) {
+    static void setReceiveListener(ReceivedMessageListener<SMSMessage> listener) {
         receivedListener = listener;
         for (SMSMessage pendingMessage : pendingMessages) receivedListener.onMessageReceived(pendingMessage);
         pendingMessages.clear();
@@ -56,7 +56,7 @@ public class SMSHandler extends NotificationListenerService {
      *
      * @author Marco Cognolato
      */
-    protected static void removeReceiveListener() {
+    static void removeReceiveListener() {
         receivedListener = null;
     }
 
@@ -67,7 +67,7 @@ public class SMSHandler extends NotificationListenerService {
      * @author Matteo Carnelos
      * @author Marco Cognolato
      */
-    protected static void handleMessage(SmsMessage sms) {
+    static void handleMessage(SmsMessage sms) {
         String content = sms.getDisplayMessageBody();
         if(content.charAt(0) != APP_ID) return;
         SMSMessage message = new SMSMessage(
@@ -83,7 +83,7 @@ public class SMSHandler extends NotificationListenerService {
      * @return A boolean representing the empty state of the list.
      * @author Matteo Carnelos
      */
-    protected static boolean isPendingMessagesEmpty() {
+    static boolean isPendingMessagesEmpty() {
         return pendingMessages.isEmpty();
     }
 

@@ -1,5 +1,6 @@
 package com.eis0.smslibrary;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 /**
@@ -29,6 +30,7 @@ public class SMSPeer implements Peer, java.io.Serializable {
      * @return String containing the phone address.
      * @author Marco Cognolato
      */
+    @Override
     public String getAddress() {
         return address;
     }
@@ -39,6 +41,8 @@ public class SMSPeer implements Peer, java.io.Serializable {
      * @return String containing the representation of a peer.
      * @author Marco Cognolato
      */
+    @NonNull
+    @Override
     public String toString() {
         return address;
     }

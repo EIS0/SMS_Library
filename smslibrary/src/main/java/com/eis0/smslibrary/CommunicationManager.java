@@ -17,7 +17,7 @@ public abstract class CommunicationManager<T extends Message> {
     public abstract void sendMessage(T message);
 
     /**
-     * Adds a listener that gets called when a message for the library is received.
+     * Set a listener that gets called when a message for the library is received.
      *
      * @param listener The listener to wake up when a message is received.
      * @author Marco Cognolato

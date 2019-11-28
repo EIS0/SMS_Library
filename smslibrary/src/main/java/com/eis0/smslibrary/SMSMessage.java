@@ -1,5 +1,7 @@
 package com.eis0.smslibrary;
 
+import androidx.annotation.NonNull;
+
 /**
  * Class implementing the Message interface, it represent a message of type SMS.
  *
@@ -28,6 +30,7 @@ public class SMSMessage implements Message {
      * @return An SMSPeer object containing all the peer info.
      * @author Marco Cognolato
      */
+    @Override
     public SMSPeer getPeer() {
         return destination;
     }
@@ -38,6 +41,7 @@ public class SMSMessage implements Message {
      * @return A String containing the data.
      * @author Marco Cognolato
      */
+    @Override
     public String getData() {
         return message;
     }
@@ -48,6 +52,8 @@ public class SMSMessage implements Message {
      * @return The String containing the object representation.
      * @author Marco Cognolato
      */
+    @NonNull
+    @Override
     public String toString() {
         return "SMSPeer: " + destination + ", SMSMessage: " + message;
     }
