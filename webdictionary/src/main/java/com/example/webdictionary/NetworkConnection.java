@@ -1,7 +1,5 @@
 package com.example.webdictionary;
 
-import android.util.Log;
-
 import com.eis0.smslibrary.SMSManager;
 import com.eis0.smslibrary.SMSMessage;
 import com.eis0.smslibrary.SMSPeer;
@@ -76,22 +74,44 @@ public class NetworkConnection {
      * @param text The message received with the sender's network state
      */
     void acceptJoin(SMSPeer linkPeer, String text){
-        String[] newPeersOnNet = text.split(" ");
+        String[] newPeersOnNet_asString = text.split(" ");
+        SMSPeer[] newPeersOnNet = new SMSPeer[newPeersOnNet_asString.length];
+        for(int i = 0; i < newPeersOnNet_asString.length; i++)
+            newPeersOnNet[i] = new SMSPeer(newPeersOnNet_asString[i]);
+
         SMSPeer[] oldPeersInNet = subscribers.toArray(new SMSPeer[0]);
         //add new peers to my net
         addToNet(text);
         addToNet(oldPeersInNet);
         //notify new peers of my old peers
-        for(String newPeerAddress: newPeersOnNet){
-            SMSPeer newPeer = new SMSPeer(newPeerAddress);
-            SMSManager.getInstance().sendMessage(new SMSMessage(newPeer, RequestType.AddPeers.ordinal() + " " + oldPeersInNet));
-        }
+        partCast(newPeersOnNet, RequestType.AddPeers.ordinal() + " " + oldPeersInNet);
         //notify my old peers about the new ones
-        for(SMSPeer oldPeer : oldPeersInNet){
-            SMSManager.getInstance().sendMessage(new SMSMessage(oldPeer, RequestType.AddPeers.ordinal() + " " + text));
-        }
+        partCast(oldPeersInNet, RequestType.AddPeers.ordinal() + " " + text);
     }
 
+    //endregion
+
+    //region BroadcastMethods
+
+    /**
+     * Broadcasts a valid message to the whole network
+     * @param message The message to broadcast
+     */
+    public void broadcast(String message){
+        partCast(subscribers.toArray(new SMSPeer[0]), message);
+    }
+
+    /**
+     * Sends a message to a small part of users
+     * @param peers The list of peers to send the message to
+     * @param message The message to send
+     */
+    public void partCast(SMSPeer[] peers, String message){
+        for(SMSPeer peer : peers){
+            SMSMessage wholeMessage = new SMSMessage(peer, message);
+            SMSManager.getInstance().sendMessage(wholeMessage);
+        }
+    }
     //endregion
 
     //region LeaveMethods
@@ -114,9 +134,7 @@ public class NetworkConnection {
         //remove the peer
         removeFromNet(peer.getAddress());
         //notify my old peers about the exit
-        for(SMSPeer oldPeer : subscribers){
-            SMSManager.getInstance().sendMessage(new SMSMessage(oldPeer, RequestType.RemovePeers.ordinal() + " " + peer.getAddress()));
-        }
+        broadcast(RequestType.RemovePeers.ordinal() + " " + peer.getAddress());
     }
 
     //endregion
