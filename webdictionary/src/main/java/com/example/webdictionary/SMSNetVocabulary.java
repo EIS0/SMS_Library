@@ -1,7 +1,5 @@
 package com.example.webdictionary;
 
-import android.util.Log;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,48 +8,55 @@ import java.util.Map;
  */
 public class SMSNetVocabulary implements NetworkVocabulary<SerializableObject, SerializableObject> {
 
-    private Map <SerializableObject, SerializableObject> NetDict;
-    private String LOG_KEY = "NET_DICTIONARY";
+    private Map<SerializableObject, SerializableObject> netDict = new HashMap<>();
 
-    public SMSNetVocabulary(){
-        NetDict = new HashMap<>();
-    }
+    public SMSNetVocabulary(){ }
 
     /**
      * If present, it returns the given key resource, else it returns null
-     * @param key having resources we want
-     * @return key's resource
+     * @param key The key for which we want a resource
+     * @return Returns the key's resource if found, else returns null
      */
     public SerializableObject getResource(SerializableObject key){
-        try{
-           return NetDict.get(key);
-        }
-        catch(Exception e){
-            Log.i(LOG_KEY, "User not present.");
-            return null;
-        }
+       return netDict.get(key);
     }
 
     /**
      * Adds a valid Key-Resource couple to the network dictionary.
-     * If already presents, change the key resource
+     * If already presents, updates the key-resource pair
      * @param key A key to add to the dictionary
      * @param resource A Resource to add to the dictionary
+     * @throws NullPointerException If the key or resource is null
      */
     public void add(SerializableObject key, SerializableObject resource){
-        if(!NetDict.containsKey(key)) NetDict.put(key, resource);
-        else { //associate the new resource
-            NetDict.remove(key);
-            NetDict.put(key, resource); //didn't find a more elegant way
+        if(key == null || resource == null) throw new NullPointerException();
+        if(!netDict.containsKey(key)) netDict.put(key, resource);
+        else {
+            //update the resource since it's already present
+            update(key, resource);
         }
     }
 
     /**
      * Removes a given valid Key (and its Resource) from the network dictionary
      * @param key to remove
+     * @throws NullPointerException If key is null
      */
     public void remove(SerializableObject key) {
-        NetDict.remove(key);
+        if(key == null) throw new NullPointerException();
+        netDict.remove(key);
+    }
+
+    /**
+     * Updates a resource associated with a key
+     * @param key The key associated with the Resource to update
+     * @param resource The Resource to update
+     * @throws NullPointerException If key or resource is null
+     * @author Marco Cognolato
+     */
+    public void update(SerializableObject key, SerializableObject resource){
+        netDict.remove(key);
+        netDict.put(key, resource);
     }
 }
 

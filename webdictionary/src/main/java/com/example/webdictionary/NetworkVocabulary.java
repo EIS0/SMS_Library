@@ -23,4 +23,11 @@ interface NetworkVocabulary<K, V> {
      * @param key The key to remove from the Vocabulary
      */
     void remove(K key);
+
+    /**
+     * Updates a resource associated with a key
+     * @param key The key associated with the Resource to update
+     * @param resource The Resource to update
+     */
+    void update(K key, V resource);
 }
