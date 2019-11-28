@@ -33,6 +33,21 @@ public class SMSKademliaNode implements Serializable {
      */
     public KademliaId getNodeId() { return this.nodeId; }
 
+    /**
+     * @return The receiving port of the node.
+     */
+    public int getPort() {
+        return port;
+    }
+
+    /**
+     * @return The node's phone number.
+     */
+    public SMSPeer getPhoneNumber() {
+        return phoneNumber;
+    }
+
+
     @Override
     public boolean equals(Object toCompare) {
         if (toCompare instanceof SMSKademliaNode) {
