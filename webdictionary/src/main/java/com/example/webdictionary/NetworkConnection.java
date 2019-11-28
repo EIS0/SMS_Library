@@ -18,9 +18,7 @@ public class NetworkConnection {
     private static NetworkConnection net;
     private NetworkConnection(SMSPeer myPeer){
         if(myPeer != null){
-            Log.d(LOG_KEY, "Found myPeer: " + myPeer.getAddress());
             if(myPeer.isValid()){
-                Log.d(LOG_KEY, "Added myPeer: " + myPeer.getAddress());
                 subscribers.add(myPeer);
             }
         }
@@ -35,7 +33,6 @@ public class NetworkConnection {
     }
 
     private ArrayList<SMSPeer> subscribers = new ArrayList<>();
-    private final String LOG_KEY = "NetCon";
     private ArrayList<PingTracker> tracking = new ArrayList<>();
     private final int TRACKING_TIME = 1000 * 60 * 10; //1000 ms (1s) * 60s (1min) * 10 (10mins)
 
@@ -86,13 +83,11 @@ public class NetworkConnection {
         addToNet(oldPeersInNet);
         //notify new peers of my old peers
         for(String newPeerAddress: newPeersOnNet){
-            Log.d(LOG_KEY, "New Peer: " + newPeerAddress);
             SMSPeer newPeer = new SMSPeer(newPeerAddress);
             SMSManager.getInstance().sendMessage(new SMSMessage(newPeer, RequestType.AddPeers.ordinal() + " " + oldPeersInNet));
         }
         //notify my old peers about the new ones
         for(SMSPeer oldPeer : oldPeersInNet){
-            Log.d(LOG_KEY, "Old Peer: " + oldPeer.getAddress());
             SMSManager.getInstance().sendMessage(new SMSMessage(oldPeer, RequestType.AddPeers.ordinal() + " " + text));
         }
     }
@@ -120,7 +115,6 @@ public class NetworkConnection {
         removeFromNet(peer.getAddress());
         //notify my old peers about the exit
         for(SMSPeer oldPeer : subscribers){
-            Log.d(LOG_KEY, "Old Peer: " + oldPeer.getAddress());
             SMSManager.getInstance().sendMessage(new SMSMessage(oldPeer, RequestType.RemovePeers.ordinal() + " " + peer.getAddress()));
         }
     }
@@ -218,7 +212,6 @@ public class NetworkConnection {
      */
     public void removeFromNet(String peersInNet){
         if(peersInNet == null) throw new IllegalArgumentException();
-        Log.d(LOG_KEY, "Removing these Peers: " + peersInNet);
         String[] peers = peersInNet.split(" ");
         for(String peer : peers){
             removeFromNet(new SMSPeer(peer));
@@ -232,7 +225,6 @@ public class NetworkConnection {
      */
     public void removeFromNet(SMSPeer peer){
         if(peer == null || !peer.isValid()) throw new IllegalArgumentException();
-        Log.d(LOG_KEY, "Removing this Peer: " + peer);
         subscribers.remove(peer);
     }
 

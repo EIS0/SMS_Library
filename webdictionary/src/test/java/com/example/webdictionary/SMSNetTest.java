@@ -10,7 +10,7 @@ import static org.junit.Assert.assertEquals;
  * @author Edoardo Raimondi
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
-public class SMSNet_Tests {
+public class SMSNetTest {
     @Test
     public void Instantiation_noErrors() {
         SMSNetVocabulary net = new SMSNetVocabulary();

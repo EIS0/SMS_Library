@@ -28,6 +28,10 @@ public class PingTracker extends TimerTask {
      */
     @Override
     public void run() {
+        tick();
+    }
+
+    void tick(){
         if(shouldRun){
             pingsMissed++;
             if(pingsMissed >= maxPingMisses){
@@ -40,22 +44,33 @@ public class PingTracker extends TimerTask {
     /**
      * Resets the counter for the ping misses
      */
-    void pingReceived(){
+    public void pingReceived(){
         if(shouldRun) pingsMissed = 0;
     }
 
     /**
      * Disables the timer checks
      */
-    void disable(){
+    public void disable(){
         shouldRun = false;
     }
 
     /**
      * Re-enables the timer checks
      */
-    void enable(){
+    public void enable(){
         shouldRun = true;
+    }
+
+    /**
+     * Returns true if the timer is enabled, else returns false
+     */
+    public boolean isEnabled(){
+        return shouldRun;
+    }
+
+    public int pingsMissing(){
+        return maxPingMisses - pingsMissed;
     }
 
     /**

@@ -23,7 +23,7 @@ import static org.junit.Assert.fail;
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
 @RunWith(AndroidJUnit4.class)
-public class NetworkConnection_Tests {
+public class NetworkConnectionTest {
     @Rule public GrantPermissionRule sendSMSRule = GrantPermissionRule.grant(Manifest.permission.SEND_SMS);
     @Rule public GrantPermissionRule receiveSMSRule = GrantPermissionRule.grant(Manifest.permission.RECEIVE_SMS);
     @Rule public GrantPermissionRule readPhoneStateRule = GrantPermissionRule.grant(Manifest.permission.READ_PHONE_STATE);
