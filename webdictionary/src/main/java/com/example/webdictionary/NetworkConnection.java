@@ -17,7 +17,7 @@ public class NetworkConnection {
 
     //Singleton Design Pattern https://refactoring.guru/design-patterns/singleton
     private static NetworkConnection net;
-    private NetworkConnection(Context context, SMSPeer myPeer){
+    private NetworkConnection(SMSPeer myPeer){
         netDict = new SMSNetDictionary();
         if(myPeer != null){
             Log.d(LOG_KEY, "Found myPeer: " + myPeer.getAddress());
@@ -27,19 +27,18 @@ public class NetworkConnection {
             }
         }
         NetworkListener listener = new NetworkListener(this);
-        SMSManager.getInstance(context).addReceiveListener(listener);
+        SMSManager.getInstance().addReceiveListener(listener);
     }
-    public static NetworkConnection getInstance(Context context, SMSPeer myPeer){
+    public static NetworkConnection getInstance(SMSPeer myPeer){
         if(net == null){
-            net = new NetworkConnection(context, myPeer);
+            net = new NetworkConnection(myPeer);
         }
-        net.context = context;
+        //net.context = context;
         return net;
     }
 
     private SMSNetDictionary netDict;
     private ArrayList<SMSPeer> subscribers = new ArrayList<>();
-    private Context context;
     private final String LOG_KEY = "NetCon";
     private ArrayList<PingTracker> tracking = new ArrayList<>();
     private final int TRACKING_TIME = 1000 * 60 * 10; //1000 ms (1s) * 60s (1min) * 10 (10mins)
@@ -56,7 +55,7 @@ public class NetworkConnection {
         String textRequest = RequestType.JoinPermission.ordinal() + " " + peersInNetwork();
         SMSMessage message = new SMSMessage(peer, textRequest);
 
-        SMSManager.getInstance(context).sendMessage(message);
+        SMSManager.getInstance().sendMessage(message);
     }
 
     /**
@@ -93,12 +92,12 @@ public class NetworkConnection {
         for(String newPeerAddress: newPeersOnNet){
             Log.d(LOG_KEY, "New Peer: " + newPeerAddress);
             SMSPeer newPeer = new SMSPeer(newPeerAddress);
-            SMSManager.getInstance(context).sendMessage(new SMSMessage(newPeer, RequestType.AddPeers.ordinal() + " " + oldPeersInNet));
+            SMSManager.getInstance().sendMessage(new SMSMessage(newPeer, RequestType.AddPeers.ordinal() + " " + oldPeersInNet));
         }
         //notify my old peers about the new ones
         for(SMSPeer oldPeer : oldPeersInNet){
             Log.d(LOG_KEY, "Old Peer: " + oldPeer.getAddress());
-            SMSManager.getInstance(context).sendMessage(new SMSMessage(oldPeer, RequestType.AddPeers.ordinal() + " " + text));
+            SMSManager.getInstance().sendMessage(new SMSMessage(oldPeer, RequestType.AddPeers.ordinal() + " " + text));
         }
     }
 
@@ -113,7 +112,7 @@ public class NetworkConnection {
     public void askToLeave(SMSPeer peer){
         if(peer == null || !peer.isValid()) throw new IllegalArgumentException();
         SMSMessage message = new SMSMessage(peer, RequestType.LeavePermission.ordinal()+"");
-        SMSManager.getInstance(context).sendMessage(message);
+        SMSManager.getInstance().sendMessage(message);
     }
 
     /**
@@ -126,7 +125,7 @@ public class NetworkConnection {
         //notify my old peers about the exit
         for(SMSPeer oldPeer : subscribers){
             Log.d(LOG_KEY, "Old Peer: " + oldPeer.getAddress());
-            SMSManager.getInstance(context).sendMessage(new SMSMessage(oldPeer, RequestType.RemovePeers.ordinal() + " " + peer.getAddress()));
+            SMSManager.getInstance().sendMessage(new SMSMessage(oldPeer, RequestType.RemovePeers.ordinal() + " " + peer.getAddress()));
         }
     }
 
@@ -151,7 +150,7 @@ public class NetworkConnection {
     public void sendPing(SMSPeer peer){
         if(peer == null || !peer.isValid()) throw new IllegalArgumentException();
         SMSMessage message = new SMSMessage(peer, RequestType.Ping.ordinal()+"");
-        SMSManager.getInstance(context).sendMessage(message);
+        SMSManager.getInstance().sendMessage(message);
     }
 
     /**
@@ -284,17 +283,4 @@ public class NetworkConnection {
     }
 
     //endregion
-
-    /**
-     * Updates the current Network State of a Peer
-     * N.B. Since the lesson with the professor this method should not work this way
-     * @param peer The peer to update his resources
-     * @param resources The resources of the Peer
-     */
-    public void updateNet(String peer, SMSResource[] resources){
-        Log.d(LOG_KEY, "Updating this Peer: " + peer);
-        SMSPeer peerToUpdate = new SMSPeer(peer);
-        subscribers.remove(peerToUpdate);
-        subscribers.add(peerToUpdate);
-    }
 }
