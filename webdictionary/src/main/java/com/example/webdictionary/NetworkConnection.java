@@ -1,6 +1,5 @@
 package com.example.webdictionary;
 
-import android.content.Context;
 import android.util.Log;
 
 import com.eis0.smslibrary.SMSManager;
@@ -18,7 +17,6 @@ public class NetworkConnection {
     //Singleton Design Pattern https://refactoring.guru/design-patterns/singleton
     private static NetworkConnection net;
     private NetworkConnection(SMSPeer myPeer){
-        netDict = new SMSNetDictionary();
         if(myPeer != null){
             Log.d(LOG_KEY, "Found myPeer: " + myPeer.getAddress());
             if(myPeer.isValid()){
@@ -33,11 +31,9 @@ public class NetworkConnection {
         if(net == null){
             net = new NetworkConnection(myPeer);
         }
-        //net.context = context;
         return net;
     }
 
-    private SMSNetDictionary netDict;
     private ArrayList<SMSPeer> subscribers = new ArrayList<>();
     private final String LOG_KEY = "NetCon";
     private ArrayList<PingTracker> tracking = new ArrayList<>();

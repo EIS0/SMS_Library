@@ -1,10 +1,8 @@
 package com.example.webdictionary;
 
 import android.Manifest;
-import android.content.Context;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.GrantPermissionRule;
 
 import com.eis0.smslibrary.SMSPeer;
@@ -26,59 +24,51 @@ import static org.junit.Assert.fail;
  */
 @RunWith(AndroidJUnit4.class)
 public class NetworkConnection_Tests {
-
     @Rule public GrantPermissionRule sendSMSRule = GrantPermissionRule.grant(Manifest.permission.SEND_SMS);
     @Rule public GrantPermissionRule receiveSMSRule = GrantPermissionRule.grant(Manifest.permission.RECEIVE_SMS);
     @Rule public GrantPermissionRule readPhoneStateRule = GrantPermissionRule.grant(Manifest.permission.READ_PHONE_STATE);
     @Rule public GrantPermissionRule readSMSRule = GrantPermissionRule.grant(Manifest.permission.READ_SMS);
 
-    private Context appContext;
     private NetworkConnection instance;
 
     @Before
     public void useAppContext() {
         // Context of the app under test.
-        appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        instance = NetworkConnection.getInstance(appContext, new SMSPeer("5554"));
+        instance = NetworkConnection.getInstance(new SMSPeer("5554"));
         instance.clearNet();
     }
 
     @Test
-    public void checkContext(){
-        assertEquals("com.example.webdictionary.test", appContext.getPackageName());
-    }
-
-    @Test
     public void validNetworkInstance_noErrors(){
-        NetworkConnection.getInstance(appContext, new SMSPeer("5554"));
+        NetworkConnection.getInstance(new SMSPeer("5554"));
     }
 
     @Test
     public void singletonPattern(){
-        NetworkConnection inst1 = NetworkConnection.getInstance(appContext, null);
-        NetworkConnection inst2 = NetworkConnection.getInstance(appContext, null);
+        NetworkConnection inst1 = NetworkConnection.getInstance(null);
+        NetworkConnection inst2 = NetworkConnection.getInstance(null);
         assertEquals(inst1, inst2);
     }
 
     @Test
     public void networkInstance_nullPeerInConstructor_noErrors(){
-        NetworkConnection.getInstance(appContext, null);
+        NetworkConnection.getInstance(null);
     }
 
     @Test
     public void netJoinRequest_noErrors(){
-        NetworkConnection.getInstance(appContext, null).askToJoin(new SMSPeer("5556"));
+        NetworkConnection.getInstance(null).askToJoin(new SMSPeer("5556"));
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void netJoinRequest_invalidPeer_errors(){
-        NetworkConnection.getInstance(appContext, null).askToJoin(new SMSPeer("asdf"));
+        NetworkConnection.getInstance(null).askToJoin(new SMSPeer("asdf"));
         fail();
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void netJoinRequest_nullPeer_errors(){
-        NetworkConnection.getInstance(appContext, null).askToJoin(null);
+        NetworkConnection.getInstance(null).askToJoin(null);
         fail();
     }
 

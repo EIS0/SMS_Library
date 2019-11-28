@@ -1,5 +1,7 @@
 package com.eis0.smslibrary;
 
+import androidx.annotation.Nullable;
+
 /**
  * Class that implements the Peer interface. It represent the telephone Peer.
  *

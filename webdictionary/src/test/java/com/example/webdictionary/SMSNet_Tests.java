@@ -1,15 +1,8 @@
 package com.example.webdictionary;
 
-import com.eis0.smslibrary.SMSPeer;
-
 import org.junit.Test;
 
-import java.util.HashMap;
-
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -20,7 +13,7 @@ import static org.junit.Assert.assertTrue;
 public class SMSNet_Tests {
     @Test
     public void Instantiation_noErrors() {
-        SMSNetDictionary net = new SMSNetDictionary();
+        SMSNetVocabulary net = new SMSNetVocabulary();
     }
 
     //SerializableObject key implementation
@@ -75,53 +68,19 @@ public class SMSNet_Tests {
     //creation of the values
     SerializableObjectTestValue v1 = new SerializableObjectTestValue();
     SerializableObjectTestValue v2 = new SerializableObjectTestValue();
-    @Test
-    public void addKey_CheckIfAdded() {
-        SMSNetDictionary net = new SMSNetDictionary();
-        net.add(k1, v2);
-        assertEquals(net.getAvailableKeys()[0], k1);
-    }
-
-    @Test
-    public void addKey_NoResource_CheckIfAdded() {
-        SMSNetDictionary net = new SMSNetDictionary();
-        net.add(k1, null);
-        assertEquals(net.getAvailableKeys()[0], k1);
-    }
 
     @Test
     public void addResource_CheckIfAdded() {
-        SMSNetDictionary net = new SMSNetDictionary();
+        SMSNetVocabulary net = new SMSNetVocabulary();
         net.add(k1, v2);
         assertEquals(net.getResource(k1), v2);
     }
 
     @Test
-    public void removeKey_CheckNoPeer() {
-        SMSNetDictionary net = new SMSNetDictionary();
-        net.add(k2, v1);
-        net.remove(k2);
-        assertEquals(net.getAvailableKeys().length, 0);
-    }
-
-    @Test
     public void removeKey_CheckNoResources() {
-        SMSNetDictionary net = new SMSNetDictionary();
+        SMSNetVocabulary net = new SMSNetVocabulary();
         net.add(k1, v1);
         net.remove(k1);
         assertEquals(net.getResource(k1), null);
     }
-
-
-    @Test
-    public void addMultipleKeys(){
-        SMSNetDictionary net = new SMSNetDictionary();
-        net.add(k1, v1);
-        net.add(k2, v2);
-        SerializableObject[] keys = net.getAvailableKeys();
-        assertEquals(keys.length, 2);
-    }
-
-
-
 }
