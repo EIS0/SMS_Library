@@ -12,7 +12,7 @@ import android.content.IntentFilter;
  * @author Marco Cognolato
  * @author Matteo Carnelos
  */
-public class SMSManager extends CommunicationHandler<SMSMessage> {
+public class SMSManager extends CommunicationManager<SMSMessage> {
 
     // Singleton Design Pattern
     private SMSManager() { }
@@ -44,7 +44,7 @@ public class SMSManager extends CommunicationHandler<SMSMessage> {
      * @param listener The listener to wake up when a message is received.
      * @author Marco Cognolato
      */
-    public void addReceiveListener(ReceivedMessageListener<SMSMessage> listener) {
+    public void setReceiveListener(ReceivedMessageListener<SMSMessage> listener) {
         SMSHandler.setReceiveListener(listener);
     }
 

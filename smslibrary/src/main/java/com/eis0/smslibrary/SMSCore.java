@@ -27,7 +27,7 @@ public class SMSCore extends BroadcastReceiver {
      * @param delivered PendingIntent to activate when the message is delivered.
      * @author Matteo Carnelos
      */
-    protected static void sendMessage(SMSMessage message, PendingIntent sent, PendingIntent delivered) {
+    static void sendMessage(SMSMessage message, PendingIntent sent, PendingIntent delivered) {
         String destination = message.getPeer().getAddress();
         String textMessage = message.getData();
         manager.sendTextMessage(destination,null, textMessage, sent, delivered);
