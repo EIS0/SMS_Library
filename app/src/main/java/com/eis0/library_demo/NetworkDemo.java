@@ -18,7 +18,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.eis0.smslibrary.SMSPeer;
-import com.example.webdictionary.NetworkConnection;
+import com.eis0.webdictionary.NetworkConnection;
 
 import java.util.ArrayList;
 import java.util.Timer;
