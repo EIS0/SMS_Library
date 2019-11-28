@@ -1,5 +1,7 @@
 package com.example.kademlia;
 
+import com.eis0.smslibrary.SMSPeer;
+
 import org.junit.Test;
 
 
@@ -7,7 +9,8 @@ import static org.junit.Assert.*;
 
 public class ContactTest {
     KademliaId random = new KademliaId();
-    SMSKademliaNode toTest = new SMSKademliaNode(random, 123 ); //crete a random id
+    SMSKademliaNode toTest = new SMSKademliaNode(random, 123,
+            new SMSPeer("3497364511"));    //crete a random id
     Contact test = new Contact(toTest);
 
     @Test
