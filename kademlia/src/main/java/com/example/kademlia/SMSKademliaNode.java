@@ -1,5 +1,9 @@
 package com.example.kademlia;
 
+import androidx.annotation.NonNull;
+
+import com.eis0.smslibrary.SMSPeer;
+
 import java.io.Serializable;
 
 /**
@@ -9,16 +13,23 @@ public class SMSKademliaNode implements Serializable {
 
     private KademliaId nodeId;
     private int port;
-    private final String strRep;
+    private SMSPeer phoneNumber;
 
-    public SMSKademliaNode(KademliaId nid, int port) {
-        this.nodeId = nid;
+    /**
+     * Stores information of a Kademlia node.
+     * @param nodeId        The node's ID.
+     * @param port          The port used by the node for communication.
+     * @param phoneNumber   The phone associated to the node, replaces its IP address in our
+     *                      implementation.
+     */
+    public SMSKademliaNode(KademliaId nodeId, int port, SMSPeer phoneNumber) {
+        this.nodeId = nodeId;
         this.port = port;
-        this.strRep = this.nodeId.toString();
+        this.phoneNumber = phoneNumber;
     }
 
     /**
-     * @return The NodeId object of this node
+     * @return This node's ID.
      */
     public KademliaId getNodeId() { return this.nodeId; }
 
@@ -40,6 +51,7 @@ public class SMSKademliaNode implements Serializable {
     }
 
     @Override
+    @NonNull
     public String toString() {
         return this.getNodeId().toString();
     }
