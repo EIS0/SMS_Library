@@ -9,7 +9,7 @@ import java.io.File;
  */
 public class DefaultConfiguration implements KadConfiguration {
 
-    private final static int K = 5; // system-wide replication parameter
+    private final static int K = 2; // system-wide replication parameter
     private final static int RCSIZE = 3;
     private final static int STALE = 1;
     private static final String FOLDER = "kademlia";

@@ -194,6 +194,11 @@ public class SMSKademliaBucket implements KademliaBucket {
         }
     }
 
+    /**
+     * Remove a contact from the replacement cache
+     * @param n Node to remove
+     * @return Contact removed
+     */
     private Contact removeFromReplacementCache(SMSKademliaNode n) {
         for (Contact c : this.replacementCache) {
             if (c.getNode().equals(n)) {
@@ -204,6 +209,14 @@ public class SMSKademliaBucket implements KademliaBucket {
 
         /* We got here means this element does not exist */
         throw new NoSuchElementException("Node does not exist in the replacement cache. ");
+    }
+
+    /**
+     *
+     * @return replacementChace size
+     */
+    public int getReplacementCacheSize(){
+        return this.replacementCache.size();
     }
 
     @Override

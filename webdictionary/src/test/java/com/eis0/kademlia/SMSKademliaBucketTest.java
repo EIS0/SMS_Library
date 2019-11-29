@@ -1,5 +1,7 @@
 package com.eis0.kademlia;
 
+import android.content.Context;
+
 import com.eis0.smslibrary.SMSPeer;
 
 import org.junit.Test;
@@ -10,6 +12,8 @@ public class SMSKademliaBucketTest {
     KadConfiguration config = new DefaultConfiguration();
     KademliaId ID = new KademliaId("00000000000000000001");
     KademliaId ID2 = new KademliaId("00000000000000000011");
+    KademliaId ID3 = new KademliaId();
+    SMSKademliaNode test3 = new SMSKademliaNode(ID3, 123, new SMSPeer("3408140326"));
     SMSKademliaNode test2 = new SMSKademliaNode(ID2, 123, new SMSPeer("3497364511"));
     SMSKademliaNode test = new SMSKademliaNode(ID, 123, new SMSPeer("3497312345"));
     SMSKademliaRoutingTable routingTable = new SMSKademliaRoutingTable(test, config);
@@ -63,4 +67,24 @@ public class SMSKademliaBucketTest {
         toTest.insert(c);
         assertTrue(toTest.removeNode(test));
     }
+
+    @Test
+    public void addContacts_IfFullBucket(){
+        /*with default configuration buckets are 2 units capacious*/
+        Contact c1 = new Contact(test);
+        Contact c2 = new Contact(test2);
+        /*I expect this contact to be add to the replacement cache*/
+        Contact c3 = new Contact(test3);
+        toTest.insert(c1);
+        toTest.insert(c2);
+        toTest.insert(c3);
+        assertEquals(toTest.getReplacementCacheSize(), 1);
+    }
+
+    @Test
+    public void getReplacementCacheSizeTest(){
+        assertEquals(toTest.getReplacementCacheSize(), 0);
+    }
+
+
 }
