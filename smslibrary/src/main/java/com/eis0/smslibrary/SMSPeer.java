@@ -45,6 +45,7 @@ public class SMSPeer implements Peer, java.io.Serializable {
      *
      * @return String containing the phone address.
      * @author Marco Cognolato
+     * @author Matteo Carnelos
      */
     @Override
     public String getAddress() {
@@ -56,6 +57,7 @@ public class SMSPeer implements Peer, java.io.Serializable {
      *
      * @return String containing the representation of a peer.
      * @author Marco Cognolato
+     * @author Matteo Carnelos
      */
     @NonNull
     @Override
@@ -68,6 +70,7 @@ public class SMSPeer implements Peer, java.io.Serializable {
      *
      * @return A boolean representing the valid state of the peer.
      * @author Marco Cognolato
+     * @author Matteo Carnelos
      */
     public boolean isValid() {
         return phoneNumberUtil.isPossibleNumber(phoneNumber);
