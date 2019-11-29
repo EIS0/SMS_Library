@@ -18,6 +18,13 @@ public class SMSManager extends CommunicationManager<SMSMessage> {
     private SMSManager() { }
     private static SMSManager instance = null;
 
+    private SentMessageListener smsSentListener;
+    private BroadcastReceiver onSend = null;
+    private DeliveredMessageListener smsDeliveredListener;
+    private BroadcastReceiver onDeliver = null;
+    private PendingIntent sent;
+    private PendingIntent delivered;
+
     /**
      * Returns an instance of SMSManager if none exist, otherwise the one instance already created
      * as per the Singleton Design Patter, gets also the context of the application for future use.
@@ -30,13 +37,6 @@ public class SMSManager extends CommunicationManager<SMSMessage> {
         if(instance == null) instance = new SMSManager();
         return instance;
     }
-
-    private SentMessageListener smsSentListener;
-    private BroadcastReceiver onSend = null;
-    private DeliveredMessageListener smsDeliveredListener;
-    private BroadcastReceiver onDeliver = null;
-    private PendingIntent sent;
-    private PendingIntent delivered;
 
     /**
      * Set the listener watching for incoming SMSMessages.

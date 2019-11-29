@@ -1,11 +1,9 @@
 package com.eis0.smslibrary;
 
-import android.annotation.TargetApi;
 import android.app.PendingIntent;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
 import android.telephony.SmsMessage;
-import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -16,7 +14,6 @@ import java.util.ArrayList;
  * @author Matteo Carnelos
  * @author Marco Cognolato
  */
-@TargetApi(21)
 public class SMSHandler extends NotificationListenerService {
 
     private static final char APP_ID = '\r';

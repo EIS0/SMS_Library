@@ -9,6 +9,9 @@ import androidx.annotation.NonNull;
  */
 public class SMSMessage implements Message {
 
+    // Public needed for test, but is also good to let the user know
+    public static final int MAX_MESSAGE_LENGTH = 160;
+
     private SMSPeer destination;
     private String message;
 
@@ -17,11 +20,14 @@ public class SMSMessage implements Message {
      *
      * @param destination The destination Peer object.
      * @param message The String message.
+     * @throws IllegalArgumentException If the message body is empty or exceeds the MAX_MESSAGE_LENGTH.
      * @author Marco Cognolato
      */
     public SMSMessage(SMSPeer destination, String message) {
         this.destination = destination;
         this.message = message;
+        if(!isValid())
+            throw new IllegalArgumentException("Cannot create SMSMessage: invalid message body.");
     }
 
     /**
@@ -44,6 +50,16 @@ public class SMSMessage implements Message {
     @Override
     public String getData() {
         return message;
+    }
+
+    /**
+     * Tells if an SMSMessage object is valid.
+     *
+     * @return True if the object is valid, false otherwise.
+     * @author Matteo Carnelos
+     */
+    public boolean isValid() {
+        return !message.isEmpty() && message.length() <= MAX_MESSAGE_LENGTH;
     }
 
     /**

@@ -9,7 +9,7 @@ import android.telephony.SmsMessage;
 import android.util.Log;
 
 /**
- * Core class of the library. It is the lowest level class, so the one wihich communicate with the
+ * Core class of the library. It is the lowest level class, so the one which communicate with the
  * system APIs.
  *
  * @author Matteo Carnelos

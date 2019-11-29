@@ -2,6 +2,13 @@ package com.eis0.smslibrary;
 
 import org.junit.Test;
 
+import static org.junit.Assert.fail;
+
+/**
+ * Test class for SMSCore.
+ *
+ * @author Matteo Carnelos
+ */
 public class SMSCoreTest {
 
     /**
@@ -15,5 +22,6 @@ public class SMSCoreTest {
         SMSPeer testPeer = new SMSPeer("0123456789");
         SMSMessage testMessage = new SMSMessage(testPeer, "Hello");
         SMSCore.sendMessage(testMessage, null, null);
+        fail();
     }
 }

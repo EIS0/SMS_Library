@@ -22,6 +22,7 @@ public class SMSHandlerTest {
         SMSPeer testPeer = new SMSPeer("0123456789");
         SMSMessage testMessage = new SMSMessage(testPeer, "Hello");
         SMSHandler.sendMessage(testMessage, null, null);
+        fail();
     }
 
     /**
@@ -30,7 +31,12 @@ public class SMSHandlerTest {
      * @author Matteo Carnelos
      */
     @Test
-    public void emptyPendingMessages_isRecognized() {
+    public void pendingMessages_isEmptied() {
+        ReceivedMessageListener<SMSMessage> testListener = new ReceivedMessageListener<SMSMessage>() {
+            @Override
+            public void onMessageReceived(SMSMessage message) {}
+        };
+        SMSHandler.setReceiveListener(testListener);
         assertTrue(SMSHandler.isPendingMessagesEmpty());
     }
 }

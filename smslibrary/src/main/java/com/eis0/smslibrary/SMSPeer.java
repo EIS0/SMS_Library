@@ -3,6 +3,10 @@ package com.eis0.smslibrary;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.google.i18n.phonenumbers.NumberParseException;
+import com.google.i18n.phonenumbers.PhoneNumberUtil;
+import com.google.i18n.phonenumbers.Phonenumber;
+
 /**
  * Class that implements the Peer interface. It represent the telephone Peer.
  *
@@ -10,18 +14,30 @@ import androidx.annotation.Nullable;
  */
 public class SMSPeer implements Peer, java.io.Serializable {
 
-    private String address;
-    private final String MATCH_EXPRESSION = "^\\+?\\d{4,15}$";
+    private PhoneNumberUtil phoneNumberUtil = PhoneNumberUtil.getInstance();
+    private Phonenumber.PhoneNumber phoneNumber;
 
     /**
      * Creates and returns an SMSPeer given a valid destination.
      *
      * @param destination String containing the destination address.
+     * @throws IllegalArgumentException If the destination given is not valid or is not a phone number.
      * @author Marco Cognolato
+     * @author Matteo Carnelos
      */
     public SMSPeer(String destination) {
-        this.address = destination;
-        if(!isValid()) throw new IllegalArgumentException();
+        IllegalArgumentException exception = new IllegalArgumentException("Cannot create SMSPeer: invalid destination.");
+        try {
+            phoneNumber = phoneNumberUtil.parse(destination, "IT");
+        } catch(NumberParseException e) {
+            throw exception;
+        }
+        // If the destination is a simulator phone number (i.e. 555*) adds the extension: 555521
+        // The following two lines are intended for simulator use only
+        if(getAddress().matches("^555\\d$"))
+            phoneNumber.setNationalNumber(Long.parseLong("555521" + getAddress()));
+        if(!isValid())
+            throw exception;
     }
 
     /**
@@ -32,7 +48,7 @@ public class SMSPeer implements Peer, java.io.Serializable {
      */
     @Override
     public String getAddress() {
-        return address;
+        return String.valueOf(phoneNumber.getNationalNumber());
     }
 
     /**
@@ -44,30 +60,7 @@ public class SMSPeer implements Peer, java.io.Serializable {
     @NonNull
     @Override
     public String toString() {
-        return address;
-    }
-
-    /**
-     * Returns true if the address is empty.
-     *
-     * @return A boolean representing the empty state.
-     * @author Marco Cognolato
-     */
-    public boolean isEmpty() {
-        return address.equals("");
-    }
-
-    /**
-     * Returns true if SMSPeer has prefix.
-     *
-     * @return A boolean representing whenever or not the peer has a prefix.
-     * @author Matteo Carnelos
-     */
-    public boolean hasPrefix() {
-        String[] prefixSigns = {"+", "00"};
-        for(String prefixSign : prefixSigns)
-            if(getAddress().startsWith(prefixSign)) return true;
-        return false;
+        return getAddress();
     }
 
     /**
@@ -77,21 +70,27 @@ public class SMSPeer implements Peer, java.io.Serializable {
      * @author Marco Cognolato
      */
     public boolean isValid() {
-        return address != null && !address.isEmpty() && address.matches(MATCH_EXPRESSION);
+        return phoneNumberUtil.isPossibleNumber(phoneNumber);
     }
 
     /**
+     * Tell if two SMSPeer are equals.
+     *
+     * @return True if the compared objects are equals, false otherwise.
      * @author Giovanni Velludo
      */
     @Override
     public boolean equals(@Nullable Object obj) {
         if (obj == this) return true;
         if (!(obj instanceof SMSPeer)) return false;
-        SMSPeer peer = (SMSPeer) obj;
+        SMSPeer peer = (SMSPeer)obj;
         return peer.getAddress().equals(getAddress());
     }
 
     /**
+     * Generate a unique hash code for the object.
+     *
+     * @return The integer representing the hash code.
      * @author Giovanni Velludo
      */
     @Override
