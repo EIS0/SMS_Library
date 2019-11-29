@@ -1,15 +1,26 @@
 package com.eis0.kademlia;
 
+import com.eis0.smslibrary.SMSPeer;
+
 import org.junit.Test;
 
 import static org.junit.Assert.*;
 
 public class KademliaIdTest {
 
-    int ID_LENGTH = 160;
+    private int ID_LENGTH = KademliaId.ID_LENGTH;
 
-    KademliaId testByString = new KademliaId("11111111111111111111");
-    KademliaId testByRandom = new KademliaId();
+    private KademliaId testByString = new KademliaId("11111111111111111111");
+    private KademliaId testByRandom = new KademliaId();
+
+    @Test
+    public void creationId_BySMSPeer(){
+        KademliaId test = new KademliaId(new SMSPeer("3497463255"));
+        String toCompare = "744d03373e3d5cc8e61259efe99e9dbc00fc6b69"; /* SHA-256 hash of test
+        SMSPeer, calculated with an external program, and truncated to the first 160 bits */
+        String id = test.getInt().toString(16);
+        assertEquals(toCompare, id);
+    }
 
     @Test
     public void creationId_ByString(){

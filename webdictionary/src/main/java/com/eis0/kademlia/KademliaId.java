@@ -1,10 +1,16 @@
 package com.eis0.kademlia;
 
+import android.util.Log;
+
+import com.eis0.smslibrary.SMSPeer;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
 import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.BitSet;
 import java.util.Random;
@@ -14,8 +20,26 @@ import java.util.Random;
  */
 public class KademliaId implements Serializable {
 
-    public final transient static int ID_LENGTH = 160;
+    private static final String HASHING_ALG = "SHA-256";
+    private static final String TAG = "KademliaId";
+    final transient static int ID_LENGTH = 160;
     private byte[] keyBytes;
+
+    /**
+     * Construct the NodeId based on the address of the peer.
+     *
+     * @param peer The peer for which NodeId generation is being requested.
+     */
+    public KademliaId(SMSPeer peer) {
+        try {
+            MessageDigest md = MessageDigest.getInstance(HASHING_ALG);
+            md.update(peer.toString().getBytes());
+            keyBytes = Arrays.copyOfRange(md.digest(), 0, (ID_LENGTH/8));
+        }
+        catch (NoSuchAlgorithmException e) {
+            Log.e(TAG, HASHING_ALG + " is not a valid hashing algorithm");
+        }
+    }
 
     /**
      * Construct the NodeId from a string
