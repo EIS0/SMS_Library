@@ -35,4 +35,15 @@ public class ContactTest {
         assertEquals(test.staleCount(), 1);
     }
 
+    @Test
+    public void lastSeenTest(){
+        assertEquals(test.lastSeen(), System.currentTimeMillis()/1000L);
+    }
+
+    @Test
+    public void setSeenNowTest(){
+        test.setSeenNow();
+        assertEquals(test.lastSeen(),System.currentTimeMillis()/1000L );
+    }
+
 }

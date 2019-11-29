@@ -2,12 +2,14 @@ package com.eis0.kademlia;
 
 /**
  * Keeps information about contacts of the Node;
+ * Such as how many times it doesn't respond to a request (staleCount)
+ * or his lastSeen
  *
  */
 public class Contact implements Comparable<Contact> { //has to be comparable to test it
 
     private final SMSKademliaNode n;
-
+    private long lastSeen;
     /**
      * When a contact fails to respond, if there is no replacement for the contact,
      * just mark it as stale.
@@ -16,13 +18,34 @@ public class Contact implements Comparable<Contact> { //has to be comparable to 
      */
     private int staleCount;
 
+
     /**
      * Create a contact
      *
      * @param n The node associated with this contact
      */
     public Contact(SMSKademliaNode n) {
+
         this.n = n;
+        this.lastSeen = System.currentTimeMillis() / 1000L;
+    }
+
+    /**
+     * This method updates the last seen timestamp for this contact.
+     */
+    public void setSeenNow()
+    {
+        this.lastSeen = System.currentTimeMillis() / 1000L;
+    }
+
+    /**
+     * When last was this contact seen?
+     *
+     * @return long representing the last time this contact was seen.
+     */
+    public long lastSeen()
+    {
+        return this.lastSeen;
     }
 
     /**

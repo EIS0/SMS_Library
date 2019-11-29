@@ -6,7 +6,9 @@ import java.util.NoSuchElementException;
 import java.util.TreeSet;
 
 /**
- * A bucket inside a Kademlia routing table
+ * For each 0 < i < 160, every node keeps a list of ID for nodes of distance
+ * between 2i and 2i+1 from itself.
+ * These List are called bucket.
  *
  */
 public class SMSKademliaBucket implements KademliaBucket {
