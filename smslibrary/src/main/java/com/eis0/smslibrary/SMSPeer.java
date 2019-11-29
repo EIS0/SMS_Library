@@ -33,9 +33,12 @@ public class SMSPeer implements Peer, java.io.Serializable {
             throw exception;
         }
         // If the destination is a simulator phone number (i.e. 555*) adds the extension: 555521
-        // The following two lines are intended for simulator use only
-        if(getAddress().matches("^555\\d$"))
-            phoneNumber.setNationalNumber(Long.parseLong("555521" + getAddress()));
+        // The following lines are intended for simulator use only
+        if(getAddress().matches("^555\\d$")) return;
+        if(getAddress().startsWith("555521")) {
+            phoneNumber.setNationalNumber(Long.parseLong(getAddress().substring(6)));
+            return;
+        }
         if(!isValid())
             throw exception;
     }
@@ -73,7 +76,7 @@ public class SMSPeer implements Peer, java.io.Serializable {
      * @author Matteo Carnelos
      */
     public boolean isValid() {
-        return phoneNumberUtil.isPossibleNumber(phoneNumber);
+        return phoneNumberUtil.isValidNumber(phoneNumber);
     }
 
     /**

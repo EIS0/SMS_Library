@@ -134,7 +134,7 @@ public class SMSPeerTest {
     @Test
     public void simulatorPeer_isCreated() {
         SMSPeer testPeer = new SMSPeer(SIMULATOR_ADDR);
-        assertEquals(SIMULATOR_ADDR_WITH_EXT, testPeer.getAddress());
+        assertEquals(SIMULATOR_ADDR, testPeer.getAddress());
     }
 
     /**
@@ -145,7 +145,7 @@ public class SMSPeerTest {
     @Test
     public void simulatorPeerWithExtension_isCreated() {
         SMSPeer testPeer = new SMSPeer(SIMULATOR_ADDR_WITH_EXT);
-        assertEquals(SIMULATOR_ADDR_WITH_EXT, testPeer.getAddress());
+        assertEquals(SIMULATOR_ADDR, testPeer.getAddress());
     }
 
     /**
@@ -156,7 +156,7 @@ public class SMSPeerTest {
     @Test
     public void simulatorPeerWithPrefixAndExtension_isCreated() {
         SMSPeer testPeer = new SMSPeer(SIMULATOR_ADDR_WITH_PREFIX_AND_EXT);
-        assertEquals(SIMULATOR_ADDR_WITH_EXT, testPeer.getAddress());
+        assertEquals(SIMULATOR_ADDR, testPeer.getAddress());
     }
 
     /**
