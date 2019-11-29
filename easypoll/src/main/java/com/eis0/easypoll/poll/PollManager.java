@@ -24,11 +24,11 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
 
     // NOTE: FIELD_SEPARATOR is a regex, there are some illegal values (e.g. "*")
     // must not be private for tests to work, not a big deal since it's final
-    public static final String FIELD_SEPARATOR = "\n";
-    private static final String NEW_POLL_MSG_CODE = "0";
-    private static final String ANSWER_MSG_CODE = "1";
-    private static final String YES_ANSWER_CODE = "1";
-    private static final String NO_ANSWER_CODE = "0";
+    public static final String FIELD_SEPARATOR = "\r";
+    private static final String NEW_POLL_MSG_CODE = "EasyPoll";
+    private static final String ANSWER_MSG_CODE = "Answer";
+    private static final String YES_ANSWER_CODE = "Yes";
+    private static final String NO_ANSWER_CODE = "No";
 
     // Must always be static for getInstance to work
     private static PollManager instance = null;
@@ -187,7 +187,7 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
      * @author Matteo Carnelos
      */
     public void answerPoll(TernaryPoll poll, boolean answer) throws IllegalArgumentException {
-        if (poll.getPollAuthor().equals(TernaryPoll.SELF_PEER))
+        if (poll.getPollAuthor().equals(SMSPeer.SELF_PEER))
             throw new IllegalArgumentException("Trying to answer an owned poll");
         sendAnswer(poll, answer);
     }

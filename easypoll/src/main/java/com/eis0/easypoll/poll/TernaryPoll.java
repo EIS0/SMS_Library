@@ -22,7 +22,6 @@ import java.util.Set;
  */
 public class TernaryPoll extends Poll {
 
-    static final SMSPeer SELF_PEER = new SMSPeer("0000000000");
     private static final String POLLS_COUNT_KEY = "com.eis0.easypoll.polls_count_key";
 
     private static int pollsCount = 0;
@@ -68,7 +67,7 @@ public class TernaryPoll extends Poll {
      * @author Matteo Carnelos
      */
     public TernaryPoll(String name, String question, ArrayList<SMSPeer> users) {
-        super(++pollsCount, name, question, SELF_PEER);
+        super(++pollsCount, name, question, SMSPeer.SELF_PEER);
         pollUsers = new HashMap<>();
         for (SMSPeer user : users) addUser(user);
     }

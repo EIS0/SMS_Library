@@ -15,6 +15,7 @@ import com.google.i18n.phonenumbers.Phonenumber;
  */
 public class SMSPeer implements Peer, java.io.Serializable {
 
+    public static final SMSPeer SELF_PEER = new SMSPeer();
     private String address;
 
     /**
@@ -32,6 +33,16 @@ public class SMSPeer implements Peer, java.io.Serializable {
                 throw new IllegalArgumentException("Unable to create SMSPeer, invalid destination: \"" + destination + "\".");
         }
         this.address = extractNationalNumber(phoneNumber);
+    }
+
+    /**
+     * Private constructor for the generation of a special type of peer: the self peer.
+     * It's private because the user can only create valid peers.
+     *
+     * @author Matteo Carnelos
+     */
+    private SMSPeer() {
+        address = "self";
     }
 
     /**

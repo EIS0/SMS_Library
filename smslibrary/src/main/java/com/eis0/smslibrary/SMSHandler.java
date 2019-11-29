@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 /**
  * Class that receives SMSes from the Core, analyzes them and calls the listeners.
- * It also manage the message delievery system.
+ * It also manage the message delivery system.
  *
  * @author Matteo Carnelos
  * @author Marco Cognolato
