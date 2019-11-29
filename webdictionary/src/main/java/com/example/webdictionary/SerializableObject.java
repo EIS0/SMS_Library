@@ -12,6 +12,12 @@ import androidx.annotation.NonNull;
 public abstract class SerializableObject{
 
     /**
+     * Serializes an object into a String
+     * @return The String serialization of the object
+     */
+    public abstract String serialize();
+
+    /**
      * Mandatory override for equals()
      *
      * @param toCompare object to compare
@@ -24,7 +30,6 @@ public abstract class SerializableObject{
      *
      * @return a string representing the state of the object
      */
-
     @NonNull
     public abstract String toString();
 

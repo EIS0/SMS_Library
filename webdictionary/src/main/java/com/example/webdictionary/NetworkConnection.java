@@ -14,6 +14,7 @@ public class NetworkConnection {
 
     //Singleton Design Pattern https://refactoring.guru/design-patterns/singleton
     private static NetworkConnection net;
+
     private NetworkConnection(SMSPeer myPeer){
         if(myPeer != null){
             if(myPeer.isValid()){
@@ -23,6 +24,7 @@ public class NetworkConnection {
         NetworkListener listener = new NetworkListener(this);
         SMSManager.getInstance().addReceiveListener(listener);
     }
+
     public static NetworkConnection getInstance(SMSPeer myPeer){
         if(net == null){
             net = new NetworkConnection(myPeer);
@@ -33,6 +35,7 @@ public class NetworkConnection {
     private ArrayList<SMSPeer> subscribers = new ArrayList<>();
     private ArrayList<PingTracker> tracking = new ArrayList<>();
     private final int TRACKING_TIME = 1000 * 60 * 10; //1000 ms (1s) * 60s (1min) * 10 (10mins)
+    private SMSNetVocabulary vocabulary = new SMSNetVocabulary();
 
     //region JoinMethods
     /**
@@ -139,6 +142,8 @@ public class NetworkConnection {
 
     //endregion
 
+    //region PingMethods
+
     /**
      * Returns a space separated String with all the Peers in my Network
      */
@@ -182,6 +187,8 @@ public class NetworkConnection {
         timer.schedule(tracker, 0,TRACKING_TIME);
         tracking.add(tracker);
     }
+
+    //endregion
 
     //region addToNet
     /**
@@ -255,6 +262,101 @@ public class NetworkConnection {
     public void removeFromNet(SMSPeer[] peers){
         if(peers == null) throw new IllegalArgumentException();
         for (SMSPeer peer : peers) removeFromNet(peer);
+    }
+    //endregion
+
+    //region addToDict
+
+    /**
+     * Adds to the dictionary a key-value pair, then broadcasts the operation to every subscriber
+     * @param key The key to add to the dictionary (and broadcast to all subscribers)
+     * @param value The value to add to the dictionary with the key (and broadcast)
+     */
+    public void addToDictionary(SerializableObject key, SerializableObject value){
+        addToDictionaryNoCast(key, value);
+        broadcast(RequestType.AddToDict.ordinal() + " " + key.serialize() + " " + value.serialize());
+    }
+
+    /**
+     * Adds a key-value couple to the vocabulary without broadcasting to the whole net
+     */
+    void addToDictionaryNoCast(SerializableObject key, SerializableObject value){
+        vocabulary.add(key, value);
+    }
+
+    /**
+     * Adds a key-value couple to the vocabulary without broadcasting to the whole net starting from a String
+     */
+    void addToDictionaryNoCast(String text){
+        String[] objects = text.split(" ");
+        SMSSerialization key = new SMSSerialization(objects[0]);
+        SMSSerialization value = new SMSSerialization(objects[1]);
+        addToDictionaryNoCast(key, value);
+    }
+    //endregion
+
+    //region removeFromDict
+    /**
+     * Removes from the dictionary a key, then broadcasts the operation to every subscriber
+     * @param key The key to remove from the dictionary (and broadcast to all subscribers)
+     */
+    public void removeFromDictionary(SerializableObject key){
+        removeFromDictionaryNoCast(key);
+        broadcast(RequestType.RemoveFromDict.ordinal() + " " + key.serialize());
+    }
+
+    /**
+     * Removes a key from the vocabulary without broadcasting to the whole net
+     */
+    void removeFromDictionaryNoCast(SerializableObject key){
+        vocabulary.remove(key);
+    }
+
+    /**
+     * Removes a key from the vocabulary without broadcasting to the whole net starting from a String
+     */
+    void removeFromDictionaryNoCast(String text){
+        String[] objects = text.split(" ");
+        SMSSerialization key = new SMSSerialization(objects[0]);
+        removeFromDictionaryNoCast(key);
+    }
+    //endregion
+
+    //region updateDict
+    /**
+     * Removes from the dictionary a key, then broadcasts the operation to every subscriber
+     * @param key The key to remove from the dictionary (and broadcast to all subscribers)
+     */
+    public void updateDictionary(SerializableObject key, SerializableObject value){
+        updateDictionaryNoCast(key, value);
+        broadcast(RequestType.RemoveFromDict.ordinal() + " " + key.serialize() + " " + value.serialize());
+    }
+
+    /**
+     * Removes a key from the vocabulary without broadcasting to the whole net
+     */
+    void updateDictionaryNoCast(SerializableObject key, SerializableObject value){
+        vocabulary.update(key, value);
+    }
+
+    /**
+     * Removes a key from the vocabulary without broadcasting to the whole net starting from a String
+     */
+    void updateDictionaryNoCast(String text){
+        String[] objects = text.split(" ");
+        SMSSerialization key = new SMSSerialization(objects[0]);
+        SMSSerialization value = new SMSSerialization(objects[1]);
+        updateDictionaryNoCast(key, value);
+    }
+    //endregion
+
+    //region getFromDict
+
+    /**
+     * Returns the Resource associated with the given valid key
+     */
+    public SerializableObject getResource(SerializableObject key){
+        return vocabulary.getResource(key);
     }
     //endregion
 
