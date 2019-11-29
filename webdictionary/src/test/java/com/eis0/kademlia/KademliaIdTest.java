@@ -53,7 +53,7 @@ public class KademliaIdTest {
     }
 
     @Test
-    public void xorDistanceTestByPhoneNumber(){
+    public void xorDistanceTest_ByPhoneNumber(){
         SMSPeer distance = new SMSPeer("3497463254");
         KademliaId toCompareDistance = new KademliaId(distance);
         /*distance calculated with external programs*/
@@ -70,6 +70,15 @@ public class KademliaIdTest {
         KademliaId testByBytes = new KademliaId(test);
         /*I expect 159 leading's zero*/
         assertEquals(testByBytes.getFirstSetBitIndex(), 159);
+    }
+
+    @Test
+    public void getDistanceTest(){
+        SMSPeer distance = new SMSPeer("3497463254");
+        KademliaId toHaveDistance = new KademliaId(distance);
+        int result = 158; // calculated outside
+        int shouldResult = testByNumber.getDistance(toHaveDistance);
+        assertEquals(shouldResult, result);
     }
 
 }

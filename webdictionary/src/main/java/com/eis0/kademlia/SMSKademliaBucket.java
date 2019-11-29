@@ -6,7 +6,8 @@ import java.util.NoSuchElementException;
 import java.util.TreeSet;
 
 /**
- * A bucket in the Kademlia routing table
+ * A bucket inside a Kademlia routing table
+ *
  */
 public class SMSKademliaBucket implements KademliaBucket {
 

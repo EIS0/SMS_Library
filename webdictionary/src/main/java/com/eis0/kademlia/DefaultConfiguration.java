@@ -3,8 +3,8 @@ package com.eis0.kademlia;
 import java.io.File;
 
 /**
- * A set of Kademlia configuration parameters. Default values are
- * supplied and can be changed by the application as necessary.
+ * A set of Kademlia configuration parameters.
+ * Default values are supplied and can be changed by the application as necessary.
  *
  */
 public class DefaultConfiguration implements KadConfiguration {
@@ -25,14 +25,28 @@ public class DefaultConfiguration implements KadConfiguration {
         return K;
     }
 
+    /**
+     *
+     * @return int representing the size of the replacement chache
+     */
     public int replacementCacheSize() {
         return RCSIZE;
     }
 
+    /**
+     *
+     * @return int representing how many time there was a stale
+     */
     public int stale() {
         return STALE;
     }
 
+    /**
+     *
+     * @param ownerId
+     *
+     * @return String representing a node data folder
+     */
     public String getNodeDataFolder(String ownerId) {
         /* Setup the main storage folder if it doesn't exist */
         String path = System.getProperty("user.home") + File.separator + DefaultConfiguration.FOLDER;
