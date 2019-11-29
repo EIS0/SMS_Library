@@ -19,8 +19,8 @@ public class SMSHandlerTest {
      */
     @Test(expected = NullPointerException.class)
     public void message_isSent() {
-        SMSPeer testPeer = new SMSPeer("0123456789");
-        SMSMessage testMessage = new SMSMessage(testPeer, "Hello");
+        SMSPeer testPeer = new SMSPeer(SMSPeerTest.VALID_ADDR);
+        SMSMessage testMessage = new SMSMessage(testPeer, SMSMessageTest.VALID_DATA);
         SMSHandler.sendMessage(testMessage, null, null);
         fail();
     }
