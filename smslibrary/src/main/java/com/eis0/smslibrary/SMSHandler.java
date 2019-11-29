@@ -9,6 +9,13 @@ import android.util.Log;
 
 import java.util.ArrayList;
 
+/**
+ * Class that receives SMSes from the Core, analyzes them and calls the listeners.
+ * It also manage the message delievery system.
+ *
+ * @author Matteo Carnelos
+ * @author Marco Cognolato
+ */
 @TargetApi(21)
 public class SMSHandler extends NotificationListenerService {
 
@@ -20,10 +27,13 @@ public class SMSHandler extends NotificationListenerService {
 
     /**
      * Sends a valid SMSmessage, with sent and delivery confirmation.
+     *
      * @param message SMSMessage to send to the SMSPeer.
-     * @param sent PendingIntent listening for message sent
-     * @param delivered PendingIntent listening for message delivery
-     * @throws IllegalArgumentException if the destination is invalid
+     * @param sent PendingIntent listening for message sent.
+     * @param delivered PendingIntent listening for message delivery.
+     * @throws IllegalArgumentException If the destination is invalid.
+     * @author Matteo Carnelos
+     * @author Marco Cognolato
      */
     protected static void sendMessage(SMSMessage message, PendingIntent sent, PendingIntent delivered) {
         SMSPeer destination = message.getPeer();
@@ -37,7 +47,9 @@ public class SMSHandler extends NotificationListenerService {
 
     /**
      * Sets the listener, that is the object to be called when an SMS with the APP_ID is received.
+     *
      * @param listener Must be an object that implements the ReceivedMessageListener<SMSMessage> interface.
+     * @author Marco Cognolato
      */
     protected static void setReceiveListener(ReceivedMessageListener<SMSMessage> listener) {
         smsReceivedListener = listener;
@@ -46,7 +58,9 @@ public class SMSHandler extends NotificationListenerService {
     }
 
     /**
-     * Removes a listener from listening to incoming messages
+     * Removes a listener from listening to incoming messages.
+     *
+     * @author Marco Cognolato
      */
     protected static void removeReceiveListener() {
         smsReceivedListener = null;
@@ -54,7 +68,10 @@ public class SMSHandler extends NotificationListenerService {
 
     /**
      * Analyze the message received by SMSCore, if the APP_ID is recognized it calls the listener.
+     *
      * @param sms The object representing the short message.
+     * @author Matteo Carnelos
+     * @author Marco Cognolato
      */
     protected static void handleMessage(SmsMessage sms) {
         String content = sms.getDisplayMessageBody();
@@ -67,7 +84,10 @@ public class SMSHandler extends NotificationListenerService {
     }
 
     /**
-     * Returns true if there's no pending message, false otherwise
+     * Returns true if there's no pending message, false otherwise.
+     *
+     * @return A boolean representing the empty state of the list.
+     * @author Matteo Carnelos
      */
     protected static boolean isPendingMessagesEmpty() {
         return pendingMessages.isEmpty();
@@ -76,10 +96,12 @@ public class SMSHandler extends NotificationListenerService {
     /**
      * Overridden method that catches the notifications. If a messaging notification is
      * recognized and it contains the APP_ID than it will be cancelled.
+     *
      * @param sbn StatusBarNotification object that contains all the notification informations.
+     * @author Matteo Carnelos
      */
     @Override
-    public void onNotificationPosted (StatusBarNotification sbn) {
+    public void onNotificationPosted(StatusBarNotification sbn) {
         if(sbn.getPackageName().equals("com.google.android.apps.messaging")
                 && sbn.getNotification().tickerText.toString().contains(APP_ID + ""))
             cancelNotification(sbn.getKey());
