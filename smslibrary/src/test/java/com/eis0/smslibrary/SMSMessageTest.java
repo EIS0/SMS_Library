@@ -11,7 +11,7 @@ import static org.junit.Assert.*;
  */
 public class SMSMessageTest {
 
-    private static final String VALID_DATA = "Hello";
+    static final String VALID_DATA = "Hello";
     private static final String EMPTY_DATA = "";
 
     /**
