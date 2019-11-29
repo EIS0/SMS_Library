@@ -2,7 +2,6 @@ package com.eis0.kademlia;
 
 /**
  * Keeps information about contacts of the Node;
- * Contacts are stored
  *
  */
 public class Contact implements Comparable<Contact> { //has to be comparable to test it
@@ -26,10 +25,18 @@ public class Contact implements Comparable<Contact> { //has to be comparable to 
         this.n = n;
     }
 
+    /**
+     * @return The node associated to this contact
+     */
     public SMSKademliaNode getNode() {
         return this.n;
     }
 
+    /**
+     * Method to compare two Nodes inside different contacts
+     * @param toCompare Object to compare
+     * @return true if equal
+     */
     @Override
     public boolean equals(Object toCompare) {
         if (toCompare instanceof Contact) {
@@ -46,7 +53,7 @@ public class Contact implements Comparable<Contact> { //has to be comparable to 
     }
 
     /**
-     * @return Integer Stale count
+     * @return Integer representing stale count
      */
     public int staleCount() {
         return this.staleCount;
@@ -59,14 +66,23 @@ public class Contact implements Comparable<Contact> { //has to be comparable to 
         this.staleCount = 0;
     }
 
+    /**
+     * Method to compare two contacts
+     * @param toCompare Contact to compare with this
+     * @return 0 if equals, -1 otherwise
+     */
     @Override
-    public int compareTo(Contact o) {
-        if (this.getNode().equals(o.getNode())) {
+    public int compareTo(Contact toCompare) {
+        if (this.getNode().equals(toCompare.getNode())) {
             return 0;
         }
         return -1;
     }
 
+    /**
+     * Get the node contact's hashcode
+     * @return integer representing the node hashcode
+     */
     @Override
     public int hashCode() {
         return this.getNode().hashCode();

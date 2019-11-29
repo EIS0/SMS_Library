@@ -8,9 +8,9 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class ContactTest {
-    KademliaId random = new KademliaId();
+    KademliaId random = new KademliaId(); //create a random Id
     SMSKademliaNode toTest = new SMSKademliaNode(random, 123,
-            new SMSPeer("3497364511"));    //crete a random id
+            new SMSPeer("3497364511"));
     Contact test = new Contact(toTest);
 
     @Test

@@ -5,7 +5,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeSet;
 /**
- * Implementation of a Kademlia routing table
+ * Implementation of a Kademlia routing table.
+ * Every Node has his own table. It contains his well known contacts.
+ * A routing table is composed by different Buckets (see SMSKademliaBucket)
+ * Every routing table has a configuration that, at the creation, will be a DefaultConfiguration
  */
 public class SMSKademliaRoutingTable implements KademliaRoutingTable {
 
@@ -35,6 +38,10 @@ public class SMSKademliaRoutingTable implements KademliaRoutingTable {
         }
     }
 
+    /**
+     * Set configuration as default
+     * @param config
+     */
     public void setConfiguration(KadConfiguration config)
     {
         this.config = config;
@@ -61,7 +68,8 @@ public class SMSKademliaRoutingTable implements KademliaRoutingTable {
     }
 
     /**
-     * Compute the bucket ID in which a given node should be placed; the bucketId is computed based on how far the node is away from the Local Node.
+     * Compute the bucket ID in which a given node should be placed.
+     * The bucketId is computed based on how far the node is away from the Local Node.
      *
      * @param nid The NodeId for which we want to find which bucket it belong to
      *
@@ -118,7 +126,7 @@ public class SMSKademliaRoutingTable implements KademliaRoutingTable {
     }
 
     /**
-     * @return List A List of all Nodes in this RoutingTable
+     * @return List A List of all Contacts in this RoutingTable
      */
     @Override
     public final List<Contact> getAllContacts() {
@@ -148,6 +156,10 @@ public class SMSKademliaRoutingTable implements KademliaRoutingTable {
         this.buckets = buckets;
     }
 
+    /**
+     * Print routing table
+     * @return String representing the routing table
+     */
     @Override
     public synchronized final String toString() {
         StringBuilder sb = new StringBuilder("\nPrinting Routing Table Started... \n");

@@ -1,5 +1,6 @@
 package com.eis0.kademlia;
 
+import android.annotation.TargetApi;
 import android.util.Log;
 
 import com.eis0.smslibrary.SMSPeer;
@@ -16,7 +17,8 @@ import java.util.BitSet;
 import java.util.Random;
 
 /**
- * Class that defines a KademliaId
+ * Class that defines a KademliaId.
+ * It is representing by the hasCode of the user's phone number
  */
 public class KademliaId implements Serializable {
 
@@ -42,16 +44,19 @@ public class KademliaId implements Serializable {
     }
 
     /**
-     * Construct the NodeId from a string
+     * Construct the NodeId from some string
      *
-     * @param data representing key string
+     * @param data The user generated key string
      */
-    public KademliaId(String data) {
+    public KademliaId(String data)
+    {
         keyBytes = data.getBytes();
-        if (keyBytes.length != ID_LENGTH / 8) {
+        if (keyBytes.length != ID_LENGTH / 8)
+        {
             throw new IllegalArgumentException("Specified Data need to be " + (ID_LENGTH / 8) + " characters long.");
         }
     }
+
 
     /**
      * Generate a random key
@@ -80,16 +85,17 @@ public class KademliaId implements Serializable {
      * @param in The stream from which to load the NodeId
      * @throws IOException
      */
-    public KademliaId(DataInputStream in) throws IOException {
-        this.fromStream(in);
-    }
+    public KademliaId(DataInputStream in) throws IOException { this.fromStream(in); }
 
+    /**
+     * @return Bytes' array (if used)
+     */
     public byte[] getBytes() {
         return this.keyBytes;
     }
 
     /**
-     * @return The BigInteger representation of the key
+     * @return The BigInteger representating the key
      */
     public BigInteger getInt() {
         return new BigInteger(1, this.getBytes());
@@ -110,6 +116,9 @@ public class KademliaId implements Serializable {
         return false;
     }
 
+    /**
+     * @return hashCode of my NodeId
+     */
     @Override
     public int hashCode() {
         int hash = 7;
@@ -140,7 +149,9 @@ public class KademliaId implements Serializable {
      * @param distance in number of bits
      * @return NodeId The newly generated NodeId
      */
+    @TargetApi(19)
     public KademliaId generateNodeIdByDistance(int distance) {
+
         byte[] result = new byte[ID_LENGTH / 8];
 
         /* Since distance = ID_LENGTH - prefixLength, we need to fill that amount with 0's */
@@ -206,36 +217,48 @@ public class KademliaId implements Serializable {
 
     /**
      * Gets the distance from this NodeId to another NodeId
+     * Compute xor between this and to
+     * Given i index of the first set bit of the xor returned NodeId
+     * The distance is ID_LENGTH - i
      *
      * @param to
      * @return Integer The distance
      */
     public int getDistance(KademliaId to) {
-        /**
-         * Compute the xor of this and to
-         * Get the index i of the first set bit of the xor returned NodeId
-         * The distance between them is ID_LENGTH - i
-         */
         return ID_LENGTH - this.xor(to).getFirstSetBitIndex();
     }
 
+    /**
+     * Add the NodeId to the stream
+     * @param out Data to write
+     * @throws IOException
+     */
     public void toStream(DataOutputStream out) throws IOException {
-        /* Add the NodeId to the stream */
         out.write(this.getBytes());
     }
 
+    /**
+     * Read the data
+     * @param in Data to read
+     * @throws IOException
+     */
     public final void fromStream(DataInputStream in) throws IOException {
         byte[] input = new byte[ID_LENGTH / 8];
         in.readFully(input);
         this.keyBytes = input;
     }
 
+    /**
+     * @return The hex format of this NodeId
+     */
     public String hexRepresentation() {
-        /* Returns the hex format of this NodeId */
         BigInteger bi = new BigInteger(1, this.keyBytes);
         return String.format("%0" + (this.keyBytes.length << 1) + "X", bi);
     }
 
+    /**
+     * @return String representing the NodeId
+     */
     @Override
     public String toString() {
         return this.hexRepresentation();
