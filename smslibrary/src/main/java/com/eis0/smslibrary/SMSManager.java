@@ -12,11 +12,18 @@ import android.content.IntentFilter;
  * @author Marco Cognolato
  * @author Matteo Carnelos
  */
-public class SMSManager extends CommunicationHandler<SMSMessage> {
+public class SMSManager extends CommunicationManager<SMSMessage> {
 
     // Singleton Design Pattern
     private SMSManager() { }
     private static SMSManager instance = null;
+
+    private SentMessageListener smsSentListener;
+    private BroadcastReceiver onSend = null;
+    private DeliveredMessageListener smsDeliveredListener;
+    private BroadcastReceiver onDeliver = null;
+    private PendingIntent sent;
+    private PendingIntent delivered;
 
     /**
      * Returns an instance of SMSManager if none exist, otherwise the one instance already created
@@ -31,20 +38,14 @@ public class SMSManager extends CommunicationHandler<SMSMessage> {
         return instance;
     }
 
-    private SentMessageListener smsSentListener;
-    private BroadcastReceiver onSend = null;
-    private DeliveredMessageListener smsDeliveredListener;
-    private BroadcastReceiver onDeliver = null;
-    private PendingIntent sent;
-    private PendingIntent delivered;
-
     /**
-     * Adds the listener watching for incoming SMSMessages.
+     * Set the listener watching for incoming SMSMessages.
      *
      * @param listener The listener to wake up when a message is received.
      * @author Marco Cognolato
      */
-    public void addReceiveListener(ReceivedMessageListener<SMSMessage> listener) {
+    @Override
+    public void setReceiveListener(ReceivedMessageListener<SMSMessage> listener) {
         SMSHandler.setReceiveListener(listener);
     }
 
@@ -53,6 +54,7 @@ public class SMSManager extends CommunicationHandler<SMSMessage> {
      *
      * @author Marco Cognolato
      */
+    @Override
     public void removeReceiveListener() {
         SMSHandler.removeReceiveListener();
     }
@@ -62,6 +64,7 @@ public class SMSManager extends CommunicationHandler<SMSMessage> {
      *
      * @author Marco Cognolato
      */
+    @Override
     public void sendMessage(SMSMessage message) {
         SMSHandler.sendMessage(message, null, null);
     }

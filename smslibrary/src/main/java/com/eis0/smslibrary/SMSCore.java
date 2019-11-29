@@ -9,7 +9,7 @@ import android.telephony.SmsMessage;
 import android.util.Log;
 
 /**
- * Core class of the library. It is the lowest level class, so the one wihich communicate with the
+ * Core class of the library. It is the lowest level class, so the one which communicate with the
  * system APIs.
  *
  * @author Matteo Carnelos
@@ -27,7 +27,7 @@ public class SMSCore extends BroadcastReceiver {
      * @param delivered PendingIntent to activate when the message is delivered.
      * @author Matteo Carnelos
      */
-    protected static void sendMessage(SMSMessage message, PendingIntent sent, PendingIntent delivered) {
+    static void sendMessage(SMSMessage message, PendingIntent sent, PendingIntent delivered) {
         String destination = message.getPeer().getAddress();
         String textMessage = message.getData();
         manager.sendTextMessage(destination,null, textMessage, sent, delivered);

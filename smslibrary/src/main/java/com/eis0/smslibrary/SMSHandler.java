@@ -1,11 +1,9 @@
 package com.eis0.smslibrary;
 
-import android.annotation.TargetApi;
 import android.app.PendingIntent;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
 import android.telephony.SmsMessage;
-import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -16,14 +14,12 @@ import java.util.ArrayList;
  * @author Matteo Carnelos
  * @author Marco Cognolato
  */
-@TargetApi(21)
 public class SMSHandler extends NotificationListenerService {
 
     private static final char APP_ID = '\r';
-    private static final String LOG_KEY = "SMS_HANDLER";
     private static ArrayList<SMSMessage> pendingMessages = new ArrayList<>();
 
-    private static ReceivedMessageListener smsReceivedListener;
+    private static ReceivedMessageListener receivedListener;
 
     /**
      * Sends a valid SMSmessage, with sent and delivery confirmation.
@@ -31,17 +27,12 @@ public class SMSHandler extends NotificationListenerService {
      * @param message SMSMessage to send to the SMSPeer.
      * @param sent PendingIntent listening for message sent.
      * @param delivered PendingIntent listening for message delivery.
-     * @throws IllegalArgumentException If the destination is invalid.
      * @author Matteo Carnelos
      * @author Marco Cognolato
      */
-    protected static void sendMessage(SMSMessage message, PendingIntent sent, PendingIntent delivered) {
+    static void sendMessage(SMSMessage message, PendingIntent sent, PendingIntent delivered) {
         SMSPeer destination = message.getPeer();
         SMSMessage msg = new SMSMessage(destination, APP_ID + message.getData());
-        if(!destination.isValid()) {
-            Log.e(LOG_KEY,"Invalid destination \"" + destination + "\"");
-            throw new IllegalArgumentException("Invalid destination \"" + destination + "\"");
-        }
         SMSCore.sendMessage(msg, sent, delivered);
     }
 
@@ -49,11 +40,11 @@ public class SMSHandler extends NotificationListenerService {
      * Sets the listener, that is the object to be called when an SMS with the APP_ID is received.
      *
      * @param listener Must be an object that implements the ReceivedMessageListener<SMSMessage> interface.
-     * @author Marco Cognolato
+     * @author Matteo Carnelos
      */
-    protected static void setReceiveListener(ReceivedMessageListener<SMSMessage> listener) {
-        smsReceivedListener = listener;
-        for (SMSMessage pendingMessage : pendingMessages) smsReceivedListener.onMessageReceived(pendingMessage);
+    static void setReceiveListener(ReceivedMessageListener<SMSMessage> listener) {
+        receivedListener = listener;
+        for (SMSMessage pendingMessage : pendingMessages) receivedListener.onMessageReceived(pendingMessage);
         pendingMessages.clear();
     }
 
@@ -62,8 +53,8 @@ public class SMSHandler extends NotificationListenerService {
      *
      * @author Marco Cognolato
      */
-    protected static void removeReceiveListener() {
-        smsReceivedListener = null;
+    static void removeReceiveListener() {
+        receivedListener = null;
     }
 
     /**
@@ -73,14 +64,14 @@ public class SMSHandler extends NotificationListenerService {
      * @author Matteo Carnelos
      * @author Marco Cognolato
      */
-    protected static void handleMessage(SmsMessage sms) {
+    static void handleMessage(SmsMessage sms) {
         String content = sms.getDisplayMessageBody();
         if(content.charAt(0) != APP_ID) return;
         SMSMessage message = new SMSMessage(
                 new SMSPeer(sms.getDisplayOriginatingAddress()),
                 content.substring(1));
-        if(smsReceivedListener == null) pendingMessages.add(message);
-        else smsReceivedListener.onMessageReceived(message);
+        if(receivedListener == null) pendingMessages.add(message);
+        else receivedListener.onMessageReceived(message);
     }
 
     /**
@@ -89,7 +80,7 @@ public class SMSHandler extends NotificationListenerService {
      * @return A boolean representing the empty state of the list.
      * @author Matteo Carnelos
      */
-    protected static boolean isPendingMessagesEmpty() {
+    static boolean isPendingMessagesEmpty() {
         return pendingMessages.isEmpty();
     }
 
