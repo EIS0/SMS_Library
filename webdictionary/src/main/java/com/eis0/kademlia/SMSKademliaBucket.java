@@ -6,6 +6,7 @@ import java.util.NoSuchElementException;
 import java.util.TreeSet;
 
 /**
+ * A bucket inside the routing table
  * For each 0 < i < 160, every node keeps a list of ID for nodes of distance
  * between 2i and 2i+1 from itself.
  * These List are called bucket.
@@ -45,6 +46,7 @@ public class SMSKademliaBucket implements KademliaBucket {
              * We need to remove and re-add the contact to get the Sorted Set to update sort order
              */
             Contact tmp = this.removeFromContacts(c.getNode());
+            tmp.setSeenNow();
             tmp.resetStaleCount();
             this.contacts.add(tmp);
         } else {
@@ -180,6 +182,7 @@ public class SMSKademliaBucket implements KademliaBucket {
              * We need to remove and re-add the contact to get the Sorted Set to update sort order
              */
             Contact tmp = this.removeFromReplacementCache(c.getNode());
+            tmp.setSeenNow();
             this.replacementCache.add(tmp);
         }
         else if (this.replacementCache.size() > this.config.k()) {

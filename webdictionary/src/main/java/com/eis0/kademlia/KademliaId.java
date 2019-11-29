@@ -44,7 +44,7 @@ public class KademliaId implements Serializable {
     }
 
     /**
-     * Construct the NodeId from some string
+     * Construct the NodeId from a string
      *
      * @param data The user generated key string
      */
