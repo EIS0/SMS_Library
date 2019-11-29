@@ -2,9 +2,13 @@ package com.example.webdictionary;
 
 import com.eis0.smslibrary.SMSPeer;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class PingTrackerTest {
 
@@ -27,18 +31,18 @@ public class PingTrackerTest {
 
     @Test
     public void isTrackingThePeer_shouldBeTracking(){
-        Assert.assertTrue(tracker1.isTracking(VALID_PEER));
+        assertTrue(tracker1.isTracking(VALID_PEER));
     }
 
     @Test
     public void isNotTrackingTheWrongPeer_shouldTrackOne(){
-        Assert.assertFalse(tracker1.isTracking(VALID_PEER2));
+        assertFalse(tracker1.isTracking(VALID_PEER2));
     }
 
     @Test
     public void correctlyTicksOnce_noExceptions(){
         tracker1.tick();
-        Assert.assertEquals(tracker1.pingsMissing(), MAX_PING_MISSES-1);
+        assertEquals(tracker1.pingsMissing(), MAX_PING_MISSES-1);
     }
 
     @Test
@@ -47,7 +51,7 @@ public class PingTrackerTest {
             tracker1.tick();
         }
         SMSPeer[] expected = {VALID_PEER2};
-        Assert.assertArrayEquals(net.getOnlinePeers(), expected);
+        assertArrayEquals(net.getOnlinePeers(), expected);
     }
 
     @Test
@@ -57,13 +61,13 @@ public class PingTrackerTest {
             tracker1.pingReceived();
         }
         SMSPeer[] expected = {VALID_PEER,VALID_PEER2};
-        Assert.assertArrayEquals(net.getOnlinePeers(), expected);
+        assertArrayEquals(net.getOnlinePeers(), expected);
     }
 
     @Test
     public void disable_StopsExecution(){
         tracker1.disable();
-        Assert.assertFalse(tracker1.isEnabled());
+        assertFalse(tracker1.isEnabled());
     }
 
     @Test
@@ -73,7 +77,7 @@ public class PingTrackerTest {
             tracker1.tick();
         }
         SMSPeer[] expected = {VALID_PEER,VALID_PEER2};
-        Assert.assertArrayEquals(net.getOnlinePeers(), expected);
+        assertArrayEquals(net.getOnlinePeers(), expected);
     }
 
     @Test
@@ -83,7 +87,7 @@ public class PingTrackerTest {
             tracker2.tick();
         }
         SMSPeer[] expected = {};
-        Assert.assertArrayEquals(net.getOnlinePeers(), expected);
+        assertArrayEquals(net.getOnlinePeers(), expected);
     }
 
     @Test
@@ -97,6 +101,6 @@ public class PingTrackerTest {
             tracker1.tick();
         }
         SMSPeer[] expected = {VALID_PEER2};
-        Assert.assertArrayEquals(net.getOnlinePeers(), expected);
+        assertArrayEquals(net.getOnlinePeers(), expected);
     }
 }
