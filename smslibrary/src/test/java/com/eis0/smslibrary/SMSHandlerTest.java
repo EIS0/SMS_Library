@@ -26,7 +26,7 @@ public class SMSHandlerTest {
     }
 
     /**
-     * Checks if the pending messages list is empty.
+     * Checks if the pending messages list is emptied when a listener is added.
      *
      * @author Matteo Carnelos
      */
