@@ -67,7 +67,7 @@ public class TernaryPoll extends Poll {
      * @author Matteo Carnelos
      */
     public TernaryPoll(String name, String question, ArrayList<SMSPeer> users) {
-        super(++pollsCount, name, question, SMSPeer.SELF_PEER);
+        super(++pollsCount, name, question, null);
         pollUsers = new HashMap<>();
         for (SMSPeer user : users) addUser(user);
     }
