@@ -27,8 +27,8 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
     public static final String FIELD_SEPARATOR = "\r";
     private static final String NEW_POLL_MSG_CODE = "EasyPoll";
     private static final String ANSWER_MSG_CODE = "Answer";
-    private static final String YES_ANSWER_CODE = "Yes";
-    private static final String NO_ANSWER_CODE = "No";
+    private static final String YES_MSG_CODE = "Yes";
+    private static final String NO_MSG_CODE = "No";
 
     // Must always be static for getInstance to work
     private static PollManager instance = null;
@@ -166,7 +166,7 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
             // ANSWER_MSG_CODE + pollId + answerCode
             //        [0]          [1]       [2]
             case ANSWER_MSG_CODE:
-                boolean isYes = fields[2].equals(YES_ANSWER_CODE);
+                boolean isYes = fields[2].equals(YES_MSG_CODE);
                 SMSPeer voter = message.getPeer();
                 TernaryPoll answeredPoll = sentPolls.get(pollId);
                 if(isYes) answeredPoll.setYes(voter);
@@ -187,7 +187,7 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
      * @author Matteo Carnelos
      */
     public void answerPoll(TernaryPoll poll, boolean answer) throws IllegalArgumentException {
-        if (poll.getPollAuthor().equals(SMSPeer.SELF_PEER))
+        if (poll.getPollAuthor() == null)
             throw new IllegalArgumentException("Trying to answer an owned poll");
         sendAnswer(poll, answer);
     }
@@ -215,7 +215,7 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
      */
     private static String answerToMessage(int id, boolean answer) {
         String message = ANSWER_MSG_CODE + FIELD_SEPARATOR + id + FIELD_SEPARATOR;
-        if (answer) return message + YES_ANSWER_CODE;
-        else return message + NO_ANSWER_CODE;
+        if (answer) return message + YES_MSG_CODE;
+        else return message + NO_MSG_CODE;
     }
 }
