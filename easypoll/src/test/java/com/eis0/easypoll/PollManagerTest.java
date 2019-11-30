@@ -5,6 +5,7 @@ import com.eis0.easypoll.poll.PollManager;
 import com.eis0.easypoll.poll.TernaryPoll;
 import com.eis0.smslibrary.SMSMessage;
 import com.eis0.smslibrary.SMSPeer;
+import com.eis0.smslibrary.SMSPeerTest;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -43,8 +44,8 @@ public class PollManagerTest {
         pollManager.setPollListener(mockListener);
 
         String sep = PollManager.FIELD_SEPARATOR;
-        int messageCode = 0;
-        SMSPeer pollAuthor = new SMSPeer("3337235485");
+        String messageCode = PollManager.NEW_POLL_MSG_CODE;
+        SMSPeer pollAuthor = new SMSPeer(SMSPeerTest.VALID_ADDR);
         int pollId = 38;
         String pollName = "Pizza";
         String pollQuestion = "Should we get takeout pizza for dinner?";

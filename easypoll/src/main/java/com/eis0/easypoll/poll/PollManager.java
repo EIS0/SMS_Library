@@ -25,7 +25,7 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
     // NOTE: FIELD_SEPARATOR is a regex, there are some illegal values (e.g. "*")
     // must not be private for tests to work, not a big deal since it's final
     public static final String FIELD_SEPARATOR = "\r";
-    private static final String NEW_POLL_MSG_CODE = "EasyPoll";
+    public static final String NEW_POLL_MSG_CODE = "EasyPoll";
     private static final String ANSWER_MSG_CODE = "Answer";
     private static final String YES_MSG_CODE = "Yes";
     private static final String NO_MSG_CODE = "No";
