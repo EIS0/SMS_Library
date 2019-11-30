@@ -60,7 +60,6 @@ public class SMSPeer implements Peer, java.io.Serializable {
         //       wont be able to send SMSs through this library.
         String destWithoutPrefix = extractNationalNumber(phoneNumber);
         if(destWithoutPrefix.matches("^555\\d$")) return true;
-        //    phoneNumber.setNationalNumber((Long.parseLong("555521" + destWithoutPrefix)));
         if(destWithoutPrefix.startsWith("555521")) {
             phoneNumber.setNationalNumber(Long.parseLong(destWithoutPrefix.substring(6)));
             return true;
