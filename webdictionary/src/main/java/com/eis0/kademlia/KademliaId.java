@@ -3,6 +3,8 @@ package com.eis0.kademlia;
 import android.annotation.TargetApi;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import com.eis0.smslibrary.SMSPeer;
 
 import java.io.DataInputStream;
@@ -69,9 +71,9 @@ public class KademliaId implements Serializable {
     }
 
     /**
-     * Generate the NodeId from a given byte array
+     * Use a given byte array as the NodeId.
      *
-     * @param bytes
+     * @param bytes The byte array to use as the NodeId.
      */
     public KademliaId(byte[] bytes) {
         if (bytes.length != ID_LENGTH / 8) {
@@ -131,7 +133,7 @@ public class KademliaId implements Serializable {
     /**
      * Checks the distance between two NodeIds
      *
-     * @param nid
+     * @param nid The NodeId from which to calculate the distance
      * @return The distance of this NodeId from the given NodeId
      */
     public KademliaId xor(KademliaId nid) {
@@ -151,7 +153,6 @@ public class KademliaId implements Serializable {
      * @param distance in number of bits
      * @return NodeId The newly generated NodeId
      */
-    @TargetApi(19)
     public KademliaId generateNodeIdByDistance(int distance) {
 
         byte[] result = new byte[ID_LENGTH / 8];
@@ -223,7 +224,7 @@ public class KademliaId implements Serializable {
      * Given i index of the first set bit of the xor returned NodeId
      * The distance is ID_LENGTH - i
      *
-     * @param to
+     * @param to The node from which to calculate the distance
      * @return Integer The distance
      */
     public int getDistance(KademliaId to) {
@@ -240,7 +241,7 @@ public class KademliaId implements Serializable {
     }
 
     /**
-     * Read the data
+     * Uses a DataInputStream to generate a NodeId.
      * @param in Data to read
      * @throws IOException
      */
@@ -262,6 +263,7 @@ public class KademliaId implements Serializable {
      * @return String representing the NodeId
      */
     @Override
+    @NonNull
     public String toString() {
         return this.hexRepresentation();
     }
