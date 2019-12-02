@@ -9,6 +9,8 @@ import java.util.TreeSet;
  * Every Node has his own table. It contains his well known contacts.
  * A routing table is composed by different Buckets (see SMSKademliaBucket)
  * Every routing table has a configuration that, at the creation, will be a DefaultConfiguration
+ *
+ * @see "https://pdos.csail.mit.edu/~petar/papers/maymounkov-kademlia-lncs.pdf" for more details
  */
 public class SMSKademliaRoutingTable implements KademliaRoutingTable {
 

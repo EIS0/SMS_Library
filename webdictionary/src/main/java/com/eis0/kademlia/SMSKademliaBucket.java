@@ -11,6 +11,7 @@ import java.util.TreeSet;
  * between 2i and 2i+1 from itself.
  * These List are called bucket.
  *
+ * @see "https://pdos.csail.mit.edu/~petar/papers/maymounkov-kademlia-lncs.pdf" for more details
  */
 public class SMSKademliaBucket implements KademliaBucket {
 
@@ -38,6 +39,10 @@ public class SMSKademliaBucket implements KademliaBucket {
         this.config = config;
     }
 
+    /**
+     * Insert a contact in the bucket
+     * @param c the new contact
+     */
     @Override
     public void insert(Contact c) {
         if (this.contacts.contains(c)) {
@@ -80,19 +85,41 @@ public class SMSKademliaBucket implements KademliaBucket {
         }
     }
 
+    /**
+     * Insert a contact form a node
+     * @param n The node to create the contact from
+     */
     @Override
     public void insert(SMSKademliaNode n) {
         this.insert(new Contact(n));
     }
 
+    /**
+     *
+     * @param c The contact to check for
+     *
+     * @return true if there is c
+     */
     @Override
     public boolean containsContact(Contact c) {
         return this.contacts.contains(c);
     }
 
+    /**
+     *
+     * @param n The node to check for
+     *
+     * @return true if there is n
+     */
     @Override
     public boolean containsNode(SMSKademliaNode n) { return this.containsContact(new Contact(n)); }
 
+    /**
+     *
+     * @param c The contact to remove
+     *
+     * @return true if well removed
+     */
     @Override
     public boolean removeContact(Contact c) {
         /* If the contact does not exist, then we failed to remove it */
@@ -116,6 +143,12 @@ public class SMSKademliaBucket implements KademliaBucket {
         return true;
     }
 
+    /**
+     *
+     * @param n The node to get the contact from
+     *
+     * @return The contact
+     */
     public Contact getFromContacts(SMSKademliaNode n) {
         for (Contact c : this.contacts) {
             if (c.getNode().equals(n)) {
@@ -127,6 +160,12 @@ public class SMSKademliaBucket implements KademliaBucket {
         throw new NoSuchElementException("The contact does not exist in the contacts list.");
     }
 
+    /**
+     *
+     * @param n The node representing the contact to remove
+     *
+     * @return The contact removed
+     */
     public Contact removeFromContacts(SMSKademliaNode n) {
         for (Contact c : this.contacts) {
             if (c.getNode().equals(n)) {
@@ -139,21 +178,39 @@ public class SMSKademliaBucket implements KademliaBucket {
         throw new NoSuchElementException("Node does not exist in the replacement cache. ");
     }
 
+    /**
+     *
+     * @param n The node of the contact to remove
+     *
+     * @return true if well removed
+     */
     @Override
     public boolean removeNode(SMSKademliaNode n) {
         return this.removeContact(new Contact(n));
     }
 
+    /**
+     *
+     * @return Int representing the contacts number
+     */
     @Override
     public int numContacts() {
         return this.contacts.size();
     }
 
+    /**
+     *
+     * @return Int representing the bucket depth
+     */
     @Override
     public int getDepth() {
         return this.depth;
     }
 
+    /**
+     *
+     * @return A list of all the contacts in the bucket
+     */
     @Override
     public List<Contact> getContacts(){
         final ArrayList<Contact> ret = new ArrayList<>();
@@ -219,6 +276,10 @@ public class SMSKademliaBucket implements KademliaBucket {
         return this.replacementCache.size();
     }
 
+    /**
+     *
+     * @return A String with all the bucket's informations
+     */
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("Bucket at depth: ");
