@@ -2,12 +2,14 @@ package com.eis0.kademlia;
 
 import com.eis0.smslibrary.SMSPeer;
 
+import org.junit.Before;
 import org.junit.Test;
 
 
 import static org.junit.Assert.*;
 
 public class ContactTest {
+
     KademliaId random = new KademliaId(); //create a random Id
     SMSKademliaNode toTest = new SMSKademliaNode(random, 123,
             new SMSPeer("3497364511"));
