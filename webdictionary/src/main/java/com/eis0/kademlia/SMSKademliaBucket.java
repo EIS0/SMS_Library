@@ -11,7 +11,8 @@ import java.util.TreeSet;
  * between 2i and 2i+1 from itself.
  * These List are called bucket.
  *
- * @see "https://pdos.csail.mit.edu/~petar/papers/maymounkov-kademlia-lncs.pdf" for more details
+ * @see <a href="https://pdos.csail.mit.edu/~petar/papers/maymounkov-kademlia-lncs.pdf">Kademlia's
+ *  *      paper</a> for more details.
  */
 public class SMSKademliaBucket implements KademliaBucket {
 

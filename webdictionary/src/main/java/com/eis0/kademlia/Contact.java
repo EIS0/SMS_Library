@@ -5,7 +5,8 @@ package com.eis0.kademlia;
  * Such as how many times it doesn't respond to a request (staleCount)
  * or his lastSeen
  *
- * @see "https://pdos.csail.mit.edu/~petar/papers/maymounkov-kademlia-lncs.pdf" for more details
+ * @see <a href="https://pdos.csail.mit.edu/~petar/papers/maymounkov-kademlia-lncs.pdf">Kademlia's
+ *      paper</a> for more details.
  */
 public class Contact implements Comparable<Contact> { //has to be comparable to test it
 

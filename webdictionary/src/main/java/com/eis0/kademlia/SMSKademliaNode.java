@@ -9,7 +9,8 @@ import java.io.Serializable;
 /**
  * A Node in the Kademlia network - Contains basic node network information.
  *
- * @see "https://pdos.csail.mit.edu/~petar/papers/maymounkov-kademlia-lncs.pdf" for more details
+ * @see <a href="https://pdos.csail.mit.edu/~petar/papers/maymounkov-kademlia-lncs.pdf">Kademlia's
+ *      paper</a> for more details.
  */
 public class SMSKademliaNode implements Serializable {
 

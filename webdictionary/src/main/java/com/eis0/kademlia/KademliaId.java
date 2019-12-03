@@ -22,7 +22,8 @@ import java.util.Random;
  * Class that defines a KademliaId.
  * It is representing by the hasCode of the user's phone number
  *
- * @see "https://pdos.csail.mit.edu/~petar/papers/maymounkov-kademlia-lncs.pdf" for more details
+ * @see <a href="https://pdos.csail.mit.edu/~petar/papers/maymounkov-kademlia-lncs.pdf">Kademlia's
+ *      paper</a> for more details.
  */
 public class KademliaId implements Serializable {
 

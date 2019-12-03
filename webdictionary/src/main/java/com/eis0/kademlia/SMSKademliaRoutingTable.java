@@ -10,7 +10,8 @@ import java.util.TreeSet;
  * A routing table is composed by different Buckets (see SMSKademliaBucket)
  * Every routing table has a configuration that, at the creation, will be a DefaultConfiguration
  *
- * @see "https://pdos.csail.mit.edu/~petar/papers/maymounkov-kademlia-lncs.pdf" for more details
+ * @see <a href="https://pdos.csail.mit.edu/~petar/papers/maymounkov-kademlia-lncs.pdf">Kademlia's
+ *      paper</a> for more details.
  */
 public class SMSKademliaRoutingTable implements KademliaRoutingTable {
 
@@ -41,8 +42,8 @@ public class SMSKademliaRoutingTable implements KademliaRoutingTable {
     }
 
     /**
-     * Set configuration as default
-     * @param config
+     * Set configuration as default.
+     * @param config The configuration to set as default.
      */
     public void setConfiguration(KadConfiguration config)
     {
@@ -152,7 +153,7 @@ public class SMSKademliaRoutingTable implements KademliaRoutingTable {
     /**
      * Set the Buckets of this routing table, mainly used when retrieving saved state
      *
-     * @param buckets
+     * @param buckets The buckets to use.
      */
     public final void setBuckets(SMSKademliaBucket[] buckets) {
         this.buckets = buckets;
