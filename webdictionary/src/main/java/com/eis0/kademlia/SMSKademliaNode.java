@@ -17,6 +17,7 @@ public class SMSKademliaNode implements Serializable {
     private KademliaId nodeId;
     private int port;
     private SMSPeer phoneNumber;
+    private SMSKademliaRoutingTable RoutingTable;
 
     /**
      * Stores information of a Kademlia node.
@@ -30,6 +31,7 @@ public class SMSKademliaNode implements Serializable {
         this.nodeId = nodeId;
         this.port = port;
         this.phoneNumber = phoneNumber;
+        RoutingTable = new SMSKademliaRoutingTable(this, new DefaultConfiguration());
     }
 
     /**
@@ -50,6 +52,11 @@ public class SMSKademliaNode implements Serializable {
     public SMSPeer getPhoneNumber() {
         return phoneNumber;
     }
+
+    /**
+     * @return Node's routing table
+     */
+    public SMSKademliaRoutingTable getRoutingTable(){ return this.RoutingTable; }
 
     /**
      * Method to compare two Nodes
