@@ -4,7 +4,7 @@ import com.eis0.kademlia.SMSKademliaNode;
 
 /**
  * Receives a ConnectMessage and sends an AcknowledgeMessage as reply.
- *
+ * N.B. All "receivers" has to be manage in a listener
  */
 public class ConnectReceiver {
 
