@@ -68,8 +68,10 @@ public class CreatePollActivity extends AppCompatActivity {
      * @author Matteo Carnelos
      */
     public void addPeerOnClick(View view) {
-        if(peersAdapter.getItemCount() >= MAX_USERS_ALLOWED)
+        if(peersAdapter.getItemCount() >= MAX_USERS_ALLOWED) {
             Toast.makeText(this, getString(R.string.limit_reached_message), Toast.LENGTH_SHORT).show();
+            return;
+        }
         String peerAddress = peerTxt.getText().toString();
         SMSPeer peer;
         try {

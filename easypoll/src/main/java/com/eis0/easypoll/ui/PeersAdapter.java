@@ -64,7 +64,9 @@ public class PeersAdapter extends RecyclerView.Adapter<PeersAdapter.PeerListView
      */
     public void removePeer(int index) {
         peersDataset.remove(index);
-        notifyDataSetChanged();
+        notifyItemRemoved(index);
+        for(int i = index; i < getItemCount(); i++)
+            notifyItemChanged(i);
     }
 
     /**
