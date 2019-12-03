@@ -3,9 +3,9 @@ package com.eis0.easypoll;
 import android.content.Context;
 import android.util.Log;
 
+import com.eis0.easypoll.poll.BinaryPoll;
 import com.eis0.easypoll.poll.PollListener;
 import com.eis0.easypoll.poll.PollManager;
-import com.eis0.easypoll.poll.TernaryPoll;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -37,9 +37,9 @@ public class DataProvider extends Observable implements PollListener {
     private static final String CLOSED_POLLS_FILE_NAME = "closedPolls.json";
     // Must always be static for getInstance to work
     private static DataProvider instance = null;
-    private static List<TernaryPoll> incomingPolls = new ArrayList<>();
-    private static List<TernaryPoll> openedPolls = new ArrayList<>();
-    private static List<TernaryPoll> closedPolls = new ArrayList<>();
+    private static List<BinaryPoll> incomingPolls = new ArrayList<>();
+    private static List<BinaryPoll> openedPolls = new ArrayList<>();
+    private static List<BinaryPoll> closedPolls = new ArrayList<>();
 
     /**
      * DataProvider constructor, sets this as the PollManager listener.
@@ -83,8 +83,8 @@ public class DataProvider extends Observable implements PollListener {
      * @param context The application context.
      * @author Matteo Carnelos
      */
-    private static void savePollsList(List<TernaryPoll> list, String fileName, Context context) {
-        Type listType = new TypeToken<List<TernaryPoll>>() {}.getType();
+    private static void savePollsList(List<BinaryPoll> list, String fileName, Context context) {
+        Type listType = new TypeToken<List<BinaryPoll>>() {}.getType();
         Gson gson = new GsonBuilder().enableComplexMapKeySerialization().create();
         String listJson = gson.toJson(list, listType);
         File listFile = new File(context.getFilesDir(), fileName);
@@ -118,7 +118,7 @@ public class DataProvider extends Observable implements PollListener {
      * @return The loaded list, or an empty list if the file was not found.
      * @author Matteo Carnelos
      */
-    private static List<TernaryPoll> loadPollsList(String fileName, Context context) {
+    private static List<BinaryPoll> loadPollsList(String fileName, Context context) {
         FileInputStream fileInputStream;
         try {
             fileInputStream = context.openFileInput(fileName);
@@ -139,7 +139,7 @@ public class DataProvider extends Observable implements PollListener {
         } catch (IOException e) {
             Log.e(LOG_KEY, "Unable to read data from list \"" + fileName + "\".");
         }
-        Type listType = new TypeToken<List<TernaryPoll>>() {}.getType();
+        Type listType = new TypeToken<List<BinaryPoll>>() {}.getType();
         return new Gson().fromJson(listJson, listType);
     }
 
@@ -149,7 +149,7 @@ public class DataProvider extends Observable implements PollListener {
      * @return The incoming polls ArrayList.
      * @author Matteo Carnelos
      */
-    public static List<TernaryPoll> getIncomingPolls() {
+    public static List<BinaryPoll> getIncomingPolls() {
         return incomingPolls;
     }
 
@@ -159,7 +159,7 @@ public class DataProvider extends Observable implements PollListener {
      * @return The opened polls ArrayList.
      * @author Matteo Carnelos
      */
-    public static List<TernaryPoll> getOpenedPolls() {
+    public static List<BinaryPoll> getOpenedPolls() {
         return openedPolls;
     }
 
@@ -169,7 +169,7 @@ public class DataProvider extends Observable implements PollListener {
      * @return The closed polls ArrayList.
      * @author Matteo Carnelos
      */
-    public static List<TernaryPoll> getClosedPolls() {
+    public static List<BinaryPoll> getClosedPolls() {
         return closedPolls;
     }
 
@@ -180,7 +180,7 @@ public class DataProvider extends Observable implements PollListener {
      * @param poll The poll received.
      * @author Matteo Carnelos
      */
-    public void onPollReceived(TernaryPoll poll) {
+    public void onPollReceived(BinaryPoll poll) {
         incomingPolls.add(poll);
         setChanged();
         notifyObservers(poll);
@@ -193,7 +193,7 @@ public class DataProvider extends Observable implements PollListener {
      * @param poll The poll created or updated.
      * @author Matteo Carnelos
      */
-    public void onSentPollUpdate(TernaryPoll poll) {
+    public void onSentPollUpdate(BinaryPoll poll) {
         // Two scenarios:
         // Poll Closed, move it from the openedPolls to the closedPolls list
         // Poll Opened, it can be either a new poll or an update to an existing one

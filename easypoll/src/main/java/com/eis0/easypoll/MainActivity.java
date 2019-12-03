@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Load previously saved data
         //DataProvider.loadDataFromInternal(this);
-        //TernaryPoll.loadPollsCountFromInternal(this);
+        //BinaryPoll.loadPollsCountFromInternal(this);
     }
 
     /**
@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         //DataProvider.saveDataToInternal(this);
-        //TernaryPoll.savePollsCountToInternal(this);
+        //BinaryPoll.savePollsCountToInternal(this);
     }
 
     /**

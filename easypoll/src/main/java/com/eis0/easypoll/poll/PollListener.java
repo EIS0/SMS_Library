@@ -13,7 +13,7 @@ public interface PollListener {
      * @param poll The poll received.
      * @author Giovanni Velludo
      */
-    void onPollReceived(TernaryPoll poll);
+    void onPollReceived(BinaryPoll poll);
 
     /**
      * Called by PollManager whenever a poll is updated or created.
@@ -21,5 +21,5 @@ public interface PollListener {
      * @param poll The poll updated/created.
      * @author Giovanni Velludo
      */
-    void onSentPollUpdate(TernaryPoll poll);
+    void onSentPollUpdate(BinaryPoll poll);
 }

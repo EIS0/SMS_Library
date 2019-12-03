@@ -20,7 +20,7 @@ import java.util.Set;
  * @author Giovanni Velludo
  * @author Matteo Carnelos
  */
-public class TernaryPoll extends Poll {
+public class BinaryPoll extends Poll {
 
     private static final String POLLS_COUNT_KEY = "com.eis0.easypoll.polls_count_key";
 
@@ -53,7 +53,7 @@ public class TernaryPoll extends Poll {
      * @author Giovanni Velludo
      * @author Matteo Carnelos
      */
-    public TernaryPoll(SMSPeer author, int id, String name, String question) {
+    public BinaryPoll(SMSPeer author, int id, String name, String question) {
         super(id, name, question, author);
     }
 
@@ -66,7 +66,7 @@ public class TernaryPoll extends Poll {
      * @author Giovanni Velludo
      * @author Matteo Carnelos
      */
-    public TernaryPoll(String name, String question, ArrayList<SMSPeer> users) {
+    public BinaryPoll(String name, String question, ArrayList<SMSPeer> users) {
         super(++pollsCount, name, question, null);
         pollUsers = new HashMap<>();
         for (SMSPeer user : users) addUser(user);
@@ -223,7 +223,7 @@ public class TernaryPoll extends Poll {
     }
 
     /**
-     * Compare two TernaryPoll object and tell if they are equal.
+     * Compare two BinaryPoll object and tell if they are equal.
      *
      * @param o The object to compare.
      * @return True if the two objects are equal, false otherwise.
@@ -233,7 +233,7 @@ public class TernaryPoll extends Poll {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        TernaryPoll that = (TernaryPoll) o;
+        BinaryPoll that = (BinaryPoll) o;
 
         // When comparing polls with no users, as they were received from another device
         if (that.pollUsers == null && this.pollUsers == null) {

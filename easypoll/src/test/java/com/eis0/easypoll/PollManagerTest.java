@@ -1,8 +1,8 @@
 package com.eis0.easypoll;
 
+import com.eis0.easypoll.poll.BinaryPoll;
 import com.eis0.easypoll.poll.PollListener;
 import com.eis0.easypoll.poll.PollManager;
-import com.eis0.easypoll.poll.TernaryPoll;
 import com.eis0.smslibrary.SMSMessage;
 import com.eis0.smslibrary.SMSPeer;
 import com.eis0.smslibrary.SMSPeerTest;
@@ -53,8 +53,8 @@ public class PollManagerTest {
         String text = messageCode + sep + pollId + sep + pollName + sep + pollQuestion;
         SMSMessage message = new SMSMessage(pollAuthor, text);
 
-        TernaryPoll verificationPoll =
-                new TernaryPoll(pollAuthor, pollId, pollName, pollQuestion);
+        BinaryPoll verificationPoll =
+                new BinaryPoll(pollAuthor, pollId, pollName, pollQuestion);
 
         pollManager.onMessageReceived(message);
         verify(mockListener).onPollReceived(verificationPoll);

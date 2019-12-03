@@ -3,23 +3,16 @@ package com.eis0.easypoll;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.eis0.easypoll.ui.PeerListAdapter;
-import com.eis0.smslibrary.Peer;
+import com.eis0.easypoll.ui.PeersAdapter;
 import com.eis0.smslibrary.SMSPeer;
-
-import java.util.ArrayList;
 
 /**
  * Create Poll Activity view controller, it checks and sends back data insered from the user.
@@ -31,6 +24,8 @@ import java.util.ArrayList;
  */
 public class CreatePollActivity extends AppCompatActivity {
 
+    private static final int MAX_USERS_ALLOWED = 10;
+
     static final String ARG_POLL_NAME = "poll_name";
     static final String ARG_POLL_QUESTION = "poll_question";
     static final String ARG_POLL_PEERS = "poll_peers";
@@ -38,7 +33,7 @@ public class CreatePollActivity extends AppCompatActivity {
     private EditText pollNameTxt;
     private EditText pollQuestionTxt;
     private EditText peerTxt;
-    private PeerListAdapter peerListAdapter;
+    private PeersAdapter peersAdapter;
 
     /**
      * Called when the activity is being created.
@@ -57,29 +52,31 @@ public class CreatePollActivity extends AppCompatActivity {
         pollQuestionTxt = findViewById(R.id.pollQuestionTxt);
         peerTxt = findViewById(R.id.peerTxt);
 
-        RecyclerView peerList = findViewById(R.id.peerList);
+        RecyclerView peerList = findViewById(R.id.peersRclView);
         peerList.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         peerList.setLayoutManager(layoutManager);
-        peerListAdapter = new PeerListAdapter();
-        peerList.setAdapter(peerListAdapter);
+        peersAdapter = new PeersAdapter();
+        peerList.setAdapter(peersAdapter);
     }
 
     /**
      * Function called when the add user button is clicked. It gets and checks data inserted from the
-     * user and adds it in the peer list.
+     * user and adds it in the peer recycler view.
      *
      * @param view The view on which the onClick event is coming from.
      * @author Matteo Carnelos
      */
     public void addPeerOnClick(View view) {
+        if(peersAdapter.getItemCount() >= MAX_USERS_ALLOWED)
+            Toast.makeText(this, getString(R.string.limit_reached_message), Toast.LENGTH_SHORT).show();
         String peerAddress = peerTxt.getText().toString();
         SMSPeer peer;
         try {
             peer = new SMSPeer(peerAddress);
-            if(!peerListAdapter.addPeer(peer)) {
-                Toast.makeText(this, getString(R.string.limit_reached_message), Toast.LENGTH_SHORT).show();
-            }
+            if(!peersAdapter.addPeer(peer))
+                Toast.makeText(this, getString(R.string.duplicated_user_message), Toast.LENGTH_SHORT).show();
+            peerTxt.setText("");
         }
         catch (IllegalArgumentException e) {
             Toast.makeText(this, getString(R.string.invalid_peer_message), Toast.LENGTH_SHORT).show();
@@ -108,7 +105,7 @@ public class CreatePollActivity extends AppCompatActivity {
         }
 
         // At least one Peer is required
-        if(peerListAdapter.getPeerDataset().isEmpty()) {
+        if(peersAdapter.getPeersDataset().isEmpty()) {
             Toast.makeText(this, getString(R.string.empty_peers_message), Toast.LENGTH_SHORT).show();
             return;
         }
@@ -117,7 +114,7 @@ public class CreatePollActivity extends AppCompatActivity {
         Intent returnIntent = new Intent()
                 .putExtra(ARG_POLL_NAME, name)
                 .putExtra(ARG_POLL_QUESTION, question)
-                .putExtra(ARG_POLL_PEERS, peerListAdapter.getPeerDataset());
+                .putExtra(ARG_POLL_PEERS, peersAdapter.getPeersDataset());
         setResult(Activity.RESULT_OK, returnIntent);
         finish();
     }

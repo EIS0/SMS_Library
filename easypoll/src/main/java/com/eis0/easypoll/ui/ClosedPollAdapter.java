@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import com.eis0.easypoll.DataProvider;
 import com.eis0.easypoll.R;
-import com.eis0.easypoll.poll.TernaryPoll;
+import com.eis0.easypoll.poll.BinaryPoll;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -109,7 +109,7 @@ public class ClosedPollAdapter extends BaseAdapter implements Observer {
         TextView yesNum = convertView.findViewById(R.id.yesNumTxt);
         TextView noNum = convertView.findViewById(R.id.noNumTxt);
 
-        TernaryPoll poll = DataProvider.getClosedPolls().get(position);
+        BinaryPoll poll = DataProvider.getClosedPolls().get(position);
 
         // Assigning poll display values to UI objects
         pollName.setText(poll.getPollName());

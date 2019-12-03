@@ -1,6 +1,6 @@
 package com.eis0.easypoll;
 
-public class TernaryPollTest {/*
+public class BinaryPollTest {/*
 
     @Test
     public void addValidUser() {
@@ -8,7 +8,7 @@ public class TernaryPollTest {/*
         SMSPeer expectedInPoll = new SMSPeer("654321");
         ArrayList<SMSPeer> users = new ArrayList<>();
         users.add(expectedInPoll);
-        TernaryPoll test = new TernaryPoll("ciao", author, users);
+        BinaryPoll test = new BinaryPoll("ciao", author, users);
         assertEquals(test.hasUser(expectedInPoll), true);
 
     }
@@ -19,7 +19,7 @@ public class TernaryPollTest {/*
         SMSPeer author = new SMSPeer("1234567");
         SMSPeer notInPoll = new SMSPeer("654321");
         ArrayList<SMSPeer> users = new ArrayList<>();
-        TernaryPoll test = new TernaryPoll("ciao", author, users);
+        BinaryPoll test = new BinaryPoll("ciao", author, users);
         assertEquals(test.hasUser(notInPoll), false);
     }
 
@@ -29,7 +29,7 @@ public class TernaryPollTest {/*
         SMSPeer inPoll = new SMSPeer("654321");
         ArrayList<SMSPeer> users = new ArrayList<>();
         users.add(inPoll);
-        TernaryPoll test = new TernaryPoll("cvb", author, users);
+        BinaryPoll test = new BinaryPoll("cvb", author, users);
         assertEquals(test.hasUser(inPoll), true);
     }
 
@@ -39,7 +39,7 @@ public class TernaryPollTest {/*
         SMSPeer inPoll = new SMSPeer("654321");
         ArrayList<SMSPeer> users = new ArrayList<>();
         users.add(inPoll);
-        TernaryPoll test = new TernaryPoll("fuck off", author, users);
+        BinaryPoll test = new BinaryPoll("fuck off", author, users);
         test.setYes(inPoll);
         assertEquals(test.getAnswer(inPoll), "Yes");
     }
@@ -51,7 +51,7 @@ public class TernaryPollTest {/*
         SMSPeer inPoll = new SMSPeer("654321");
         ArrayList<SMSPeer> users = new ArrayList<>();
         users.add(inPoll);
-        TernaryPoll test = new TernaryPoll("lol", author, users);
+        BinaryPoll test = new BinaryPoll("lol", author, users);
         test.setNo(inPoll);
         assertEquals(test.getAnswer(inPoll), "No");
     }
@@ -63,7 +63,7 @@ public class TernaryPollTest {/*
         SMSPeer inPoll = new SMSPeer("654321");
         ArrayList<SMSPeer> users = new ArrayList<>();
         users.add(inPoll);
-        TernaryPoll test = new TernaryPoll("", author, users);
+        BinaryPoll test = new BinaryPoll("", author, users);
         assertEquals(test.getAnswer(inPoll), "Unavailable");
     }
 
@@ -73,7 +73,7 @@ public class TernaryPollTest {/*
         SMSPeer author = new SMSPeer("1234567");
         SMSPeer notInPoll = new SMSPeer("654321");
         ArrayList<SMSPeer> users = new ArrayList<>();
-        TernaryPoll test = new TernaryPoll("", author, users);
+        BinaryPoll test = new BinaryPoll("", author, users);
         test.getAnswer(notInPoll);
     }
 
@@ -81,7 +81,7 @@ public class TernaryPollTest {/*
     public void getPollId() {
         SMSPeer author = new SMSPeer("1234567");
         ArrayList<SMSPeer> users = new ArrayList<>();
-        TernaryPoll test = new TernaryPoll("", author, users);
+        BinaryPoll test = new BinaryPoll("", author, users);
         assertEquals(test.getPollId(), 1);
     }
     */

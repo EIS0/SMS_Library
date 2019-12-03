@@ -9,9 +9,9 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.eis0.easypoll.DataProvider;
+import com.eis0.easypoll.poll.BinaryPoll;
 import com.eis0.easypoll.poll.PollManager;
 import com.eis0.easypoll.R;
-import com.eis0.easypoll.poll.TernaryPoll;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -112,7 +112,7 @@ public class IncomingPollAdapter extends BaseAdapter implements Observer {
         Button yesBtn = convertView.findViewById(R.id.yesBtn);
         Button noBtn = convertView.findViewById(R.id.noBtn);
 
-        final TernaryPoll poll = DataProvider.getIncomingPolls().get(position);
+        final BinaryPoll poll = DataProvider.getIncomingPolls().get(position);
 
         // Assigning poll display values and actions to UI objects
         pollNameTxt.setText(poll.getPollName());
