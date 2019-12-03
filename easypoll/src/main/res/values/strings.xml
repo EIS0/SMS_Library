@@ -14,14 +14,16 @@
     <!-- Create Poll strings-->
     <string name="name_hint">What is the poll name?</string>
     <string name="question_hint">Type the question!</string>
-    <string name="peer1_hint">First number</string>
-    <string name="peer2_hint">Second number </string>
-    <string name="peer3_hint">Third number</string>
+    <string name="peer1_hint">Enter a valid phone number</string>
     <string name="button_send">Send</string>
     <string name="empty_question_message">Please insert a question first</string>
     <string name="empty_name_message">Please insert a poll name</string>
-    <string name="invalid_peers_message">Please insert at least one valid phone number</string>
+    <string name="invalid_peer_message">Please insert a valid phone number</string>
+    <string name="empty_peers_message">Please insert at least one phone number</string>
     <string name="poll_name">Poll Name</string>
     <string name="poll_question">Poll Question</string>
     <string name="users">Users</string>
+    <string name="add_btn_content_descriptor">Add</string>
+    <string name="remove_btn_text">Remove</string>
+    <string name="limit_reached_message">You have reached the limit for the beta version (3 peers)</string>
 </resources>
