@@ -14,6 +14,9 @@ import android.content.IntentFilter;
  */
 public class SMSManager extends CommunicationManager<SMSMessage> {
 
+    private static final String SENT_ACTION = "SMS_SENT";
+    private static final String DELIVERED_ACTION = "SMS_DELIVERED";
+
     // Singleton Design Pattern
     private SMSManager() { }
     private static SMSManager instance = null;
@@ -66,7 +69,7 @@ public class SMSManager extends CommunicationManager<SMSMessage> {
      */
     @Override
     public void sendMessage(SMSMessage message) {
-        SMSHandler.sendMessage(message, null, null);
+        sendMessage(message, null, null, null);
     }
 
     /**
@@ -78,8 +81,7 @@ public class SMSManager extends CommunicationManager<SMSMessage> {
      * @author Marco Cognolato
      */
     public void sendMessage(SMSMessage message, SentMessageListener listener, Context context) {
-        setSentIntent(message, context, listener);
-        SMSHandler.sendMessage(message, sent, null);
+        sendMessage(message, listener, null, context);
     }
 
     /**
@@ -91,8 +93,7 @@ public class SMSManager extends CommunicationManager<SMSMessage> {
      * @author Marco Cognolato
      */
     public void sendMessage(SMSMessage message, DeliveredMessageListener listener, Context context) {
-        setDeliveredIntent(message, context, listener);
-        SMSHandler.sendMessage(message, null, delivered);
+        sendMessage(message, null, listener, context);
     }
 
     /**
@@ -108,8 +109,8 @@ public class SMSManager extends CommunicationManager<SMSMessage> {
                             SentMessageListener sendListener,
                             DeliveredMessageListener deliveredListener,
                             Context context) {
-        setSentIntent(message, context, sendListener);
-        setDeliveredIntent(message, context, deliveredListener);
+        if(sendListener != null) setSentIntent(message, context, sendListener);
+        if(deliveredListener != null) setDeliveredIntent(message, context, deliveredListener);
         SMSHandler.sendMessage(message, sent, delivered);
     }
 
@@ -124,8 +125,7 @@ public class SMSManager extends CommunicationManager<SMSMessage> {
     private void setSentIntent(final SMSMessage message, final Context cont, SentMessageListener listener) {
         if(onSend != null) cont.unregisterReceiver(onSend);
         smsSentListener = listener;
-        String action = "SMS_SENT";
-        sent = PendingIntent.getBroadcast(cont, 0, new Intent(action), 0);
+        sent = PendingIntent.getBroadcast(cont, 0, new Intent(SENT_ACTION), 0);
         onSend = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -133,7 +133,7 @@ public class SMSManager extends CommunicationManager<SMSMessage> {
                 cont.unregisterReceiver(onSend);
             }
         };
-        cont.registerReceiver(onSend, new IntentFilter(action));
+        cont.registerReceiver(onSend, new IntentFilter(SENT_ACTION));
     }
 
     /**
@@ -147,8 +147,7 @@ public class SMSManager extends CommunicationManager<SMSMessage> {
     private void setDeliveredIntent(final SMSMessage message, final Context cont, DeliveredMessageListener listener) {
         if(onDeliver != null) cont.unregisterReceiver(onDeliver);
         smsDeliveredListener = listener;
-        String action = "SMS_DELIVERED";
-        delivered = PendingIntent.getBroadcast(cont, 0, new Intent(action), 0);
+        delivered = PendingIntent.getBroadcast(cont, 0, new Intent(DELIVERED_ACTION), 0);
         onDeliver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -156,6 +155,6 @@ public class SMSManager extends CommunicationManager<SMSMessage> {
                 cont.unregisterReceiver(onDeliver);
             }
         };
-        cont.registerReceiver(onDeliver, new IntentFilter(action));
+        cont.registerReceiver(onDeliver, new IntentFilter(DELIVERED_ACTION));
     }
 }

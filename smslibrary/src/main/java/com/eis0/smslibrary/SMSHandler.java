@@ -44,6 +44,7 @@ public class SMSHandler extends NotificationListenerService {
      */
     static void setReceiveListener(ReceivedMessageListener<SMSMessage> listener) {
         receivedListener = listener;
+        if(listener == null) return;
         for (SMSMessage pendingMessage : pendingMessages) receivedListener.onMessageReceived(pendingMessage);
         pendingMessages.clear();
     }
