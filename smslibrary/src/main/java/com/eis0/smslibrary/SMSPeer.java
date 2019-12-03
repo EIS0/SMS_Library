@@ -28,7 +28,7 @@ public class SMSPeer implements Peer, java.io.Serializable {
     public SMSPeer(String destination) {
         Phonenumber.PhoneNumber phoneNumber = phoneNumberWithoutPrefix(destination);
         if (!adjustForEmulator(phoneNumber)) {
-            if (!PhoneNumberUtil.getInstance().isValidNumber(phoneNumber))
+            if (!PhoneNumberUtil.getInstance().isPossibleNumber(phoneNumber))
                 throw new IllegalArgumentException("Unable to create SMSPeer, invalid destination: \"" + destination + "\".");
         }
         this.address = extractNationalNumber(phoneNumber);
