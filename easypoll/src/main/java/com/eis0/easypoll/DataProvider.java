@@ -40,6 +40,7 @@ public class DataProvider extends Observable implements PollListener {
     private static List<BinaryPoll> incomingPolls = new ArrayList<>();
     private static List<BinaryPoll> openedPolls = new ArrayList<>();
     private static List<BinaryPoll> closedPolls = new ArrayList<>();
+    private static File filesDir;
 
     /**
      * DataProvider constructor, sets this as the PollManager listener.
@@ -64,15 +65,26 @@ public class DataProvider extends Observable implements PollListener {
     }
 
     /**
-     * Save all the incoming/opened/closed polls data in the internal memory.
+     * Set the output directory for file saving.
+     * If you want to use the memorization feature you should set the outputFilesDir as soon as the
+     * app starts.
      *
-     * @param context The context of the application.
      * @author Matteo Carnelos
      */
-    static void saveDataToInternal(Context context) {
-        savePollsList(incomingPolls, INCOMING_POLLS_FILE_NAME, context);
-        savePollsList(openedPolls, OPENED_POLLS_FILE_NAME, context);
-        savePollsList(closedPolls, CLOSED_POLLS_FILE_NAME, context);
+    static void setOutputFilesDir(File outputFilesDir) {
+        filesDir = outputFilesDir;
+    }
+
+    /**
+     * Save all the incoming/opened/closed polls data in the internal memory.
+     *
+     * @author Matteo Carnelos
+     */
+    static void saveDataToInternal() {
+        if(filesDir == null) return;
+        savePollsList(incomingPolls, INCOMING_POLLS_FILE_NAME, filesDir);
+        savePollsList(openedPolls, OPENED_POLLS_FILE_NAME, filesDir);
+        savePollsList(closedPolls, CLOSED_POLLS_FILE_NAME, filesDir);
     }
 
     /**
@@ -80,14 +92,14 @@ public class DataProvider extends Observable implements PollListener {
      *
      * @param list The list of Poll to save.
      * @param fileName The name of the file.
-     * @param context The application context.
+     * @param directory The directory path.
      * @author Matteo Carnelos
      */
-    private static void savePollsList(List<BinaryPoll> list, String fileName, Context context) {
+    private static void savePollsList(List<BinaryPoll> list, String fileName, File directory) {
         Type listType = new TypeToken<List<BinaryPoll>>() {}.getType();
         Gson gson = new GsonBuilder().enableComplexMapKeySerialization().create();
         String listJson = gson.toJson(list, listType);
-        File listFile = new File(context.getFilesDir(), fileName);
+        File listFile = new File(directory, fileName);
         try {
             FileWriter fileWriter = new FileWriter(listFile, false);
             fileWriter.write(listJson);
@@ -104,9 +116,10 @@ public class DataProvider extends Observable implements PollListener {
      * @author Matteo Carnelos
      */
     static void loadDataFromInternal(Context context) {
-        incomingPolls.addAll(loadPollsList(INCOMING_POLLS_FILE_NAME, context));
-        openedPolls.addAll(loadPollsList(OPENED_POLLS_FILE_NAME, context));
-        closedPolls.addAll(loadPollsList(CLOSED_POLLS_FILE_NAME, context));
+        if(context == null) return;
+        incomingPolls = loadPollsList(INCOMING_POLLS_FILE_NAME, context);
+        openedPolls = loadPollsList(OPENED_POLLS_FILE_NAME, context);
+        closedPolls = loadPollsList(CLOSED_POLLS_FILE_NAME, context);
         PollManager.updateSentPolls();
     }
 
@@ -174,6 +187,18 @@ public class DataProvider extends Observable implements PollListener {
     }
 
     /**
+     * This method overrides the Observable.setChanged() method.
+     * Save the dataset anytime is changed.
+     *
+     * @author Matteo Carnelos
+     */
+    @Override
+    protected void setChanged() {
+        super.setChanged();
+        saveDataToInternal();
+    }
+
+    /**
      * Called whenever a new poll is received by other users, adds it to the incomingPoll list and
      * notifies all the observers.
      *
@@ -205,6 +230,19 @@ public class DataProvider extends Observable implements PollListener {
             if (pollIndex == -1) openedPolls.add(poll);
             else openedPolls.set(pollIndex, poll);
         }
+        setChanged();
+        notifyObservers(poll);
+    }
+
+    /**
+     * Called whenever a poll is answered. Remove it from the incomingPolls list and
+     * notify the observers.
+     *
+     * @param poll The poll answered.
+     * @author Matteo Carnelos
+     */
+    public void onPollAnswered(BinaryPoll poll) {
+        incomingPolls.remove(poll);
         setChanged();
         notifyObservers(poll);
     }

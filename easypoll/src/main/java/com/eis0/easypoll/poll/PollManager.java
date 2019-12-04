@@ -190,6 +190,7 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
         if (poll.getPollAuthor() == null)
             throw new IllegalArgumentException("Trying to answer an owned poll");
         sendAnswer(poll, answer);
+        pollListener.onPollAnswered(poll);
     }
 
     /**

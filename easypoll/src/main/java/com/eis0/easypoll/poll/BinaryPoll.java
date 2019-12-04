@@ -1,7 +1,5 @@
 package com.eis0.easypoll.poll;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.SharedPreferences;
 
 import androidx.annotation.NonNull;
@@ -25,6 +23,7 @@ public class BinaryPoll extends Poll {
     private static final String POLLS_COUNT_KEY = "com.eis0.easypoll.polls_count_key";
 
     private static int pollsCount = 0;
+    private static SharedPreferences mSharedPreferences;
 
     private enum PollResult {
         YES("Yes"), NO("No"), UNAVAILABLE("Unavailable");
@@ -70,30 +69,37 @@ public class BinaryPoll extends Poll {
         super(++pollsCount, name, question, null);
         pollUsers = new HashMap<>();
         for (SMSPeer user : users) addUser(user);
+        savePollsCountToInternal();
+    }
+
+    /**
+     * Set the SharedPreferences reference to which save the pollsCount value.
+     *
+     * @author Matteo Carnelos
+     */
+    public static void setSharedPreferences(SharedPreferences sharedPreferences) {
+        mSharedPreferences = sharedPreferences;
     }
 
     /**
      * Save the polls counter (for Ids) to the internal storage.
      *
-     * @param activity The Activity to which the preferences will be saved.
      * @author Matteo Carnelos
      */
-    public static void savePollsCountToInternal(Activity activity) {
-        SharedPreferences sharedPreferences = activity.getPreferences(Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
+    public static void savePollsCountToInternal() {
+        if(mSharedPreferences == null) return;
+        SharedPreferences.Editor editor = mSharedPreferences.edit();
         editor.putInt(POLLS_COUNT_KEY, pollsCount);
         editor.apply();
     }
 
     /**
      * Load the polls counter (for Ids) from the internal storage.
-     *
-     * @param activity The Activity where the preferences are saved.
+
      * @author Matteo Carnelos
      */
-    public static void loadPollsCountFromInternal(Activity activity) {
-        SharedPreferences sharedPreferences = activity.getPreferences(Context.MODE_PRIVATE);
-        pollsCount = sharedPreferences.getInt(POLLS_COUNT_KEY, 0);
+    public static void loadPollsCountFromInternal() {
+        pollsCount = mSharedPreferences.getInt(POLLS_COUNT_KEY, 0);
     }
 
     /**
@@ -242,8 +248,8 @@ public class BinaryPoll extends Poll {
                     this.getPollName().equals(that.getPollName()) &&
                     this.getPollQuestion().equals(that.getPollQuestion());
         }
+        // When comparing polls with no author, as they were sent from the device
         return this.getPollId() == that.getPollId() &&
-                this.getPollAuthor().equals(that.getPollAuthor()) &&
                 this.getPollName().equals(that.getPollName()) &&
                 this.getPollQuestion().equals(that.getPollQuestion()) &&
                 pollUsers.equals(that.pollUsers);

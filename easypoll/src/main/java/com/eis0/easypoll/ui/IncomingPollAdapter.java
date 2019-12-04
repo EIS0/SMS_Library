@@ -121,16 +121,12 @@ public class IncomingPollAdapter extends BaseAdapter implements Observer {
         yesBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 pollManager.answerPoll(poll, true);
-                DataProvider.getIncomingPolls().remove(poll);
-                notifyDataSetChanged();
             }
         });
         noBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 pollManager.answerPoll(poll, false);
-                DataProvider.getIncomingPolls().remove(poll);
-                notifyDataSetChanged();
             }
         });
 

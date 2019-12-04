@@ -44,7 +44,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="4dp"
             android:textAppearance="?attr/textAppearanceListItem"
-            android:textColor="@android:color/holo_green_dark"
+            android:textColor="@color/colorPrimary"
             app:layout_constraintBaseline_toBaselineOf="@+id/yesTxt"
             app:layout_constraintEnd_toStartOf="@+id/yesTxt" />
 
@@ -55,7 +55,7 @@
             android:layout_marginEnd="8dp"
             android:text="@string/poll_li_yes"
             android:textAppearance="?attr/textAppearanceListItem"
-            android:textColor="@android:color/holo_green_dark"
+            android:textColor="@color/colorPrimary"
             app:layout_constraintBaseline_toBaselineOf="@+id/dashTxt"
             app:layout_constraintEnd_toStartOf="@+id/dashTxt" />
 
@@ -75,7 +75,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="4dp"
             android:textAppearance="?attr/textAppearanceListItem"
-            android:textColor="@android:color/holo_red_light"
+            android:textColor="@color/colorAccent"
             app:layout_constraintBaseline_toBaselineOf="@+id/noTxt"
             app:layout_constraintEnd_toStartOf="@+id/noTxt" />
 
@@ -85,7 +85,7 @@
             android:layout_height="wrap_content"
             android:text="@string/poll_li_no"
             android:textAppearance="?attr/textAppearanceListItem"
-            android:textColor="@android:color/holo_red_light"
+            android:textColor="@color/colorAccent"
             app:layout_constraintBaseline_toBaselineOf="@+id/pollIdTxt"
             app:layout_constraintEnd_toEndOf="@+id/pollQuestionTxt" />
 
