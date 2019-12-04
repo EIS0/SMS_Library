@@ -9,13 +9,13 @@ import androidx.annotation.NonNull;
  * That force the user to override equals() and toString().
  * @author Edoardo Raimondi
  */
-public abstract class SerializableObject{
+public abstract class SerializableObject<T>{
 
     /**
      * Serializes an object into a String
      * @return The String serialization of the object
      */
-    public abstract String serialize();
+    public abstract T serialize();
 
     /**
      * Mandatory override for equals()

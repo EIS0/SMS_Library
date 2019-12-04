@@ -2,7 +2,7 @@ package com.example.webdictionary;
 
 import androidx.annotation.NonNull;
 
-public class SMSSerialization extends SerializableObject {
+public class SMSSerialization extends SerializableObject<String> {
 
     private String data;
 
