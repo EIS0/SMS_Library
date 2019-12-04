@@ -3,6 +3,7 @@ package com.eis0.kademlia;
 import android.content.Context;
 
 import com.eis0.smslibrary.SMSPeer;
+import com.eis0.webdictionary.SMSNetDictionary;
 
 import org.junit.Test;
 
@@ -13,9 +14,10 @@ public class SMSKademliaBucketTest {
     KademliaId ID = new KademliaId("00000000000000000001");
     KademliaId ID2 = new KademliaId("00000000000000000011");
     KademliaId ID3 = new KademliaId();
-    SMSKademliaNode test3 = new SMSKademliaNode(ID3, 123, new SMSPeer("3408140326"));
-    SMSKademliaNode test2 = new SMSKademliaNode(ID2, 123, new SMSPeer("3497364511"));
-    SMSKademliaNode test = new SMSKademliaNode(ID, 123, new SMSPeer("3497312345"));
+    SMSNetDictionary dic = new SMSNetDictionary();
+    SMSKademliaNode test3 = new SMSKademliaNode(ID3, new SMSPeer("3408140326"), dic);
+    SMSKademliaNode test2 = new SMSKademliaNode(ID2,  new SMSPeer("3497364511"), dic);
+    SMSKademliaNode test = new SMSKademliaNode(ID, new SMSPeer("3497312345"), dic);
     SMSKademliaRoutingTable routingTable = new SMSKademliaRoutingTable(test, config);
     /*configuration test*/
     SMSKademliaBucket toTest = new SMSKademliaBucket(5, config);

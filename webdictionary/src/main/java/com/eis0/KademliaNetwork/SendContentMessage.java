@@ -29,11 +29,10 @@ public class SendContentMessage implements Message {
     }
 
     /**
-     * @param toDic SMSNetDIctionary where put the content
      * @param ofNode SMSKademliaNode having the dictionary
      */
-    public void setContent(SMSNetDictionary toDic, SMSKademliaNode ofNode){
-        toDic.add(this.Key, this.Content);
+    public void setContent(SMSKademliaNode ofNode){
+        ofNode.getDictionary().add(this.Key, this.Content);
     }
 
     /**
@@ -64,6 +63,5 @@ public class SendContentMessage implements Message {
     {
         return "ContentMessage[origin=" + From + ",content=" + Content + "]";
     }
-
 
 }

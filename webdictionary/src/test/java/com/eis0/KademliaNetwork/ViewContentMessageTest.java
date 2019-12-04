@@ -6,24 +6,24 @@ import com.eis0.smslibrary.SMSPeer;
 import com.eis0.webdictionary.SMSNetDictionary;
 import com.eis0.webdictionary.SerializableObject;
 
+import org.junit.Before;
 import org.junit.Test;
-import org.w3c.dom.Node;
 
 import static org.junit.Assert.*;
 
-public class SendContentMessageTest {
-
+public class ViewContentMessageTest {
     SMSPeer peer = new SMSPeer("3408140326");
     KademliaId ID = new KademliaId(peer);
-    SMSNetDictionary dic = new SMSNetDictionary();
+    static SMSNetDictionary dic = new SMSNetDictionary();
     SMSKademliaNode From = new SMSKademliaNode(ID, peer, dic);
     SMSKademliaNode To = new SMSKademliaNode(new KademliaId(), peer, dic);
     TestContent content = new TestContent();
     TestKey key = new TestKey();
-    SendContentMessage test = new SendContentMessage(From, content, key);
+    ViewContentMessage test = new ViewContentMessage(From, key);
 
     /*SerializableObject key implementation*/
     public class TestKey extends SerializableObject {
+
         public int key;
 
         public TestKey() {
@@ -68,31 +68,15 @@ public class SendContentMessageTest {
     }
 
 
-    @Test
-    public void setContent() {
-        test.setContent(To);
-        assertTrue(dic.getResource(key).equals(content));
+    @Before
+    public void dicPopolator(){
+        To.getDictionary().add(content, key);
     }
+
 
     @Test
     public void getContent() {
-        assertTrue(test.getContent().equals(content));
-    }
-
-    @Test
-    public void getPeer() {
-        assertTrue(test.getPeer().equals(peer));
-    }
-
-    @Test
-    public void getCode() {
-        byte shouldBe = 0x01;
-        assertEquals(test.getCode(), shouldBe);
-    }
-
-    @Test
-    public void getData() {
-        String ShouldBe = "ContentMessage[origin=108877ECC3A9B2C286E5CD813119910F6DF43EC4,content=test]";
-        assertEquals(test.getData(), ShouldBe);
+        To.getDictionary().add(content, key);
+        assertTrue(test.getContent(To).equals(content));
     }
 }
