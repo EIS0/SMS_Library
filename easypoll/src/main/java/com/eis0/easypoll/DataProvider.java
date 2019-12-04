@@ -6,6 +6,9 @@ import android.util.Log;
 import com.eis0.easypoll.poll.BinaryPoll;
 import com.eis0.easypoll.poll.PollListener;
 import com.eis0.easypoll.poll.PollManager;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -19,9 +22,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 
 /**
  * It's the PollManager listener, it handles polls updates by splitting them out in three

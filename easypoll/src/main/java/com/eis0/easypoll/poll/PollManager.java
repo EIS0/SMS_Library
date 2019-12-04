@@ -87,13 +87,10 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
      * @param name     The name given to the poll.
      * @param question The question to ask users.
      * @param users    Users to which the question should be asked.
-     * @throws IllegalArgumentException When users is empty
      * @author Giovanni Velludo
      * @author Matteo Carnelos
      */
-    public void createPoll(String name, String question, ArrayList<SMSPeer> users)
-            throws IllegalArgumentException {
-        if (users.isEmpty()) throw new IllegalArgumentException("Can't create poll with no users");
+    public void createPoll(String name, String question, ArrayList<SMSPeer> users) {
         BinaryPoll poll = new BinaryPoll(name, question, users);
         sentPolls.put(poll.getPollId(), poll);
         sendNewPoll(poll);

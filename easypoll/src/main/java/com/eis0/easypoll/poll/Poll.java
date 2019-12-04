@@ -4,7 +4,8 @@ import com.eis0.smslibrary.SMSPeer;
 
 /**
  * Abstract class to extend to create a poll, it contains all the basics actions that a generic
- * poll could have. Management of users and answers is delelgated to subclasses.
+ * poll could have. Management of users and answers is delegated to subclasses.
+ *
  * @author Edoardo Raimondi
  * @author Giovanni Velludo
  * @author Matteo Carnelos
@@ -18,6 +19,7 @@ abstract class Poll {
 
     /**
      * Poll basic constructor, it sets all the variables that a poll needs in order to exist.
+     *
      * @param id The unique id for the poll to create.
      * @param name The name of the poll.
      * @param question The question of the poll.
@@ -25,6 +27,8 @@ abstract class Poll {
      * @author Matteo Carnelos
      */
     Poll(int id, String name, String question, SMSPeer author) {
+        if(name.isEmpty()) throw new IllegalArgumentException("Can't create poll with empty name");
+        if(question.isEmpty()) throw new IllegalArgumentException("Can't create poll with empty question");
         pollId = id;
         pollName = name;
         pollQuestion = question;
@@ -33,6 +37,7 @@ abstract class Poll {
 
     /**
      * Get the poll unique id.
+     *
      * @return An integer representing the poll id.
      * @author Matteo Carnelos
      */
@@ -42,6 +47,7 @@ abstract class Poll {
 
     /**
      * Get the poll name.
+     *
      * @return A string representing the poll name.
      * @author Matteo Carnelos
      */
@@ -51,6 +57,7 @@ abstract class Poll {
 
     /**
      * Get the poll question.
+     *
      * @return A string representing the poll question.
      * @author Matteo Carnelos
      */
@@ -60,6 +67,7 @@ abstract class Poll {
 
     /**
      * Get the poll author.
+     *
      * @return An SMSPeer representing the poll author.
      * @author Matteo Carnelos
      */
@@ -69,6 +77,7 @@ abstract class Poll {
 
     /**
      * Tell if a poll is closed.
+     *
      * @return True if the poll is closed, false otherwise.
      * @author Matteo Carnelos
      */
@@ -77,6 +86,7 @@ abstract class Poll {
     /**
      * Returns a percentage value representing the quantity of answers received in relationship
      * with the total number of users that have to answer.
+     *
      * @return The closed percentage as an integer value.
      * @author Matteo Carnelos
      */
@@ -84,6 +94,7 @@ abstract class Poll {
 
     /**
      * Check if the user is in the poll.
+     *
      * @param user The user for which the check is being requested.
      * @return True if the user is in the poll, false otherwise.
      * @author Giovanni Velludo
@@ -92,6 +103,7 @@ abstract class Poll {
 
     /**
      * Insert an user in the poll.
+     *
      * @param user The user to insert in the poll.
      * @author Giovanni Velludo
      */
@@ -99,6 +111,7 @@ abstract class Poll {
 
     /**
      * Return the answer of a specific user.
+     *
      * @param user The user whose answer is being requested.
      * @return String representing the answer.
      * @author Giovanni Velludo

@@ -9,9 +9,9 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.eis0.easypoll.DataProvider;
+import com.eis0.easypoll.R;
 import com.eis0.easypoll.poll.BinaryPoll;
 import com.eis0.easypoll.poll.PollManager;
-import com.eis0.easypoll.R;
 
 import java.util.Observable;
 import java.util.Observer;

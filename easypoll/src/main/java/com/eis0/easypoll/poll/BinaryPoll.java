@@ -25,7 +25,7 @@ public class BinaryPoll extends Poll {
     private static int pollsCount = 0;
     private static SharedPreferences mSharedPreferences;
 
-    private enum PollResult {
+    public enum PollResult {
         YES("Yes"), NO("No"), UNAVAILABLE("Unavailable");
         private String answer;
 
@@ -62,11 +62,13 @@ public class BinaryPoll extends Poll {
      * @param name     The name of the poll.
      * @param question The question to ask all users.
      * @param users    Users to include in the poll.
+     * @throws IllegalArgumentException When one of the arguments is empty.
      * @author Giovanni Velludo
      * @author Matteo Carnelos
      */
     public BinaryPoll(String name, String question, ArrayList<SMSPeer> users) {
         super(++pollsCount, name, question, null);
+        if(users.isEmpty()) throw new IllegalArgumentException("Can't create poll with no users");
         pollUsers = new HashMap<>();
         for (SMSPeer user : users) addUser(user);
         savePollsCountToInternal();
@@ -110,6 +112,29 @@ public class BinaryPoll extends Poll {
      */
     Set<SMSPeer> getPollUsers() {
         return pollUsers.keySet();
+    }
+
+    /**
+     * Check if the user is in the poll.
+     *
+     * @param user The user for which the check is being requested.
+     * @return True if the user is in the poll, false otherwise.
+     * @author Giovanni Velludo
+     */
+    public boolean hasUser(SMSPeer user) {
+        return pollUsers.containsKey(user);
+    }
+
+    /**
+     * Insert an user in the poll.
+     *
+     * @param user The user to insert in the poll
+     * @author Giovanni Velludo
+     */
+    public void addUser(SMSPeer user) {
+        // At the beginning we have no feedback by the user
+        PollResult result = PollResult.UNAVAILABLE;
+        pollUsers.put(user, result);
     }
 
     /**
@@ -163,29 +188,6 @@ public class BinaryPoll extends Poll {
     }
 
     /**
-     * Check if the user is in the poll.
-     *
-     * @param user The user for which the check is being requested.
-     * @return True if the user is in the poll, false otherwise.
-     * @author Giovanni Velludo
-     */
-    public boolean hasUser(SMSPeer user) {
-        return pollUsers.containsKey(user);
-    }
-
-    /**
-     * Insert an user in the poll.
-     *
-     * @param user The user to insert in the poll
-     * @author Giovanni Velludo
-     */
-    void addUser(SMSPeer user) {
-        // At the beginning we have no feedback by the user
-        PollResult result = PollResult.UNAVAILABLE;
-        pollUsers.put(user, result);
-    }
-
-    /**
      * Set user's answer to "Yes".
      *
      * @param user User who answered "Yes".
@@ -193,7 +195,7 @@ public class BinaryPoll extends Poll {
      * @author Giovanni Velludo
      * @author Matteo Carnelos
      */
-    void setYes(SMSPeer user) {
+    public void setYes(SMSPeer user) {
         if (hasUser(user)) {
             PollResult result = PollResult.YES;
             pollUsers.put(user, result);
@@ -203,12 +205,12 @@ public class BinaryPoll extends Poll {
     /**
      * Set user's answer to "No".
      *
-     * @param user user who answered "No".
+     * @param user User who answered "No".
      * @throws IllegalArgumentException If the specified user isn't in the poll.
      * @author Giovanni Velludo
      * @author Matteo Carnelos
      */
-    void setNo(SMSPeer user) {
+    public void setNo(SMSPeer user) {
         if (hasUser(user)) {
             PollResult result = PollResult.NO;
             pollUsers.put(user, result);
