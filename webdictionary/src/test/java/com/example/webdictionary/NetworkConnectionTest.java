@@ -4,17 +4,22 @@ import com.eis0.smslibrary.SMSPeer;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import static org.mockito.Mockito.when;
 
 /**
  * Instrumented test, which will execute on an Android device.
  *
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
+@RunWith(MockitoJUnitRunner.class)
 public class NetworkConnectionTest {
 
     private NetworkConnection instance;
@@ -23,6 +28,10 @@ public class NetworkConnectionTest {
     private final SMSPeer PEER3 = new SMSPeer("5553");
     private final SMSPeer PEER4 = new SMSPeer("5554");
     private final SMSPeer[] PEERS = {PEER1,PEER2,PEER3,PEER4};
+
+    @Mock
+    SMSPeer mockedPeer;
+    private class MessageSentException extends RuntimeException{}
 
     @Before
     public void setup() {
@@ -47,11 +56,15 @@ public class NetworkConnectionTest {
         NetworkConnection.getInstance(null);
     }
 
-    @Test(expected = ExceptionInInitializerError.class)
+
+
+    @Test(expected = MessageSentException.class)
     public void netJoinRequest_noErrors(){
-        //since I don't have a Mock for SmsManager this returns ExceptionInInitializerError
-        //and since I'm asking for a valid peer it means the call get's correctly propagated
-        NetworkConnection.getInstance(null).askToJoin(PEER1);
+        when(mockedPeer.isValid()).thenReturn(true).thenThrow(new MessageSentException());
+        //the peer passed gets checked 2 times before being sent via sms.
+        //since I cannot mock for the sent I can at least mock those 2 checks
+        //using a custom exception so I can catch it here
+        NetworkConnection.getInstance(null).askToJoin(mockedPeer);
     }
 
     @Test(expected = IllegalArgumentException.class)
