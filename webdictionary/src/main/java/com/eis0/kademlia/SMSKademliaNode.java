@@ -18,6 +18,7 @@ public class SMSKademliaNode implements Serializable {
     private int port;
     private SMSPeer phoneNumber;
     private SMSKademliaRoutingTable RoutingTable;
+    //TODO it's supposed a node should have a portion of a SMSNetDictionary
 
     /**
      * Stores information of a Kademlia node.

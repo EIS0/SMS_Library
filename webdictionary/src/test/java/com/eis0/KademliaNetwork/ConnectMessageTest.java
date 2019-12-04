@@ -27,12 +27,14 @@ public class ConnectMessageTest {
 
     @Test
     public void getData() {
-        assertEquals(test.getData(), "108877ECC3A9B2C286E5CD813119910F6DF43EC4");
+        String ShouldBe = "108877ECC3A9B2C286E5CD813119910F6DF43EC4";
+        assertEquals(test.getData(),ShouldBe);
     }
 
     @Test
     public void code() {
-        assertEquals(test.code(), 0x02);
+        byte ShouldBe = 0x02;
+        assertEquals(test.code(), ShouldBe);
     }
 
 }
