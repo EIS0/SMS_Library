@@ -113,12 +113,11 @@ public class NetworkDemo extends AppCompatActivity {
      * Asks for an inserted valid number a request to join his network
      */
     public void buttonClick(View arg0){
-        SMSPeer peer = new SMSPeer(t1.getText().toString());
-
-        if(peer.isValid()){
+        try{
+            SMSPeer peer = new SMSPeer(t1.getText().toString());
             NetworkConnection.getInstance(getPhoneNumber()).askToJoin(peer);
         }
-        else{
+        catch(IllegalArgumentException e){
             Toast.makeText(getApplicationContext(),"Please insert a valid SMSPeer!",Toast.LENGTH_SHORT).show();
         }
     }
