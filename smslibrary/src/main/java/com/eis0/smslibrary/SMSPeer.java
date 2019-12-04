@@ -1,27 +1,87 @@
 package com.eis0.smslibrary;
 
-import android.util.Log;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
+import com.google.i18n.phonenumbers.NumberParseException;
+import com.google.i18n.phonenumbers.PhoneNumberUtil;
+import com.google.i18n.phonenumbers.Phonenumber;
 
 /**
  * Class that implements the Peer interface. It represent the telephone Peer.
  *
  * @author Marco Cognolato
+ * @author Matteo Carnelos
  */
-public class SMSPeer implements Peer {
+public class SMSPeer implements Peer, java.io.Serializable {
 
     private String address;
-    private final String LOG_KEY = "SMS_PEER";
 
     /**
      * Creates and returns an SMSPeer given a valid destination.
      *
      * @param destination String containing the destination address.
+     * @throws IllegalArgumentException If the destination given is not valid.
      * @author Marco Cognolato
+     * @author Matteo Carnelos
      */
     public SMSPeer(String destination) {
-        this.address = destination;
-        if(!isValid()) throw new IllegalArgumentException();
+        Phonenumber.PhoneNumber phoneNumber = phoneNumberWithoutPrefix(destination);
+        if (!adjustForEmulator(phoneNumber)) {
+            if (!PhoneNumberUtil.getInstance().isPossibleNumber(phoneNumber))
+                throw new IllegalArgumentException("Unable to create SMSPeer, invalid destination: \"" + destination + "\".");
+        }
+        this.address = extractNationalNumber(phoneNumber);
+    }
+
+    /**
+     * Returns the string version of the national address contained in a PhoneNumber object.
+     *
+     * @param phoneNumber The PhoneNumber object to get the national number string.
+     * @return A string containing the phone number.
+     */
+    private String extractNationalNumber(Phonenumber.PhoneNumber phoneNumber) {
+        return String.valueOf(phoneNumber.getNationalNumber());
+    }
+
+    /**
+     * This method adjust the address string in case it is the extended phone number of an emulator.
+     * The emulator phone numbers could be (without prefix) either "555521555*" or "555*",
+     * this method adjust emulator phone numbers of the first type by removing the
+     * extension "555521".
+     *
+     * @param phoneNumber The PhoneNumber to analyze.
+     * @return True if the number given is an emulator number, false otherwise.
+     * @author Matteo Carnelos
+     */
+    private boolean adjustForEmulator(Phonenumber.PhoneNumber phoneNumber) {
+        // NOTE: Before releasing the app this method should be removed or not called in the
+        //       constructor. This because all the numbers of type "555521555*" in the real world
+        //       wont be able to send SMSs through this library.
+        String destWithoutPrefix = extractNationalNumber(phoneNumber);
+        if(destWithoutPrefix.matches("^555\\d$")) return true;
+        if(destWithoutPrefix.startsWith("555521")) {
+            phoneNumber.setNationalNumber(Long.parseLong(destWithoutPrefix.substring(6)));
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Returns a PhoneNumber object that contains the destination string without the prefix.
+     *
+     * @param destination The destination string, eventually with the prefix.
+     * @return The PhoneNumber object containing the phone number given without the prefix.
+     * @throws IllegalArgumentException If the given destination is not parsable.
+     * @author Matteo Carnelos
+     */
+    private Phonenumber.PhoneNumber phoneNumberWithoutPrefix(String destination) {
+        Phonenumber.PhoneNumber phoneNumber;
+        try { phoneNumber = PhoneNumberUtil.getInstance().parse(destination, "IT"); }
+        catch(NumberParseException e) {
+            throw new IllegalArgumentException("Unable to remove prefix, not parsable destination: \"" + destination + "\".");
+        }
+        return phoneNumber;
     }
 
     /**
@@ -29,7 +89,9 @@ public class SMSPeer implements Peer {
      *
      * @return String containing the phone address.
      * @author Marco Cognolato
+     * @author Matteo Carnelos
      */
+    @Override
     public String getAddress() {
         return address;
     }
@@ -39,53 +101,36 @@ public class SMSPeer implements Peer {
      *
      * @return String containing the representation of a peer.
      * @author Marco Cognolato
-     */
-    public String toString() {
-        return address;
-    }
-
-    /**
-     * Returns true if the address is empty.
-     *
-     * @return A boolean representing the empty state.
-     * @author Marco Cognolato
-     */
-    public boolean isEmpty() {
-        return address.equals("");
-    }
-
-    /**
-     * Returns true if SMSPeer has prefix.
-     *
-     * @return A boolean representing whenever or not the peer has a prefix.
      * @author Matteo Carnelos
      */
-    public boolean hasPrefix() {
-        return address.charAt(0) == '+';
+    @NonNull
+    @Override
+    public String toString() {
+        return getAddress();
     }
 
     /**
-     * Returns true if the SMSPeer is valid
-     * @author Edoardo Raimondi
+     * Tell if two SMSPeer are equals.
+     *
+     * @return True if the compared objects are equals, false otherwise.
+     * @author Giovanni Velludo
      */
-    public boolean isValid() {
-        try {
-            int maxLength = 15;
-            if (!isEmpty() && address.length() < maxLength) {
-                if (hasPrefix()) {
-                    Long.parseLong(address.substring(1)); //to verify exception
-                } else Long.parseLong(address);
-                return true;
-            }
-        }
-        catch(Exception e){
-            Log.i(LOG_KEY, " invalid destination");
-        }
-        return false;
-    }
     @Override
-    public int hashCode() {
-        return address.hashCode();
+    public boolean equals(@Nullable Object obj) {
+        if (obj == this) return true;
+        if (!(obj instanceof SMSPeer)) return false;
+        SMSPeer peer = (SMSPeer)obj;
+        return peer.getAddress().equals(getAddress());
     }
 
+    /**
+     * Generate a unique hash code for the object.
+     *
+     * @return The integer representing the hash code.
+     * @author Giovanni Velludo
+     */
+    @Override
+    public int hashCode() {
+        return getAddress().hashCode();
+    }
 }
