@@ -39,6 +39,11 @@ public class PingTrackerTest {
         assertFalse(tracker1.isTracking(VALID_PEER2));
     }
 
+    @Test(expected = NullPointerException.class)
+    public void isTrackingNullPeer_throws(){
+        assertFalse(tracker1.isTracking(null));
+    }
+
     @Test
     public void correctlyTicksOnce_noExceptions(){
         tracker1.tick();

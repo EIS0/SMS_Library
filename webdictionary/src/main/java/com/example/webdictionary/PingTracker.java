@@ -80,7 +80,7 @@ public class PingTracker extends TimerTask {
      * @throws IllegalArgumentException if the peer is null or invalid
      */
     boolean isTracking(SMSPeer peer){
-        if(peer == null || !peer.isValid()) throw new IllegalArgumentException();
+        if(peer == null) throw new NullPointerException();
         return toTrack == peer;
     }
 }

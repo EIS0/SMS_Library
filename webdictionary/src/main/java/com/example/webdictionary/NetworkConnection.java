@@ -17,12 +17,10 @@ public class NetworkConnection {
 
     private NetworkConnection(SMSPeer myPeer){
         if(myPeer != null){
-            if(myPeer.isValid()){
-                subscribers.add(myPeer);
-            }
+            subscribers.add(myPeer);
         }
         NetworkListener listener = new NetworkListener(this);
-        SMSManager.getInstance().addReceiveListener(listener);
+        SMSManager.getInstance().setReceiveListener(listener);
     }
 
     public static NetworkConnection getInstance(SMSPeer myPeer){
@@ -45,7 +43,7 @@ public class NetworkConnection {
      * @throws IllegalArgumentException If the peer is invalid or null
      */
     public void askToJoin(SMSPeer peer){
-        if(peer == null || !peer.isValid()) throw new IllegalArgumentException();
+        if(peer == null) throw new IllegalArgumentException();
         String textRequest = RequestType.JoinPermission.ordinal() + " " + peersInNetwork();
         SMSMessage message = new SMSMessage(peer, textRequest);
 
@@ -123,7 +121,7 @@ public class NetworkConnection {
      * @author Edoardo Raimondi
      */
     public void askToLeave(SMSPeer peer){
-        if(peer == null || !peer.isValid()) throw new IllegalArgumentException();
+        if(peer == null) throw new IllegalArgumentException();
         SMSMessage message = new SMSMessage(peer, RequestType.LeavePermission.ordinal()+"");
         SMSManager.getInstance().sendMessage(message);
     }
@@ -160,7 +158,7 @@ public class NetworkConnection {
      * @throws IllegalArgumentException If the peer is null or not valid
      */
     public void sendPing(SMSPeer peer){
-        if(peer == null || !peer.isValid()) throw new IllegalArgumentException();
+        if(peer == null) throw new IllegalArgumentException();
         SMSMessage message = new SMSMessage(peer, RequestType.Ping.ordinal()+"");
         SMSManager.getInstance().sendMessage(message);
     }
@@ -211,7 +209,7 @@ public class NetworkConnection {
      * @throws IllegalArgumentException If the peer is null or invalid
      */
     public void addToNet(SMSPeer peer){
-        if(peer == null || !peer.isValid()) throw new IllegalArgumentException();
+        if(peer == null) throw new IllegalArgumentException();
         if(!subscribers.contains(peer)) subscribers.add(peer);
     }
 
@@ -248,7 +246,7 @@ public class NetworkConnection {
      * @throws IllegalArgumentException if peer is null or invalid
      */
     public void removeFromNet(SMSPeer peer){
-        if(peer == null || !peer.isValid()) throw new IllegalArgumentException();
+        if(peer == null) throw new IllegalArgumentException();
         subscribers.remove(peer);
     }
 
