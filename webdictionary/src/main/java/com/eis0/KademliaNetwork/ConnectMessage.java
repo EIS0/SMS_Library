@@ -12,12 +12,12 @@ import com.eis0.smslibrary.SMSPeer;
 public class ConnectMessage implements Message
 {
 
-    private SMSKademliaNode NodeToConnect;
+    private SMSKademliaNode nodeToConnect;
     public static final byte CODE = 0x02;
 
     public ConnectMessage(SMSKademliaNode origin)
     {
-        this.NodeToConnect = origin;
+        this.nodeToConnect = origin;
     }
 
     /**
@@ -25,7 +25,7 @@ public class ConnectMessage implements Message
      * @return SMSKademliaNode
      */
     public SMSKademliaNode getNode(){
-        return this.NodeToConnect;
+        return this.nodeToConnect;
     }
 
     /**
@@ -33,7 +33,7 @@ public class ConnectMessage implements Message
      * @return SMSpeer
      */
     public SMSPeer getPeer(){
-        return NodeToConnect.getPhoneNumber();
+        return nodeToConnect.getPhoneNumber();
     }
 
 
@@ -42,7 +42,7 @@ public class ConnectMessage implements Message
      * @return String of the node
      */
     public String getData(){
-        return this.NodeToConnect.toString();
+        return this.nodeToConnect.toString();
     }
 
     /**
@@ -61,6 +61,6 @@ public class ConnectMessage implements Message
     @Override
     public String toString()
     {
-        return "ConnectMessage[origin NodeId=" + NodeToConnect.getNodeId() + "]";
+        return "ConnectMessage[origin NodeId=" + nodeToConnect.getNodeId() + "]";
     }
 }

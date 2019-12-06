@@ -9,10 +9,11 @@ import com.eis0.webdictionary.SerializableObject;
 /**
  * Message used to see/get a content in another node
  */
+
 public class ViewContentMessage implements Message {
 
-    private SMSKademliaNode From;
-    private SerializableObject Key;
+    private SMSKademliaNode from;
+    private SerializableObject key;
     private static final byte CODE = 0x05;
 
     /**
@@ -20,8 +21,8 @@ public class ViewContentMessage implements Message {
      * @param key key of the value
      */
     public ViewContentMessage(SMSKademliaNode from, SerializableObject key){
-        this.From = from;
-        this.Key = key;
+        this.from = from;
+        this.key = key;
     }
 
     /**
@@ -29,14 +30,14 @@ public class ViewContentMessage implements Message {
      * @return the value associated to the given key
      */
     public SerializableObject getContent(SMSKademliaNode to){
-        return to.getDictionary().getResource(Key);
+        return to.getDictionary().getResource(key);
     }
 
     /**
      * @return Peer of the node
      */
     public SMSPeer getPeer() {
-        return this.From.getPhoneNumber();
+        return this.from.getPhoneNumber();
     }
 
     /**
@@ -51,7 +52,7 @@ public class ViewContentMessage implements Message {
      */
     public String getData()
     {
-        return "ContentMessage[origin=" + From + ",key=" + Key + "]";
+        return "ContentMessage[origin=" + from + ",key=" + key + "]";
     }
 
 }

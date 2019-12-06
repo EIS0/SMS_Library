@@ -12,9 +12,9 @@ import com.eis0.webdictionary.SerializableObject;
 
 public class SendContentMessage implements Message {
 
-    private SMSKademliaNode From;
-    private SerializableObject Content;
-    private SerializableObject Key;
+    private SMSKademliaNode from;
+    private SerializableObject content;
+    private SerializableObject key;
     private static final byte CODE = 0x01;
 
     /**
@@ -23,30 +23,30 @@ public class SendContentMessage implements Message {
      * @param key serializableObject key
      */
     public SendContentMessage(SMSKademliaNode from, SerializableObject content, SerializableObject key) {
-        this.From = from;
-        this.Content = content;
-        this.Key = key;
+        this.from = from;
+        this.content = content;
+        this.key = key;
     }
 
     /**
      * @param ofNode SMSKademliaNode having the dictionary
      */
     public void setContent(SMSKademliaNode ofNode){
-        ofNode.getDictionary().add(this.Key, this.Content);
+        ofNode.getDictionary().add(this.key, this.content);
     }
 
     /**
      * @return content that's is sent
      */
     public SerializableObject getContent(){
-        return this.Content;
+        return this.content;
     }
 
     /**
      * @return Peer of the node
      */
     public SMSPeer getPeer() {
-        return this.From.getPhoneNumber();
+        return this.from.getPhoneNumber();
     }
 
     /**
@@ -61,7 +61,7 @@ public class SendContentMessage implements Message {
      */
     public String getData()
     {
-        return "ContentMessage[origin=" + From + ",content=" + Content + "]";
+        return "ContentMessage[origin=" + from + ",content=" + content + "]";
     }
 
 }
