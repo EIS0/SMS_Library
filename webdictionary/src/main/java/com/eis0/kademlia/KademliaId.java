@@ -34,6 +34,14 @@ public class KademliaId implements Serializable {
     private byte[] keyBytes;
 
     /**
+     * Generates a KademliaId using a random key
+     */
+    public KademliaId() {
+        keyBytes = new byte[ID_LENGTH_BYTES];
+        new Random().nextBytes(keyBytes);
+    }
+
+    /**
      * Construct the NodeId based on the address of the peer.
      *
      * @param peer The peer for which NodeId generation is being requested.
@@ -54,19 +62,15 @@ public class KademliaId implements Serializable {
      * @param data The user generated key string
      */
     public KademliaId(String data) {
-        keyBytes = data.getBytes();
-        if (keyBytes.length != ID_LENGTH_BYTES) {
+        this.keyBytes = data.getBytes();
+        if (this.keyBytes.length > ID_LENGTH_BYTES) {
             throw new IllegalArgumentException("Specified Data need to be " + ID_LENGTH_BYTES + " characters long.");
         }
-    }
 
-
-    /**
-     * Generate a random key
-     */
-    public KademliaId() {
-        keyBytes = new byte[ID_LENGTH_BYTES];
-        new Random().nextBytes(keyBytes);
+        //if the string it's too short, add some leading null bytes
+        if(this.keyBytes.length < ID_LENGTH_BYTES){
+            this.keyBytes = addTrailingZeros(this.keyBytes);
+        }
     }
 
     /**
@@ -75,21 +79,34 @@ public class KademliaId implements Serializable {
      * @param bytes The byte array to use as the NodeId.
      */
     public KademliaId(byte[] bytes) {
-        if (bytes.length != ID_LENGTH_BYTES) {
+        if (bytes.length > ID_LENGTH_BYTES) {
             throw new IllegalArgumentException("Specified Data need to be " + ID_LENGTH_BYTES + " characters long. Data Given: '" + new String(bytes) + "'");
         }
         this.keyBytes = bytes;
+        //if the byte array it's too short, add some leading null bytes
+        if(bytes.length < ID_LENGTH_BYTES){
+            this.keyBytes = addTrailingZeros(this.keyBytes);
+        }
     }
-
 
     /**
      * Load the NodeId from a DataInput stream
      *
      * @param in The stream from which to load the NodeId
-     * @throws IOException
+     * @throws IOException If there's an error in the input stream
      */
     public KademliaId(DataInputStream in) throws IOException {
         this.fromStream(in);
+    }
+
+    private byte[] addTrailingZeros(byte[] number){
+        //by default each element is set to 0x00
+        byte[] toReturn = new byte[ID_LENGTH_BYTES];
+        //add to the end (ax expected) each element
+        for(int i = 0; i < number.length; i++){
+            toReturn[i+ID_LENGTH_BYTES-number.length] = number[i];
+        }
+        return toReturn;
     }
 
     /**
@@ -236,7 +253,7 @@ public class KademliaId implements Serializable {
      * Add the NodeId to the stream
      *
      * @param out Data to write
-     * @throws IOException
+     * @throws IOException If there's an error in the input stream
      */
     public void toStream(DataOutputStream out) throws IOException {
         out.write(this.getBytes());
@@ -246,7 +263,7 @@ public class KademliaId implements Serializable {
      * Uses a DataInputStream to generate a NodeId.
      *
      * @param in Data to read
-     * @throws IOException
+     * @throws IOException If there's an error in the input stream
      */
     public final void fromStream(DataInputStream in) throws IOException {
         byte[] input = new byte[ID_LENGTH_BYTES];
