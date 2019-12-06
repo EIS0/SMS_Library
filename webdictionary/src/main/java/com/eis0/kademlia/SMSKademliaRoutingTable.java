@@ -4,6 +4,7 @@ package com.eis0.kademlia;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeSet;
+
 /**
  * Implementation of a Kademlia routing table.
  * Every Node has his own table. It contains his well known contacts.
@@ -11,7 +12,8 @@ import java.util.TreeSet;
  * Every routing table has a configuration that, at the creation, will be a DefaultConfiguration
  *
  * @see <a href="https://pdos.csail.mit.edu/~petar/papers/maymounkov-kademlia-lncs.pdf">Kademlia's
- *      paper</a> for more details.
+ * paper</a> for more details.
+ * @author Edoardo Raimondi
  */
 public class SMSKademliaRoutingTable implements KademliaRoutingTable {
 
@@ -43,10 +45,10 @@ public class SMSKademliaRoutingTable implements KademliaRoutingTable {
 
     /**
      * Set configuration as default.
+     *
      * @param config The configuration to set as default.
      */
-    public void setConfiguration(KadConfiguration config)
-    {
+    public void setConfiguration(KadConfiguration config) {
         this.config = config;
     }
 
@@ -75,7 +77,6 @@ public class SMSKademliaRoutingTable implements KademliaRoutingTable {
      * The bucketId is computed based on how far the node is away from the Local Node.
      *
      * @param nid The NodeId for which we want to find which bucket it belong to
-     *
      * @return Integer The bucket ID in which the given node should be placed.
      */
     @Override
@@ -91,7 +92,6 @@ public class SMSKademliaRoutingTable implements KademliaRoutingTable {
      *
      * @param target           The NodeId to find contacts close to
      * @param numNodesRequired The number of contacts to find
-     *
      * @return List A List of contacts closest to target
      */
     @Override
@@ -161,6 +161,7 @@ public class SMSKademliaRoutingTable implements KademliaRoutingTable {
 
     /**
      * Print routing table
+     *
      * @return String representing the routing table
      */
     @Override

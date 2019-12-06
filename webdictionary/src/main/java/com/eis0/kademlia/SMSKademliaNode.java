@@ -3,7 +3,7 @@ package com.eis0.kademlia;
 import androidx.annotation.NonNull;
 
 import com.eis0.smslibrary.SMSPeer;
-import com.example.webdictionary.SMSNetVocabulary;
+import com.eis0.webdictionary.SMSNetVocabulary;
 
 import java.io.Serializable;
 
@@ -11,7 +11,8 @@ import java.io.Serializable;
  * A Node in the Kademlia network - Contains basic node network information.
  *
  * @see <a href="https://pdos.csail.mit.edu/~petar/papers/maymounkov-kademlia-lncs.pdf">Kademlia's
- *      paper</a> for more details.
+ * paper</a> for more details.
+ * @author Edoardo Raimondi, edits by Giovanni Velludo
  */
 public class SMSKademliaNode implements Serializable {
 
@@ -22,10 +23,10 @@ public class SMSKademliaNode implements Serializable {
     /**
      * Stores information of a Kademlia node.
      *
-     * @param nodeId        The node's ID.
-     * @param phoneNumber   The phone associated to the node, replaces its IP address in our
-     *                      implementation.
-     * @param dic           Node's portion of dictionary
+     * @param nodeId      The node's ID.
+     * @param phoneNumber The phone associated to the node, replaces its IP address in our
+     *                    implementation.
+     * @param dic         Node's portion of dictionary
      */
     public SMSKademliaNode(KademliaId nodeId, SMSPeer phoneNumber, SMSNetVocabulary dic) {
         this.nodeId = nodeId;
@@ -36,17 +37,23 @@ public class SMSKademliaNode implements Serializable {
     /**
      * @return This node's ID.
      */
-    public KademliaId getNodeId() { return this.nodeId; }
+    public KademliaId getNodeId() {
+        return this.nodeId;
+    }
 
     /**
      * @return This node's portion of dictionary
      */
-    public SMSNetVocabulary getDictionary(){ return this.dictionary; }
+    public SMSNetVocabulary getDictionary() {
+        return this.dictionary;
+    }
 
     /**
      * @return The node's phone number.
      */
-    public SMSPeer getPhoneNumber() { return phoneNumber; }
+    public SMSPeer getPhoneNumber() {
+        return phoneNumber;
+    }
 
     /**
      * Method to compare two Nodes

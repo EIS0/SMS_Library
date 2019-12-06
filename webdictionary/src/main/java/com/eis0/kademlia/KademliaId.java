@@ -1,6 +1,5 @@
 package com.eis0.kademlia;
 
-import android.annotation.TargetApi;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -23,7 +22,8 @@ import java.util.Random;
  * It is representing by the hasCode of the user's phone number
  *
  * @see <a href="https://pdos.csail.mit.edu/~petar/papers/maymounkov-kademlia-lncs.pdf">Kademlia's
- *      paper</a> for more details.
+ * paper</a> for more details.
+ * @author Edoardo Raimondi
  */
 public class KademliaId implements Serializable {
 
@@ -41,9 +41,8 @@ public class KademliaId implements Serializable {
         try {
             MessageDigest md = MessageDigest.getInstance(HASHING_ALG);
             md.update(peer.toString().getBytes());
-            keyBytes = Arrays.copyOfRange(md.digest(), 0, (ID_LENGTH/8));
-        }
-        catch (NoSuchAlgorithmException e) {
+            keyBytes = Arrays.copyOfRange(md.digest(), 0, (ID_LENGTH / 8));
+        } catch (NoSuchAlgorithmException e) {
             Log.e(TAG, HASHING_ALG + " is not a valid hashing algorithm");
         }
     }
@@ -53,11 +52,9 @@ public class KademliaId implements Serializable {
      *
      * @param data The user generated key string
      */
-    public KademliaId(String data)
-    {
+    public KademliaId(String data) {
         keyBytes = data.getBytes();
-        if (keyBytes.length != ID_LENGTH / 8)
-        {
+        if (keyBytes.length != ID_LENGTH / 8) {
             throw new IllegalArgumentException("Specified Data need to be " + (ID_LENGTH / 8) + " characters long.");
         }
     }
@@ -90,7 +87,9 @@ public class KademliaId implements Serializable {
      * @param in The stream from which to load the NodeId
      * @throws IOException
      */
-    public KademliaId(DataInputStream in) throws IOException { this.fromStream(in); }
+    public KademliaId(DataInputStream in) throws IOException {
+        this.fromStream(in);
+    }
 
     /**
      * @return Bytes' array (if used)
@@ -234,6 +233,7 @@ public class KademliaId implements Serializable {
 
     /**
      * Add the NodeId to the stream
+     *
      * @param out Data to write
      * @throws IOException
      */
@@ -243,6 +243,7 @@ public class KademliaId implements Serializable {
 
     /**
      * Uses a DataInputStream to generate a NodeId.
+     *
      * @param in Data to read
      * @throws IOException
      */

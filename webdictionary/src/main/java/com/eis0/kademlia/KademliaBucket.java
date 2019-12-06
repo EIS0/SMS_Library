@@ -4,6 +4,8 @@ import java.util.List;
 
 /**
  * A bucket used to store Contacts(or SMSKademliaNode directly?) in the routing table.
+ *
+ * @author Edoardo Raimondi
  */
 public interface KademliaBucket {
 
@@ -25,7 +27,6 @@ public interface KademliaBucket {
      * Checks if this bucket contain a contact
      *
      * @param c The contact to check for
-     *
      * @return boolean
      */
     boolean containsContact(Contact c);
@@ -34,7 +35,6 @@ public interface KademliaBucket {
      * Checks if this bucket contain a node
      *
      * @param n The node to check for
-     *
      * @return boolean
      */
     boolean containsNode(SMSKademliaNode n);
@@ -43,7 +43,6 @@ public interface KademliaBucket {
      * Remove a contact from this bucket.
      *
      * @param c The contact to remove
-     *
      * @return Boolean whether the removal was successful.
      */
     boolean removeContact(Contact c);
@@ -52,7 +51,6 @@ public interface KademliaBucket {
      * Remove the contact object related to a node from this bucket
      *
      * @param n The node of the contact to remove
-     *
      * @return Boolean whether the removal was successful.
      */
     boolean removeNode(SMSKademliaNode n);

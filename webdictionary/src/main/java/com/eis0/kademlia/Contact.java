@@ -6,7 +6,8 @@ package com.eis0.kademlia;
  * or his lastSeen
  *
  * @see <a href="https://pdos.csail.mit.edu/~petar/papers/maymounkov-kademlia-lncs.pdf">Kademlia's
- *      paper</a> for more details.
+ * paper</a> for more details.
+ * @author Edoardo Raimondi
  */
 public class Contact implements Comparable<Contact> { //has to be comparable to test it
 
@@ -15,7 +16,7 @@ public class Contact implements Comparable<Contact> { //has to be comparable to 
     /**
      * When a contact fails to respond, if there is no replacement for the contact,
      * just mark it as stale.
-     *
+     * <p>
      * When a new contact is added, if the contact is stale, it is removed.
      */
     private int staleCount;
@@ -35,8 +36,7 @@ public class Contact implements Comparable<Contact> { //has to be comparable to 
     /**
      * This method updates the last seen timestamp for this contact.
      */
-    public void setSeenNow()
-    {
+    public void setSeenNow() {
         this.lastSeen = System.currentTimeMillis() / 1000L;
     }
 
@@ -45,8 +45,7 @@ public class Contact implements Comparable<Contact> { //has to be comparable to 
      *
      * @return long representing the last time this contact was seen.
      */
-    public long lastSeen()
-    {
+    public long lastSeen() {
         return this.lastSeen;
     }
 
@@ -59,6 +58,7 @@ public class Contact implements Comparable<Contact> { //has to be comparable to 
 
     /**
      * Method to compare two Nodes inside different contacts
+     *
      * @param toCompare Object to compare
      * @return true if equal
      */
@@ -93,6 +93,7 @@ public class Contact implements Comparable<Contact> { //has to be comparable to 
 
     /**
      * Method to compare two contacts
+     *
      * @param toCompare Contact to compare with this
      * @return 0 if equals, -1 otherwise
      */
@@ -106,6 +107,7 @@ public class Contact implements Comparable<Contact> { //has to be comparable to 
 
     /**
      * Get the node contact's hashcode
+     *
      * @return integer representing the node hashcode
      */
     @Override

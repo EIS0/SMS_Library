@@ -6,6 +6,8 @@ import java.util.Comparator;
 /**
  * A Comparator to compare 2 keys to a given key
  * Kademlia uses keys to identify both nodes and data on the Kademlia network
+ *
+ * @author Edoardo Raimondi
  */
 public class KeyComparator implements Comparator<SMSKademliaNode> {
 
