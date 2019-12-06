@@ -9,7 +9,6 @@ import org.junit.Test;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public class SMSKademliaRoutingTableTest {
 
@@ -32,13 +31,13 @@ public class SMSKademliaRoutingTableTest {
     public void insertContactTest(){
         Contact c = new Contact(test);
         toTest.insert(c);
-        assertTrue(toTest.getAllNodes().get(0).equals(test));
+        assertEquals(toTest.getAllNodes().get(0), test);
     }
 
     @Test
     public void insertNodeTest(){
         toTest.insert(test);
-        assertTrue(toTest.getAllNodes().get(0).equals(test));
+        assertEquals(toTest.getAllNodes().get(0), test);
     }
 
     @Test
@@ -56,7 +55,7 @@ public class SMSKademliaRoutingTableTest {
         int required = 1; //so I should have target as result
         List<SMSKademliaNode> result;
         result = toTest.findClosest(target, required);
-        assertTrue(result.get(0).equals(toCompare));
+        assertEquals(result.get(0), toCompare);
     }
 
     @Test
@@ -65,15 +64,13 @@ public class SMSKademliaRoutingTableTest {
         toTest.insert(test2);
         List<SMSKademliaNode> result;
         result = toTest.getAllNodes();
-        assertTrue(result.get(0).equals(test));
-        assertTrue(result.get(1).equals(test2));
+        assertEquals(result.get(0), test);
+        assertEquals(result.get(1), test2);
     }
 
     @Test
     public void getBucketTest(){
         SMSKademliaBucket[] result = toTest.getBuckets();
-        assertTrue(result[0].equals(toTest.getBuckets()[0]));
+        assertEquals(result[0], toTest.getBuckets()[0]);
     }
-
-
 }

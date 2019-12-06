@@ -213,7 +213,7 @@ public class KademliaId implements Serializable {
      * Counts the number of leading 0's in this NodeId
      *
      * @return Integer representing the number of leading 0's,
-     * also returns -1 if there's no leading 0
+     * also returns -1 if there's only leading 0's
      * @author Marco Cognolato
      */
     public int getFirstSetBitIndex() {
@@ -239,7 +239,9 @@ public class KademliaId implements Serializable {
      * @return Integer The distance
      */
     public int getDistance(KademliaId to) {
-        return ID_LENGTH - this.xor(to).getFirstSetBitIndex();
+        int diffIndex = this.xor(to).getFirstSetBitIndex();
+        if(diffIndex == -1) return 0;
+        return ID_LENGTH - diffIndex;
     }
 
     /**

@@ -26,10 +26,10 @@ public class SMSKademliaRoutingTable implements KademliaRoutingTable {
         this.config = config;
 
         /* Initialize all of the buckets to a specific depth */
-        this.initialize();
+        initialize();
 
         /* Insert the local node */
-        this.insert(localNode);
+        insert(localNode);
     }
 
     /**
@@ -55,36 +55,36 @@ public class SMSKademliaRoutingTable implements KademliaRoutingTable {
     /**
      * Adds a contact to the routing table based on how far it is from the LocalNode.
      *
-     * @param c The contact to add
+     * @param contact The contact to add
      */
     @Override
-    public synchronized final void insert(Contact c) {
-        this.buckets[this.getBucketId(c.getNode().getNodeId())].insert(c);
+    public synchronized final void insert(Contact contact) {
+        this.buckets[this.getBucketId(contact.getNode().getNodeId())].insert(contact);
     }
 
     /**
      * Adds a node to the routing table based on how far it is from the LocalNode.
      *
-     * @param n The node to add
+     * @param node The node to add
      */
 
-    public synchronized final void insert(SMSKademliaNode n) {
-        this.buckets[this.getBucketId(n.getNodeId())].insert(n);
+    public synchronized final void insert(SMSKademliaNode node) {
+        this.buckets[this.getBucketId(node.getNodeId())].insert(node);
     }
 
     /**
      * Compute the bucket ID in which a given node should be placed.
      * The bucketId is computed based on how far the node is away from the Local Node.
      *
-     * @param nid The NodeId for which we want to find which bucket it belong to
+     * @param nodeId The NodeId for which we want to find which bucket it belong to
      * @return Integer The bucket ID in which the given node should be placed.
      */
     @Override
-    public final int getBucketId(KademliaId nid) {
-        int bId = this.localNode.getNodeId().getDistance(nid) - 1;
+    public final int getBucketId(KademliaId nodeId) {
+        int bId = this.localNode.getNodeId().getDistance(nodeId);
 
         /* If we are trying to insert a node into it's own routing table, then the bucket ID will be -1, so let's just keep it in bucket 0 */
-        return bId < 0 ? 0 : bId;
+        return bId-1 < 0 ? 0 : bId-1;
     }
 
     /**
