@@ -3,7 +3,6 @@ package com.eis0.KademliaNetwork;
 import com.eis0.kademlia.SMSKademliaNode;
 import com.eis0.smslibrary.Message;
 import com.eis0.smslibrary.SMSPeer;
-import com.eis0.webdictionary.SMSNetDictionary;
 import com.eis0.webdictionary.SerializableObject;
 
 /**

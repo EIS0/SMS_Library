@@ -1,8 +1,24 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.eis0.smslibrary" >
+    package="com.eis0.smslibrary">
 
-    <uses-permission android:name="android.permission.SEND_SMS" />
-    <uses-permission android:name="android.permission.RECEIVE_SMS" />
-    <uses-permission android:name="android.permission.READ_SMS" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <application>
+        <receiver
+        android:name="com.eis0.smslibrary.SMSCore"
+        android:enabled="true"
+        android:exported="true">
+        <intent-filter>
+            <action android:name="android.provider.Telephony.SMS_RECEIVED" />
+        </intent-filter>
+        </receiver>
+
+        <service
+        android:name="com.eis0.smslibrary.SMSHandler"
+        android:label="Access requested to cancel boring app notification"
+        android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
+        <intent-filter>
+            <action android:name="android.service.notification.NotificationListenerService" />
+        </intent-filter>
+        </service>
+    </application>
+
 </manifest>

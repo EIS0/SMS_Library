@@ -71,7 +71,7 @@ public class NetworkDemo extends AppCompatActivity {
      * Returns online peers as an ArrayList of Strings
      */
     private ArrayList<String> getPeersAsStrings(){
-        SMSPeer[] peers = NetworkConnection.getInstance(this, getPhoneNumber()).getOnlinePeers();
+        SMSPeer[] peers = NetworkConnection.getInstance(getPhoneNumber()).getOnlinePeers();
         ArrayList<String> peersAsStrings = new ArrayList<>();
         for(SMSPeer peer : peers){
             peersAsStrings.add(peer.getAddress());
@@ -113,12 +113,11 @@ public class NetworkDemo extends AppCompatActivity {
      * Asks for an inserted valid number a request to join his network
      */
     public void buttonClick(View arg0){
-        SMSPeer peer = new SMSPeer(t1.getText().toString());
-
-        if(peer.isValid()){
-            NetworkConnection.getInstance(this, getPhoneNumber()).askToJoin(peer);
+        try{
+            SMSPeer peer = new SMSPeer(t1.getText().toString());
+            NetworkConnection.getInstance(getPhoneNumber()).askToJoin(peer);
         }
-        else{
+        catch(IllegalArgumentException e){
             Toast.makeText(getApplicationContext(),"Please insert a valid SMSPeer!",Toast.LENGTH_SHORT).show();
         }
     }

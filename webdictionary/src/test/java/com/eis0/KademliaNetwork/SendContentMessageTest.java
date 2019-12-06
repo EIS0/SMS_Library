@@ -3,11 +3,9 @@ package com.eis0.KademliaNetwork;
 import com.eis0.kademlia.KademliaId;
 import com.eis0.kademlia.SMSKademliaNode;
 import com.eis0.smslibrary.SMSPeer;
-import com.eis0.webdictionary.SMSNetDictionary;
 import com.eis0.webdictionary.SerializableObject;
 
 import org.junit.Test;
-import org.w3c.dom.Node;
 
 import static org.junit.Assert.*;
 

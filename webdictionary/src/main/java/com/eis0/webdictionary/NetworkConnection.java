@@ -1,13 +1,11 @@
-package com.eis0.webdictionary;
-
-import android.content.Context;
-import android.util.Log;
+package com.example.webdictionary;
 
 import com.eis0.smslibrary.SMSManager;
 import com.eis0.smslibrary.SMSMessage;
 import com.eis0.smslibrary.SMSPeer;
 
 import java.util.ArrayList;
+import java.util.Timer;
 
 /**
  * @author Marco Cognolato except where otherwise indicated
@@ -16,30 +14,26 @@ public class NetworkConnection {
 
     //Singleton Design Pattern https://refactoring.guru/design-patterns/singleton
     private static NetworkConnection net;
-    private NetworkConnection(Context context, SMSPeer myPeer){
-        netDict = new SMSNetDictionary();
+
+    private NetworkConnection(SMSPeer myPeer){
         if(myPeer != null){
-            Log.d(LOG_KEY, "Found myPeer: " + myPeer.getAddress());
-            if(myPeer.isValid()){
-                Log.d(LOG_KEY, "Added myPeer: " + myPeer.getAddress());
-                subscribers.add(myPeer);
-            }
+            subscribers.add(myPeer);
         }
         NetworkListener listener = new NetworkListener(this);
-        SMSManager.getInstance().addReceiveListener(listener);
+        SMSManager.getInstance().setReceiveListener(listener);
     }
-    public static NetworkConnection getInstance(Context context, SMSPeer myPeer){
+
+    public static NetworkConnection getInstance(SMSPeer myPeer){
         if(net == null){
-            net = new NetworkConnection(context, myPeer);
+            net = new NetworkConnection(myPeer);
         }
-        net.context = context;
         return net;
     }
 
-    private SMSNetDictionary netDict;
     private ArrayList<SMSPeer> subscribers = new ArrayList<>();
-    private Context context;
-    private final String LOG_KEY = "NetCon";
+    private ArrayList<PingTracker> tracking = new ArrayList<>();
+    private final int TRACKING_TIME = 1000 * 60 * 10; //1000 ms (1s) * 60s (1min) * 10 (10mins)
+    private SMSNetVocabulary vocabulary = new SMSNetVocabulary();
 
     //region JoinMethods
     /**
@@ -49,7 +43,7 @@ public class NetworkConnection {
      * @throws IllegalArgumentException If the peer is invalid or null
      */
     public void askToJoin(SMSPeer peer){
-        if(peer == null || !peer.isValid()) throw new IllegalArgumentException();
+        if(peer == null) throw new IllegalArgumentException();
         String textRequest = RequestType.JoinPermission.ordinal() + " " + peersInNetwork();
         SMSMessage message = new SMSMessage(peer, textRequest);
 
@@ -67,7 +61,6 @@ public class NetworkConnection {
         A net request connection is one of two types:
         1. A asks B to join B's network
         2. A invites B to join A's network
-
         Since either case is valid they can be supported in a simple way:
         being the same type of request, so an invite to join a network is the same as
         asking to enter the other's network, so I simply call the other function
@@ -81,24 +74,44 @@ public class NetworkConnection {
      * @param text The message received with the sender's network state
      */
     void acceptJoin(SMSPeer linkPeer, String text){
-        String[] newPeersOnNet = text.split(" ");
+        String[] newPeersOnNet_asString = text.split(" ");
+        SMSPeer[] newPeersOnNet = new SMSPeer[newPeersOnNet_asString.length];
+        for(int i = 0; i < newPeersOnNet_asString.length; i++)
+            newPeersOnNet[i] = new SMSPeer(newPeersOnNet_asString[i]);
+
         SMSPeer[] oldPeersInNet = subscribers.toArray(new SMSPeer[0]);
         //add new peers to my net
         addToNet(text);
         addToNet(oldPeersInNet);
         //notify new peers of my old peers
-        for(String newPeerAddress: newPeersOnNet){
-            Log.d(LOG_KEY, "New Peer: " + newPeerAddress);
-            SMSPeer newPeer = new SMSPeer(newPeerAddress);
-            SMSManager.getInstance().sendMessage(new SMSMessage(newPeer, RequestType.AddPeers.ordinal() + " " + oldPeersInNet));
-        }
+        partCast(newPeersOnNet, RequestType.AddPeers.ordinal() + " " + oldPeersInNet);
         //notify my old peers about the new ones
-        for(SMSPeer oldPeer : oldPeersInNet){
-            Log.d(LOG_KEY, "Old Peer: " + oldPeer.getAddress());
-            SMSManager.getInstance().sendMessage(new SMSMessage(oldPeer, RequestType.AddPeers.ordinal() + " " + text));
-        }
+        partCast(oldPeersInNet, RequestType.AddPeers.ordinal() + " " + text);
     }
 
+    //endregion
+
+    //region BroadcastMethods
+
+    /**
+     * Broadcasts a valid message to the whole network
+     * @param message The message to broadcast
+     */
+    public void broadcast(String message){
+        partCast(subscribers.toArray(new SMSPeer[0]), message);
+    }
+
+    /**
+     * Sends a message to a small part of users
+     * @param peers The list of peers to send the message to
+     * @param message The message to send
+     */
+    public void partCast(SMSPeer[] peers, String message){
+        for(SMSPeer peer : peers){
+            SMSMessage wholeMessage = new SMSMessage(peer, message);
+            SMSManager.getInstance().sendMessage(wholeMessage);
+        }
+    }
     //endregion
 
     //region LeaveMethods
@@ -108,7 +121,7 @@ public class NetworkConnection {
      * @author Edoardo Raimondi
      */
     public void askToLeave(SMSPeer peer){
-        if(peer == null || !peer.isValid()) throw new IllegalArgumentException();
+        if(peer == null) throw new IllegalArgumentException();
         SMSMessage message = new SMSMessage(peer, RequestType.LeavePermission.ordinal()+"");
         SMSManager.getInstance().sendMessage(message);
     }
@@ -121,13 +134,12 @@ public class NetworkConnection {
         //remove the peer
         removeFromNet(peer.getAddress());
         //notify my old peers about the exit
-        for(SMSPeer oldPeer : subscribers){
-            Log.d(LOG_KEY, "Old Peer: " + oldPeer.getAddress());
-            SMSManager.getInstance().sendMessage(new SMSMessage(oldPeer, RequestType.RemovePeers.ordinal() + " " + peer.getAddress()));
-        }
+        broadcast(RequestType.RemovePeers.ordinal() + " " + peer.getAddress());
     }
 
     //endregion
+
+    //region PingMethods
 
     /**
      * Returns a space separated String with all the Peers in my Network
@@ -146,7 +158,7 @@ public class NetworkConnection {
      * @throws IllegalArgumentException If the peer is null or not valid
      */
     public void sendPing(SMSPeer peer){
-        if(peer == null || !peer.isValid()) throw new IllegalArgumentException();
+        if(peer == null) throw new IllegalArgumentException();
         SMSMessage message = new SMSMessage(peer, RequestType.Ping.ordinal()+"");
         SMSManager.getInstance().sendMessage(message);
     }
@@ -157,8 +169,23 @@ public class NetworkConnection {
      * @param peer The peer who sent the ping
      */
     void incomingPing(SMSPeer peer){
-        //TODO: implement this (using timers?)
+        //search through enabled trackers if one is tracking this peer
+        for(PingTracker tracker: tracking){
+            if(tracker.isTracking(peer)){
+                //if it is, then ping received, so skip the others
+                tracker.pingReceived();
+                return;
+            }
+        }
+
+        //if I'm here it means there's no tracker for this peer, create a new one
+        PingTracker tracker = new PingTracker(this, peer, 4);
+        Timer timer = new Timer();
+        timer.schedule(tracker, 0,TRACKING_TIME);
+        tracking.add(tracker);
     }
+
+    //endregion
 
     //region addToNet
     /**
@@ -182,7 +209,7 @@ public class NetworkConnection {
      * @throws IllegalArgumentException If the peer is null or invalid
      */
     public void addToNet(SMSPeer peer){
-        if(peer == null || !peer.isValid()) throw new IllegalArgumentException();
+        if(peer == null) throw new IllegalArgumentException();
         if(!subscribers.contains(peer)) subscribers.add(peer);
     }
 
@@ -207,7 +234,6 @@ public class NetworkConnection {
      */
     public void removeFromNet(String peersInNet){
         if(peersInNet == null) throw new IllegalArgumentException();
-        Log.d(LOG_KEY, "Removing these Peers: " + peersInNet);
         String[] peers = peersInNet.split(" ");
         for(String peer : peers){
             removeFromNet(new SMSPeer(peer));
@@ -220,8 +246,7 @@ public class NetworkConnection {
      * @throws IllegalArgumentException if peer is null or invalid
      */
     public void removeFromNet(SMSPeer peer){
-        if(peer == null || !peer.isValid()) throw new IllegalArgumentException();
-        Log.d(LOG_KEY, "Removing this Peer: " + peer);
+        if(peer == null) throw new IllegalArgumentException();
         subscribers.remove(peer);
     }
 
@@ -234,6 +259,101 @@ public class NetworkConnection {
     public void removeFromNet(SMSPeer[] peers){
         if(peers == null) throw new IllegalArgumentException();
         for (SMSPeer peer : peers) removeFromNet(peer);
+    }
+    //endregion
+
+    //region addToDict
+
+    /**
+     * Adds to the dictionary a key-value pair, then broadcasts the operation to every subscriber
+     * @param key The key to add to the dictionary (and broadcast to all subscribers)
+     * @param value The value to add to the dictionary with the key (and broadcast)
+     */
+    public void addToDictionary(SerializableObject key, SerializableObject value){
+        addToDictionaryNoCast(key, value);
+        broadcast(RequestType.AddToDict.ordinal() + " " + key.serialize() + " " + value.serialize());
+    }
+
+    /**
+     * Adds a key-value couple to the vocabulary without broadcasting to the whole net
+     */
+    void addToDictionaryNoCast(SerializableObject key, SerializableObject value){
+        vocabulary.add(key, value);
+    }
+
+    /**
+     * Adds a key-value couple to the vocabulary without broadcasting to the whole net starting from a String
+     */
+    void addToDictionaryNoCast(String text){
+        String[] objects = text.split(" ");
+        SMSSerialization key = new SMSSerialization(objects[0]);
+        SMSSerialization value = new SMSSerialization(objects[1]);
+        addToDictionaryNoCast(key, value);
+    }
+    //endregion
+
+    //region removeFromDict
+    /**
+     * Removes from the dictionary a key, then broadcasts the operation to every subscriber
+     * @param key The key to remove from the dictionary (and broadcast to all subscribers)
+     */
+    public void removeFromDictionary(SerializableObject key){
+        removeFromDictionaryNoCast(key);
+        broadcast(RequestType.RemoveFromDict.ordinal() + " " + key.serialize());
+    }
+
+    /**
+     * Removes a key from the vocabulary without broadcasting to the whole net
+     */
+    void removeFromDictionaryNoCast(SerializableObject key){
+        vocabulary.remove(key);
+    }
+
+    /**
+     * Removes a key from the vocabulary without broadcasting to the whole net starting from a String
+     */
+    void removeFromDictionaryNoCast(String text){
+        String[] objects = text.split(" ");
+        SMSSerialization key = new SMSSerialization(objects[0]);
+        removeFromDictionaryNoCast(key);
+    }
+    //endregion
+
+    //region updateDict
+    /**
+     * Removes from the dictionary a key, then broadcasts the operation to every subscriber
+     * @param key The key to remove from the dictionary (and broadcast to all subscribers)
+     */
+    public void updateDictionary(SerializableObject key, SerializableObject value){
+        updateDictionaryNoCast(key, value);
+        broadcast(RequestType.RemoveFromDict.ordinal() + " " + key.serialize() + " " + value.serialize());
+    }
+
+    /**
+     * Removes a key from the vocabulary without broadcasting to the whole net
+     */
+    void updateDictionaryNoCast(SerializableObject key, SerializableObject value){
+        vocabulary.update(key, value);
+    }
+
+    /**
+     * Removes a key from the vocabulary without broadcasting to the whole net starting from a String
+     */
+    void updateDictionaryNoCast(String text){
+        String[] objects = text.split(" ");
+        SMSSerialization key = new SMSSerialization(objects[0]);
+        SMSSerialization value = new SMSSerialization(objects[1]);
+        updateDictionaryNoCast(key, value);
+    }
+    //endregion
+
+    //region getFromDict
+
+    /**
+     * Returns the Resource associated with the given valid key
+     */
+    public SerializableObject getResource(SerializableObject key){
+        return vocabulary.getResource(key);
     }
     //endregion
 
@@ -268,14 +388,4 @@ public class NetworkConnection {
     }
 
     //endregion
-
-    /**
-     * Updates the current Network State given a peer in the network to update and it's resources
-     */
-    public void updateNet(String peer, SerializableObject resources){
-        Log.d(LOG_KEY, "Updating this Peer: " + peer);
-        SMSPeer peerToUpdate = new SMSPeer(peer);
-        subscribers.remove(peerToUpdate);
-        subscribers.add(peerToUpdate);
-    }
 }

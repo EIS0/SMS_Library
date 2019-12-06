@@ -1,0 +1,33 @@
+package com.eis0.webdictionary;
+
+/**
+ * General interface of the network vocabulary.
+ * @author Marco Cognolato
+ */
+interface NetworkVocabulary<K, V> {
+
+    /**
+     * Returns Resource of a key if present, else returns null
+     */
+    V getResource(K key);
+
+    /**
+     * Adds a valid Key-Resource couple to the network vocabulary
+     * @param key A key to add to the vocabulary
+     * @param resource A Resource to add to the vocabulary for the specific key
+     */
+    void add(K key, V resource);
+
+    /**
+     * Removes a given valid Key (and its Resource pair) from the network vocabulary
+     * @param key The key to remove from the Vocabulary
+     */
+    void remove(K key);
+
+    /**
+     * Updates a resource associated with a key
+     * @param key The key associated with the Resource to update
+     * @param resource The Resource to update
+     */
+    void update(K key, V resource);
+}

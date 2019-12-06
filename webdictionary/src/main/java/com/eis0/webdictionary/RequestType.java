@@ -8,5 +8,8 @@ enum RequestType{
     UpdatePeers,
     LeavePermission,
     AcceptLeave,
-    Ping
+    Ping,
+    AddToDict,
+    RemoveFromDict,
+    UpdateDict
 }
