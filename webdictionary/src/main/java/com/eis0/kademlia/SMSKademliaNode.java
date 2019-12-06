@@ -3,7 +3,7 @@ package com.eis0.kademlia;
 import androidx.annotation.NonNull;
 
 import com.eis0.smslibrary.SMSPeer;
-import com.eis0.webdictionary.SMSNetDictionary;
+import com.example.webdictionary.SMSNetVocabulary;
 
 import java.io.Serializable;
 
@@ -17,7 +17,7 @@ public class SMSKademliaNode implements Serializable {
 
     private KademliaId nodeId;
     private SMSPeer phoneNumber;
-    private SMSNetDictionary dictionary;
+    private SMSNetVocabulary dictionary;
 
     /**
      * Stores information of a Kademlia node.
@@ -27,7 +27,7 @@ public class SMSKademliaNode implements Serializable {
      *                      implementation.
      * @param dic           Node's portion of dictionary
      */
-    public SMSKademliaNode(KademliaId nodeId, SMSPeer phoneNumber, SMSNetDictionary dic) {
+    public SMSKademliaNode(KademliaId nodeId, SMSPeer phoneNumber, SMSNetVocabulary dic) {
         this.nodeId = nodeId;
         this.phoneNumber = phoneNumber;
         this.dictionary = dic;
@@ -41,7 +41,7 @@ public class SMSKademliaNode implements Serializable {
     /**
      * @return This node's portion of dictionary
      */
-    public SMSNetDictionary getDictionary(){ return this.dictionary; }
+    public SMSNetVocabulary getDictionary(){ return this.dictionary; }
 
     /**
      * @return The node's phone number.

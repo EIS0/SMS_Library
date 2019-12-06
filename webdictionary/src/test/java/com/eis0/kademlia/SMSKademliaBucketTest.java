@@ -1,9 +1,6 @@
 package com.eis0.kademlia;
 
-import android.content.Context;
-
 import com.eis0.smslibrary.SMSPeer;
-import com.eis0.webdictionary.SMSNetDictionary;
 
 import org.junit.Test;
 

@@ -1,7 +1,5 @@
 package com.eis0.webdictionary;
 
-import android.util.Log;
-
 import com.eis0.smslibrary.ReceivedMessageListener;
 import com.eis0.smslibrary.SMSMessage;
 import com.eis0.smslibrary.SMSPeer;
@@ -28,28 +26,31 @@ class NetworkListener implements ReceivedMessageListener<SMSMessage> {
         RequestType incomingRequest = RequestType.values()[Integer.parseInt(text.split(" ")[0])];
         //starts a specific action based on the action received from the other user
         if(incomingRequest == RequestType.JoinPermission){
-            Log.d(LOG_KEY, "Received Join Permission: accepting...");
             net.acceptJoin(peer, text.substring(2));
         }
         else if(incomingRequest == RequestType.AcceptJoin){
-            Log.d(LOG_KEY, "Received Join Accepted: updating net...");
             net.addToNet(text.substring(2));
         }
         else if(incomingRequest == RequestType.AddPeers){
-            Log.d(LOG_KEY, "Received Update Net Request: updating net...");
             net.addToNet(text.substring(2));
         }
         else if(incomingRequest == RequestType.LeavePermission){
-            Log.d(LOG_KEY, "Received Leave Permission: ...");
             net.acceptLeave(peer);
         }
         else if(incomingRequest == RequestType.AcceptLeave){
-            Log.d(LOG_KEY, "Received Leave Accepted: updating net...");
             net.removeFromNet(text.substring(2));
         }
         else if(incomingRequest == RequestType.Ping){
-            Log.d(LOG_KEY, "Received Ping...");
             net.incomingPing(peer);
+        }
+        else if(incomingRequest == RequestType.AddToDict){
+            net.addToDictionaryNoCast(text.substring(2));
+        }
+        else if(incomingRequest == RequestType.RemoveFromDict){
+            net.removeFromDictionaryNoCast(text.substring(2));
+        }
+        else if(incomingRequest == RequestType.UpdateDict){
+            net.updateDictionaryNoCast(text.substring(2));
         }
     }
 }

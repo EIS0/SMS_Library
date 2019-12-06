@@ -8,6 +8,12 @@ import android.telephony.SmsManager;
 import android.telephony.SmsMessage;
 import android.util.Log;
 
+/**
+ * Core class of the library. It is the lowest level class, so the one which communicate with the
+ * system APIs.
+ *
+ * @author Matteo Carnelos
+ */
 public class SMSCore extends BroadcastReceiver {
 
     private static SmsManager manager = SmsManager.getDefault();
@@ -15,11 +21,13 @@ public class SMSCore extends BroadcastReceiver {
 
     /**
      * Sends a message (SMS) to the specified target, with sent and delivery confirmation.
+     *
      * @param message SMSMessage to send to the destination SMSPeer.
      * @param sent PendingIntent to activate when the message is sent.
      * @param delivered PendingIntent to activate when the message is delivered.
+     * @author Matteo Carnelos
      */
-    protected static void sendMessage(SMSMessage message, PendingIntent sent, PendingIntent delivered) {
+    static void sendMessage(SMSMessage message, PendingIntent sent, PendingIntent delivered) {
         String destination = message.getPeer().getAddress();
         String textMessage = message.getData();
         manager.sendTextMessage(destination,null, textMessage, sent, delivered);
@@ -29,8 +37,10 @@ public class SMSCore extends BroadcastReceiver {
     /**
      * Function called when a message is received. It delegates the message to the SMSMessage
      * Handler which analyzes its content.
+     *
      * @param context Received message context.
      * @param intent Received message Intent.
+     * @author Matteo Carnelos
      */
     @Override
     public void onReceive(Context context, Intent intent) {
