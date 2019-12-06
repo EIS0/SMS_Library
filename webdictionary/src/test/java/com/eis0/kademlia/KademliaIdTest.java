@@ -35,6 +35,23 @@ public class KademliaIdTest {
     }
 
     @Test
+    public void trailingZeros_correctOrder(){
+        //manually checking, a 20 char number is ordered left ot right,
+        //so giving a 19 char number will skip the first char (set as 0)
+        // and go on as intended
+        KademliaId id1 = new KademliaId("2345678901234567890");
+        KademliaId id2 = new KademliaId("\00"+"2345678901234567890");
+        assertEquals(id1,id2);
+    }
+
+    @Test
+    public void nullString_sameAsEmptyByteArray(){
+        KademliaId id1 = new KademliaId("");
+        byte[] empty = new byte[1];
+        KademliaId id2 = new KademliaId(empty);
+    }
+
+    @Test
     public void creationRandomId_shouldBeDifferent() {
         KademliaId toCompare = new KademliaId();
         assertNotEquals(RANDOM_ID, toCompare);
@@ -54,13 +71,18 @@ public class KademliaIdTest {
     public void xorDistanceTestByString() {
         KademliaId toCompareDistance = new KademliaId("11111111111111111110");
         KademliaId toReturn = STRING_ID.xor(toCompareDistance);
-        byte[] distance = new byte[ID_LENGTH_BYTES];
+        byte[] distanceByteArr = new byte[ID_LENGTH_BYTES];
         for (int i = 0; i < ID_LENGTH_BYTES - 1; i++) {
-            distance[i] = 0;
+            distanceByteArr[i] = 0;
         }
-        distance[ID_LENGTH_BYTES - 1] = 1; // I expect a distance of 1
-        KademliaId Distance = new KademliaId(distance);
-        assertEquals(toReturn, Distance);
+        distanceByteArr[ID_LENGTH_BYTES - 1] = 1; // I expect a distance of 1
+        KademliaId distance = new KademliaId(distanceByteArr);
+        assertEquals(toReturn, distance);
+    }
+
+    @Test
+    public void metricXorDistance(){
+        assertEquals(SIMPLE_ID1.getXorDistance(SIMPLE_ID2), SIMPLE_ID3.getInt());
     }
 
     @Test
@@ -79,7 +101,7 @@ public class KademliaIdTest {
         for (int i = 0; i < ID_LENGTH_BYTES - 1; i++) {
             test[i] = 0;
         }
-        test[ID_LENGTH_BYTES - 1] = 1;
+        test[ID_LENGTH_BYTES - 1] = 0x01; //0b00000001
         KademliaId testByBytes = new KademliaId(test);
         /*I expect 159 leading's zero*/
         assertEquals(testByBytes.getFirstSetBitIndex(), ID_LENGTH - 1);

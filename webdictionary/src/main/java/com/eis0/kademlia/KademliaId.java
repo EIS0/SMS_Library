@@ -23,7 +23,7 @@ import java.util.Random;
  *
  * @see <a href="https://pdos.csail.mit.edu/~petar/papers/maymounkov-kademlia-lncs.pdf">Kademlia's
  * paper</a> for more details.
- * @author Edoardo Raimondi
+ * @author Edoardo Raimondi, edits by Marco Cognolato
  */
 public class KademliaId implements Serializable {
 
@@ -99,6 +99,12 @@ public class KademliaId implements Serializable {
         this.fromStream(in);
     }
 
+    /**
+     * Returns a byte array of length ID_LENGTH_BYTES with zeros and then a given number
+     * @param number The byte array of the number to trail with zeros
+     * @return A byte array with the number trailed with zeros
+     * @author Marco Cognolato
+     */
     private byte[] addTrailingZeros(byte[] number){
         //by default each element is set to 0x00
         byte[] toReturn = new byte[ID_LENGTH_BYTES];
@@ -151,8 +157,8 @@ public class KademliaId implements Serializable {
     /**
      * Checks the distance between two NodeIds
      *
-     * @param nid The NodeId from which to calculate the distance
-     * @return The distance of this NodeId from the given NodeId
+     * @param nid The NodeId from which to calculate the metric xor distance
+     * @return The distance of this NodeId from the given NodeId as a new Kademlia Id
      */
     public KademliaId xor(KademliaId nid) {
         byte[] result = new byte[ID_LENGTH_BYTES];
@@ -206,39 +212,26 @@ public class KademliaId implements Serializable {
     /**
      * Counts the number of leading 0's in this NodeId
      *
-     * @return Integer representing the number of leading 0's
+     * @return Integer representing the number of leading 0's,
+     * also returns -1 if there's no leading 0
+     * @author Marco Cognolato
      */
     public int getFirstSetBitIndex() {
         int prefixLength = 0;
-
-        for (byte b : this.keyBytes) {
-            if (b == 0) {
-                prefixLength += 8;
-            } else {
-                /* If the byte is not 0, we need to count how many MSBs are 0 */
-                int count = 0;
-                for (int i = 7; i >= 0; i--) {
-                    boolean a = (b & (1 << i)) == 0;
-                    if (a) {
-                        count++;
-                    } else {
-                        break;   // Reset the count if we encounter a non-zero number
-                    }
+        for(int byteIndex = 0; byteIndex < keyBytes.length; byteIndex++) {
+            byte currentByte = keyBytes[byteIndex];
+            //8 bits in a byte, from 0 to 7
+            for(int bitIndex = 7; bitIndex >= 0; bitIndex--) {
+                if(((0x01 << bitIndex) & currentByte) == (0x01 << bitIndex)){
+                    return (7-bitIndex) + byteIndex * 8;
                 }
-
-                /* Add the count of MSB 0s to the prefix length */
-                prefixLength += count;
-
-                /* Break here since we've now covered the MSB 0s */
-                break;
             }
         }
-        return prefixLength;
+        return -1;
     }
 
     /**
-     * Gets the distance from this NodeId to another NodeId
-     * Compute xor between this and to
+     * Gets the bit distance from this NodeId to another NodeId
      * Given i index of the first set bit of the xor returned NodeId
      * The distance is ID_LENGTH - i
      *
@@ -247,6 +240,17 @@ public class KademliaId implements Serializable {
      */
     public int getDistance(KademliaId to) {
         return ID_LENGTH - this.xor(to).getFirstSetBitIndex();
+    }
+
+    /**
+     * Returns the distance from this Id to a given Id in the xor metric system.
+     * @param to The node to check the distance to
+     * @return A BigInteger saying the distance between the two Ids in the metric xor system
+     */
+    public BigInteger getXorDistance(KademliaId to){
+        //The xor distance is defined as the number returned
+        // by the xor of the 2 numbers to compare
+        return this.xor(to).getInt();
     }
 
     /**
