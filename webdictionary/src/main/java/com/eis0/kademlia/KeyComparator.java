@@ -21,7 +21,7 @@ public class KeyComparator implements Comparator<SMSKademliaNode> {
     }
 
     /**
-     * Compare two objects which must both be of type <code>Node</code>
+     * Compare two objects which must both be of type {@link SMSKademliaNode}
      * and determine which is closest to the identifier specified in the
      * constructor.
      *

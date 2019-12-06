@@ -1,6 +1,7 @@
 package com.eis0.kademlia;
 
 import com.eis0.smslibrary.SMSPeer;
+import com.eis0.webdictionary.SMSNetVocabulary;
 
 import org.junit.Test;
 
@@ -10,7 +11,7 @@ import static org.junit.Assert.*;
 public class ContactTest {
 
     KademliaId random = new KademliaId(); //create a random Id
-    SMSNetDictionary dic = new SMSNetDictionary();
+    SMSNetVocabulary dic = new SMSNetVocabulary();
     SMSKademliaNode toTest = new SMSKademliaNode(random,
             new SMSPeer("3497364511"), dic);
     Contact test = new Contact(toTest);

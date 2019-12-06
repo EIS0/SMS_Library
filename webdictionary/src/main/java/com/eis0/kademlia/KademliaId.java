@@ -29,7 +29,7 @@ public class KademliaId implements Serializable {
 
     private static final String HASHING_ALG = "SHA-256";
     private static final String TAG = "KademliaId";
-    final transient static int ID_LENGTH = 160;
+    final static int ID_LENGTH = 160;
     private byte[] keyBytes;
 
     /**
@@ -40,7 +40,7 @@ public class KademliaId implements Serializable {
     public KademliaId(SMSPeer peer) {
         try {
             MessageDigest md = MessageDigest.getInstance(HASHING_ALG);
-            md.update(peer.toString().getBytes());
+            md.update(peer.getAddress().getBytes());
             keyBytes = Arrays.copyOfRange(md.digest(), 0, (ID_LENGTH / 8));
         } catch (NoSuchAlgorithmException e) {
             Log.e(TAG, HASHING_ALG + " is not a valid hashing algorithm");

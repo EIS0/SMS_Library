@@ -2,16 +2,19 @@ package com.eis0.kademlia;
 
 
 import com.eis0.smslibrary.SMSPeer;
+import com.eis0.webdictionary.SMSNetVocabulary;
 
 import org.junit.Test;
 
 import java.util.List;
-import static org.junit.Assert.*;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class SMSKademliaRoutingTableTest {
 
     KadConfiguration config = new DefaultConfiguration();
-    SMSNetDictionary dic = new SMSNetDictionary();
+    SMSNetVocabulary dic = new SMSNetVocabulary();
     KademliaId ID = new KademliaId("00000000000000000001");
     KademliaId ID2 = new KademliaId("00000000000000000011");
     SMSKademliaNode test2 = new SMSKademliaNode(ID2, new SMSPeer("3497364511"), dic);
@@ -46,7 +49,7 @@ public class SMSKademliaRoutingTableTest {
     @Test
     public void findClosestTest(){
         KademliaId target = new KademliaId("00000000000000000010");
-        SMSNetDictionary dic = new SMSNetDictionary();
+        SMSNetVocabulary dic = new SMSNetVocabulary();
         SMSKademliaNode toCompare = new SMSKademliaNode(target,
                 new SMSPeer("3497364511"), dic);
         toTest.insert(toCompare);
