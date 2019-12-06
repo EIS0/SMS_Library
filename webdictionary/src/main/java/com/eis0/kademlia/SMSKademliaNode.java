@@ -63,14 +63,11 @@ public class SMSKademliaNode implements Serializable {
      */
     @Override
     public boolean equals(Object toCompare) {
-        if (toCompare instanceof SMSKademliaNode) {
-            SMSKademliaNode n = (SMSKademliaNode) toCompare;
-            if (n == this) {
-                return true;
-            }
-            return this.getNodeId().equals(n.getNodeId());
+        if (!(toCompare instanceof SMSKademliaNode)) {
+            return false;
         }
-        return false;
+        SMSKademliaNode n = (SMSKademliaNode) toCompare;
+        return this.getNodeId().equals(n.getNodeId());
     }
 
     /**
