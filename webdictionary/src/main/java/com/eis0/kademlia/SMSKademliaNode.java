@@ -12,12 +12,12 @@ import java.io.Serializable;
  *
  * @see <a href="https://pdos.csail.mit.edu/~petar/papers/maymounkov-kademlia-lncs.pdf">Kademlia's
  * paper</a> for more details.
- * @author Edoardo Raimondi, edits by Giovanni Velludo
+ * @author Edoardo Raimondi, edits by Giovanni Velludo and Marco Cognolato
  */
 public class SMSKademliaNode implements Serializable {
 
     private KademliaId nodeId;
-    private SMSPeer phoneNumber;
+    private SMSPeer nodePeer;
     private SMSNetVocabulary dictionary;
 
     /**
@@ -30,7 +30,7 @@ public class SMSKademliaNode implements Serializable {
      */
     public SMSKademliaNode(KademliaId nodeId, SMSPeer phoneNumber, SMSNetVocabulary dic) {
         this.nodeId = nodeId;
-        this.phoneNumber = phoneNumber;
+        this.nodePeer = phoneNumber;
         this.dictionary = dic;
     }
 
@@ -49,17 +49,18 @@ public class SMSKademliaNode implements Serializable {
     }
 
     /**
-     * @return The node's phone number.
+     * @return The node's Peer
      */
-    public SMSPeer getPhoneNumber() {
-        return phoneNumber;
+    public SMSPeer getNodePeer() {
+        return nodePeer;
     }
 
     /**
-     * Method to compare two Nodes
+     * Compares if two objects are equal or not.
+     * Two Kademlia Nodes are said to be equal if they have the same Id
      *
      * @param toCompare Object to compare
-     * @return true if they are equal
+     * @return True if they are equal, false otherwise
      */
     @Override
     public boolean equals(Object toCompare) {
