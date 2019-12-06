@@ -30,6 +30,7 @@ public class KademliaId implements Serializable {
     private static final String HASHING_ALG = "SHA-256";
     private static final String TAG = "KademliaId";
     final static int ID_LENGTH = 160;
+    final static int ID_LENGTH_BYTES = ID_LENGTH / 8;
     private byte[] keyBytes;
 
     /**
@@ -41,7 +42,7 @@ public class KademliaId implements Serializable {
         try {
             MessageDigest md = MessageDigest.getInstance(HASHING_ALG);
             md.update(peer.getAddress().getBytes());
-            keyBytes = Arrays.copyOfRange(md.digest(), 0, (ID_LENGTH / 8));
+            keyBytes = Arrays.copyOfRange(md.digest(), 0, ID_LENGTH_BYTES);
         } catch (NoSuchAlgorithmException e) {
             Log.e(TAG, HASHING_ALG + " is not a valid hashing algorithm");
         }
@@ -54,8 +55,8 @@ public class KademliaId implements Serializable {
      */
     public KademliaId(String data) {
         keyBytes = data.getBytes();
-        if (keyBytes.length != ID_LENGTH / 8) {
-            throw new IllegalArgumentException("Specified Data need to be " + (ID_LENGTH / 8) + " characters long.");
+        if (keyBytes.length != ID_LENGTH_BYTES) {
+            throw new IllegalArgumentException("Specified Data need to be " + ID_LENGTH_BYTES + " characters long.");
         }
     }
 
@@ -64,7 +65,7 @@ public class KademliaId implements Serializable {
      * Generate a random key
      */
     public KademliaId() {
-        keyBytes = new byte[ID_LENGTH / 8];
+        keyBytes = new byte[ID_LENGTH_BYTES];
         new Random().nextBytes(keyBytes);
     }
 
@@ -74,8 +75,8 @@ public class KademliaId implements Serializable {
      * @param bytes The byte array to use as the NodeId.
      */
     public KademliaId(byte[] bytes) {
-        if (bytes.length != ID_LENGTH / 8) {
-            throw new IllegalArgumentException("Specified Data need to be " + (ID_LENGTH / 8) + " characters long. Data Given: '" + new String(bytes) + "'");
+        if (bytes.length != ID_LENGTH_BYTES) {
+            throw new IllegalArgumentException("Specified Data need to be " + ID_LENGTH_BYTES + " characters long. Data Given: '" + new String(bytes) + "'");
         }
         this.keyBytes = bytes;
     }
@@ -137,10 +138,10 @@ public class KademliaId implements Serializable {
      * @return The distance of this NodeId from the given NodeId
      */
     public KademliaId xor(KademliaId nid) {
-        byte[] result = new byte[ID_LENGTH / 8];
+        byte[] result = new byte[ID_LENGTH_BYTES];
         byte[] nidBytes = nid.getBytes();
 
-        for (int i = 0; i < ID_LENGTH / 8; i++) {
+        for (int i = 0; i < ID_LENGTH_BYTES; i++) {
             result[i] = (byte) (this.keyBytes[i] ^ nidBytes[i]);
         }
 
@@ -155,7 +156,7 @@ public class KademliaId implements Serializable {
      */
     public KademliaId generateNodeIdByDistance(int distance) {
 
-        byte[] result = new byte[ID_LENGTH / 8];
+        byte[] result = new byte[ID_LENGTH_BYTES];
 
         /* Since distance = ID_LENGTH - prefixLength, we need to fill that amount with 0's */
         int numByteZeroes = (ID_LENGTH - distance) / 8;
@@ -248,7 +249,7 @@ public class KademliaId implements Serializable {
      * @throws IOException
      */
     public final void fromStream(DataInputStream in) throws IOException {
-        byte[] input = new byte[ID_LENGTH / 8];
+        byte[] input = new byte[ID_LENGTH_BYTES];
         in.readFully(input);
         this.keyBytes = input;
     }
