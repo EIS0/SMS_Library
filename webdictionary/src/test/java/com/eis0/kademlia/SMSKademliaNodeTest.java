@@ -1,6 +1,7 @@
 package com.eis0.kademlia;
 
 import com.eis0.smslibrary.SMSPeer;
+import com.eis0.webdictionary.SMSNetDictionary;
 
 import org.junit.Test;
 
@@ -10,8 +11,8 @@ public class SMSKademliaNodeTest {
 
     /*Test initialization*/
     KademliaId random = new KademliaId();
-    SMSKademliaNode Node1 = new SMSKademliaNode(random, 123,
-            new SMSPeer("3497364511"));
+    SMSNetDictionary dic = new SMSNetDictionary();
+    SMSKademliaNode Node1 = new SMSKademliaNode(random,new SMSPeer("3497364511"),dic);
 
     @Test
     public void getNodeIdTest(){
@@ -22,6 +23,9 @@ public class SMSKademliaNodeTest {
     public void equalsTest(){
         assertTrue(Node1.equals(Node1));
     }
+
+    @Test
+    public void getDictionaryTest(){ assertTrue(Node1.getDictionary().equals(dic)); }
 
 
 }
