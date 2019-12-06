@@ -1,6 +1,4 @@
-package com.example.webdictionary;
-
-import com.eis0.webdictionary.SerializableObject;
+package com.eis0.webdictionary;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -8,7 +6,7 @@ import java.util.Map;
 /**
  * @author Edoardo Raimondi, edits by Marco Cognolato
  */
-public class SMSNetVocabulary implements com.example.webdictionary.NetworkVocabulary<SerializableObject, SerializableObject> {
+public class SMSNetVocabulary implements NetworkVocabulary<SerializableObject, SerializableObject> {
 
     private Map<SerializableObject, SerializableObject> netDict = new HashMap<>();
 

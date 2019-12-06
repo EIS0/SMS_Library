@@ -1,4 +1,4 @@
-package com.example.webdictionary;
+package com.eis0.webdictionary;
 
 /**
  * General interface of the network vocabulary.
