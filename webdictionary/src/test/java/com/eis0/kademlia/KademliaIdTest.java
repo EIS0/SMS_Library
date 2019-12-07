@@ -115,4 +115,24 @@ public class KademliaIdTest {
         int shouldResult = NUMBER_ID.getDistance(toHaveDistance);
         assertEquals(shouldResult, result);
     }
+
+    @Test
+    public void newIdByDistance_asExpected(){
+        assertEquals(SIMPLE_ID1.generateNodeIdByDistance(ID_LENGTH-1), SIMPLE_ID2);
+    }
+
+    @Test
+    public void anotherNewIdByDistance_asExpected(){
+        assertEquals(SIMPLE_ID1.generateNodeIdByDistance(ID_LENGTH-2), SIMPLE_ID3);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void idByDistanceOutOfRangeNegative_throws(){
+        SIMPLE_ID1.generateNodeIdByDistance(-1);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void idByDistanceOutOfRangePositive_throws(){
+        SIMPLE_ID1.generateNodeIdByDistance(160);
+    }
 }

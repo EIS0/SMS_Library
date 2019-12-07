@@ -14,7 +14,6 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
-import java.util.BitSet;
 import java.util.Random;
 
 /**
@@ -174,39 +173,24 @@ public class KademliaId implements Serializable {
     /**
      * Generates a NodeId that is some distance away from this NodeId
      *
-     * @param distance in number of bits
-     * @return NodeId The newly generated NodeId
+     * @param distance The index of the first bit that should be different,
+     *                 From 0 to 159, where 0 changes the most significant bit
+     * @return The newly generated NodeId with a given distance from this.
+     * @throws IllegalArgumentException if the distance is < 0 or >= 160
+     * @author Marco Cognolato
      */
     public KademliaId generateNodeIdByDistance(int distance) {
+        if(distance < 0 || distance >= 160) throw new IllegalArgumentException();
 
-        byte[] result = new byte[ID_LENGTH_BYTES];
+        byte[] result = keyBytes.clone();
 
-        /* Since distance = ID_LENGTH - prefixLength, we need to fill that amount with 0's */
-        int numByteZeroes = (ID_LENGTH - distance) / 8;
-        int numBitZeroes = 8 - (distance % 8);
+        // calculate the index of the byte and bit to update
+        int byteToUpdateIndex = (distance) / 8;
+        int bitToUpdateIndex = 7 - (distance % 8);
 
-        /* Filling byte zeroes */
-        for (int i = 0; i < numByteZeroes; i++) {
-            result[i] = 0;
-        }
-
-        /* Filling bit zeroes */
-        BitSet bits = new BitSet(8);
-        bits.set(0, 8);
-
-        for (int i = 0; i < numBitZeroes; i++) {
-            /* Shift 1 zero into the start of the value */
-            bits.clear(i);
-        }
-        bits.flip(0, 8);        // Flip the bits since they're in reverse order
-        result[numByteZeroes] = bits.toByteArray()[0];
-
-        /* Set the remaining bytes to Maximum value */
-        for (int i = numByteZeroes + 1; i < result.length; i++) {
-            result[i] = Byte.MAX_VALUE;
-        }
-
-        return this.xor(new KademliaId(result));
+        //change only the bit at the distance requested
+        result[byteToUpdateIndex] = (byte)(result[byteToUpdateIndex] ^ 0x01<<bitToUpdateIndex);
+        return new KademliaId(result);
     }
 
     /**
@@ -236,7 +220,8 @@ public class KademliaId implements Serializable {
      * The distance is ID_LENGTH - i
      *
      * @param to The node from which to calculate the distance
-     * @return Integer The distance
+     * @return An integer from ID_LENGTH and 1 saying the first different bit.
+     * if 0 is returned it it means the two id's are equal.
      */
     public int getDistance(KademliaId to) {
         int diffIndex = this.xor(to).getFirstSetBitIndex();
