@@ -92,6 +92,20 @@ public class DataProvider extends Observable implements PollListener {
     }
 
     /**
+     * Load all the incoming/opened/closed polls data from the internal memory.
+     *
+     * @param context The context of the application.
+     * @author Matteo Carnelos
+     */
+    static void loadDataFromInternal(Context context) {
+        if(context == null) return;
+        incomingPolls = loadPollsList(INCOMING_POLLS_FILE_NAME, context);
+        openedPolls = loadPollsList(OPENED_POLLS_FILE_NAME, context);
+        closedPolls = loadPollsList(CLOSED_POLLS_FILE_NAME, context);
+        PollManager.updateSentPolls();
+    }
+
+    /**
      * Save a poll list in the internal storage as a JSON file.
      *
      * @param list The list of Poll to save.
@@ -111,20 +125,6 @@ public class DataProvider extends Observable implements PollListener {
         } catch (IOException e) {
             Log.e(LOG_KEY, "Unable to save list \"" + fileName + "\" to internal memory.");
         }
-    }
-
-    /**
-     * Load all the incoming/opened/closed polls data from the internal memory.
-     *
-     * @param context The context of the application.
-     * @author Matteo Carnelos
-     */
-    static void loadDataFromInternal(Context context) {
-        if(context == null) return;
-        incomingPolls = loadPollsList(INCOMING_POLLS_FILE_NAME, context);
-        openedPolls = loadPollsList(OPENED_POLLS_FILE_NAME, context);
-        closedPolls = loadPollsList(CLOSED_POLLS_FILE_NAME, context);
-        PollManager.updateSentPolls();
     }
 
     /**
