@@ -1,6 +1,5 @@
 package com.eis0.kademlia;
 
-import android.annotation.TargetApi;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -15,7 +14,6 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
-import java.util.BitSet;
 import java.util.Random;
 
 /**
@@ -23,14 +21,24 @@ import java.util.Random;
  * It is representing by the hasCode of the user's phone number
  *
  * @see <a href="https://pdos.csail.mit.edu/~petar/papers/maymounkov-kademlia-lncs.pdf">Kademlia's
- *      paper</a> for more details.
+ * paper</a> for more details.
+ * @author Edoardo Raimondi, edits by Marco Cognolato
  */
 public class KademliaId implements Serializable {
 
     private static final String HASHING_ALG = "SHA-256";
     private static final String TAG = "KademliaId";
-    final transient static int ID_LENGTH = 160;
+    final static int ID_LENGTH = 160;
+    final static int ID_LENGTH_BYTES = ID_LENGTH / 8;
     private byte[] keyBytes;
+
+    /**
+     * Generates a KademliaId using a random key
+     */
+    public KademliaId() {
+        keyBytes = new byte[ID_LENGTH_BYTES];
+        new Random().nextBytes(keyBytes);
+    }
 
     /**
      * Construct the NodeId based on the address of the peer.
@@ -40,10 +48,9 @@ public class KademliaId implements Serializable {
     public KademliaId(SMSPeer peer) {
         try {
             MessageDigest md = MessageDigest.getInstance(HASHING_ALG);
-            md.update(peer.toString().getBytes());
-            keyBytes = Arrays.copyOfRange(md.digest(), 0, (ID_LENGTH/8));
-        }
-        catch (NoSuchAlgorithmException e) {
+            md.update(peer.getAddress().getBytes());
+            keyBytes = Arrays.copyOfRange(md.digest(), 0, ID_LENGTH_BYTES);
+        } catch (NoSuchAlgorithmException e) {
             Log.e(TAG, HASHING_ALG + " is not a valid hashing algorithm");
         }
     }
@@ -53,22 +60,16 @@ public class KademliaId implements Serializable {
      *
      * @param data The user generated key string
      */
-    public KademliaId(String data)
-    {
-        keyBytes = data.getBytes();
-        if (keyBytes.length != ID_LENGTH / 8)
-        {
-            throw new IllegalArgumentException("Specified Data need to be " + (ID_LENGTH / 8) + " characters long.");
+    public KademliaId(String data) {
+        this.keyBytes = data.getBytes();
+        if (this.keyBytes.length > ID_LENGTH_BYTES) {
+            throw new IllegalArgumentException("Specified Data need to be " + ID_LENGTH_BYTES + " characters long.");
         }
-    }
 
-
-    /**
-     * Generate a random key
-     */
-    public KademliaId() {
-        keyBytes = new byte[ID_LENGTH / 8];
-        new Random().nextBytes(keyBytes);
+        //if the string it's too short, add some leading null bytes
+        if(this.keyBytes.length < ID_LENGTH_BYTES){
+            this.keyBytes = addTrailingZeros(this.keyBytes);
+        }
     }
 
     /**
@@ -77,20 +78,41 @@ public class KademliaId implements Serializable {
      * @param bytes The byte array to use as the NodeId.
      */
     public KademliaId(byte[] bytes) {
-        if (bytes.length != ID_LENGTH / 8) {
-            throw new IllegalArgumentException("Specified Data need to be " + (ID_LENGTH / 8) + " characters long. Data Given: '" + new String(bytes) + "'");
+        if (bytes.length > ID_LENGTH_BYTES) {
+            throw new IllegalArgumentException("Specified Data need to be " + ID_LENGTH_BYTES + " characters long. Data Given: '" + new String(bytes) + "'");
         }
         this.keyBytes = bytes;
+        //if the byte array it's too short, add some leading null bytes
+        if(bytes.length < ID_LENGTH_BYTES){
+            this.keyBytes = addTrailingZeros(this.keyBytes);
+        }
     }
-
 
     /**
      * Load the NodeId from a DataInput stream
      *
      * @param in The stream from which to load the NodeId
-     * @throws IOException
+     * @throws IOException If there's an error in the input stream
      */
-    public KademliaId(DataInputStream in) throws IOException { this.fromStream(in); }
+    public KademliaId(DataInputStream in) throws IOException {
+        this.fromStream(in);
+    }
+
+    /**
+     * Returns a byte array of length ID_LENGTH_BYTES with zeros and then a given number
+     * @param number The byte array of the number to trail with zeros
+     * @return A byte array with the number trailed with zeros
+     * @author Marco Cognolato
+     */
+    private byte[] addTrailingZeros(byte[] number){
+        //by default each element is set to 0x00
+        byte[] toReturn = new byte[ID_LENGTH_BYTES];
+        //add to the end (ax expected) each element
+        for(int i = 0; i < number.length; i++){
+            toReturn[i+ID_LENGTH_BYTES-number.length] = number[i];
+        }
+        return toReturn;
+    }
 
     /**
      * @return Bytes' array (if used)
@@ -134,14 +156,14 @@ public class KademliaId implements Serializable {
     /**
      * Checks the distance between two NodeIds
      *
-     * @param nid The NodeId from which to calculate the distance
-     * @return The distance of this NodeId from the given NodeId
+     * @param nid The NodeId from which to calculate the metric xor distance
+     * @return The distance of this NodeId from the given NodeId as a new Kademlia Id
      */
     public KademliaId xor(KademliaId nid) {
-        byte[] result = new byte[ID_LENGTH / 8];
+        byte[] result = new byte[ID_LENGTH_BYTES];
         byte[] nidBytes = nid.getBytes();
 
-        for (int i = 0; i < ID_LENGTH / 8; i++) {
+        for (int i = 0; i < ID_LENGTH_BYTES; i++) {
             result[i] = (byte) (this.keyBytes[i] ^ nidBytes[i]);
         }
 
@@ -151,91 +173,78 @@ public class KademliaId implements Serializable {
     /**
      * Generates a NodeId that is some distance away from this NodeId
      *
-     * @param distance in number of bits
-     * @return NodeId The newly generated NodeId
+     * @param distance The index of the first bit that should be different,
+     *                 From 0 to 159, where 0 changes the most significant bit
+     * @return The newly generated NodeId with a given distance from this.
+     * @throws IllegalArgumentException if the distance is < 0 or >= 160
+     * @author Marco Cognolato
      */
     public KademliaId generateNodeIdByDistance(int distance) {
+        if(distance < 0 || distance >= 160) throw new IllegalArgumentException();
 
-        byte[] result = new byte[ID_LENGTH / 8];
+        byte[] result = keyBytes.clone();
 
-        /* Since distance = ID_LENGTH - prefixLength, we need to fill that amount with 0's */
-        int numByteZeroes = (ID_LENGTH - distance) / 8;
-        int numBitZeroes = 8 - (distance % 8);
+        // calculate the index of the byte and bit to update
+        int byteToUpdateIndex = (distance) / 8;
+        int bitToUpdateIndex = 7 - (distance % 8);
 
-        /* Filling byte zeroes */
-        for (int i = 0; i < numByteZeroes; i++) {
-            result[i] = 0;
-        }
-
-        /* Filling bit zeroes */
-        BitSet bits = new BitSet(8);
-        bits.set(0, 8);
-
-        for (int i = 0; i < numBitZeroes; i++) {
-            /* Shift 1 zero into the start of the value */
-            bits.clear(i);
-        }
-        bits.flip(0, 8);        // Flip the bits since they're in reverse order
-        result[numByteZeroes] = bits.toByteArray()[0];
-
-        /* Set the remaining bytes to Maximum value */
-        for (int i = numByteZeroes + 1; i < result.length; i++) {
-            result[i] = Byte.MAX_VALUE;
-        }
-
-        return this.xor(new KademliaId(result));
+        //change only the bit at the distance requested
+        result[byteToUpdateIndex] = (byte)(result[byteToUpdateIndex] ^ 0x01<<bitToUpdateIndex);
+        return new KademliaId(result);
     }
 
     /**
      * Counts the number of leading 0's in this NodeId
      *
-     * @return Integer representing the number of leading 0's
+     * @return Integer representing the number of leading 0's,
+     * also returns -1 if there's only leading 0's
+     * @author Marco Cognolato
      */
     public int getFirstSetBitIndex() {
         int prefixLength = 0;
-
-        for (byte b : this.keyBytes) {
-            if (b == 0) {
-                prefixLength += 8;
-            } else {
-                /* If the byte is not 0, we need to count how many MSBs are 0 */
-                int count = 0;
-                for (int i = 7; i >= 0; i--) {
-                    boolean a = (b & (1 << i)) == 0;
-                    if (a) {
-                        count++;
-                    } else {
-                        break;   // Reset the count if we encounter a non-zero number
-                    }
+        for(int byteIndex = 0; byteIndex < keyBytes.length; byteIndex++) {
+            byte currentByte = keyBytes[byteIndex];
+            //8 bits in a byte, from 0 to 7
+            for(int bitIndex = 7; bitIndex >= 0; bitIndex--) {
+                if(((0x01 << bitIndex) & currentByte) == (0x01 << bitIndex)){
+                    return (7-bitIndex) + byteIndex * 8;
                 }
-
-                /* Add the count of MSB 0s to the prefix length */
-                prefixLength += count;
-
-                /* Break here since we've now covered the MSB 0s */
-                break;
             }
         }
-        return prefixLength;
+        return -1;
     }
 
     /**
-     * Gets the distance from this NodeId to another NodeId
-     * Compute xor between this and to
+     * Gets the bit distance from this NodeId to another NodeId
      * Given i index of the first set bit of the xor returned NodeId
      * The distance is ID_LENGTH - i
      *
      * @param to The node from which to calculate the distance
-     * @return Integer The distance
+     * @return An integer from ID_LENGTH and 1 saying the first different bit.
+     * if 0 is returned it it means the two id's are equal.
      */
     public int getDistance(KademliaId to) {
-        return ID_LENGTH - this.xor(to).getFirstSetBitIndex();
+        int diffIndex = this.xor(to).getFirstSetBitIndex();
+        if(diffIndex == -1) return 0;
+        return ID_LENGTH - diffIndex;
+    }
+
+    /**
+     * Returns the distance from this Id to a given Id in the xor metric system.
+     * @param to The node to check the distance to
+     * @return A BigInteger saying the distance between the two Ids in the metric xor system
+     */
+    public BigInteger getXorDistance(KademliaId to){
+        //The xor distance is defined as the number returned
+        // by the xor of the 2 numbers to compare
+        return this.xor(to).getInt();
     }
 
     /**
      * Add the NodeId to the stream
+     *
      * @param out Data to write
-     * @throws IOException
+     * @throws IOException If there's an error in the input stream
      */
     public void toStream(DataOutputStream out) throws IOException {
         out.write(this.getBytes());
@@ -243,11 +252,12 @@ public class KademliaId implements Serializable {
 
     /**
      * Uses a DataInputStream to generate a NodeId.
+     *
      * @param in Data to read
-     * @throws IOException
+     * @throws IOException If there's an error in the input stream
      */
     public final void fromStream(DataInputStream in) throws IOException {
-        byte[] input = new byte[ID_LENGTH / 8];
+        byte[] input = new byte[ID_LENGTH_BYTES];
         in.readFully(input);
         this.keyBytes = input;
     }

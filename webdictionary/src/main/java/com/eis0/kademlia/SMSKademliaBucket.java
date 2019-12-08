@@ -12,28 +12,24 @@ import java.util.TreeSet;
  * These List are called bucket.
  *
  * @see <a href="https://pdos.csail.mit.edu/~petar/papers/maymounkov-kademlia-lncs.pdf">Kademlia's
- *  *      paper</a> for more details.
+ * *      paper</a> for more details.
+ * @author Edoardo Raimondi
  */
 public class SMSKademliaBucket implements KademliaBucket {
 
     /* How deep is this bucket in the Routing Table */
-    private final int depth;
+    private int depth;
 
     /* Contacts stored in this routing table */
-    private final TreeSet<Contact> contacts;
+    private TreeSet<Contact> contacts = new TreeSet<>();
 
     /* A set of last seen contacts that can replace any current contact that is unresponsive */
-    private final TreeSet<Contact> replacementCache;
+    private TreeSet<Contact> replacementCache = new TreeSet<>();
 
     private KadConfiguration config;
 
-        {
-        contacts = new TreeSet<>();
-        replacementCache = new TreeSet<>();
-        }
-
     /**
-     * @param depth  How deep in the routing tree is this bucket
+     * @param depth How deep in the routing tree is this bucket
      */
     public SMSKademliaBucket(int depth, KadConfiguration config) {
         this.depth = depth;
@@ -42,12 +38,13 @@ public class SMSKademliaBucket implements KademliaBucket {
 
     /**
      * Insert a contact in the bucket
+     *
      * @param c the new contact
      */
     @Override
     public void insert(Contact c) {
         if (this.contacts.contains(c)) {
-            /**
+            /*
              * If the contact is already in the bucket, lets update that we've seen it
              * We need to remove and re-add the contact to get the Sorted Set to update sort order
              */
@@ -65,8 +62,7 @@ public class SMSKademliaBucket implements KademliaBucket {
                         /* Contact is stale */
                         if (stalest == null) {
                             stalest = tmp;
-                        }
-                        else if (tmp.staleCount() > stalest.staleCount()) {
+                        } else if (tmp.staleCount() > stalest.staleCount()) {
                             stalest = tmp;
                         }
                     }
@@ -88,6 +84,7 @@ public class SMSKademliaBucket implements KademliaBucket {
 
     /**
      * Insert a contact form a node
+     *
      * @param n The node to create the contact from
      */
     @Override
@@ -96,9 +93,7 @@ public class SMSKademliaBucket implements KademliaBucket {
     }
 
     /**
-     *
      * @param c The contact to check for
-     *
      * @return true if there is c
      */
     @Override
@@ -107,18 +102,16 @@ public class SMSKademliaBucket implements KademliaBucket {
     }
 
     /**
-     *
      * @param n The node to check for
-     *
      * @return true if there is n
      */
     @Override
-    public boolean containsNode(SMSKademliaNode n) { return this.containsContact(new Contact(n)); }
+    public boolean containsNode(SMSKademliaNode n) {
+        return this.containsContact(new Contact(n));
+    }
 
     /**
-     *
      * @param c The contact to remove
-     *
      * @return true if well removed
      */
     @Override
@@ -135,8 +128,7 @@ public class SMSKademliaBucket implements KademliaBucket {
             Contact replacement = this.replacementCache.first();
             this.contacts.add(replacement);
             this.replacementCache.remove(replacement);
-        }
-        else {
+        } else {
             /* There is no replacement, just increment the contact's stale count */
             this.getFromContacts(c.getNode()).incrementStaleCount();
         }
@@ -145,9 +137,7 @@ public class SMSKademliaBucket implements KademliaBucket {
     }
 
     /**
-     *
      * @param n The node to get the contact from
-     *
      * @return The contact
      */
     public Contact getFromContacts(SMSKademliaNode n) {
@@ -162,9 +152,7 @@ public class SMSKademliaBucket implements KademliaBucket {
     }
 
     /**
-     *
      * @param n The node representing the contact to remove
-     *
      * @return The contact removed
      */
     public Contact removeFromContacts(SMSKademliaNode n) {
@@ -180,9 +168,7 @@ public class SMSKademliaBucket implements KademliaBucket {
     }
 
     /**
-     *
      * @param n The node of the contact to remove
-     *
      * @return true if well removed
      */
     @Override
@@ -191,7 +177,6 @@ public class SMSKademliaBucket implements KademliaBucket {
     }
 
     /**
-     *
      * @return Int representing the contacts number
      */
     @Override
@@ -200,7 +185,6 @@ public class SMSKademliaBucket implements KademliaBucket {
     }
 
     /**
-     *
      * @return Int representing the bucket depth
      */
     @Override
@@ -209,11 +193,10 @@ public class SMSKademliaBucket implements KademliaBucket {
     }
 
     /**
-     *
      * @return A list of all the contacts in the bucket
      */
     @Override
-    public List<Contact> getContacts(){
+    public List<Contact> getContacts() {
         final ArrayList<Contact> ret = new ArrayList<>();
 
         /* If we have no contacts, return the blank arraylist */
@@ -242,8 +225,7 @@ public class SMSKademliaBucket implements KademliaBucket {
             Contact tmp = this.removeFromReplacementCache(c.getNode());
             tmp.setSeenNow();
             this.replacementCache.add(tmp);
-        }
-        else if (this.replacementCache.size() > this.config.k()) {
+        } else if (this.replacementCache.size() > this.config.k()) {
             /* if our cache is filled, we remove the least recently seen contact */
             this.replacementCache.remove(this.replacementCache.last());
             this.replacementCache.add(c);
@@ -254,6 +236,7 @@ public class SMSKademliaBucket implements KademliaBucket {
 
     /**
      * Remove a contact from the replacement cache
+     *
      * @param n Node to remove
      * @return Contact removed
      */
@@ -270,15 +253,13 @@ public class SMSKademliaBucket implements KademliaBucket {
     }
 
     /**
-     *
      * @return replacementChace size
      */
-    public int getReplacementCacheSize(){
+    public int getReplacementCacheSize() {
         return this.replacementCache.size();
     }
 
     /**
-     *
      * @return A String with all the bucket's informations
      */
     @Override

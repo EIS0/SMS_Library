@@ -1,4 +1,4 @@
-package com.example.webdictionary;
+package com.eis0.webdictionary;
 
 import org.junit.Assert;
 import org.junit.Before;

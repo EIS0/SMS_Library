@@ -6,6 +6,7 @@ import java.io.File;
  * A set of Kademlia configuration parameters.
  * Default values are supplied and can be changed by the application as necessary.
  *
+ * @author Edoardo Raimondi
  */
 public class DefaultConfiguration implements KadConfiguration {
 
@@ -22,7 +23,6 @@ public class DefaultConfiguration implements KadConfiguration {
     }
 
     /**
-     *
      * @return int representing K parameter
      */
     public int k() {
@@ -30,7 +30,6 @@ public class DefaultConfiguration implements KadConfiguration {
     }
 
     /**
-     *
      * @return int representing the size of the replacement chache
      */
     public int replacementCacheSize() {
@@ -38,7 +37,6 @@ public class DefaultConfiguration implements KadConfiguration {
     }
 
     /**
-     *
      * @return int representing how many time there was a stale
      */
     public int stale() {
@@ -46,9 +44,7 @@ public class DefaultConfiguration implements KadConfiguration {
     }
 
     /**
-     *
      * @param ownerId
-     *
      * @return String representing a node data folder
      */
     public String getNodeDataFolder(String ownerId) {

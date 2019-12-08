@@ -4,6 +4,7 @@ package com.eis0.kademlia;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeSet;
+
 /**
  * Implementation of a Kademlia routing table.
  * Every Node has his own table. It contains his well known contacts.
@@ -11,7 +12,8 @@ import java.util.TreeSet;
  * Every routing table has a configuration that, at the creation, will be a DefaultConfiguration
  *
  * @see <a href="https://pdos.csail.mit.edu/~petar/papers/maymounkov-kademlia-lncs.pdf">Kademlia's
- *      paper</a> for more details.
+ * paper</a> for more details.
+ * @author Edoardo Raimondi
  */
 public class SMSKademliaRoutingTable implements KademliaRoutingTable {
 
@@ -24,10 +26,10 @@ public class SMSKademliaRoutingTable implements KademliaRoutingTable {
         this.config = config;
 
         /* Initialize all of the buckets to a specific depth */
-        this.initialize();
+        initialize();
 
         /* Insert the local node */
-        this.insert(localNode);
+        insert(localNode);
     }
 
     /**
@@ -43,47 +45,46 @@ public class SMSKademliaRoutingTable implements KademliaRoutingTable {
 
     /**
      * Set configuration as default.
+     *
      * @param config The configuration to set as default.
      */
-    public void setConfiguration(KadConfiguration config)
-    {
+    public void setConfiguration(KadConfiguration config) {
         this.config = config;
     }
 
     /**
      * Adds a contact to the routing table based on how far it is from the LocalNode.
      *
-     * @param c The contact to add
+     * @param contact The contact to add
      */
     @Override
-    public synchronized final void insert(Contact c) {
-        this.buckets[this.getBucketId(c.getNode().getNodeId())].insert(c);
+    public synchronized final void insert(Contact contact) {
+        this.buckets[this.getBucketId(contact.getNode().getNodeId())].insert(contact);
     }
 
     /**
      * Adds a node to the routing table based on how far it is from the LocalNode.
      *
-     * @param n The node to add
+     * @param node The node to add
      */
 
-    public synchronized final void insert(SMSKademliaNode n) {
-        this.buckets[this.getBucketId(n.getNodeId())].insert(n);
+    public synchronized final void insert(SMSKademliaNode node) {
+        this.buckets[this.getBucketId(node.getNodeId())].insert(node);
     }
 
     /**
      * Compute the bucket ID in which a given node should be placed.
      * The bucketId is computed based on how far the node is away from the Local Node.
      *
-     * @param nid The NodeId for which we want to find which bucket it belong to
-     *
+     * @param nodeId The NodeId for which we want to find which bucket it belong to
      * @return Integer The bucket ID in which the given node should be placed.
      */
     @Override
-    public final int getBucketId(KademliaId nid) {
-        int bId = this.localNode.getNodeId().getDistance(nid) - 1;
+    public final int getBucketId(KademliaId nodeId) {
+        int bId = this.localNode.getNodeId().getDistance(nodeId);
 
         /* If we are trying to insert a node into it's own routing table, then the bucket ID will be -1, so let's just keep it in bucket 0 */
-        return bId < 0 ? 0 : bId;
+        return bId-1 < 0 ? 0 : bId-1;
     }
 
     /**
@@ -91,7 +92,6 @@ public class SMSKademliaRoutingTable implements KademliaRoutingTable {
      *
      * @param target           The NodeId to find contacts close to
      * @param numNodesRequired The number of contacts to find
-     *
      * @return List A List of contacts closest to target
      */
     @Override
@@ -161,6 +161,7 @@ public class SMSKademliaRoutingTable implements KademliaRoutingTable {
 
     /**
      * Print routing table
+     *
      * @return String representing the routing table
      */
     @Override
