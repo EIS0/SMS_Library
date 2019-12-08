@@ -7,80 +7,90 @@ import com.eis0.smslibrary.SMSPeer;
 
 
 /**
- * A message sent to other nodes requesting the K-Closest nodes to a key sent in this message.
+ * Class to create Lookup messages
+ * A lookup message is sent to other nodes to request which are the K nodes closest to the key sent
+ * within the message itself.
  *
+ * @author Edoardo Raimondi
  */
-public class NodeLookupMessage implements Message
-{
+public class NodeLookupMessage implements Message {
 
     private SMSKademliaNode origin;
     private KademliaId lookupId;
 
     public static final byte CODE = 0x05;
 
+
     /**
-     * A new NodeLookupMessage to find nodes
+     * The NodeLookupMessage constructor
      *
      * @param origin The Node from which the message is coming from
-     * @param lookup The key for which to lookup nodes for
+     * @param lookup The key upon which the lookup is carried out
      */
-    public NodeLookupMessage(SMSKademliaNode origin, KademliaId lookup)
-    {
+    public NodeLookupMessage(SMSKademliaNode origin, KademliaId lookup) {
         this.origin = origin;
         this.lookupId = lookup;
     }
 
+
     /**
-     * Return the node peer
-     * @return SMSPeer
+     * Returns the peer of the node which originated the lookup
+     *
+     * @return The SMSPeer object of the origin node, that is the SMSKademliaNode object sent
+     * inside the NodeLookupMessage, representing the node which originated the lookup
      */
-    public SMSPeer getPeer(){
+    public SMSPeer getPeer() {
         return origin.getNodePeer();
     }
 
     /**
      * Return the node's data
+     *
      * @return String
      */
-    public String getData(){
+    public String getData() {
         return origin.toString();
     }
 
+
     /**
      * Return the node
+     *
      * @return SMSKademliaNode
      */
-    public SMSKademliaNode getNode()
-    {
+    public SMSKademliaNode getNode() {
         return this.origin;
     }
 
+
     /**
      * Return the key
+     *
      * @return KademliaId
      */
 
-    public KademliaId getLookupId()
-    {
+    public KademliaId getLookupId() {
         return this.lookupId;
     }
 
+
     /**
      * Return the code
+     *
      * @return code
      */
-    public byte code()
-    {
+    public byte code() {
         return CODE;
     }
 
+
     /**
      * Return a String representing the node
+     *
      * @return String
      */
     @Override
-    public String toString()
-    {
+    public String toString() {
         return "NodeLookupMessage[origin=" + origin + ",lookup=" + lookupId + "]";
     }
 }

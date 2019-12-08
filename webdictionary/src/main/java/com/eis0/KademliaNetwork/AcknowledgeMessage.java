@@ -5,7 +5,13 @@ import com.eis0.smslibrary.Message;
 import com.eis0.smslibrary.SMSPeer;
 
 /**
- * General respond message
+ * Class to create acknowledge messages
+ * The acknowledge message is a generic response message, whose purpose is to inform another node
+ * about the occurrence of a specific event
+ * Example: A content arrives to destination, the receiving node will send an acknowledge
+ * message to inform the sending node about the delivery completed
+ *
+ * @author Edoardo Raimondi
  */
 
 public class AcknowledgeMessage implements Message {
@@ -18,45 +24,55 @@ public class AcknowledgeMessage implements Message {
     }
 
     /**
-     * @return Node's peer
+     * Returns the Peer of the localNode stored inside the AcknowledgeMessage
+     *
+     * @return The SMSPeer object belonging to the localNode, a SMSKademliaNode object stored inside
+     * the AcknowledgeMessage object
      */
     public SMSPeer getPeer() {
         return localNode.getNodePeer();
     }
 
+
     /**
-     * Return the Node
-     * @return SMSKademliaNode
+     * Returns the localNode value of the AcknowledgeMessage object
+     *
+     * @return The SMSKademliaNode object carried by the AcknowledgeMessage
      */
-    public SMSKademliaNode getNode(){
+    public SMSKademliaNode getNode() {
         return this.localNode;
     }
 
 
     /**
-     * Return String representing the node
+     * Returns a String value representing the localNode
      *
-     * @return String
+     * @return The String value representing the localNode, a SMSKademliaNode object inside carried
+     * inside the AcknowledgeMessage
      */
     public String getData() {
         return this.localNode.toString();
     }
 
+
     /**
-     * Return Code message
-     * @return byte
+     * Returns the Code of the AcknowledgeMessage
+     *
+     * @return The byte containing the Code of the AcknowledgeMessage
      */
-    public byte code()
-    {
+    public byte code() {
         return CODE;
     }
 
-     /**
-      * Return a String representing the Node
-      * @return String
-      */
-     public String toString() {
-         return "ConnectMessage[origin NodeId=" + localNode.getNodeId() + "]";
-     }
+
+    /**
+     * Returns a String representing the ID of the node that originated the AcknowledgeMessage
+     *
+     * @return The String value containing the ID of the node that originated the AcknowledgeMessage,
+     * written in a format understandable to the user
+     */
+    public String toString() {
+        return "ConnectMessage[origin NodeId=" + localNode.getNodeId() + "]";
+    }
 }
 
