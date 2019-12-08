@@ -1,4 +1,8 @@
-package com.example.webdictionary;
+
+package com.eis0.webdictionary;
+
+import com.eis0.webdictionary.SMSNetVocabulary;
+import com.eis0.webdictionary.SerializableObject;
 
 import org.junit.Test;
 

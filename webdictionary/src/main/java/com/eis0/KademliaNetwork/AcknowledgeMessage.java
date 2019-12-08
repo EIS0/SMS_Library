@@ -21,7 +21,7 @@ public class AcknowledgeMessage implements Message {
      * @return Node's peer
      */
     public SMSPeer getPeer() {
-        return localNode.getPhoneNumber();
+        return localNode.getNodePeer();
     }
 
     /**

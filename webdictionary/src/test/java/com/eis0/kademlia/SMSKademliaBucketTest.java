@@ -1,20 +1,27 @@
 package com.eis0.kademlia;
 
 import com.eis0.smslibrary.SMSPeer;
+import com.eis0.webdictionary.SMSNetVocabulary;
 
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class SMSKademliaBucketTest {
     KadConfiguration config = new DefaultConfiguration();
+    /*Crating some ID*/
     KademliaId ID = new KademliaId("00000000000000000001");
     KademliaId ID2 = new KademliaId("00000000000000000011");
     KademliaId ID3 = new KademliaId();
-    SMSNetDictionary dic = new SMSNetDictionary();
+
+    SMSNetVocabulary dic = new SMSNetVocabulary(); //creating a dictionary
+    /*Creating some Nodes*/
     SMSKademliaNode test3 = new SMSKademliaNode(ID3, new SMSPeer("3408140326"), dic);
-    SMSKademliaNode test2 = new SMSKademliaNode(ID2,  new SMSPeer("3497364511"), dic);
+    SMSKademliaNode test2 = new SMSKademliaNode(ID2, new SMSPeer("3497364511"), dic);
     SMSKademliaNode test = new SMSKademliaNode(ID, new SMSPeer("3497312345"), dic);
+    /*Creating the routing table*/
     SMSKademliaRoutingTable routingTable = new SMSKademliaRoutingTable(test, config);
     /*configuration test*/
     SMSKademliaBucket toTest = new SMSKademliaBucket(5, config);

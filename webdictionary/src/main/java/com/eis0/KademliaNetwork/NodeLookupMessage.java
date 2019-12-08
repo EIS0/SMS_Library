@@ -35,7 +35,7 @@ public class NodeLookupMessage implements Message
      * @return SMSPeer
      */
     public SMSPeer getPeer(){
-        return origin.getPhoneNumber();
+        return origin.getNodePeer();
     }
 
     /**

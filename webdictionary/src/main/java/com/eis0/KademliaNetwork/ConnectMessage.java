@@ -33,7 +33,7 @@ public class ConnectMessage implements Message
      * @return SMSpeer
      */
     public SMSPeer getPeer(){
-        return nodeToConnect.getPhoneNumber();
+        return nodeToConnect.getNodePeer();
     }
 
 

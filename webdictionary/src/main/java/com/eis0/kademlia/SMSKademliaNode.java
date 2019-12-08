@@ -5,13 +5,16 @@ import androidx.annotation.NonNull;
 import com.eis0.smslibrary.SMSPeer;
 import com.eis0.webdictionary.SMSNetVocabulary;
 
+import org.w3c.dom.Node;
+
 import java.io.Serializable;
 
 /**
  * A Node in the Kademlia network - Contains basic node network information.
  *
  * @see <a href="https://pdos.csail.mit.edu/~petar/papers/maymounkov-kademlia-lncs.pdf">Kademlia's
- *      paper</a> for more details.
+ * paper</a> for more details.
+ * @author Edoardo Raimondi, edits by Giovanni Velludo and Marco Cognolato
  */
 public class SMSKademliaNode implements Serializable {
 
@@ -19,6 +22,8 @@ public class SMSKademliaNode implements Serializable {
     private SMSPeer phoneNumber;
     private SMSKademliaRoutingTable RoutingTable;
     private static SMSNetVocabulary dictionary;
+    private SMSPeer nodePeer;
+
 
     /**
      * Stores information of a Kademlia node.
@@ -37,20 +42,23 @@ public class SMSKademliaNode implements Serializable {
     /**
      * @return This node's ID.
      */
-    public KademliaId getNodeId() { return this.nodeId; }
+    public KademliaId getNodeId() {
+        return this.nodeId;
+    }
 
     /**
      * @return this node's dictionary
      */
-    public SMSNetVocabulary getDictionary(){
+
+    public SMSNetVocabulary getDictionary() {
         return this.dictionary;
     }
 
     /**
-     * @return The node's phone number.
+     * @return The node's Peer
      */
-    public SMSPeer getPhoneNumber() {
-        return phoneNumber;
+    public SMSPeer getNodePeer() {
+        return nodePeer;
     }
 
     /**
@@ -60,20 +68,19 @@ public class SMSKademliaNode implements Serializable {
 
     /**
      * Method to compare two Nodes
+     * Compares if two objects are equal or not.
+     * Two Kademlia Nodes are said to be equal if they have the same Id
      *
      * @param toCompare Object to compare
-     * @return true if they are equal
+     * @return True if they are equal, false otherwise
      */
     @Override
     public boolean equals(Object toCompare) {
-        if (toCompare instanceof SMSKademliaNode) {
-            SMSKademliaNode n = (SMSKademliaNode) toCompare;
-            if (n == this) {
-                return true;
-            }
-            return this.getNodeId().equals(n.getNodeId());
+        if (!(toCompare instanceof SMSKademliaNode)) {
+            return false;
         }
-        return false;
+        SMSKademliaNode n = (SMSKademliaNode) toCompare;
+        return this.getNodeId().equals(n.getNodeId());
     }
 
     /**

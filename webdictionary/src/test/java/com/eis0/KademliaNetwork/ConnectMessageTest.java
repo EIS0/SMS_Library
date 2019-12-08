@@ -3,6 +3,7 @@ package com.eis0.KademliaNetwork;
 import com.eis0.kademlia.KademliaId;
 import com.eis0.kademlia.SMSKademliaNode;
 import com.eis0.smslibrary.SMSPeer;
+import com.eis0.webdictionary.SMSNetVocabulary;
 
 import org.junit.Test;
 
@@ -12,7 +13,7 @@ public class ConnectMessageTest {
 
     SMSPeer peer = new SMSPeer("3408140326");
     KademliaId ID = new KademliaId(peer);
-    SMSNetDictionary dic = new SMSNetDictionary();
+    SMSNetVocabulary dic = new SMSNetVocabulary();
     SMSKademliaNode Node = new SMSKademliaNode(ID, peer, dic);
     ConnectMessage test = new ConnectMessage(Node);
 

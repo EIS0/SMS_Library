@@ -45,7 +45,7 @@ public class SendContentMessage implements Message {
      * @return Peer of the node
      */
     public SMSPeer getPeer() {
-        return this.from.getPhoneNumber();
+        return this.from.getNodePeer();
     }
 
     /**

@@ -3,6 +3,7 @@ package com.eis0.KademliaNetwork;
 import com.eis0.kademlia.KademliaId;
 import com.eis0.kademlia.SMSKademliaNode;
 import com.eis0.smslibrary.SMSPeer;
+import com.eis0.webdictionary.SMSNetVocabulary;
 import com.eis0.webdictionary.SerializableObject;
 
 import org.junit.Test;
@@ -13,7 +14,7 @@ public class SendContentMessageTest {
 
     SMSPeer peer = new SMSPeer("3408140326");
     KademliaId ID = new KademliaId(peer);
-    SMSNetDictionary dic = new SMSNetDictionary();
+    SMSNetVocabulary dic = new SMSNetVocabulary();
     SMSKademliaNode From = new SMSKademliaNode(ID, peer, dic);
     SMSKademliaNode To = new SMSKademliaNode(new KademliaId(), peer, dic);
     TestContent content = new TestContent();
@@ -41,6 +42,10 @@ public class SendContentMessageTest {
             SerializableObject other = (SerializableObject)toCompare;
             return other.toString().equals(this.toString());
         }
+
+        public String serialize(){
+            return toString();
+        }
     }
     /*SerializableObject Value implementation*/
     public class TestContent extends SerializableObject {
@@ -62,6 +67,10 @@ public class SendContentMessageTest {
             }
             SerializableObject other = (SerializableObject) toCompare;
             return other.toString().equals(this.toString());
+        }
+
+        public String serialize(){
+            return toString();
         }
     }
 
