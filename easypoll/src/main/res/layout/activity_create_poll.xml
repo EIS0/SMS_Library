@@ -7,13 +7,13 @@
     tools:context=".CreatePollActivity">
 
     <TextView
-        android:id="@+id/textView4"
+        android:id="@+id/pollUsersTxtView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="16dp"
         android:text="@string/users"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        app:layout_constraintStart_toStartOf="@+id/peer1Txt"
+        app:layout_constraintStart_toStartOf="@+id/peerTxt"
         app:layout_constraintTop_toBottomOf="@+id/pollQuestionTxt" />
 
     <TextView
@@ -30,7 +30,7 @@
         android:id="@+id/pollNameTxtView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="55dp"
+        android:layout_marginTop="32dp"
         android:text="@string/poll_name"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         app:layout_constraintStart_toStartOf="@+id/pollNameTxt"
@@ -40,10 +40,8 @@
         android:id="@+id/pollNameTxt"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="80dp"
-        android:layout_marginLeft="80dp"
-        android:layout_marginEnd="80dp"
-        android:layout_marginRight="80dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
         android:ems="10"
         android:hint="@string/name_hint"
         android:inputType="textPersonName"
@@ -56,60 +54,63 @@
         android:id="@+id/pollQuestionTxt"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:gravity="center|start|center_horizontal|top"
         android:hint="@string/question_hint"
         android:inputType="textMultiLine"
         android:maxLength="130"
+        android:maxLines="5"
+        android:scrollbars="vertical"
         app:layout_constraintEnd_toEndOf="@+id/pollNameTxt"
         app:layout_constraintStart_toStartOf="@+id/pollNameTxt"
         app:layout_constraintTop_toBottomOf="@+id/pollQuestionTxtView" />
 
     <EditText
-        android:id="@+id/peer1Txt"
+        android:id="@+id/peerTxt"
         android:layout_width="0dp"
-        android:layout_height="45dp"
-        android:layout_marginTop="8dp"
+        android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="@string/peer1_hint"
+        android:hint="@string/users_hint"
         android:inputType="phone"
-        app:layout_constraintEnd_toEndOf="@+id/pollQuestionTxt"
+        app:layout_constraintEnd_toStartOf="@+id/addPeerBtn"
         app:layout_constraintStart_toStartOf="@+id/pollQuestionTxt"
-        app:layout_constraintTop_toBottomOf="@+id/textView4" />
-
-    <EditText
-        android:id="@+id/peer2Txt"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:ems="10"
-        android:hint="@string/peer2_hint"
-        android:inputType="phone"
-        app:layout_constraintEnd_toEndOf="@+id/peer1Txt"
-        app:layout_constraintStart_toStartOf="@+id/peer1Txt"
-        app:layout_constraintTop_toBottomOf="@+id/peer1Txt" />
-
-    <EditText
-        android:id="@+id/peer3Txt"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:ems="10"
-        android:hint="@string/peer3_hint"
-        android:inputType="phone"
-        app:layout_constraintEnd_toEndOf="@+id/peer2Txt"
-        app:layout_constraintStart_toStartOf="@+id/peer2Txt"
-        app:layout_constraintTop_toBottomOf="@+id/peer2Txt" />
+        app:layout_constraintTop_toBottomOf="@+id/pollUsersTxtView" />
 
     <Button
         android:id="@+id/sendBtn"
+        style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginBottom="32dp"
         android:onClick="sendPollOnClick"
         android:text="@string/button_send"
-        app:layout_constraintEnd_toEndOf="@+id/peer3Txt"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="@+id/peer3Txt"
-        app:layout_constraintTop_toBottomOf="@+id/peer3Txt" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/peersRclView"
+        app:layout_constraintStart_toStartOf="@+id/peersRclView" />
+
+    <ImageButton
+        android:id="@+id/addPeerBtn"
+        style="@style/Widget.AppCompat.ImageButton"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:background="#0000"
+        android:contentDescription="@string/add_peer_btn_cont_desc"
+        android:onClick="addPeerOnClick"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        android:scaleType="fitCenter"
+        app:layout_constraintBottom_toBottomOf="@+id/peerTxt"
+        app:layout_constraintEnd_toEndOf="@+id/peersRclView"
+        app:layout_constraintTop_toTopOf="@+id/peerTxt"
+        app:srcCompat="@drawable/ic_add_box_black" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/peersRclView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="16dp"
+        android:requiresFadingEdge="vertical"
+        android:scrollbars="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/sendBtn"
+        app:layout_constraintEnd_toEndOf="@+id/pollQuestionTxt"
+        app:layout_constraintStart_toStartOf="@+id/peerTxt"
+        app:layout_constraintTop_toBottomOf="@+id/peerTxt" />
 </androidx.constraintlayout.widget.ConstraintLayout>

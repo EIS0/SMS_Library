@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
         <TextView
             android:id="@+id/pollNameTxt"
@@ -55,7 +54,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/poll_li_yes"
-            android:textColor="@android:color/holo_green_dark"
+            android:textColor="@color/colorPrimary"
             app:layout_constraintEnd_toStartOf="@+id/noBtn"
             app:layout_constraintTop_toBottomOf="@+id/pollQuestionTxt" />
 
@@ -65,7 +64,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/poll_li_no"
-            android:textColor="@android:color/holo_red_dark"
+            android:textColor="@color/colorAccent"
             app:layout_constraintEnd_toEndOf="@+id/pollQuestionTxt"
             app:layout_constraintTop_toTopOf="@+id/yesBtn" />
 
