@@ -21,12 +21,13 @@ public class ViewContentMessage implements Message {
 
     /**
      * @param from Node that want to see a value
-     * @param key key of the value
+     * @param key  key of the value
      */
-    public ViewContentMessage(SMSKademliaNode from, SerializableObject key){
+    public ViewContentMessage(SMSKademliaNode from, SerializableObject key) {
         this.from = from;
         this.key = key;
     }
+
 
     /**
      * @return Peer of the node message sender
@@ -35,18 +36,19 @@ public class ViewContentMessage implements Message {
         return this.from.getNodePeer();
     }
 
+
     /**
      * @return byte Code
      */
-    public byte getCode(){
+    public byte getCode() {
         return this.CODE;
     }
+
 
     /**
      * @return String representing the message
      */
-    public String getData()
-    {
+    public String getData() {
         return "ContentMessage[origin=" + from + ",key=" + key + "]";
     }
 

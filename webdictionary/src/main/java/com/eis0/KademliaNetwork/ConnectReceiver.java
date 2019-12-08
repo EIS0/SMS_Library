@@ -12,8 +12,7 @@ public class ConnectReceiver {
 
     private final SMSKademliaNode localNode;
 
-    public ConnectReceiver(SMSKademliaNode local)
-    {
+    public ConnectReceiver(SMSKademliaNode local) {
         this.localNode = local;
     }
 

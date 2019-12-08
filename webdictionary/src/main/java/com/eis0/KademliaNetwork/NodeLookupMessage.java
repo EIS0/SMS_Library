@@ -43,6 +43,7 @@ public class NodeLookupMessage implements Message {
         return origin.getNodePeer();
     }
 
+
     /**
      * Return the node's data
      *

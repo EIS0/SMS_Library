@@ -22,26 +22,31 @@ public class SendContentMessage implements Message {
 
     /**
      * @param content serializableObject to send
-     * @param key serializableObject key
+     * @param key     serializableObject key
      */
-    public SendContentMessage(SMSKademliaNode from, SerializableObject content, SerializableObject key){
+    public SendContentMessage(SMSKademliaNode from, SerializableObject content, SerializableObject key) {
         this.from = from;
         this.content = content;
         this.key = key;
 
     }
 
+
     /**
      * @return key of the content
      */
-    public SerializableObject getKey(){ return this.key; }
+    public SerializableObject getKey() {
+        return this.key;
+    }
+
 
     /**
      * @return content that's is sent
      */
-    public SerializableObject getContent(){
+    public SerializableObject getContent() {
         return this.content;
     }
+
 
     /**
      * @return Peer of the node
@@ -50,18 +55,19 @@ public class SendContentMessage implements Message {
         return this.from.getNodePeer();
     }
 
+
     /**
      * @return byte Code
      */
-    public byte getCode(){
+    public byte getCode() {
         return this.CODE;
     }
+
 
     /**
      * @return String representing the message
      */
-    public String getData()
-    {
+    public String getData() {
         return "ContentMessage[origin=" + from + ",content=" + content + "]";
     }
 
