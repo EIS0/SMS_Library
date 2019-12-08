@@ -9,6 +9,8 @@ import java.util.List;
  * Receives a NodeLookupMessage
  * It's supposed to be sent a NodeReplyMessage as reply with the K-Closest nodes to the ID sent.
  * N.B. All "receivers" has to be manage in a listener
+ *
+ * @author Edoardo Raimondi
  */
 public class NodeLookupReceiver {
 

@@ -58,7 +58,7 @@ public class SMSKademliaRoutingTable implements KademliaRoutingTable {
      * @param contact The contact to add
      */
     @Override
-    public synchronized final void insert(Contact contact) {
+    public final void insert(Contact contact) {
         this.buckets[this.getBucketId(contact.getNode().getNodeId())].insert(contact);
     }
 
@@ -116,7 +116,7 @@ public class SMSKademliaRoutingTable implements KademliaRoutingTable {
      * @return List of all Nodes in this RoutingTable
      */
     @Override
-    public synchronized final List<SMSKademliaNode> getAllNodes() {
+    public final List<SMSKademliaNode> getAllNodes() {
         List<SMSKademliaNode> nodes = new ArrayList<>();
 
         for (KademliaBucket b : this.buckets) {
@@ -165,7 +165,7 @@ public class SMSKademliaRoutingTable implements KademliaRoutingTable {
      * @return String representing the routing table
      */
     @Override
-    public synchronized final String toString() {
+    public final String toString() {
         StringBuilder sb = new StringBuilder("\nPrinting Routing Table Started... \n");
         int totalContacts = 0;
         for (KademliaBucket b : this.buckets) {
