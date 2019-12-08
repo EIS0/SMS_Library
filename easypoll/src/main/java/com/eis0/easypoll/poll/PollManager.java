@@ -37,6 +37,8 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
 
     private static SparseArray<BinaryPoll> sentPolls = new SparseArray<>();
 
+    // ---------------------------- SINGLETON CONSTRUCTORS ---------------------------- //
+
     /**
      * PollManager constructor, sets this as the SMSManager listener.
      * It cannot be accessed from outside the class because this follows the Singleton Design Pattern.
@@ -60,8 +62,10 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
         return instance;
     }
 
+    // ---------------------------- DATA STORING ---------------------------- //
+
     /**
-     * Populate the sentPolls SparseArray with the new data.
+     * Populate the sentPolls SparseArray with the new data usually read from the internal storage.
      *
      * @author Matteo Carnelos
      */
@@ -69,6 +73,8 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
         for(BinaryPoll openedPoll : DataProvider.getOpenedPolls())
             sentPolls.put(openedPoll.getPollId(), openedPoll);
     }
+
+    // ---------------------------- LISTENERS MANAGING ---------------------------- //
 
     /**
      * Set the listener that will be called when a new poll or an answer is received.
@@ -80,6 +86,8 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
     public void setPollListener(PollListener listener) {
         pollListener = listener;
     }
+
+    // ---------------------------- POLL CREATION ---------------------------- //
 
     /**
      * Creates a new poll and sends it to all the included users, it eventually wakes the listener.
@@ -127,14 +135,16 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
                 + poll.getPollQuestion();
     }
 
+    // ---------------------------- POLL RECEIVING ---------------------------- //
+
     /**
      * Receives an SMSMessage and updates poll data accordingly.
-     * <p>
+     *
      * messageCode is the first header, and it's always one of the following values:
      * [NEW_POLL_MSG_CODE] when the message contains a new poll;
      * [ANSWER_MSG_CODE] when the message is sent from a user to the author and contains an answer;
      *
-     * @param message The SMS messaged passed by SMSHandler. SMSHandler already checks if the
+     * @param message The SMS message passed by SMSHandler. SMSHandler already checks if the
      *                message is meant for our app and strips it of its identification section, so
      *                we don't perform any checks on the validity of the message here. We could
      *                implement them in the future for added security.
@@ -173,6 +183,8 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
                 break;
         }
     }
+
+    // ---------------------------- POLL ANSWERING ---------------------------- //
 
     /**
      * Sends the answer to the author and remove the poll from the receivedPolls map.

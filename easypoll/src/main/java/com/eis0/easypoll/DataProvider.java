@@ -42,6 +42,8 @@ public class DataProvider extends Observable implements PollListener {
     private static List<BinaryPoll> closedPolls = new ArrayList<>();
     private static File filesDir;
 
+    // ---------------------------- SINGLETON CONSTRUCTORS ---------------------------- //
+
     /**
      * DataProvider constructor, sets this as the PollManager listener.
      * It cannot be accessed from outside the class because this follows the Singleton Design Pattern.
@@ -63,6 +65,8 @@ public class DataProvider extends Observable implements PollListener {
         if (instance == null) instance = new DataProvider();
         return instance;
     }
+
+    // ---------------------------- DATA STORING ---------------------------- //
 
     /**
      * Set the output directory for file saving.
@@ -156,6 +160,8 @@ public class DataProvider extends Observable implements PollListener {
         return new Gson().fromJson(listJson, listType);
     }
 
+    // ---------------------------- GETTERS ---------------------------- //
+
     /**
      * Get all the incoming polls.
      *
@@ -186,6 +192,8 @@ public class DataProvider extends Observable implements PollListener {
         return closedPolls;
     }
 
+    // ---------------------------- SETTERS ---------------------------- //
+
     /**
      * This method overrides the Observable.setChanged() method.
      * Save the dataset anytime is changed.
@@ -197,6 +205,8 @@ public class DataProvider extends Observable implements PollListener {
         super.setChanged();
         saveDataToInternal();
     }
+
+    // ---------------------------- LISTENING EVENTS ---------------------------- //
 
     /**
      * Called whenever a new poll is received by other users, adds it to the incomingPoll list and

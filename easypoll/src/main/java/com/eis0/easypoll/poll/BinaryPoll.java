@@ -18,7 +18,7 @@ import java.util.Set;
  * @author Giovanni Velludo
  * @author Matteo Carnelos
  */
-public class BinaryPoll extends Poll {
+public class BinaryPoll {
 
     private static final String POLLS_COUNT_KEY = "com.eis0.easypoll.polls_count_key";
 
@@ -40,7 +40,13 @@ public class BinaryPoll extends Poll {
         }
     }
 
-    private HashMap<SMSPeer, PollResult> pollUsers;
+    private int pollId;
+    private String pollName;
+    private String pollQuestion;
+    private SMSPeer pollAuthor;
+    private HashMap<SMSPeer, PollResult> pollUsers = new HashMap<>();
+
+    // ---------------------------- CONSTRUCTORS ---------------------------- //
 
     /**
      * Creates a local copy of a poll coming from another device.
@@ -49,11 +55,17 @@ public class BinaryPoll extends Poll {
      * @param id       The id of the poll.
      * @param name     The name of the poll.
      * @param question The question asked to all users.
+     * @throws IllegalArgumentException If the name or the question are empty.
      * @author Giovanni Velludo
      * @author Matteo Carnelos
      */
     public BinaryPoll(SMSPeer author, int id, String name, String question) {
-        super(id, name, question, author);
+        if(name.isEmpty()) throw new IllegalArgumentException("Can't create poll with empty name");
+        if(question.isEmpty()) throw new IllegalArgumentException("Can't create poll with empty question");
+        pollId = id;
+        pollName = name;
+        pollQuestion = question;
+        pollAuthor = author;
     }
 
     /**
@@ -67,12 +79,15 @@ public class BinaryPoll extends Poll {
      * @author Matteo Carnelos
      */
     public BinaryPoll(String name, String question, ArrayList<SMSPeer> users) {
-        super(++pollsCount, name, question, null);
+        this(null, pollsCount+1, name, question);
         if(users.isEmpty()) throw new IllegalArgumentException("Can't create poll with no users");
-        pollUsers = new HashMap<>();
         for (SMSPeer user : users) addUser(user);
+        // If everything goes fine, saves the new pollsCount
+        pollsCount++;
         savePollsCountToInternal();
     }
+
+    // ---------------------------- DATA STORING ---------------------------- //
 
     /**
      * Set the SharedPreferences reference to which save the pollsCount value.
@@ -104,6 +119,48 @@ public class BinaryPoll extends Poll {
         pollsCount = mSharedPreferences.getInt(POLLS_COUNT_KEY, 0);
     }
 
+    // ---------------------------- GETTERS ---------------------------- //
+
+    /**
+     * Get the poll unique id.
+     *
+     * @return An integer representing the poll id.
+     * @author Matteo Carnelos
+     */
+    public int getPollId() {
+        return pollId;
+    }
+
+    /**
+     * Get the poll name.
+     *
+     * @return A string representing the poll name.
+     * @author Matteo Carnelos
+     */
+    public String getPollName() {
+        return pollName;
+    }
+
+    /**
+     * Get the poll question.
+     *
+     * @return A string representing the poll question.
+     * @author Matteo Carnelos
+     */
+    public String getPollQuestion() {
+        return pollQuestion;
+    }
+
+    /**
+     * Get the poll author.
+     *
+     * @return An SMSPeer representing the poll author.
+     * @author Matteo Carnelos
+     */
+    SMSPeer getPollAuthor() {
+        return pollAuthor;
+    }
+
     /**
      * Get all the users in the poll.
      *
@@ -115,77 +172,19 @@ public class BinaryPoll extends Poll {
     }
 
     /**
-     * Check if the user is in the poll.
+     * Return the answer of the specific user.
      *
-     * @param user The user for which the check is being requested.
-     * @return True if the user is in the poll, false otherwise.
+     * @param user The user whose answer is being requested.
+     * @return A string representing the answer.
+     * @throws IllegalArgumentException when the user is not included in the poll.
      * @author Giovanni Velludo
      */
-    public boolean hasUser(SMSPeer user) {
-        return pollUsers.containsKey(user);
+    public String getAnswer(SMSPeer user) throws IllegalArgumentException {
+        if (hasUser(user)) return pollUsers.get(user).toString();
+        else throw new IllegalArgumentException("The user is not part of the poll");
     }
 
-    /**
-     * Insert an user in the poll.
-     *
-     * @param user The user to insert in the poll
-     * @author Giovanni Velludo
-     */
-    public void addUser(SMSPeer user) {
-        // At the beginning we have no feedback by the user
-        PollResult result = PollResult.UNAVAILABLE;
-        pollUsers.put(user, result);
-    }
-
-    /**
-     * Tell if a poll is closed, a poll is closed when there aren't users without a given answer
-     * associated.
-     *
-     * @return True if the poll is closed, false otherwise.
-     * @author Matteo Carnelos
-     */
-    public boolean isClosed() {
-        return !pollUsers.containsValue(PollResult.UNAVAILABLE);
-    }
-
-    /**
-     * Returns a percentage value representing the quantity of answers received in relationship
-     * with the total number of users that have to answer.
-     *
-     * @return The closed percentage as an integer value.
-     * @author Matteo Carnelos
-     */
-    public int getClosedPercentage() {
-        float answerCount = countYes() + countNo();
-        float ratio = answerCount / (float) pollUsers.size();
-        return Math.round(ratio * 100);
-    }
-
-    /**
-     * Get the number of answer "Yes".
-     *
-     * @return An integer value representing the number of "Yes".
-     * @author Matteo Carnelos
-     */
-    public int countYes() {
-        int count = 0;
-        for (PollResult result : pollUsers.values())
-            if (result == PollResult.YES) count++;
-        return count;
-    }
-
-    /**
-     * Get the number of answer "No".
-     *
-     * @return An integer value representing the number of "No".
-     * @author Matteo Carnelos
-     */
-    public int countNo() {
-        int count = 0;
-        for (PollResult result : pollUsers.values())
-            if (result == PollResult.NO) count++;
-        return count;
-    }
+    // ---------------------------- SETTERS ---------------------------- //
 
     /**
      * Set user's answer to "Yes".
@@ -217,18 +216,84 @@ public class BinaryPoll extends Poll {
         } else throw new IllegalArgumentException("Trying to manage an inexistent user");
     }
 
+    // ---------------------------- INSPECTIONS ---------------------------- //
+
     /**
-     * Return the answer of the specific user.
+     * Check if the user is in the poll.
      *
-     * @param user The user whose answer is being requested.
-     * @return A string representing the answer.
-     * @throws IllegalArgumentException when the user is not included in the poll.
+     * @param user The user for which the check is being requested.
+     * @return True if the user is in the poll, false otherwise.
      * @author Giovanni Velludo
      */
-    public String getAnswer(SMSPeer user) throws IllegalArgumentException {
-        if (hasUser(user)) return pollUsers.get(user).toString();
-        else throw new IllegalArgumentException("The user is not part of the poll");
+    public boolean hasUser(SMSPeer user) {
+        return pollUsers.containsKey(user);
     }
+
+    /**
+     * Tell if a poll is closed, a poll is closed when there aren't users without a given answer
+     * associated.
+     *
+     * @return True if the poll is closed, false otherwise.
+     * @author Matteo Carnelos
+     */
+    public boolean isClosed() {
+        return !pollUsers.containsValue(PollResult.UNAVAILABLE);
+    }
+
+    /**
+     * Returns a percentage value representing the quantity of answers received in relationship
+     * with the total number of users that have to answer.
+     *
+     * @return The closed percentage as an integer value.
+     * @author Matteo Carnelos
+     */
+    public int getClosedPercentage() {
+        float answerCount = countYes() + countNo();
+        float ratio = answerCount / (float) pollUsers.size();
+        return Math.round(ratio * 100);
+    }
+
+    // ---------------------------- ACTIONS ---------------------------- //
+
+    /**
+     * Insert an user in the poll.
+     *
+     * @param user The user to insert in the poll
+     * @author Giovanni Velludo
+     */
+    public void addUser(SMSPeer user) {
+        // At the beginning we have no feedback by the user
+        PollResult result = PollResult.UNAVAILABLE;
+        pollUsers.put(user, result);
+    }
+
+    /**
+     * Get the number of answer "Yes".
+     *
+     * @return An integer value representing the number of "Yes".
+     * @author Matteo Carnelos
+     */
+    public int countYes() {
+        int count = 0;
+        for (PollResult result : pollUsers.values())
+            if (result == PollResult.YES) count++;
+        return count;
+    }
+
+    /**
+     * Get the number of answer "No".
+     *
+     * @return An integer value representing the number of "No".
+     * @author Matteo Carnelos
+     */
+    public int countNo() {
+        int count = 0;
+        for (PollResult result : pollUsers.values())
+            if (result == PollResult.NO) count++;
+        return count;
+    }
+
+    // ---------------------------- OVERRIDDEN METHODS ---------------------------- //
 
     /**
      * Compare two BinaryPoll object and tell if they are equal.
