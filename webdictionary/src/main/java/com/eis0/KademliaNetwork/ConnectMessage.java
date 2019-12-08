@@ -8,6 +8,7 @@ import com.eis0.smslibrary.SMSPeer;
 /**
  * A message sent to another node requesting to connect to them.
  *
+ * @author Edoardo Raimondi
  */
 public class ConnectMessage implements Message
 {

@@ -12,11 +12,11 @@ import static org.junit.Assert.*;
 
 public class SendContentMessageTest {
 
+    /*Creation of all the necessary params*/
     SMSPeer peer = new SMSPeer("3408140326");
     KademliaId ID = new KademliaId(peer);
     SMSNetVocabulary dic = new SMSNetVocabulary();
     SMSKademliaNode From = new SMSKademliaNode(ID, peer, dic);
-    SMSKademliaNode To = new SMSKademliaNode(new KademliaId(), peer, dic);
     TestContent content = new TestContent();
     TestKey key = new TestKey();
     SendContentMessage test = new SendContentMessage(From, content, key);
@@ -76,10 +76,7 @@ public class SendContentMessageTest {
 
 
     @Test
-    public void setContent() {
-        test.setContent(To);
-        assertTrue(dic.getResource(key).equals(content));
-    }
+    public void getKey() { assertTrue(test.getKey().equals(key));}
 
     @Test
     public void getContent() {
@@ -87,9 +84,7 @@ public class SendContentMessageTest {
     }
 
     @Test
-    public void getPeer() {
-        assertTrue(test.getPeer().equals(peer));
-    }
+    public void getPeer() { assertTrue(test.getPeer().equals(peer)); }
 
     @Test
     public void getCode() {

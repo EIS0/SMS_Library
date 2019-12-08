@@ -72,21 +72,24 @@ public class ViewContentMessageTest {
         }
 
         @Override
-        public String serialize(){
+        public String serialize() {
             return toString();
         }
     }
 
-
-    @Before
-    public void dicPopolator(){
-        To.getDictionary().add(content, key);
-    }
-
+    @Test
+    public void getPeer() { assertTrue(test.getPeer().equals(peer)); }
 
     @Test
-    public void getContent() {
-        To.getDictionary().add(content, key);
-        assertTrue(test.getContent(To).equals(content));
+    public void getCode() {
+        byte shouldBe = 0x05;
+        assertEquals(test.getCode(), shouldBe);
     }
+
+    @Test
+    public void getData() {
+        String ShouldBe = "ContentMessage[origin=108877ECC3A9B2C286E5CD813119910F6DF43EC4,key=uno]";
+        assertEquals(test.getData(), ShouldBe);
+    }
+
 }

@@ -122,7 +122,7 @@ public class KademliaId implements Serializable {
     }
 
     /**
-     * @return The BigInteger representating the key
+     * @return The BigInteger representing the key
      */
     public BigInteger getInt() {
         return new BigInteger(1, this.getBytes());

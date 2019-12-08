@@ -5,7 +5,10 @@ import com.eis0.smslibrary.Message;
 import com.eis0.smslibrary.SMSPeer;
 
 /**
- * General respond message
+ * General respond message.
+ * It can be used as a respond to notify a successful operation
+ *
+ * @author Edoardo Raimondi
  */
 
 public class AcknowledgeMessage implements Message {

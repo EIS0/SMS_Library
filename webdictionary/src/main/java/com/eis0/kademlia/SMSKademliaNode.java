@@ -19,7 +19,6 @@ import java.io.Serializable;
 public class SMSKademliaNode implements Serializable {
 
     private KademliaId nodeId;
-    private SMSPeer phoneNumber;
     private SMSKademliaRoutingTable RoutingTable;
     private static SMSNetVocabulary dictionary;
     private SMSPeer nodePeer;
@@ -34,7 +33,7 @@ public class SMSKademliaNode implements Serializable {
      */
     public SMSKademliaNode(KademliaId nodeId, SMSPeer phoneNumber, SMSNetVocabulary dictionary) {
         this.nodeId = nodeId;
-        this.phoneNumber = phoneNumber;
+        this.nodePeer = phoneNumber;
         RoutingTable = new SMSKademliaRoutingTable(this, new DefaultConfiguration());
         this.dictionary = dictionary;
     }

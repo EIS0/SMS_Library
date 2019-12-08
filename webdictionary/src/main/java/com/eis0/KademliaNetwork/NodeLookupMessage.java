@@ -9,6 +9,7 @@ import com.eis0.smslibrary.SMSPeer;
 /**
  * A message sent to other nodes requesting the K-Closest nodes to a key sent in this message.
  *
+ * @author Edoardo Raimondi
  */
 public class NodeLookupMessage implements Message
 {

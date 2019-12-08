@@ -8,6 +8,9 @@ import com.eis0.webdictionary.SerializableObject;
 
 /**
  * Message used to see/get a content in another node
+ * The Node associated to the key, has to respond with a SendContentMessage.
+ *
+ * @author Edoardo Raimondi
  */
 
 public class ViewContentMessage implements Message {
@@ -26,15 +29,7 @@ public class ViewContentMessage implements Message {
     }
 
     /**
-     * @param to The node containing my value
-     * @return the value associated to the given key
-     */
-    public SerializableObject getContent(SMSKademliaNode to){
-        return to.getDictionary().getResource(key);
-    }
-
-    /**
-     * @return Peer of the node
+     * @return Peer of the node message sender
      */
     public SMSPeer getPeer() {
         return this.from.getNodePeer();

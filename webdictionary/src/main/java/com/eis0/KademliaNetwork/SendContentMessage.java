@@ -7,6 +7,10 @@ import com.eis0.webdictionary.SerializableObject;
 
 /**
  * A message used by a node to send a content to another one
+ * When a node receive this type of message, it's supposed to add the Key-Content
+ * to his own portion of dictionary
+ *
+ * @author Edoardo Raimondi
  */
 
 public class SendContentMessage implements Message {
@@ -17,22 +21,20 @@ public class SendContentMessage implements Message {
     private static final byte CODE = 0x01;
 
     /**
-     * @param from Node where the content is from
      * @param content serializableObject to send
      * @param key serializableObject key
      */
-    public SendContentMessage(SMSKademliaNode from, SerializableObject content, SerializableObject key) {
+    public SendContentMessage(SMSKademliaNode from, SerializableObject content, SerializableObject key){
         this.from = from;
         this.content = content;
         this.key = key;
+
     }
 
     /**
-     * @param ofNode SMSKademliaNode having the dictionary
+     * @return key of the content
      */
-    public void setContent(SMSKademliaNode ofNode){
-        ofNode.getDictionary().add(this.key, this.content);
-    }
+    public SerializableObject getKey(){ return this.key; }
 
     /**
      * @return content that's is sent
