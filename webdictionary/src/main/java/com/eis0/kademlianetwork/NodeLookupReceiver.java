@@ -2,7 +2,6 @@ package com.eis0.kademlianetwork;
 
 import com.eis0.kademlia.KadConfiguration;
 import com.eis0.kademlia.SMSKademliaNode;
-import com.eis0.kademlianetwork.NodeLookupMessage;
 
 import java.util.List;
 
@@ -15,7 +14,6 @@ import java.util.List;
  */
 public class NodeLookupReceiver {
 
-
     private final SMSKademliaNode localNode;
     private final KadConfiguration config;
 
@@ -23,7 +21,6 @@ public class NodeLookupReceiver {
         this.localNode = local;
         this.config = config;
     }
-
 
     /**
      * Handle receiving a NodeLookupMessage
@@ -40,6 +37,5 @@ public class NodeLookupReceiver {
 
         /* Find nodes closest to the LookupId */
         List<SMSKademliaNode> nodes = this.localNode.getRoutingTable().findClosest(incoming.getLookupId(), this.config.k());
-
     }
 }
