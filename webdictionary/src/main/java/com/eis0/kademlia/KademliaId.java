@@ -44,6 +44,7 @@ public class KademliaId implements Serializable {
      * Construct the NodeId based on the address of the peer.
      *
      * @param peer The peer for which NodeId generation is being requested.
+     * @author Giovanni Velludo
      */
     public KademliaId(SMSPeer peer) {
         try {
@@ -97,6 +98,7 @@ public class KademliaId implements Serializable {
     public KademliaId(DataInputStream in) throws IOException {
         this.fromStream(in);
     }
+    //TODO: remove this constructor and the StreamManaging methods
 
     /**
      * Returns a byte array of length ID_LENGTH_BYTES with zeros and then a given number
@@ -198,7 +200,7 @@ public class KademliaId implements Serializable {
      *
      * @return Integer representing the number of leading 0's,
      * also returns -1 if there's only leading 0's
-     * @author Marco Cognolato
+     * @author Marco Cognolato, Edoardo Raimondi
      */
     public int getFirstSetBitIndex() {
         int prefixLength = 0;

@@ -5,8 +5,6 @@ import androidx.annotation.NonNull;
 import com.eis0.smslibrary.SMSPeer;
 import com.eis0.webdictionary.SMSNetVocabulary;
 
-import org.w3c.dom.Node;
-
 import java.io.Serializable;
 
 /**
@@ -14,12 +12,13 @@ import java.io.Serializable;
  *
  * @see <a href="https://pdos.csail.mit.edu/~petar/papers/maymounkov-kademlia-lncs.pdf">Kademlia's
  * paper</a> for more details.
- * @author Edoardo Raimondi, edits by Giovanni Velludo and Marco Cognolato
+ * @author Edoardo Raimondi
+ * @author Marco Cognolato
  */
 public class SMSKademliaNode implements Serializable {
 
     private KademliaId nodeId;
-    private SMSKademliaRoutingTable RoutingTable;
+    private SMSKademliaRoutingTable routingTable;
     private static SMSNetVocabulary dictionary;
     private SMSPeer nodePeer;
 
@@ -34,7 +33,7 @@ public class SMSKademliaNode implements Serializable {
     public SMSKademliaNode(KademliaId nodeId, SMSPeer phoneNumber, SMSNetVocabulary dictionary) {
         this.nodeId = nodeId;
         this.nodePeer = phoneNumber;
-        RoutingTable = new SMSKademliaRoutingTable(this, new DefaultConfiguration());
+        routingTable = new SMSKademliaRoutingTable(this, new DefaultConfiguration());
         this.dictionary = dictionary;
     }
 
@@ -63,7 +62,7 @@ public class SMSKademliaNode implements Serializable {
     /**
      * @return Node's routing table
      */
-    public SMSKademliaRoutingTable getRoutingTable(){ return this.RoutingTable; }
+    public SMSKademliaRoutingTable getRoutingTable(){ return this.routingTable; }
 
     /**
      * Method to compare two Nodes
