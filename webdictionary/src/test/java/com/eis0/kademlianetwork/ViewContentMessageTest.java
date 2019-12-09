@@ -15,8 +15,6 @@ public class ViewContentMessageTest {
     KademliaId ID = new KademliaId(peer);
     static SMSNetVocabulary dic = new SMSNetVocabulary();
     SMSKademliaNode From = new SMSKademliaNode(ID, peer, dic);
-    SMSKademliaNode To = new SMSKademliaNode(new KademliaId(), peer, dic);
-    TestContent content = new TestContent();
     TestKey key = new TestKey();
     ViewContentMessage test = new ViewContentMessage(From, key);
 
@@ -36,33 +34,6 @@ public class ViewContentMessageTest {
 
         @Override
         public boolean equals(Object toCompare) {
-            if((toCompare == null) || (toCompare.getClass() != this.getClass())) {
-                return false;
-            }
-            SerializableObject other = (SerializableObject)toCompare;
-            return other.toString().equals(this.toString());
-        }
-
-        @Override
-        public String serialize(){
-            return toString();
-        }
-    }
-    /*SerializableObject Value implementation*/
-    public class TestContent extends SerializableObject {
-        public String value;
-
-        public TestContent() {
-            value = "test";
-        }
-
-        @Override
-        public String toString() {
-            return value;
-        }
-
-        @Override
-        public boolean equals(Object toCompare) {
             if ((toCompare == null) || (toCompare.getClass() != this.getClass())) {
                 return false;
             }
@@ -75,7 +46,6 @@ public class ViewContentMessageTest {
             return toString();
         }
     }
-
     @Test
     public void getPeer() { assertTrue(test.getPeer().equals(peer)); }
 
