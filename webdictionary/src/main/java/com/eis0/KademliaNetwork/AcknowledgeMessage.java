@@ -2,6 +2,7 @@ package com.eis0.kademlianetwork;
 
 import com.eis0.kademlia.SMSKademliaNode;
 import com.eis0.smslibrary.Message;
+import com.eis0.smslibrary.SMSMessage;
 import com.eis0.smslibrary.SMSPeer;
 
 /**
@@ -14,12 +15,14 @@ import com.eis0.smslibrary.SMSPeer;
  * @author Edoardo Raimondi
  */
 
-public class AcknowledgeMessage implements Message {
+public class AcknowledgeMessage extends SMSMessage {
 
     private SMSKademliaNode localNode;
     private static final byte CODE = 0x02;
 
+
     public AcknowledgeMessage(SMSKademliaNode origin) {
+        super(origin.getNodePeer(), "Acknowledge x");
         this.localNode = origin;
     }
 
@@ -29,6 +32,7 @@ public class AcknowledgeMessage implements Message {
      * @return The SMSPeer object belonging to the localNode, a SMSKademliaNode object stored inside
      * the AcknowledgeMessage object
      */
+    @Override
     public SMSPeer getPeer() {
         return localNode.getNodePeer();
     }
@@ -50,6 +54,7 @@ public class AcknowledgeMessage implements Message {
      * @return The String value representing the localNode, a SMSKademliaNode object inside carried
      * inside the AcknowledgeMessage
      */
+    @Override
     public String getData() {
         return this.localNode.toString();
     }
@@ -71,8 +76,10 @@ public class AcknowledgeMessage implements Message {
      * @return The String value containing the ID of the node that originated the AcknowledgeMessage,
      * written in a format understandable to the user
      */
+    @Override
     public String toString() {
         return "ConnectMessage[origin NodeId=" + localNode.getNodeId() + "]";
     }
+
 }
 

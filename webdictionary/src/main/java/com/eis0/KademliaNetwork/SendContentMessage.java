@@ -1,7 +1,7 @@
 package com.eis0.kademlianetwork;
 
 import com.eis0.kademlia.SMSKademliaNode;
-import com.eis0.smslibrary.Message;
+import com.eis0.smslibrary.SMSMessage;
 import com.eis0.smslibrary.SMSPeer;
 import com.eis0.webdictionary.SerializableObject;
 
@@ -13,7 +13,7 @@ import com.eis0.webdictionary.SerializableObject;
  * @author Edoardo Raimondi
  */
 
-public class SendContentMessage implements Message {
+public class SendContentMessage extends SMSMessage {
 
     private SMSKademliaNode from;
     private SerializableObject content;
@@ -25,6 +25,7 @@ public class SendContentMessage implements Message {
      * @param key     serializableObject key
      */
     public SendContentMessage(SMSKademliaNode from, SerializableObject content, SerializableObject key) {
+        super(from.getNodePeer(), "SendContentMessage x");
         this.from = from;
         this.content = content;
         this.key = key;
@@ -51,6 +52,7 @@ public class SendContentMessage implements Message {
     /**
      * @return Peer of the node
      */
+    @Override
     public SMSPeer getPeer() {
         return this.from.getNodePeer();
     }
@@ -67,6 +69,7 @@ public class SendContentMessage implements Message {
     /**
      * @return String representing the message
      */
+    @Override
     public String getData() {
         return "ContentMessage[origin=" + from + ",content=" + content + "]";
     }

@@ -2,18 +2,18 @@ package com.eis0.kademlianetwork;
 
 
 import com.eis0.kademlia.SMSKademliaNode;
-import com.eis0.smslibrary.Message;
+import com.eis0.smslibrary.SMSMessage;
 import com.eis0.smslibrary.SMSPeer;
 import com.eis0.webdictionary.SerializableObject;
 
 /**
- * Message used to see/get a content in another node
+ * Message used to see a content in another node
  * The Node associated to the key, has to respond with a SendContentMessage.
  *
  * @author Edoardo Raimondi
  */
 
-public class ViewContentMessage implements Message {
+public class ViewContentMessage extends SMSMessage {
 
     private SMSKademliaNode from;
     private SerializableObject key;
@@ -24,6 +24,7 @@ public class ViewContentMessage implements Message {
      * @param key  key of the value
      */
     public ViewContentMessage(SMSKademliaNode from, SerializableObject key) {
+        super(from.getNodePeer(), "ViewContentMessage x");
         this.from = from;
         this.key = key;
     }
@@ -32,6 +33,7 @@ public class ViewContentMessage implements Message {
     /**
      * @return Peer of the node message sender
      */
+    @Override
     public SMSPeer getPeer() {
         return this.from.getNodePeer();
     }
@@ -48,6 +50,7 @@ public class ViewContentMessage implements Message {
     /**
      * @return String representing the message
      */
+    @Override
     public String getData() {
         return "ContentMessage[origin=" + from + ",key=" + key + "]";
     }
