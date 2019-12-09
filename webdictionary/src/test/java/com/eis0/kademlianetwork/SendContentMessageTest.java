@@ -1,4 +1,4 @@
-package com.eis0.KademliaNetwork;
+package com.eis0.kademlianetwork;
 
 import com.eis0.kademlia.KademliaId;
 import com.eis0.kademlia.SMSKademliaNode;
@@ -6,24 +6,23 @@ import com.eis0.smslibrary.SMSPeer;
 import com.eis0.webdictionary.SMSNetVocabulary;
 import com.eis0.webdictionary.SerializableObject;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class ViewContentMessageTest {
+public class SendContentMessageTest {
+
+    /*Creation of all the necessary params*/
     SMSPeer peer = new SMSPeer("3408140326");
     KademliaId ID = new KademliaId(peer);
-    static SMSNetVocabulary dic = new SMSNetVocabulary();
+    SMSNetVocabulary dic = new SMSNetVocabulary();
     SMSKademliaNode From = new SMSKademliaNode(ID, peer, dic);
-    SMSKademliaNode To = new SMSKademliaNode(new KademliaId(), peer, dic);
     TestContent content = new TestContent();
     TestKey key = new TestKey();
-    ViewContentMessage test = new ViewContentMessage(From, key);
+    SendContentMessage test = new SendContentMessage(From, content, key);
 
     /*SerializableObject key implementation*/
     public class TestKey extends SerializableObject {
-
         public int key;
 
         public TestKey() {
@@ -44,7 +43,6 @@ public class ViewContentMessageTest {
             return other.toString().equals(this.toString());
         }
 
-        @Override
         public String serialize(){
             return toString();
         }
@@ -71,10 +69,18 @@ public class ViewContentMessageTest {
             return other.toString().equals(this.toString());
         }
 
-        @Override
-        public String serialize() {
+        public String serialize(){
             return toString();
         }
+    }
+
+
+    @Test
+    public void getKey() { assertTrue(test.getKey().equals(key));}
+
+    @Test
+    public void getContent() {
+        assertTrue(test.getContent().equals(content));
     }
 
     @Test
@@ -82,14 +88,13 @@ public class ViewContentMessageTest {
 
     @Test
     public void getCode() {
-        byte shouldBe = 0x05;
+        byte shouldBe = 0x01;
         assertEquals(test.getCode(), shouldBe);
     }
 
     @Test
     public void getData() {
-        String ShouldBe = "ContentMessage[origin=108877ECC3A9B2C286E5CD813119910F6DF43EC4,key=uno]";
+        String ShouldBe = "ContentMessage[origin=108877ECC3A9B2C286E5CD813119910F6DF43EC4,content=test]";
         assertEquals(test.getData(), ShouldBe);
     }
-
 }

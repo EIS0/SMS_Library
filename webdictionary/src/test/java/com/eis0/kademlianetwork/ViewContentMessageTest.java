@@ -1,4 +1,4 @@
-package com.eis0.KademliaNetwork;
+package com.eis0.kademlianetwork;
 
 import com.eis0.kademlia.KademliaId;
 import com.eis0.kademlia.SMSKademliaNode;
@@ -10,19 +10,19 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class SendContentMessageTest {
-
-    /*Creation of all the necessary params*/
+public class ViewContentMessageTest {
     SMSPeer peer = new SMSPeer("3408140326");
     KademliaId ID = new KademliaId(peer);
-    SMSNetVocabulary dic = new SMSNetVocabulary();
+    static SMSNetVocabulary dic = new SMSNetVocabulary();
     SMSKademliaNode From = new SMSKademliaNode(ID, peer, dic);
+    SMSKademliaNode To = new SMSKademliaNode(new KademliaId(), peer, dic);
     TestContent content = new TestContent();
     TestKey key = new TestKey();
-    SendContentMessage test = new SendContentMessage(From, content, key);
+    ViewContentMessage test = new ViewContentMessage(From, key);
 
     /*SerializableObject key implementation*/
     public class TestKey extends SerializableObject {
+
         public int key;
 
         public TestKey() {
@@ -43,6 +43,7 @@ public class SendContentMessageTest {
             return other.toString().equals(this.toString());
         }
 
+        @Override
         public String serialize(){
             return toString();
         }
@@ -69,18 +70,10 @@ public class SendContentMessageTest {
             return other.toString().equals(this.toString());
         }
 
-        public String serialize(){
+        @Override
+        public String serialize() {
             return toString();
         }
-    }
-
-
-    @Test
-    public void getKey() { assertTrue(test.getKey().equals(key));}
-
-    @Test
-    public void getContent() {
-        assertTrue(test.getContent().equals(content));
     }
 
     @Test
@@ -88,13 +81,14 @@ public class SendContentMessageTest {
 
     @Test
     public void getCode() {
-        byte shouldBe = 0x01;
+        byte shouldBe = 0x05;
         assertEquals(test.getCode(), shouldBe);
     }
 
     @Test
     public void getData() {
-        String ShouldBe = "ContentMessage[origin=108877ECC3A9B2C286E5CD813119910F6DF43EC4,content=test]";
+        String ShouldBe = "ContentMessage[origin=108877ECC3A9B2C286E5CD813119910F6DF43EC4,key=uno]";
         assertEquals(test.getData(), ShouldBe);
     }
+
 }

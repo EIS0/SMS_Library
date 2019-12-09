@@ -89,16 +89,6 @@ public class KademliaId implements Serializable {
         }
     }
 
-    /**
-     * Load the NodeId from a DataInput stream
-     *
-     * @param in The stream from which to load the NodeId
-     * @throws IOException If there's an error in the input stream
-     */
-    public KademliaId(DataInputStream in) throws IOException {
-        this.fromStream(in);
-    }
-    //TODO: remove this constructor and the StreamManaging methods
 
     /**
      * Returns a byte array of length ID_LENGTH_BYTES with zeros and then a given number
@@ -242,27 +232,6 @@ public class KademliaId implements Serializable {
         return this.xor(to).getInt();
     }
 
-    /**
-     * Add the NodeId to the stream
-     *
-     * @param out Data to write
-     * @throws IOException If there's an error in the input stream
-     */
-    public void toStream(DataOutputStream out) throws IOException {
-        out.write(this.getBytes());
-    }
-
-    /**
-     * Uses a DataInputStream to generate a NodeId.
-     *
-     * @param in Data to read
-     * @throws IOException If there's an error in the input stream
-     */
-    public final void fromStream(DataInputStream in) throws IOException {
-        byte[] input = new byte[ID_LENGTH_BYTES];
-        in.readFully(input);
-        this.keyBytes = input;
-    }
 
     /**
      * @return The hex format of this NodeId
