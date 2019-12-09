@@ -1,7 +1,8 @@
-package com.eis0.KademliaNetwork;
+package com.eis0.kademlianetwork;
 
 import com.eis0.kademlia.KadConfiguration;
 import com.eis0.kademlia.SMSKademliaNode;
+import com.eis0.kademlianetwork.NodeLookupMessage;
 
 import java.util.List;
 

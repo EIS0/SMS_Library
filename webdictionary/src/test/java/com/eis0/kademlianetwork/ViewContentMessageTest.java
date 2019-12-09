@@ -81,7 +81,7 @@ public class ViewContentMessageTest {
 
     @Test
     public void getCode() {
-        byte shouldBe = 0x05;
+        byte shouldBe = 0x04;
         assertEquals(test.getCode(), shouldBe);
     }
 

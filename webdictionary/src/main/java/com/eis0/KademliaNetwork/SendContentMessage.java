@@ -1,4 +1,4 @@
-package com.eis0.KademliaNetwork;
+package com.eis0.kademlianetwork;
 
 import com.eis0.kademlia.SMSKademliaNode;
 import com.eis0.smslibrary.Message;
@@ -18,7 +18,7 @@ public class SendContentMessage implements Message {
     private SMSKademliaNode from;
     private SerializableObject content;
     private SerializableObject key;
-    private static final byte CODE = 0x01;
+    private static final byte CODE = 0x03;
 
     /**
      * @param content serializableObject to send

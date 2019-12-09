@@ -1,4 +1,4 @@
-package com.eis0.KademliaNetwork;
+package com.eis0.kademlianetwork;
 
 import com.eis0.kademlia.SMSKademliaNode;
 import com.eis0.smslibrary.Message;

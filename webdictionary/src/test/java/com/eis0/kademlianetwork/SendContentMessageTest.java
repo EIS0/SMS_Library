@@ -88,7 +88,7 @@ public class SendContentMessageTest {
 
     @Test
     public void getCode() {
-        byte shouldBe = 0x01;
+        byte shouldBe = 0x03;
         assertEquals(test.getCode(), shouldBe);
     }
 

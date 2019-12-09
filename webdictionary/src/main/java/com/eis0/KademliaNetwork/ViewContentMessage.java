@@ -1,4 +1,4 @@
-package com.eis0.KademliaNetwork;
+package com.eis0.kademlianetwork;
 
 
 import com.eis0.kademlia.SMSKademliaNode;
@@ -17,7 +17,7 @@ public class ViewContentMessage implements Message {
 
     private SMSKademliaNode from;
     private SerializableObject key;
-    private static final byte CODE = 0x05;
+    private static final byte CODE = 0x04;
 
     /**
      * @param from Node that want to see a value
