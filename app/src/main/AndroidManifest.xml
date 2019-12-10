@@ -14,10 +14,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity
-            android:name=".NetworkDemo"
-            android:label="@string/app_name"
-            android:theme="@style/AppTheme">
+        <activity android:name=".KademliaDemo">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
