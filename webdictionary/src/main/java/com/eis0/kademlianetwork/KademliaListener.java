@@ -5,14 +5,15 @@ import com.eis0.smslibrary.SMSMessage;
 import com.eis0.smslibrary.SMSPeer;
 
 public class KademliaListener implements ReceivedMessageListener<SMSMessage> {
-      /*
-        private KademliaNetwork net;
-        private final String LOG_KEY = "NetListener";
-        NetworkListener(NetworkConnection net){
-            this.net = net;
+
+        private KademliaNetwork kadNet;
+        private final String LOG_KEY = "KadListener";
+
+        KademliaListener(KademliaNetwork kadNet){
+            this.kadNet = kadNet;
         }
 
-       */
+
 
         @Override
         public void onMessageReceived(SMSMessage message) {
@@ -23,20 +24,20 @@ public class KademliaListener implements ReceivedMessageListener<SMSMessage> {
                 peer = new SMSPeer(peer.toString().substring(peer.toString().length() - 4));
             }
             //convert the code number in the message to the related enum
-            RequestType incomingRequest = RequestType.values()[Integer.parseInt(text.split(" ")[0])];
+            KademliaNetwork.RequestType incomingRequest = KademliaNetwork.RequestType.values()[Integer.parseInt(text.split(" ")[0])];
             //starts a specific action based on the action received from the other user
             switch (incomingRequest) {
-                case RequestType.AcknowledgeMessage:
+                case KademliaNetwork.RequestType.AcknowledgeMessage:
                     break;
-                case RequestType.JoinPermission:
+                case KademliaNetwork.RequestType.JoinPermission:
                     break;
-                case RequestType.AddPeers:
+                case KademliaNetwork.RequestType.AddPeers:
                     break;
-                case RequestType.AddToDict:
+                case KademliaNetwork.RequestType.AddToDict:
                     break;
-                case RequestType.RemoveFromDict:
+                case KademliaNetwork.RequestType.RemoveFromDict:
                     break;
-                case RequestType.UpdateDict:
+                case KademliaNetwork.RequestType.UpdateDict:
                     break;
             }
         }
