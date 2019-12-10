@@ -10,20 +10,20 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class ViewContentMessageTest {
+public class ContentMessageTest {
     SMSPeer peer = new SMSPeer("3408140326");
     KademliaId ID = new KademliaId(peer);
     static SMSNetVocabulary dic = new SMSNetVocabulary();
     SMSKademliaNode From = new SMSKademliaNode(ID, peer, dic);
-    TestKey key = new TestKey();
-    ViewContentMessage test = new ViewContentMessage(From, key);
+    ContentMessageTest.TestContent content = new ContentMessageTest.TestContent();
+    ContentMessage test = new ContentMessage(From, content);
 
     /*SerializableObject key implementation*/
-    public class TestKey extends SerializableObject {
+    public class TestContent extends SerializableObject {
 
         public int key;
 
-        public TestKey() {
+        public TestContent() {
             key = 1;
         }
 
@@ -48,19 +48,21 @@ public class ViewContentMessageTest {
     }
 
     /*Start testing*/
+    @Test
+    public void getContent(){ assertTrue(test.getContent().equals(content)); }
 
     @Test
     public void getPeer() { assertTrue(test.getPeer().equals(peer)); }
 
     @Test
     public void getCode() {
-        byte shouldBe = 0x04;
+        byte shouldBe = 0x05;
         assertEquals(test.getCode(), shouldBe);
     }
 
     @Test
     public void getData() {
-        String ShouldBe = "ViewContentMessage x with the following key: uno";
+        String ShouldBe ="ContentMessage x with the following content : uno";
         assertEquals(test.getData(), ShouldBe);
     }
 

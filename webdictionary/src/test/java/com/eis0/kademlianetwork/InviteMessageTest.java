@@ -17,6 +17,7 @@ public class InviteMessageTest {
     SMSKademliaNode from = new SMSKademliaNode(ID, peer, dic);
     InviteMessage test = new InviteMessage(from);
 
+    /*Start testing*/
     @Test
     public void getPeer() { assertTrue(test.getPeer().equals(peer)); }
 

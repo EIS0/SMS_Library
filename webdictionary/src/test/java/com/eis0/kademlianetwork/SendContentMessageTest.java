@@ -74,7 +74,7 @@ public class SendContentMessageTest {
         }
     }
 
-
+    /*Start testing*/
     @Test
     public void getKey() { assertTrue(test.getKey().equals(key));}
 
@@ -94,7 +94,7 @@ public class SendContentMessageTest {
 
     @Test
     public void getData() {
-        String ShouldBe = "ContentMessage[origin=108877ECC3A9B2C286E5CD813119910F6DF43EC4,content=test]";
+        String ShouldBe = "SendContentMessage x with the following content: test";
         assertEquals(test.getData(), ShouldBe);
     }
 }

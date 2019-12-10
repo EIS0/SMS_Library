@@ -85,7 +85,7 @@ public class NodeLookupMessage extends SMSMessage {
      * @return code
      */
     public byte code() {
-        return CODE;
+        return this.CODE;
     }
 
 

@@ -36,34 +36,26 @@ public class SendContentMessage extends SMSMessage {
     /**
      * @return key of the content
      */
-    public SerializableObject getKey() {
-        return this.key;
-    }
+    public SerializableObject getKey() { return this.key; }
 
 
     /**
      * @return content that's is sent
      */
-    public SerializableObject getContent() {
-        return this.content;
-    }
+    public SerializableObject getContent() { return this.content; }
 
 
     /**
      * @return Peer of the node
      */
     @Override
-    public SMSPeer getPeer() {
-        return this.from.getNodePeer();
-    }
+    public SMSPeer getPeer() { return this.from.getNodePeer(); }
 
 
     /**
      * @return byte Code
      */
-    public byte getCode() {
-        return this.CODE;
-    }
+    public byte getCode() { return this.CODE; }
 
 
     /**
@@ -71,7 +63,7 @@ public class SendContentMessage extends SMSMessage {
      */
     @Override
     public String getData() {
-        return "ContentMessage[origin=" + from + ",content=" + content + "]";
+        return super.getData() + " with the following content: " + content.toString();
     }
 
 }

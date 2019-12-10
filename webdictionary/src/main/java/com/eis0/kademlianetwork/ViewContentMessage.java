@@ -8,7 +8,7 @@ import com.eis0.webdictionary.SerializableObject;
 
 /**
  * Message used to see a content in another node
- * The Node associated to the key, has to respond with a SendContentMessage.
+ * The Node associated to the key, has to respond with a ContentMessage.
  *
  * @author Edoardo Raimondi
  */
@@ -52,7 +52,7 @@ public class ViewContentMessage extends SMSMessage {
      */
     @Override
     public String getData() {
-        return "ContentMessage[origin=" + from + ",key=" + key + "]";
+        return super.getData() + " with the following key: " + key.toString();
     }
 
 }
