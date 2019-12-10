@@ -8,6 +8,8 @@ import com.eis0.smslibrary.SMSPeer;
  *
  * Message to invite someone to my network
  * It's supposed that the invited node to send an acknowledge message as respond
+ *
+ * @author EdoardoRaimondi
  */
 public class InviteMessage extends SMSMessage {
 

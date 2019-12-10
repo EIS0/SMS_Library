@@ -8,6 +8,8 @@ import com.eis0.webdictionary.SerializableObject;
 /**
  * Message containing a content to show
  * (It's supposed to be a respond to a specific ViewContentMessage)
+ *
+ * @author EdoardoRaimondi
  */
 
 public class ContentMessage extends SMSMessage {
@@ -17,7 +19,7 @@ public class ContentMessage extends SMSMessage {
     private static final byte CODE = 0x05;
 
     /**
-     * @param from Node sending that content
+     * @param from    Node sending that content
      * @param content The content to be sent
      */
     public ContentMessage(SMSKademliaNode from, SerializableObject content){

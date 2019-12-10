@@ -21,6 +21,9 @@ public class AcknowledgeMessage extends SMSMessage {
     private static final byte CODE = 0x02;
 
 
+    /**
+     * @param origin Node that's is sending the message
+     */
     public AcknowledgeMessage(SMSKademliaNode origin) {
         super(origin.getNodePeer(), "Acknowledge x");
         this.localNode = origin;
