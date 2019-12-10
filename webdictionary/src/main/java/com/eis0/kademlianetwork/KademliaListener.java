@@ -27,17 +27,17 @@ public class KademliaListener implements ReceivedMessageListener<SMSMessage> {
             KademliaNetwork.RequestType incomingRequest = KademliaNetwork.RequestType.values()[Integer.parseInt(text.split(" ")[0])];
             //starts a specific action based on the action received from the other user
             switch (incomingRequest) {
-                case KademliaNetwork.RequestType.AcknowledgeMessage:
+                case AcknowledgeMessage:
                     break;
-                case KademliaNetwork.RequestType.JoinPermission:
+                case JoinPermission:
                     break;
-                case KademliaNetwork.RequestType.AddPeers:
+                case AddPeers:
                     break;
-                case KademliaNetwork.RequestType.AddToDict:
+                case AddToDict:
                     break;
-                case KademliaNetwork.RequestType.RemoveFromDict:
+                case RemoveFromDict:
                     break;
-                case KademliaNetwork.RequestType.UpdateDict:
+                case UpdateDict:
                     break;
             }
         }
