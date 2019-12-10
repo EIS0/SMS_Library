@@ -17,6 +17,8 @@ public class KademliaNetwork {
     //Routing table for this user of the network
     private SMSKademliaRoutingTable table;
 
+    //Singleton instance
+    private static KademliaNetwork instance;
     //Constructor following the Singleton Design Pattern
     private KademliaNetwork(){ }
 
@@ -25,7 +27,8 @@ public class KademliaNetwork {
      * <a href="https://refactoring.guru/design-patterns/singleton">Singleton Design Pattern</a>
      */
     public static KademliaNetwork getInstance(){
-        return null;
+        if(instance == null) instance = new KademliaNetwork();
+        return instance;
     }
 
     /**
