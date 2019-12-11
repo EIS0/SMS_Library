@@ -6,7 +6,13 @@ import com.eis0.smslibrary.SMSPeer;
 
 /**
  * Class to send, view or set
+ * @TODO SO, will we use only String object? AND where do we store them?
  * @TODO verifying if there is any need for a Set method
+ * @TODO Discuss if the right position for this methods really is this class
+ *  => The sendContent method could be inside the KademliaNetwork class, which would realise it with
+ *  some more basic methods, stored inside THIS class
+ *  EXAMPLE: a method to send to a specified destination, the message with the code to add a content
+ *  to the dictionary
  *
  */
 
