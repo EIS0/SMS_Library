@@ -35,16 +35,40 @@ public class ConnectionHandler {
     }
 
     /**
+     * Accepts the request sent by an SMSPeer (by notifying him)
+     * @param peer The peer who sent the request (and to notify back)
+     */
+    public static void sendAcceptRequest(SMSPeer peer){
+        /*
+        * If both the other peer sent me a request to join his network, or
+        * a request to invite me to his network, I have to update my routing table
+        * from scratch adding him to the table as a contact. I also have to send
+        * an acceptJoin event, so he can do the same thing.
+        *  This serves to more strongly fuse both networks by
+        * creating contacts from the other network
+        * */
+
+        String messageRequest = KademliaNetwork.RequestType.AcceptJoin.ordinal() + "";
+        SMSMessage message = new SMSMessage(peer, messageRequest);
+        SMSManager.getInstance().sendMessage(message);
+
+        acceptRequest(peer);
+    }
+
+    /**
      * Accepts the request sent by an SMSPeer
      * @param peer The peer who sent the request
      */
     public static void acceptRequest(SMSPeer peer){
         /*
-        * If both the other peer sent me a request to join his network, or
-        * a request to invite me to his network, I have to update my routing table
-        * from scratch adding him to the table as a contact. This serves to more strongly
-        * fuse both networks by creating contacts from the other network
-        * */
+         * If both the other peer sent me a request to join his network, or
+         * a request to invite me to his network, I have to update my routing table
+         * from scratch adding him to the table as a contact, then I have to send
+         * an acceptRequest event, so he can do the same thing.
+         *  This serves to more strongly fuse both networks by
+         * creating contacts from the other network
+         * */
+
         KademliaId nodeId = new KademliaId(peer);
         SMSKademliaNode node = new SMSKademliaNode(nodeId, peer, null);
         KademliaNetwork.getInstance().addNodeToTable(node);

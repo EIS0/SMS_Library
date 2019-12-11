@@ -37,6 +37,7 @@ public class KademliaNetwork {
      */
     public enum RequestType{
         JoinPermission,
+        AcceptJoin,
         AddPeers,
         RemovePeers,
         UpdatePeers,

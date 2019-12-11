@@ -41,6 +41,9 @@ class KademliaListener implements ReceivedMessageListener<SMSMessage> {
                 case AcknowledgeMessage:
                     break;
                 case JoinPermission:
+                    ConnectionHandler.sendAcceptRequest(peer);
+                    break;
+                case AcceptJoin:
                     ConnectionHandler.acceptRequest(peer);
                     break;
                 case AddPeers:
