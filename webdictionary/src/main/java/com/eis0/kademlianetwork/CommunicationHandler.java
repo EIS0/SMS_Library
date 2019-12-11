@@ -3,7 +3,7 @@ package com.eis0.kademlianetwork;
 import com.eis0.smslibrary.SMSManager;
 import com.eis0.smslibrary.SMSMessage;
 import com.eis0.smslibrary.SMSPeer;
-import com.eis0.webdictionary.SerializableObject;
+import com.eis0.webdictionary.SMSSerialization;
 
 /**
  * Class to send, view or set
@@ -19,6 +19,7 @@ import com.eis0.webdictionary.SerializableObject;
  */
 
 public class CommunicationHandler {
+
 
     /**
      * Method used to add a content to the dictionary
@@ -44,32 +45,38 @@ public class CommunicationHandler {
     /**
      *
      */
-    public static void receiveAddToDictionaryRequest(String contentRequested) {
+    public static void handleAddToDictionaryRequest(String contentRequested) {
     /* This method is called by the Node already chosen as the closest one to the ID, and it's been
     chosen before the request to store the content was sent; in fact, the Node requesting to store
     the content ask for the closest ID and send the content directly to it
      */
-    int hashCode = contentRequested.hashCode();
-    //@TODO convert SerializableObject into String. Key??
-    KademliaNetwork.getInstance().addToLocalDictionary(key, resource);
+    String key = Integer.toString(contentRequested.hashCode());
+    KademliaNetwork.getInstance().addToLocalDictionary(new SMSSerialization(key), new SMSSerialization(contentRequested));
+    }
+
+
+    /**
+     * This method asks to a Peer for the
+     */
+    public static void viewContentRequest(String key) {
+     /* This method is called by the Node already chosen as the closest one to the ID, and it's been
+    chosen before the request to share the content was sent; in fact, the Node requesting to see
+    the content ask for the closest ID and ask the content directly to it
+     */
+     
     }
 
 
     /**
      *
      */
-    public static void viewContentRequest() {
+    public void handleViewContentRequest(String contentToSend) {
+        /*This method uses the string value to send to the asking Node
 
-    }
-
-
-    /**
-     *
-     */
-    public void sendContent() {
+         */
         //@TODO Complete, and remove your telephone number ffs
         SMSPeer peer = new SMSPeer("+393479281192");
-        SMSMessage contentMessage = new SMSMessage(peer,  KademliaNetwork.RequestType.AddToDict + " " + content);
+        SMSMessage contentMessage = new SMSMessage(peer,  KademliaNetwork.RequestType.AddToDict + " " + contentToSend);
         SMSManager.getInstance().sendMessage(contentMessage);
     }
 }
