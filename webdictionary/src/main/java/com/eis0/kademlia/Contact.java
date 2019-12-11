@@ -2,8 +2,11 @@ package com.eis0.kademlia;
 
 /**
  * Keeps information about contacts of the Node;
- * Such as how many times it doesn't respond to a request (staleCount)
- * or his lastSeen
+ * Such as how many times it didn't respond to a request (staleCount)
+ * or his lastSeen.
+ * If a node has a StaleCount > 0, it's supposed to be eliminated by the network
+ *
+ * A contact is "invisible" to user's eyes.
  *
  * @see <a href="https://pdos.csail.mit.edu/~petar/papers/maymounkov-kademlia-lncs.pdf">Kademlia's
  * paper</a> for more details.
@@ -16,8 +19,8 @@ public class Contact implements Comparable<Contact> { //has to be comparable to 
     /**
      * When a contact fails to respond, if there is no replacement for the contact,
      * just mark it as stale.
-     * <p>
-     * When a new contact is added, if the contact is stale, it is removed.
+     *
+     * When a new contact is added, if another contact in the table is stale, it is removed.
      */
     private int staleCount;
 

@@ -11,8 +11,8 @@ import java.io.File;
 public class DefaultConfiguration implements KadConfiguration {
 
     private final static int K = 2; // system-wide replication parameter
-    private final static int RCSIZE = 3;
-    private final static int STALE = 1;
+    private final static int RCSIZE = 3; //replacement cache size
+    private final static int STALE = 0;
     private static final String FOLDER = "kademlia";
 
     /**
@@ -43,25 +43,4 @@ public class DefaultConfiguration implements KadConfiguration {
         return STALE;
     }
 
-    /**
-     * @param ownerId
-     * @return String representing a node data folder
-     */
-    public String getNodeDataFolder(String ownerId) {
-        /* Setup the main storage folder if it doesn't exist */
-        String path = System.getProperty("user.home") + File.separator + DefaultConfiguration.FOLDER;
-        File folder = new File(path);
-        if (!folder.isDirectory()) {
-            folder.mkdir();
-        }
-
-        /* Setup subfolder for this owner if it doesn't exist */
-        File ownerFolder = new File(folder + File.separator + ownerId);
-        if (!ownerFolder.isDirectory()) {
-            ownerFolder.mkdir();
-        }
-
-        /* Return the path */
-        return ownerFolder.toString();
-    }
 }

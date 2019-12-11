@@ -22,11 +22,4 @@ public interface KadConfiguration {
      */
     int stale();
 
-    /**
-     * Creates the folder in which this node data is to be stored.
-     *
-     * @param ownerId
-     * @return The folder path
-     */
-    String getNodeDataFolder(String ownerId);
 }

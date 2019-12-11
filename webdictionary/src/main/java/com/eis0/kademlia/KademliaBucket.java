@@ -3,7 +3,7 @@ package com.eis0.kademlia;
 import java.util.List;
 
 /**
- * A bucket used to store Contacts(or SMSKademliaNode directly?) in the routing table.
+ * A bucket used to store Contacts in the routing table.
  *
  * @author Edoardo Raimondi
  */

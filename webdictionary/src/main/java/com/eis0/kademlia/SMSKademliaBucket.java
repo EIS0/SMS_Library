@@ -139,6 +139,7 @@ public class SMSKademliaBucket implements KademliaBucket {
     /**
      * @param n The node to get the contact from
      * @return The contact
+     * @throw NoSuchElementException if the contact isn't in the list
      */
     public Contact getFromContacts(SMSKademliaNode n) {
         for (Contact c : this.contacts) {
@@ -154,6 +155,7 @@ public class SMSKademliaBucket implements KademliaBucket {
     /**
      * @param n The node representing the contact to remove
      * @return The contact removed
+     * @throw NoSuchElementException if the contact isn't in the list
      */
     public Contact removeFromContacts(SMSKademliaNode n) {
         for (Contact c : this.contacts) {
@@ -239,6 +241,7 @@ public class SMSKademliaBucket implements KademliaBucket {
      *
      * @param n Node to remove
      * @return Contact removed
+     * @throw NoSuchElementException if the node isn't in the list
      */
     private Contact removeFromReplacementCache(SMSKademliaNode n) {
         for (Contact c : this.replacementCache) {

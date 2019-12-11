@@ -190,7 +190,6 @@ public class KademliaId implements Serializable {
      * @author Marco Cognolato, Edoardo Raimondi
      */
     public int getFirstSetBitIndex() {
-        int prefixLength = 0;
         for(int byteIndex = 0; byteIndex < keyBytes.length; byteIndex++) {
             byte currentByte = keyBytes[byteIndex];
             //8 bits in a byte, from 0 to 7
@@ -210,7 +209,7 @@ public class KademliaId implements Serializable {
      *
      * @param to The node from which to calculate the distance
      * @return An integer from ID_LENGTH and 1 saying the first different bit.
-     * if 0 is returned it it means the two id's are equal.
+     * if 0 is returned, it means the two id's are equal.
      */
     public int getDistance(KademliaId to) {
         int diffIndex = this.xor(to).getFirstSetBitIndex();
@@ -239,7 +238,7 @@ public class KademliaId implements Serializable {
     }
 
     /**
-     * @return String representing the NodeId
+     * @return String representing the Node
      */
     @Override
     @NonNull
