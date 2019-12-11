@@ -4,6 +4,8 @@ import com.eis0.kademlia.Contact;
 import com.eis0.kademlia.DefaultConfiguration;
 import com.eis0.kademlia.SMSKademliaNode;
 import com.eis0.kademlia.SMSKademliaRoutingTable;
+import com.eis0.smslibrary.SMSManager;
+import com.eis0.smslibrary.SMSPeer;
 
 /**
  * Central class fo the KademliaNetwork. Instead of handling everything itself,
@@ -18,26 +20,15 @@ public class KademliaNetwork {
 
     private SMSKademliaNode localNode;
     private SMSKademliaRoutingTable localRoutingTable;
-
-    // Request types for the Kademlia Network
-    public enum RequestType {
-        JoinPermission,
-        AddPeers,
-        RemovePeers,
-        UpdatePeers,
-        LeavePermission,
-        AcceptLeave,
-        AcknowledgeMessage,
-        AddToDict,
-        RemoveFromDict,
-        UpdateDict,
-        NodeLookup
-    }
+    private ConnectionHandler connectionHandler = new ConnectionHandler();
+    private KademliaListener listener;
 
     // Singleton instance
     private static KademliaNetwork instance;
     // Constructor following the Singleton Design Pattern
-    private KademliaNetwork() { }
+    private KademliaNetwork() {
+        SMSManager.getInstance().setReceiveListener(connectionHandler);
+    }
 
     /**
      * Return an instance of KademliaNetwork.
@@ -58,9 +49,15 @@ public class KademliaNetwork {
      * @param localNode The SMSKademliaNode to set.
      * @author Matteo Carnelos
      */
-    public void init(SMSKademliaNode localNode) {
+    public void init(SMSKademliaNode localNode, KademliaListener listener) {
         this.localNode = localNode;
+        this.listener = listener;
         localRoutingTable = new SMSKademliaRoutingTable(localNode, new DefaultConfiguration());
+    }
+
+    public void addToNetwork(SMSPeer peer) {
+        if(!isNodeInNetwork(new SMSKademliaNode(peer)))
+            connectionHandler.inviteToJoin(peer);
     }
 
     /**
@@ -101,6 +98,7 @@ public class KademliaNetwork {
     public void addNodeToTable(SMSKademliaNode node){
         Contact nodeContact = new Contact(node);
         localRoutingTable.insert(nodeContact);
+        listener.onNewContact(nodeContact);
     }
 
     /**

@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,7 +18,9 @@ import androidx.core.app.NotificationManagerCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.eis0.kademlia.Contact;
 import com.eis0.kademlia.SMSKademliaNode;
+import com.eis0.kademlianetwork.KademliaListener;
 import com.eis0.kademlianetwork.KademliaNetwork;
 import com.eis0.smslibrary.SMSPeer;
 
@@ -28,7 +31,7 @@ import java.util.Set;
  *
  * @author Matteo Carnelos
  */
-public class KademliaDemo extends AppCompatActivity {
+public class KademliaDemo extends AppCompatActivity implements KademliaListener {
 
     private static final String[] PERMISSIONS = {
             Manifest.permission.SEND_SMS,
@@ -37,9 +40,11 @@ public class KademliaDemo extends AppCompatActivity {
             Manifest.permission.READ_SMS
     };
 
+    EditText phoneNumberTxt;
     TextView myPhoneNumberLbl;
     TextView myIdLbl;
     RecyclerView routingTableRclView;
+    RoutingTableAdapter routingTableAdapter;
 
     KademliaNetwork network = KademliaNetwork.getInstance();
 
@@ -58,6 +63,7 @@ public class KademliaDemo extends AppCompatActivity {
         myPhoneNumberLbl = findViewById(R.id.myPhoneNumberLbl);
         myIdLbl = findViewById(R.id.myIdLbl);
         routingTableRclView = findViewById(R.id.routingTableRclView);
+        phoneNumberTxt = findViewById(R.id.phoneNumberTxt);
 
         // Asks the user the permission to catch notifications, if not already granted
         if (!isNotificationListenerEnabled(getApplicationContext()))
@@ -70,12 +76,18 @@ public class KademliaDemo extends AppCompatActivity {
         routingTableRclView.setLayoutManager(new LinearLayoutManager(this));
 
         // Instantiates a new kademlia network with only this phone
-        network.init(new SMSKademliaNode(getPhoneNumber()));
+        network.init(new SMSKademliaNode(getPhoneNumber()), this);
 
         // Display initialization data
         myPhoneNumberLbl.setText(network.getLocalNode().getPeer().toString());
         myIdLbl.setText(network.getLocalNode().getId().toString());
-        routingTableRclView.setAdapter(new RoutingTableAdapter(network.getLocalRoutingTable().getAllContacts()));
+        routingTableAdapter = new RoutingTableAdapter(network.getLocalRoutingTable().getAllContacts());
+        routingTableRclView.setAdapter(routingTableAdapter);
+    }
+
+    @Override
+    public void onNewContact(Contact contact) {
+        routingTableAdapter.addContact(contact);
     }
 
     /**
@@ -86,7 +98,8 @@ public class KademliaDemo extends AppCompatActivity {
      * @author Matteo Carnelos
      */
     public void addButtonOnClick(View v) {
-
+        String address = phoneNumberTxt.getText().toString();
+        network.addToNetwork(new SMSPeer(address));
     }
 
     /**

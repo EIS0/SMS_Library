@@ -34,7 +34,7 @@ public class CommunicationHandler {
      */
         //@TODO Complete, and remove your telephone number ffs
         SMSPeer peer = new SMSPeer("+393479281192");
-        SMSMessage contentMessage = new SMSMessage(peer,  KademliaNetwork.RequestType.AddToDict + " " + content);
+        SMSMessage contentMessage = new SMSMessage(peer,  RequestTypes.AddToDict + " " + content);
         SMSManager.getInstance().sendMessage(contentMessage);
     }
 

@@ -49,6 +49,11 @@ public class RoutingTableAdapter extends RecyclerView.Adapter<RoutingTableAdapte
         this.contactsList = contactsList;
     }
 
+    public void addContact(Contact contact) {
+        contactsList.add(contact);
+        notifyItemInserted(getItemCount()-1);
+    }
+
     /**
      * Create new views. Invoked by the layout manager.
      *
