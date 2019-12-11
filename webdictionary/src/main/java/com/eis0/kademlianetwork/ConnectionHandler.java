@@ -1,5 +1,9 @@
 package com.eis0.kademlianetwork;
 
+import com.eis0.kademlia.KademliaId;
+import com.eis0.kademlia.SMSKademliaNode;
+import com.eis0.smslibrary.SMSManager;
+import com.eis0.smslibrary.SMSMessage;
 import com.eis0.smslibrary.SMSPeer;
 
 /**
@@ -16,7 +20,9 @@ public class ConnectionHandler {
      * @param peer The peer to invite to my network
      */
     public static void inviteToJoin(SMSPeer peer){
-
+        String messageRequest = KademliaNetwork.RequestType.JoinPermission + "";
+        SMSMessage message = new SMSMessage(peer, messageRequest);
+        SMSManager.getInstance().sendMessage(message);
     }
 
     /**
@@ -24,7 +30,8 @@ public class ConnectionHandler {
      * @param peer The peer to ask to
      */
     public static void askToJoin(SMSPeer peer){
-
+        //asking to join has the same functionality as inviting someone to join
+        inviteToJoin(peer);
     }
 
     /**
@@ -38,5 +45,9 @@ public class ConnectionHandler {
         * from scratch adding him to the table as a contact. This serves to more strongly
         * fuse both networks by creating contacts from the other network
         * */
+        KademliaId nodeId = new KademliaId(peer);
+        SMSKademliaNode node = new SMSKademliaNode(nodeId, peer, null);
+        KademliaNetwork.getInstance().addNodeToTable(node);
+        KademliaNetwork.getInstance().updateTable();
     }
 }
