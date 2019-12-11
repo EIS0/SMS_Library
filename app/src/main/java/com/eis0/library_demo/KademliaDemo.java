@@ -85,6 +85,12 @@ public class KademliaDemo extends AppCompatActivity implements KademliaListener 
         routingTableRclView.setAdapter(routingTableAdapter);
     }
 
+    /**
+     * Method called when a contact is added to the routing table. Refresh the recycler view.
+     *
+     * @param contact The contact added.
+     * @author Matteo Carnelos
+     */
     @Override
     public void onNewContact(Contact contact) {
         routingTableAdapter.addContact(contact);

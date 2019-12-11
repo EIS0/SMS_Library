@@ -49,6 +49,12 @@ public class RoutingTableAdapter extends RecyclerView.Adapter<RoutingTableAdapte
         this.contactsList = contactsList;
     }
 
+    /**
+     * Add a contact to the contacts list.
+     *
+     * @param contact The Contact to add.
+     * @author Matteo Carnelos
+     */
     public void addContact(Contact contact) {
         contactsList.add(contact);
         notifyItemInserted(getItemCount()-1);
