@@ -14,6 +14,7 @@ import java.io.Serializable;
  * @author Edoardo Raimondi
  * @author Marco Cognolato
  * @author Matteo Carnelos
+ * @author Enrico Cestaro
  */
 public class SMSKademliaNode implements Serializable {
 

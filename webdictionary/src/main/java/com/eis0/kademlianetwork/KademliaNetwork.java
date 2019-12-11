@@ -5,6 +5,7 @@ import com.eis0.kademlia.DefaultConfiguration;
 import com.eis0.kademlia.SMSKademliaNode;
 import com.eis0.kademlia.SMSKademliaRoutingTable;
 import com.eis0.webdictionary.SMSNetVocabulary;
+import com.eis0.webdictionary.SerializableObject;
 
 /**
  * Central class fo the KademliaNetwork. Instead of handling everything itself,
@@ -22,7 +23,7 @@ public class KademliaNetwork {
     //Routing table for this user of the network
     private SMSKademliaRoutingTable localRoutingTable;
     //Dictionary containing the resources stored by the local node
-    private SMSNetVocabulary kademliaDictionary;
+    private SMSNetVocabulary localKademliaDictionary;
 
     // Request types for the Kademlia Network
     public enum RequestType {
@@ -42,19 +43,20 @@ public class KademliaNetwork {
 
     // Singleton instance
     private static KademliaNetwork instance;
+
     // Constructor following the Singleton Design Pattern
-    private KademliaNetwork() { }
+    private KademliaNetwork() {
+    }
 
     /**
      * Return an instance of KademliaNetwork.
      *
      * @return Returns a single KademliaNetwork instance as per the
      * <a href="https://refactoring.guru/design-patterns/singleton">Singleton Design Pattern</a>.
-     *
      * @author Matteo Carnelos
      */
     public static KademliaNetwork getInstance() {
-        if(instance == null) instance = new KademliaNetwork();
+        if (instance == null) instance = new KademliaNetwork();
         return instance;
     }
 
@@ -87,24 +89,26 @@ public class KademliaNetwork {
      */
     public SMSKademliaRoutingTable getLocalRoutingTable() {
         return localRoutingTable;
-	}
+    }
 
     /**
      * Returns if a given valid {@link SMSKademliaNode} is inside this
      * network's routing table
+     *
      * @param node The node to find in the routing table
      * @return True if node is in the routing table, false otherwise
      */
-    public boolean isNodeInNetwork(SMSKademliaNode node){
+    public boolean isNodeInNetwork(SMSKademliaNode node) {
         Contact nodeContact = new Contact(node);
         return localRoutingTable.getAllContacts().contains(nodeContact);
     }
 
     /**
      * Adds a given valid SMSKademliaNode to the routing table of this network
+     *
      * @param node The valid node to add to the net
      */
-    public void addNodeToTable(SMSKademliaNode node){
+    public void addNodeToTable(SMSKademliaNode node) {
         Contact nodeContact = new Contact(node);
         localRoutingTable.insert(nodeContact);
     }
@@ -112,40 +116,71 @@ public class KademliaNetwork {
     /**
      * Updates the routing table
      */
-    public void updateTable(){
+    public void updateTable() {
         //calls the proper handler to update the routing table
         TableUpdateHandler.updateTable(localRoutingTable);
     }
 
 
-    /**
-     *
-     */
-    public void addToLocalDictionary() {
 
+
+
+
+
+
+    
+    //Methods to manipulate the Dictionary
+    /**
+     * Method used to get the local Dictionary
+     *
+     * @return The SMSNetVocabulary representing the local Dictionary
+     * @author Enrico Cestaro
+     */
+    public SMSNetVocabulary getLocalDictionary() {
+        return localKademliaDictionary;
     }
 
-
     /**
+     * Method used to add a pair <key, resource> to the local Dictionary
      *
+     * @param key      The key of the pair <key, resource> the user is trying to add to the dictionary
+     * @param resource The resource of the pair <key, resource> the user is trying to add to the dictionary
+     * @author Enrico Cestaro
      */
-    public void removeFromLocalDictionary() {
-
+    public void addToLocalDictionary(SerializableObject key, SerializableObject resource) {
+        localKademliaDictionary.add(key, resource);
     }
 
-
     /**
+     * Method used to remove a pair <key, resource> from the local Dictionary
      *
+     * @param
+     * @return
+     * @author Enrico Cestaro
      */
-    public void getFromLocalDictionary() {
-
+    public void removeFromLocalDictionary(SerializableObject key) {
+        localKademliaDictionary.remove(key);
     }
 
+    /**
+     * Method used to get a resource specified by its key
+     *
+     * @param
+     * @return
+     * @author Enrico Cestaro
+     */
+    public SerializableObject getFromLocalDictionary(SerializableObject key) {
+        return localKademliaDictionary.getResource(key);
+    }
 
     /**
+     * Method used to update a resource with the specified key, with a new resource
      *
+     * @param key
+     * @param resource
+     * @author Enrico Cestaro
      */
-    public void updateLocalDictionary() {
-
+    public void updateLocalDictionary(SerializableObject key, SerializableObject resource) {
+        localKademliaDictionary.update(key, resource);
     }
 }
