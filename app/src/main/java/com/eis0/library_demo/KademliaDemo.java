@@ -130,10 +130,10 @@ public class KademliaDemo extends AppCompatActivity implements KademliaListener 
                 });
         try {
             String phoneNumberText = telephonyManager.getLine1Number();
-            if(phoneNumberText.contains("5554")) phoneNumberText = "5556";
-            else if(phoneNumberText.contains("5556")) phoneNumberText = "5554";
-            Log.e("PHONE_GET", "Phone Number: " + phoneNumberText);
+            // if(phoneNumberText.contains("5554")) phoneNumberText = "5556";
+            // else if(phoneNumberText.contains("5556")) phoneNumberText = "5554";
             phoneNumber = new SMSPeer(phoneNumberText);
+            Log.e("PHONE_GET", "Phone Number: " + phoneNumber.getAddress());
         } catch(SecurityException e) {
             builder.setMessage(R.string.permissions_not_granted_message);
             builder.show();

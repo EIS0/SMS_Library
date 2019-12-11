@@ -32,10 +32,12 @@ public class RoutingTableAdapter extends RecyclerView.Adapter<RoutingTableAdapte
 
         public TextView nodePeerLbl;
         public TextView nodeIdLbl;
+        public TextView staleCountLbl;
         public ViewHolder(View view) {
             super(view);
             nodePeerLbl = view.findViewById(R.id.nodePeerLbl);
             nodeIdLbl = view.findViewById(R.id.nodeIdLbl);
+            staleCountLbl = view.findViewById(R.id.staleCountLbl);
         }
     }
 
@@ -91,6 +93,7 @@ public class RoutingTableAdapter extends RecyclerView.Adapter<RoutingTableAdapte
         Contact contact = contactsList.get(position);
         holder.nodePeerLbl.setText(contact.getNode().getPeer().toString());
         holder.nodeIdLbl.setText(contact.getNode().getId().toString());
+        holder.staleCountLbl.setText(String.valueOf(contact.staleCount()));
     }
 
     /**
