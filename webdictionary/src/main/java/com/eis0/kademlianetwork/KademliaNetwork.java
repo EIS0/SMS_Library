@@ -122,14 +122,8 @@ public class KademliaNetwork {
     }
 
 
-
-
-
-
-
-
-    
     //Methods to manipulate the Dictionary
+
     /**
      * Method used to get the local Dictionary
      *
@@ -148,14 +142,14 @@ public class KademliaNetwork {
      * @author Enrico Cestaro
      */
     public void addToLocalDictionary(SerializableObject key, SerializableObject resource) {
+
         localKademliaDictionary.add(key, resource);
     }
 
     /**
      * Method used to remove a pair <key, resource> from the local Dictionary
      *
-     * @param
-     * @return
+     * @param key The key of the pair <key, resource> the user is trying to remove the dictionary
      * @author Enrico Cestaro
      */
     public void removeFromLocalDictionary(SerializableObject key) {
@@ -165,8 +159,8 @@ public class KademliaNetwork {
     /**
      * Method used to get a resource specified by its key
      *
-     * @param
-     * @return
+     * @param key The key of the pair <key, resource> the user is trying to get from the dictionary
+     * @return The SerializableObject with the specified key
      * @author Enrico Cestaro
      */
     public SerializableObject getFromLocalDictionary(SerializableObject key) {
@@ -176,8 +170,8 @@ public class KademliaNetwork {
     /**
      * Method used to update a resource with the specified key, with a new resource
      *
-     * @param key
-     * @param resource
+     * @param key      The key of the pair <key, resource> the user is trying to update in the dictionary
+     * @param resource The new resource
      * @author Enrico Cestaro
      */
     public void updateLocalDictionary(SerializableObject key, SerializableObject resource) {
