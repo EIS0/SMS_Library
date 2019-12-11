@@ -3,7 +3,6 @@ package com.eis0.kademlia;
 import androidx.annotation.NonNull;
 
 import com.eis0.smslibrary.SMSPeer;
-import com.eis0.webdictionary.SMSNetVocabulary;
 
 import java.io.Serializable;
 
@@ -20,7 +19,6 @@ public class SMSKademliaNode implements Serializable {
 
     private KademliaId id;
     private SMSPeer peer;
-    private SMSNetVocabulary dictionary;
 
     /**
      * Stores information of a Kademlia node.
@@ -33,8 +31,8 @@ public class SMSKademliaNode implements Serializable {
     public SMSKademliaNode(SMSPeer phoneNumber) {
         this.id = new KademliaId(phoneNumber);
         this.peer = phoneNumber;
-        this.dictionary = new SMSNetVocabulary();
     }
+
 
     /**
      * Get the local node id.
@@ -46,15 +44,6 @@ public class SMSKademliaNode implements Serializable {
         return this.id;
     }
 
-    /**
-     * Get the dictionary associated with this node.
-     *
-     * @return This node's dictionary.
-     * @author Marco Cognolato
-     */
-    public SMSNetVocabulary getDictionary() {
-        return this.dictionary;
-    }
 
     /**
      * Get the local peer.
@@ -66,6 +55,7 @@ public class SMSKademliaNode implements Serializable {
     public SMSPeer getPeer() {
         return peer;
     }
+
 
     /**
      * Method to compare two Nodes.
@@ -83,6 +73,7 @@ public class SMSKademliaNode implements Serializable {
         return this.getId().equals(toCompare.getId());
     }
 
+
     /**
      * @return NodeId's hashCode
      */
@@ -90,6 +81,7 @@ public class SMSKademliaNode implements Serializable {
     public int hashCode() {
         return this.getId().hashCode();
     }
+
 
     /**
      * Convert the NodeId to a string.

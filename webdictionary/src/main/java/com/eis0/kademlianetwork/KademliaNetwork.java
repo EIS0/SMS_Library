@@ -4,6 +4,7 @@ import com.eis0.kademlia.Contact;
 import com.eis0.kademlia.DefaultConfiguration;
 import com.eis0.kademlia.SMSKademliaNode;
 import com.eis0.kademlia.SMSKademliaRoutingTable;
+import com.eis0.webdictionary.SMSNetVocabulary;
 
 /**
  * Central class fo the KademliaNetwork. Instead of handling everything itself,
@@ -16,8 +17,12 @@ import com.eis0.kademlia.SMSKademliaRoutingTable;
  */
 public class KademliaNetwork {
 
-    private SMSKademliaNode localNode;
-    private SMSKademliaRoutingTable localRoutingTable;
+    //User node of the network
+    private SMSKademliaNode node;
+    //Routing table for this user of the network
+    private SMSKademliaRoutingTable table;
+    //Dictionary containing the resources stored by the local node
+    private SMSNetVocabulary kademliaDictionary;
 
     // Request types for the Kademlia Network
     public enum RequestType {
@@ -59,8 +64,8 @@ public class KademliaNetwork {
      * @author Matteo Carnelos
      */
     public void init(SMSKademliaNode localNode) {
-        this.localNode = localNode;
-        localRoutingTable = new SMSKademliaRoutingTable(localNode, new DefaultConfiguration());
+        this.node = localNode;
+        table = new SMSKademliaRoutingTable(localNode, new DefaultConfiguration());
     }
 
     /**
@@ -70,7 +75,7 @@ public class KademliaNetwork {
      * @author Matteo Carnelos
      */
     public SMSKademliaNode getLocalNode() {
-        return localNode;
+        return node;
     }
 
     /**
@@ -80,7 +85,7 @@ public class KademliaNetwork {
      * @author Matteo Carnelos
      */
     public SMSKademliaRoutingTable getLocalRoutingTable() {
-        return localRoutingTable;
+        return table;
 	}
 
     /**
@@ -109,5 +114,37 @@ public class KademliaNetwork {
     public void updateTable(){
         //calls the proper handler to update the routing table
         TableUpdateHandler.updateTable(table);
+    }
+
+
+    /**
+     *
+     */
+    public void addToLocalDictionary() {
+
+    }
+
+
+    /**
+     *
+     */
+    public void removeFromLocalDictionary() {
+
+    }
+
+
+    /**
+     *
+     */
+    public void getFromLocalDictionary() {
+
+    }
+
+
+    /**
+     *
+     */
+    public void updateLocalDictionary() {
+
     }
 }
