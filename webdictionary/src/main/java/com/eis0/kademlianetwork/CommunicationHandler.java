@@ -14,12 +14,13 @@ import com.eis0.smslibrary.SMSPeer;
  *  EXAMPLE: a method to send to a specified destination, the message with the code to add a content
  *  to the dictionary
  *
+ * @author Enrico Cestaro
  */
 
 public class CommunicationHandler {
 
     /**
-     * Method to add a content to the dictionary
+     * Method used to add a content to the dictionary
      * @param content The String value to add to the Dictionary
      */
     public static void addToDictionary(String content) {
@@ -42,8 +43,13 @@ public class CommunicationHandler {
     /**
      *
      */
-    public static void receiveAddToDictionaryRequest() {
-
+    public static void receiveAddToDictionaryRequest(String content) {
+    /* This method is called by the Node already chosen as the closest one to the ID, and it's been
+    chosen before the request to store the content was sent; in fact, the Node requesting to store
+    the content ask for the closest ID and send the content directly to it
+     */
+    KademliaNetwork.getInstance();
+    //@TODO complete
     }
 
 

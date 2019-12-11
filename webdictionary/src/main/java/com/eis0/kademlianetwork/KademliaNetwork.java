@@ -6,6 +6,7 @@ import com.eis0.kademlia.SMSKademliaNode;
 import com.eis0.kademlia.SMSKademliaRoutingTable;
 import com.eis0.smslibrary.SMSManager;
 import com.eis0.smslibrary.SMSPeer;
+import com.eis0.webdictionary.SMSNetVocabulary;
 
 /**
  * Central class fo the KademliaNetwork. Instead of handling everything itself,
@@ -18,10 +19,14 @@ import com.eis0.smslibrary.SMSPeer;
  */
 public class KademliaNetwork {
 
-    private SMSKademliaNode localNode;
+    //User node of the network
+    private SMSKademliaNode node;
+    //Routing table for this user of the network
     private SMSKademliaRoutingTable localRoutingTable;
     private ConnectionHandler connectionHandler = new ConnectionHandler();
     private KademliaListener listener;
+    //Dictionary containing the resources stored by the local node
+    private SMSNetVocabulary kademliaDictionary;
 
     // Singleton instance
     private static KademliaNetwork instance;
@@ -67,7 +72,7 @@ public class KademliaNetwork {
      * @author Matteo Carnelos
      */
     public SMSKademliaNode getLocalNode() {
-        return localNode;
+        return node;
     }
 
     /**
@@ -107,5 +112,37 @@ public class KademliaNetwork {
     public void updateTable(){
         //calls the proper handler to update the routing table
         TableUpdateHandler.updateTable(localRoutingTable);
+    }
+
+
+    /**
+     *
+     */
+    public void addToLocalDictionary() {
+
+    }
+
+
+    /**
+     *
+     */
+    public void removeFromLocalDictionary() {
+
+    }
+
+
+    /**
+     *
+     */
+    public void getFromLocalDictionary() {
+
+    }
+
+
+    /**
+     *
+     */
+    public void updateLocalDictionary() {
+
     }
 }
