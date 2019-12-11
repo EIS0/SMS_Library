@@ -13,11 +13,10 @@ import static org.junit.Assert.assertEquals;
 public class SMSKademliaRoutingTableTest {
 
     KadConfiguration config = new DefaultConfiguration();
-    SMSNetVocabulary dic = new SMSNetVocabulary();
     KademliaId ID = new KademliaId("00000000000000000001");
     KademliaId ID2 = new KademliaId("00000000000000000011");
-    SMSKademliaNode test2 = new SMSKademliaNode(ID2, new SMSPeer("3497364511"), dic);
-    SMSKademliaNode test = new SMSKademliaNode(ID, new SMSPeer("3497364511"), dic);
+    SMSKademliaNode test2 = new SMSKademliaNode(new SMSPeer("3497364511"));
+    SMSKademliaNode test = new SMSKademliaNode(new SMSPeer("3497364511"));
 
     /* Testing initialization */
     SMSKademliaRoutingTable toTest = new SMSKademliaRoutingTable(test, config);
@@ -49,7 +48,7 @@ public class SMSKademliaRoutingTableTest {
     public void findClosestTest(){
         KademliaId target = new KademliaId("00000000000000000010");
         SMSNetVocabulary dic = new SMSNetVocabulary();
-        SMSKademliaNode toCompare = new SMSKademliaNode(target, new SMSPeer("3497364511"), dic);
+        SMSKademliaNode toCompare = new SMSKademliaNode(new SMSPeer("3497364511"));
         toTest.insert(toCompare);
         int required = 1; //so I should have target as result
         List<SMSKademliaNode> result;

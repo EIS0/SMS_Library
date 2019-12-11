@@ -10,10 +10,7 @@ import static org.junit.Assert.*;
 
 public class ContactTest {
 
-    KademliaId random = new KademliaId(); //create a random Id
-
-    SMSNetVocabulary dic = new SMSNetVocabulary();
-    SMSKademliaNode toTest = new SMSKademliaNode(random, new SMSPeer("3497364511"), dic);
+    SMSKademliaNode toTest = new SMSKademliaNode(new SMSPeer("3497364511"));
     Contact test = new Contact(toTest);
 
     @Test

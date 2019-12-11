@@ -13,14 +13,12 @@ public class SMSKademliaNodeTest {
     /*Test initialization*/
 
     private final KademliaId RANDOM_ID1 = new KademliaId();
-    private final KademliaId RANDOM_ID2 = new KademliaId();
-    private final SMSNetVocabulary DICT = new SMSNetVocabulary();
     private final SMSKademliaNode NODE1 =
-            new SMSKademliaNode(RANDOM_ID1, new SMSPeer("3497364511"),DICT);
+            new SMSKademliaNode(new SMSPeer("3497364511"));
     private final SMSKademliaNode NODE1_V2 =
-            new SMSKademliaNode(RANDOM_ID1, new SMSPeer("3497364511"),DICT);
+            new SMSKademliaNode(new SMSPeer("3497364511"));
     private final SMSKademliaNode NODE2 =
-            new SMSKademliaNode(RANDOM_ID2, new SMSPeer("3497364511"),DICT);
+            new SMSKademliaNode(new SMSPeer("3497364511"));
 
 
     @Test
@@ -43,8 +41,4 @@ public class SMSKademliaNodeTest {
         assertEquals(NODE1, NODE1_V2);
     }
 
-    @Test
-    public void getDictionaryTest(){
-        assertEquals(NODE1.getDictionary(), DICT);
-    }
 }
