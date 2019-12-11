@@ -20,7 +20,7 @@ import com.eis0.webdictionary.SMSNetVocabulary;
 public class KademliaNetwork {
 
     //User node of the network
-    private SMSKademliaNode node;
+    private SMSKademliaNode localNode;
     //Routing table for this user of the network
     private SMSKademliaRoutingTable localRoutingTable;
     private ConnectionHandler connectionHandler = new ConnectionHandler();
@@ -72,7 +72,7 @@ public class KademliaNetwork {
      * @author Matteo Carnelos
      */
     public SMSKademliaNode getLocalNode() {
-        return node;
+        return localNode;
     }
 
     /**
