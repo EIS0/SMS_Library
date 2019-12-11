@@ -1,7 +1,7 @@
 package com.eis0.kademlianetwork;
 
-import com.eis0.kademlia.KademliaId;
 import com.eis0.kademlia.SMSKademliaNode;
+import com.eis0.smslibrary.ReceivedMessageListener;
 import com.eis0.smslibrary.SMSManager;
 import com.eis0.smslibrary.SMSMessage;
 import com.eis0.smslibrary.SMSPeer;
@@ -13,14 +13,14 @@ import com.eis0.smslibrary.SMSPeer;
  *
  * @author Marco Cognolato
  */
-public class ConnectionHandler {
+public class ConnectionHandler implements ReceivedMessageListener<SMSMessage> {
 
     /**
      * Invites a given valid SMSPeer to join my kademlia network
      * @param peer The peer to invite to my network
      */
-    public static void inviteToJoin(SMSPeer peer){
-        String messageRequest = KademliaNetwork.RequestType.JoinPermission.ordinal() + "";
+    public void inviteToJoin(SMSPeer peer){
+        String messageRequest = RequestTypes.JoinPermission.ordinal() + "";
         SMSMessage message = new SMSMessage(peer, messageRequest);
         SMSManager.getInstance().sendMessage(message);
     }
@@ -29,7 +29,7 @@ public class ConnectionHandler {
      * Asks a given valid peer if I can join HIS Kademlia Network
      * @param peer The peer to ask to
      */
-    public static void askToJoin(SMSPeer peer){
+    public void askToJoin(SMSPeer peer){
         //asking to join has the same functionality as inviting someone to join
         inviteToJoin(peer);
     }
@@ -73,5 +73,36 @@ public class ConnectionHandler {
         SMSKademliaNode node = new SMSKademliaNode(peer);
         KademliaNetwork.getInstance().addNodeToTable(node);
         KademliaNetwork.getInstance().updateTable();
+    }
+
+    /**
+     * This method analyze the incoming messages, and extracts the content and the CODE
+     * @param message The message received.
+     */
+    @Override
+    public void onMessageReceived(SMSMessage message) {
+        String text = message.getData();
+        SMSPeer peer = message.getPeer();
+        //Converts the code number in the message to the related enum
+        RequestTypes incomingRequest = RequestTypes
+                .values()[Integer.parseInt(text.split(" ")[0])];
+        //Starts a specific action depending upon the request or the command sent by other users
+        switch (incomingRequest) {
+            case AcknowledgeMessage:
+                break;
+            case JoinPermission:
+                acceptRequest(peer);
+                break;
+            case AddPeers:
+                break;
+            case AddToDict:
+                break;
+            case RemoveFromDict:
+                break;
+            case UpdateDict:
+                break;
+            case NodeLookup:
+                break;
+        }
     }
 }

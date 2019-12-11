@@ -4,6 +4,9 @@ import com.eis0.kademlia.Contact;
 import com.eis0.kademlia.DefaultConfiguration;
 import com.eis0.kademlia.SMSKademliaNode;
 import com.eis0.kademlia.SMSKademliaRoutingTable;
+import com.eis0.smslibrary.SMSManager;
+import com.eis0.smslibrary.SMSPeer;
+import com.eis0.webdictionary.SMSNetVocabulary;
 
 /**
  * Central class fo the KademliaNetwork. Instead of handling everything itself,
@@ -16,29 +19,21 @@ import com.eis0.kademlia.SMSKademliaRoutingTable;
  */
 public class KademliaNetwork {
 
-    private SMSKademliaNode localNode;
+    //User node of the network
+    private SMSKademliaNode node;
+    //Routing table for this user of the network
     private SMSKademliaRoutingTable localRoutingTable;
-
-    // Request types for the Kademlia Network
-    public enum RequestType {
-        JoinPermission,
-        AcceptJoin,
-        AddPeers,
-        RemovePeers,
-        UpdatePeers,
-        LeavePermission,
-        AcceptLeave,
-        AcknowledgeMessage,
-        AddToDict,
-        RemoveFromDict,
-        UpdateDict,
-        NodeLookup
-    }
+    private ConnectionHandler connectionHandler = new ConnectionHandler();
+    private KademliaListener listener;
+    //Dictionary containing the resources stored by the local node
+    private SMSNetVocabulary kademliaDictionary;
 
     // Singleton instance
     private static KademliaNetwork instance;
     // Constructor following the Singleton Design Pattern
-    private KademliaNetwork() { }
+    private KademliaNetwork() {
+        SMSManager.getInstance().setReceiveListener(connectionHandler);
+    }
 
     /**
      * Return an instance of KademliaNetwork.
@@ -59,9 +54,15 @@ public class KademliaNetwork {
      * @param localNode The SMSKademliaNode to set.
      * @author Matteo Carnelos
      */
-    public void init(SMSKademliaNode localNode) {
+    public void init(SMSKademliaNode localNode, KademliaListener listener) {
         this.localNode = localNode;
+        this.listener = listener;
         localRoutingTable = new SMSKademliaRoutingTable(localNode, new DefaultConfiguration());
+    }
+
+    public void addToNetwork(SMSPeer peer) {
+        if(!isNodeInNetwork(new SMSKademliaNode(peer)))
+            connectionHandler.inviteToJoin(peer);
     }
 
     /**
@@ -71,7 +72,7 @@ public class KademliaNetwork {
      * @author Matteo Carnelos
      */
     public SMSKademliaNode getLocalNode() {
-        return localNode;
+        return node;
     }
 
     /**
@@ -100,7 +101,9 @@ public class KademliaNetwork {
      * @param node The valid node to add to the net
      */
     public void addNodeToTable(SMSKademliaNode node){
-        localRoutingTable.insert(node);
+        Contact nodeContact = new Contact(node);
+        localRoutingTable.insert(nodeContact);
+        listener.onNewContact(nodeContact);
     }
 
     /**
@@ -109,5 +112,37 @@ public class KademliaNetwork {
     public void updateTable(){
         //calls the proper handler to update the routing table
         TableUpdateHandler.updateTable(localRoutingTable, localNode.getId());
+    }
+
+
+    /**
+     *
+     */
+    public void addToLocalDictionary() {
+
+    }
+
+
+    /**
+     *
+     */
+    public void removeFromLocalDictionary() {
+
+    }
+
+
+    /**
+     *
+     */
+    public void getFromLocalDictionary() {
+
+    }
+
+
+    /**
+     *
+     */
+    public void updateLocalDictionary() {
+
     }
 }
