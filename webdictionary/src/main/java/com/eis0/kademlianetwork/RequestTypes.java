@@ -1,4 +1,4 @@
 package com.eis0.kademlianetwork;
 
-public interface KademliaListener {
+public enum RequestType {
 }
