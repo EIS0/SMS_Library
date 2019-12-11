@@ -269,7 +269,7 @@ public class SMSKademliaBucket implements KademliaBucket {
         sb.append("\n Nodes: \n");
         for (Contact n : this.contacts) {
             sb.append("Node: ");
-            sb.append(n.getNode().getNodeId().toString());
+            sb.append(n.getNode().getId().toString());
             sb.append(" (stale: ");
             sb.append(n.staleCount());
             sb.append(")");

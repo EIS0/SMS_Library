@@ -8,78 +8,79 @@ import com.eis0.webdictionary.SMSNetVocabulary;
 import java.io.Serializable;
 
 /**
- * A Node in the Kademlia network - Contains basic node network information.
+ * A Node in the Kademlia network. It contains basic node network information.
  *
  * @see <a href="https://pdos.csail.mit.edu/~petar/papers/maymounkov-kademlia-lncs.pdf">Kademlia's
  * paper</a> for more details.
  * @author Edoardo Raimondi
  * @author Marco Cognolato
+ * @author Matteo Carnelos
  */
 public class SMSKademliaNode implements Serializable {
 
-    private KademliaId nodeId;
-    //@TODO delete the RoutingTable in the node, it needs to be mooved in the KademliaNetwork class
-    private SMSKademliaRoutingTable routingTable;
-    private static SMSNetVocabulary dictionary;
-    private SMSPeer nodePeer;
-
+    private KademliaId id;
+    private SMSPeer peer;
+    private SMSNetVocabulary dictionary;
 
     /**
      * Stores information of a Kademlia node.
      *
-     * @param nodeId        The node's ID.
-     * @param phoneNumber   The phone associated to the node, replaces its IP address in our
-     *                      implementation.
+     * @param phoneNumber The phone associated to the node, replaces its IP address in out
+     *                    implementation.
+     * @author Marco Cognolato
+     * @author Matteo Carnelos
      */
-    public SMSKademliaNode(KademliaId nodeId, SMSPeer phoneNumber, SMSNetVocabulary dictionary) {
-        this.nodeId = nodeId;
-        this.nodePeer = phoneNumber;
-        routingTable = new SMSKademliaRoutingTable(this, new DefaultConfiguration());
-        this.dictionary = dictionary;
+    public SMSKademliaNode(SMSPeer phoneNumber) {
+        this.id = new KademliaId(phoneNumber);
+        this.peer = phoneNumber;
+        this.dictionary = new SMSNetVocabulary();
     }
 
     /**
-     * @return This node's ID.
+     * Get the local node id.
+     *
+     * @return This node's Id.
+     * @author Marco Cognloato
      */
-    public KademliaId getNodeId() {
-        return this.nodeId;
+    public KademliaId getId() {
+        return this.id;
     }
 
     /**
-     * @return this node's dictionary
+     * Get the dictionary associated with this node.
+     *
+     * @return This node's dictionary.
+     * @author Marco Cognolato
      */
-
     public SMSNetVocabulary getDictionary() {
         return this.dictionary;
     }
 
     /**
-     * @return The node's Peer
+     * Get the local peer.
+     *
+     * @return The node's Peer.
+     * @author Edoardo Raimondi
+     * @author Matteo Carnelos
      */
-    public SMSPeer getNodePeer() {
-        return nodePeer;
+    public SMSPeer getPeer() {
+        return peer;
     }
 
     /**
-     * @return Node's routing table
-     */
-    public SMSKademliaRoutingTable getRoutingTable(){ return this.routingTable; }
-
-    /**
-     * Method to compare two Nodes
-     * Compares if two objects are equal or not.
-     * Two Kademlia Nodes are said to be equal if they have the same Id
+     * Method to compare two Nodes.
+     * Two KademliaNodes are said to be equal if they have the same Id.
      *
-     * @param toCompare Object to compare
-     * @return True if they are equal, false otherwise
+     * @param obj Object to compare.
+     * @return True if they are equal, false otherwise.
+     * @author Marco Cognolato
+     * @author Matteo Carnelos
      */
     @Override
-    public boolean equals(Object toCompare) {
-        if (!(toCompare instanceof SMSKademliaNode)) {
-            return false;
-        }
-        SMSKademliaNode n = (SMSKademliaNode) toCompare;
-        return this.getNodeId().equals(n.getNodeId());
+    public boolean equals(Object obj) {
+        if (!(obj instanceof SMSKademliaNode)) return false;
+        SMSKademliaNode toCompare = (SMSKademliaNode)obj;
+        return this.getId().equals(toCompare.getId());
     }
 
     /**
@@ -87,17 +88,19 @@ public class SMSKademliaNode implements Serializable {
      */
     @Override
     public int hashCode() {
-        return this.getNodeId().hashCode();
+        return this.getId().hashCode();
     }
 
     /**
-     * Convert the NodeId to a string
+     * Convert the NodeId to a string.
      *
-     * @return String
+     * @return A String containing the node id.
+     * @author Edoardo Raimondi
+     * @author Matteo Carnelos
      */
     @Override
     @NonNull
     public String toString() {
-        return this.getNodeId().toString();
+        return this.getId().toString();
     }
 }

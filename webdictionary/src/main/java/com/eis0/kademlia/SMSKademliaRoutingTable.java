@@ -59,7 +59,7 @@ public class SMSKademliaRoutingTable implements KademliaRoutingTable {
      */
     @Override
     public final void insert(Contact contact) {
-        this.buckets[this.getBucketId(contact.getNode().getNodeId())].insert(contact);
+        this.buckets[this.getBucketId(contact.getNode().getId())].insert(contact);
     }
 
     /**
@@ -69,7 +69,7 @@ public class SMSKademliaRoutingTable implements KademliaRoutingTable {
      */
 
     public synchronized final void insert(SMSKademliaNode node) {
-        this.buckets[this.getBucketId(node.getNodeId())].insert(node);
+        this.buckets[this.getBucketId(node.getId())].insert(node);
     }
 
     /**
@@ -81,7 +81,7 @@ public class SMSKademliaRoutingTable implements KademliaRoutingTable {
      */
     @Override
     public final int getBucketId(KademliaId nodeId) {
-        int bId = this.localNode.getNodeId().getDistance(nodeId);
+        int bId = this.localNode.getId().getDistance(nodeId);
 
         /* If we are trying to insert a node into it's own routing table, then the bucket ID will be -1, so let's just keep it in bucket 0 */
         return bId-1 < 0 ? 0 : bId-1;

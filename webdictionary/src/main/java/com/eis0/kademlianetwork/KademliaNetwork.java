@@ -1,6 +1,7 @@
 package com.eis0.kademlianetwork;
 
 import com.eis0.kademlia.Contact;
+import com.eis0.kademlia.DefaultConfiguration;
 import com.eis0.kademlia.SMSKademliaNode;
 import com.eis0.kademlia.SMSKademliaRoutingTable;
 
@@ -10,32 +11,16 @@ import com.eis0.kademlia.SMSKademliaRoutingTable;
  * <a href="https://refactoring.guru/design-patterns/chain-of-responsibility">Chain Of Responsibility</a>
  * Design Pattern, where this class instead of handling everything
  * itself (which would make it a really big class), redirects the work on the proper handler.
+ *
+ * @author Matteo Carnelos
  */
 public class KademliaNetwork {
 
-    //User node of the network
-    private SMSKademliaNode node;
-    //Routing table for this user of the network
-    private SMSKademliaRoutingTable table;
+    private SMSKademliaNode localNode;
+    private SMSKademliaRoutingTable localRoutingTable;
 
-    //Singleton instance
-    private static KademliaNetwork instance;
-    //Constructor following the Singleton Design Pattern
-    private KademliaNetwork(){ }
-
-    /**
-     * @return Returns a single KademliaNetwork instance as per the
-     * <a href="https://refactoring.guru/design-patterns/singleton">Singleton Design Pattern</a>
-     */
-    public static KademliaNetwork getInstance(){
-        if(instance == null) instance = new KademliaNetwork();
-        return instance;
-    }
-
-    /**
-     * Request Types for the Kademlia Network
-     */
-    public enum RequestType{
+    // Request types for the Kademlia Network
+    public enum RequestType {
         JoinPermission,
         AcceptJoin,
         AddPeers,
@@ -50,6 +35,55 @@ public class KademliaNetwork {
         NodeLookup
     }
 
+    // Singleton instance
+    private static KademliaNetwork instance;
+    // Constructor following the Singleton Design Pattern
+    private KademliaNetwork() { }
+
+    /**
+     * Return an instance of KademliaNetwork.
+     *
+     * @return Returns a single KademliaNetwork instance as per the
+     * <a href="https://refactoring.guru/design-patterns/singleton">Singleton Design Pattern</a>.
+     *
+     * @author Matteo Carnelos
+     */
+    public static KademliaNetwork getInstance() {
+        if(instance == null) instance = new KademliaNetwork();
+        return instance;
+    }
+
+    /**
+     * Initialize the network by setting the current node.
+     *
+     * @param localNode The SMSKademliaNode to set.
+     * @author Matteo Carnelos
+     */
+    public void init(SMSKademliaNode localNode) {
+        this.localNode = localNode;
+        localRoutingTable = new SMSKademliaRoutingTable(localNode, new DefaultConfiguration());
+    }
+
+    /**
+     * Get the local node.
+     *
+     * @return The SMSKademliaNode representing the local node.
+     * @author Matteo Carnelos
+     */
+    public SMSKademliaNode getLocalNode() {
+        return localNode;
+    }
+
+    /**
+     * Get the local routing table.
+     *
+     * @return The SMSKademliaRoutingTable representing the local routing table.
+     * @author Matteo Carnelos
+     */
+    public SMSKademliaRoutingTable getLocalRoutingTable() {
+        return localRoutingTable;
+	}
+
     /**
      * Returns if a given valid {@link SMSKademliaNode} is inside this
      * network's routing table
@@ -58,7 +92,7 @@ public class KademliaNetwork {
      */
     public boolean isNodeInNetwork(SMSKademliaNode node){
         Contact nodeContact = new Contact(node);
-        return table.getAllContacts().contains(nodeContact);
+        return localRoutingTable.getAllContacts().contains(nodeContact);
     }
 
     /**
@@ -67,7 +101,7 @@ public class KademliaNetwork {
      */
     public void addNodeToTable(SMSKademliaNode node){
         Contact nodeContact = new Contact(node);
-        table.insert(nodeContact);
+        localRoutingTable.insert(nodeContact);
     }
 
     /**
@@ -75,6 +109,6 @@ public class KademliaNetwork {
      */
     public void updateTable(){
         //calls the proper handler to update the routing table
-        TableUpdateHandler.updateTable(table);
+        TableUpdateHandler.updateTable(localRoutingTable);
     }
 }
