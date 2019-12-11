@@ -11,18 +11,13 @@ import static org.junit.Assert.assertTrue;
 
 public class SMSKademliaBucketTest {
     KadConfiguration config = new DefaultConfiguration();
-    /*Crating some ID*/
-    KademliaId ID = new KademliaId("00000000000000000001");
-    KademliaId ID2 = new KademliaId("00000000000000000011");
-    KademliaId ID3 = new KademliaId();
 
     SMSNetVocabulary dic = new SMSNetVocabulary(); //creating a dictionary
     /*Creating some Nodes*/
-    SMSKademliaNode test3 = new SMSKademliaNode(ID3, new SMSPeer("3408140326"), dic);
-    SMSKademliaNode test2 = new SMSKademliaNode(ID2, new SMSPeer("3497364511"), dic);
-    SMSKademliaNode test = new SMSKademliaNode(ID, new SMSPeer("3497312345"), dic);
-    /*Creating the routing table*/
-    SMSKademliaRoutingTable routingTable = new SMSKademliaRoutingTable(test, config);
+    SMSKademliaNode test3 = new SMSKademliaNode(new SMSPeer("3408140326"));
+    SMSKademliaNode test2 = new SMSKademliaNode(new SMSPeer("3497364511"));
+    SMSKademliaNode test = new SMSKademliaNode(new SMSPeer("3497312345"));
+
     /*configuration test*/
     SMSKademliaBucket toTest = new SMSKademliaBucket(5, config);
 
