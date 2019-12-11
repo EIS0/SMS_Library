@@ -100,8 +100,7 @@ public class KademliaNetwork {
      * @param node The valid node to add to the net
      */
     public void addNodeToTable(SMSKademliaNode node){
-        Contact nodeContact = new Contact(node);
-        localRoutingTable.insert(nodeContact);
+        localRoutingTable.insert(node);
     }
 
     /**
@@ -109,6 +108,6 @@ public class KademliaNetwork {
      */
     public void updateTable(){
         //calls the proper handler to update the routing table
-        TableUpdateHandler.updateTable(localRoutingTable);
+        TableUpdateHandler.updateTable(localRoutingTable, localNode.getId());
     }
 }

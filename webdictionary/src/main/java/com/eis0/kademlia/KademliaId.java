@@ -25,7 +25,7 @@ public class KademliaId implements Serializable {
 
     private static final String HASHING_ALG = "SHA-256";
     private static final String LOG_KEY = "KADEMLIA_ID";
-    final static int ID_LENGTH = 160;
+    public final static int ID_LENGTH = 160;
     final static int ID_LENGTH_BYTES = ID_LENGTH / 8;
     private byte[] keyBytes;
 
