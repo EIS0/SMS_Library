@@ -25,7 +25,7 @@ public class KademliaId implements Serializable {
 
     private static final String HASHING_ALG = "SHA-256";
     private static final String LOG_KEY = "KADEMLIA_ID";
-    public final static int ID_LENGTH = 160;
+    public final static int ID_LENGTH = 64;
     final static int ID_LENGTH_BYTES = ID_LENGTH / 8;
     private byte[] keyBytes;
 
@@ -48,6 +48,7 @@ public class KademliaId implements Serializable {
             MessageDigest md = MessageDigest.getInstance(HASHING_ALG);
             md.update(peer.getAddress().getBytes());
             keyBytes = Arrays.copyOfRange(md.digest(), 0, ID_LENGTH_BYTES);
+            Log.e("ID_LOG", "keyBytes: " + keyBytes + " length: " + keyBytes.length);
         } catch (NoSuchAlgorithmException e) {
             Log.e(LOG_KEY, HASHING_ALG + " is not a valid hashing algorithm");
         }
@@ -60,6 +61,14 @@ public class KademliaId implements Serializable {
      */
     public KademliaId(String data) {
         this.keyBytes = data.getBytes();
+        if(data.length() == ID_LENGTH_BYTES*2){
+            this.keyBytes = new byte[ID_LENGTH_BYTES];
+            for (int i = 0; i < keyBytes.length; i++) {
+                int index = i * 2;
+                int j = Integer.parseInt(data.substring(index, index + 2), 16);
+                keyBytes[i] = (byte) j;
+            }
+        }
         if (this.keyBytes.length > ID_LENGTH_BYTES) {
             throw new IllegalArgumentException("Specified Data need to be " + ID_LENGTH_BYTES + " characters long.");
         }
@@ -127,7 +136,7 @@ public class KademliaId implements Serializable {
     public boolean equals(Object toCompare) {
         if (toCompare instanceof KademliaId) {
             KademliaId nid = (KademliaId) toCompare;
-            return this.hashCode() == nid.hashCode();
+            return Arrays.equals(this.keyBytes,nid.getBytes());
         }
         return false;
     }
@@ -169,7 +178,7 @@ public class KademliaId implements Serializable {
      * @author Marco Cognolato
      */
     public KademliaId generateNodeIdByDistance(int distance) {
-        if(distance < 0 || distance >= 160) throw new IllegalArgumentException();
+        if(distance < 0 || distance >= ID_LENGTH) throw new IllegalArgumentException();
 
         byte[] result = keyBytes.clone();
 
@@ -243,7 +252,14 @@ public class KademliaId implements Serializable {
     @Override
     @NonNull
     public String toString() {
-        return this.hexRepresentation();
+        final char[] HEX_ARRAY = "0123456789ABCDEF".toCharArray();
+        char[] hexChars = new char[keyBytes.length * 2];
+        for (int j = 0; j < keyBytes.length; j++) {
+            int v = keyBytes[j] & 0xFF;
+            hexChars[j * 2] = HEX_ARRAY[v >>> 4];
+            hexChars[j * 2 + 1] = HEX_ARRAY[v & 0x0F];
+        }
+        return new String(hexChars);
     }
 
 }

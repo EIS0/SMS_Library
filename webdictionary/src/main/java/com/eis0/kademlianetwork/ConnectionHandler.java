@@ -1,5 +1,7 @@
 package com.eis0.kademlianetwork;
 
+import android.util.Log;
+
 import com.eis0.kademlia.KademliaId;
 import com.eis0.kademlia.SMSKademliaNode;
 import com.eis0.smslibrary.ReceivedMessageListener;
@@ -98,6 +100,7 @@ public class ConnectionHandler implements ReceivedMessageListener<SMSMessage> {
                 break;
             case FindId:
                 String[] splitted = text.split(" ");
+                Log.e("CONN_LOG", "IdFound: " + splitted[1]);
                 KademliaId idToFind = new KademliaId(splitted[1]);
                 SMSPeer searcher = new SMSPeer(splitted[2]);
                 IdFinderHandler.searchId(idToFind, searcher);
