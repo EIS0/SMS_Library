@@ -1,5 +1,6 @@
 package com.eis0.kademlianetwork;
 
+import com.eis0.kademlia.Contact;
 import com.eis0.kademlia.SMSKademliaNode;
 import com.eis0.kademlia.SMSKademliaRoutingTable;
 
@@ -55,6 +56,24 @@ public class KademliaNetwork {
      * @return True if node is in the routing table, false otherwise
      */
     public boolean isNodeInNetwork(SMSKademliaNode node){
-        return false;
+        Contact nodeContact = new Contact(node);
+        return table.getAllContacts().contains(nodeContact);
+    }
+
+    /**
+     * Adds a given valid SMSKademliaNode to the routing table of this network
+     * @param node The valid node to add to the net
+     */
+    public void addNodeToTable(SMSKademliaNode node){
+        Contact nodeContact = new Contact(node);
+        table.insert(nodeContact);
+    }
+
+    /**
+     * Updates the routing table
+     */
+    public void updateTable(){
+        //calls the proper handler to update the routing table
+        TableUpdateHandler.updateTable(table);
     }
 }

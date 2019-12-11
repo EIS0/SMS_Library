@@ -1,5 +1,7 @@
 package com.eis0.kademlianetwork;
 
+import com.eis0.kademlia.KademliaId;
+import com.eis0.kademlia.SMSKademliaNode;
 import com.eis0.smslibrary.SMSManager;
 import com.eis0.smslibrary.SMSMessage;
 import com.eis0.smslibrary.SMSPeer;
@@ -43,5 +45,9 @@ public class ConnectionHandler {
         * from scratch adding him to the table as a contact. This serves to more strongly
         * fuse both networks by creating contacts from the other network
         * */
+        KademliaId nodeId = new KademliaId(peer);
+        SMSKademliaNode node = new SMSKademliaNode(nodeId, peer, null);
+        KademliaNetwork.getInstance().addNodeToTable(node);
+        KademliaNetwork.getInstance().updateTable();
     }
 }
