@@ -70,7 +70,7 @@ public class ConnectionHandler {
          * */
 
         KademliaId nodeId = new KademliaId(peer);
-        SMSKademliaNode node = new SMSKademliaNode(nodeId, peer, null);
+        SMSKademliaNode node = new SMSKademliaNode(peer);
         KademliaNetwork.getInstance().addNodeToTable(node);
         KademliaNetwork.getInstance().updateTable();
     }
