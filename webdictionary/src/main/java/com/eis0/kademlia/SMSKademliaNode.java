@@ -18,6 +18,7 @@ import java.io.Serializable;
 public class SMSKademliaNode implements Serializable {
 
     private KademliaId nodeId;
+    //@TODO delete the RoutingTable in the node, it needs to be mooved in the KademliaNetwork class
     private SMSKademliaRoutingTable routingTable;
     private static SMSNetVocabulary dictionary;
     private SMSPeer nodePeer;
