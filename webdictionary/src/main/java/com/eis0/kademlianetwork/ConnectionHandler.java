@@ -20,7 +20,7 @@ public class ConnectionHandler {
      * @param peer The peer to invite to my network
      */
     public static void inviteToJoin(SMSPeer peer){
-        String messageRequest = KademliaNetwork.RequestType.JoinPermission + "";
+        String messageRequest = KademliaNetwork.RequestType.JoinPermission.ordinal() + "";
         SMSMessage message = new SMSMessage(peer, messageRequest);
         SMSManager.getInstance().sendMessage(message);
     }
