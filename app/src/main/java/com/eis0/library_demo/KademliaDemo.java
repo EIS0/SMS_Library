@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -128,7 +129,11 @@ public class KademliaDemo extends AppCompatActivity implements KademliaListener 
                     }
                 });
         try {
-            phoneNumber = new SMSPeer(telephonyManager.getLine1Number());
+            String phoneNumberText = telephonyManager.getLine1Number();
+            if(phoneNumberText.contains("5554")) phoneNumberText = "5556";
+            else if(phoneNumberText.contains("5556")) phoneNumberText = "5554";
+            Log.e("PHONE_GET", "Phone Number: " + phoneNumberText);
+            phoneNumber = new SMSPeer(phoneNumberText);
         } catch(SecurityException e) {
             builder.setMessage(R.string.permissions_not_granted_message);
             builder.show();
@@ -136,6 +141,7 @@ public class KademliaDemo extends AppCompatActivity implements KademliaListener 
             builder.setMessage(R.string.unknown_phone_number_dialog_message);
             builder.show();
         }
+
         return phoneNumber;
     }
 
