@@ -59,6 +59,12 @@ public class KademliaNetwork {
         localRoutingTable = new SMSKademliaRoutingTable(localNode, new DefaultConfiguration());
     }
 
+    /**
+     * Add a peer to the kademlia network.
+     *
+     * @param peer The SMSPeer to add.
+     * @author Matteo Carnelos
+     */
     public void addToNetwork(SMSPeer peer) {
         if(!isNodeInNetwork(new SMSKademliaNode(peer)))
             connectionHandler.inviteToJoin(peer);
