@@ -20,7 +20,7 @@ public class KademliaNetwork {
     //User node of the network
     private SMSKademliaNode node;
     //Routing table for this user of the network
-    private SMSKademliaRoutingTable table;
+    private SMSKademliaRoutingTable localRoutingTable;
     //Dictionary containing the resources stored by the local node
     private SMSNetVocabulary kademliaDictionary;
 
@@ -66,7 +66,7 @@ public class KademliaNetwork {
      */
     public void init(SMSKademliaNode localNode) {
         this.node = localNode;
-        table = new SMSKademliaRoutingTable(localNode, new DefaultConfiguration());
+        localRoutingTable = new SMSKademliaRoutingTable(localNode, new DefaultConfiguration());
     }
 
     /**
@@ -86,7 +86,7 @@ public class KademliaNetwork {
      * @author Matteo Carnelos
      */
     public SMSKademliaRoutingTable getLocalRoutingTable() {
-        return table;
+        return localRoutingTable;
 	}
 
     /**
