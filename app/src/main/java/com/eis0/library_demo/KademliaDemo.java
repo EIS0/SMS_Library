@@ -14,7 +14,10 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.eis0.kademlia.SMSKademliaNode;
 import com.eis0.kademlianetwork.KademliaNetwork;
 import com.eis0.smslibrary.SMSPeer;
 
@@ -35,8 +38,10 @@ public class KademliaDemo extends AppCompatActivity {
     };
 
     TextView myPhoneNumberLbl;
+    TextView myIdLbl;
+    RecyclerView routingTableRclView;
 
-    KademliaNetwork kademliaNetwork;
+    KademliaNetwork network = KademliaNetwork.getInstance();
 
     /**
      * Called on the creation of the activity.
@@ -51,6 +56,8 @@ public class KademliaDemo extends AppCompatActivity {
         setContentView(R.layout.activity_kademlia_demo);
 
         myPhoneNumberLbl = findViewById(R.id.myPhoneNumberLbl);
+        myIdLbl = findViewById(R.id.myIdLbl);
+        routingTableRclView = findViewById(R.id.routingTableRclView);
 
         // Asks the user the permission to catch notifications, if not already granted
         if (!isNotificationListenerEnabled(getApplicationContext()))
@@ -59,12 +66,25 @@ public class KademliaDemo extends AppCompatActivity {
         // Requests app permissions, if not already granted
         ActivityCompat.requestPermissions(this, PERMISSIONS, 1);
 
+        // Initialize routing table recycler view
+        routingTableRclView.setLayoutManager(new LinearLayoutManager(this));
+
         // Instantiates a new kademlia network with only this phone
-        SMSPeer myPhoneNumber = getPhoneNumber();
-        myPhoneNumberLbl.setText(myPhoneNumber.toString());
-        kademliaNetwork = KademliaNetwork.getInstance();
+        network.init(new SMSKademliaNode(getPhoneNumber()));
+
+        // Display initialization data
+        myPhoneNumberLbl.setText(network.getLocalNode().getPeer().toString());
+        myIdLbl.setText(network.getLocalNode().getId().toString());
+        routingTableRclView.setAdapter(new RoutingTableAdapter(network.getLocalRoutingTable().getAllContacts()));
     }
 
+    /**
+     * Called when the button to add a new peer to the network is pressed, it adds the new peer to
+     * the network.
+     *
+     * @param v The from which the event is coming from.
+     * @author Matteo Carnelos
+     */
     public void addButtonOnClick(View v) {
 
     }
@@ -121,5 +141,4 @@ public class KademliaDemo extends AppCompatActivity {
         Intent intent = new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS);
         startActivity(intent);
     }
-
 }

@@ -2,7 +2,6 @@ package com.eis0.kademlianetwork;
 
 import com.eis0.kademlia.KademliaId;
 import com.eis0.kademlia.SMSKademliaNode;
-import com.eis0.smslibrary.Message;
 import com.eis0.smslibrary.SMSMessage;
 import com.eis0.smslibrary.SMSPeer;
 
@@ -29,7 +28,7 @@ public class NodeLookupMessage extends SMSMessage {
      * @param lookup The key upon which the lookup is carried out
      */
     public NodeLookupMessage(SMSKademliaNode origin, KademliaId lookup) {
-        super(origin.getNodePeer(), "NodeLookupMessage x");
+        super(origin.getPeer(), "NodeLookupMessage x");
         this.origin = origin;
         this.lookupId = lookup;
     }
@@ -43,7 +42,7 @@ public class NodeLookupMessage extends SMSMessage {
      */
     @Override
     public SMSPeer getPeer() {
-        return origin.getNodePeer();
+        return origin.getPeer();
     }
 
 

@@ -16,11 +16,10 @@ import java.util.List;
  */
 public class NodeLookupReceiver {
 
-    private final SMSKademliaNode localNode;
+    private final KademliaNetwork network = KademliaNetwork.getInstance();
     private final KadConfiguration config;
 
-    public NodeLookupReceiver(SMSKademliaNode local, KadConfiguration config) {
-        this.localNode = local;
+    public NodeLookupReceiver(KadConfiguration config) {
         this.config = config;
     }
 
@@ -35,9 +34,9 @@ public class NodeLookupReceiver {
         SMSKademliaNode origin = incoming.getNode();
 
         /* Update the local space by inserting the origin node. */
-        this.localNode.getRoutingTable().insert(origin);
+        network.getLocalRoutingTable().insert(origin);
 
         /* Find nodes closest to the LookupId */
-        List<SMSKademliaNode> nodes = this.localNode.getRoutingTable().findClosest(incoming.getLookupId(), this.config.k());
+        List<SMSKademliaNode> nodes = network.getLocalRoutingTable().findClosest(incoming.getLookupId(), this.config.k());
     }
 }

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">SMS Library - Demo</string>
+    <string name="app_name">SMS Library - Kademlia Demo</string>
     <string name="phone_number_text">Phone Number:</string>
     <string name="phone_number_hint">Enter a valid phone number</string>
     <string name="add_text">Add to network</string>
@@ -9,6 +9,6 @@
     <string name="permissions_not_granted_message">Grant permissions in order to make the app work</string>
     <string name="exit_button_text">Exit</string>
     <string name="info_text">Info:</string>
-    <string name="my_phone_number_text">My phone number:</string>
-    <string name="my_id_text">My Id:</string>
+    <string name="my_phone_number_text">Phone number:</string>
+    <string name="my_id_text">Id:</string>
 </resources>

@@ -21,7 +21,7 @@ public class InviteMessage extends SMSMessage {
      * @param from node that is inviting someone
      */
     public InviteMessage(SMSKademliaNode from){
-        super(from.getNodePeer(), "InviteMessage x");
+        super(from.getPeer(), "InviteMessage x");
         this.from = from;
     }
 
@@ -29,7 +29,7 @@ public class InviteMessage extends SMSMessage {
      * @return node from peer
      */
     @Override
-    public SMSPeer getPeer(){ return from.getNodePeer(); }
+    public SMSPeer getPeer(){ return from.getPeer(); }
 
     /**
      * @return node sending this message

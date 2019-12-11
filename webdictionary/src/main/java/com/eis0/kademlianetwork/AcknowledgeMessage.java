@@ -1,7 +1,6 @@
 package com.eis0.kademlianetwork;
 
 import com.eis0.kademlia.SMSKademliaNode;
-import com.eis0.smslibrary.Message;
 import com.eis0.smslibrary.SMSMessage;
 import com.eis0.smslibrary.SMSPeer;
 
@@ -25,7 +24,7 @@ public class AcknowledgeMessage extends SMSMessage {
      * @param origin Node that's is sending the message
      */
     public AcknowledgeMessage(SMSKademliaNode origin) {
-        super(origin.getNodePeer(), "Acknowledge x");
+        super(origin.getPeer(), "Acknowledge x");
         this.localNode = origin;
     }
 
@@ -37,7 +36,7 @@ public class AcknowledgeMessage extends SMSMessage {
      */
     @Override
     public SMSPeer getPeer() {
-        return localNode.getNodePeer();
+        return localNode.getPeer();
     }
 
 
@@ -81,7 +80,7 @@ public class AcknowledgeMessage extends SMSMessage {
      */
     @Override
     public String toString() {
-        return "ConnectMessage[origin NodeId=" + localNode.getNodeId() + "]";
+        return "ConnectMessage[origin NodeId=" + localNode.getId() + "]";
     }
 
 }

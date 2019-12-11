@@ -23,7 +23,7 @@ public class ContentMessage extends SMSMessage {
      * @param content The content to be sent
      */
     public ContentMessage(SMSKademliaNode from, SerializableObject content){
-        super(from.getNodePeer(), "ContentMessage x");
+        super(from.getPeer(), "ContentMessage x");
         this.from = from;
         this.content = content;
     }
@@ -37,7 +37,7 @@ public class ContentMessage extends SMSMessage {
      * @return Peer of the node
      */
     @Override
-    public SMSPeer getPeer() { return this.from.getNodePeer();
+    public SMSPeer getPeer() { return this.from.getPeer();
     }
 
     /**

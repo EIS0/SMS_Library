@@ -24,7 +24,7 @@ public class ViewContentMessage extends SMSMessage {
      * @param key  key of the value
      */
     public ViewContentMessage(SMSKademliaNode from, SerializableObject key) {
-        super(from.getNodePeer(), "ViewContentMessage x");
+        super(from.getPeer(), "ViewContentMessage x");
         this.from = from;
         this.key = key;
     }
@@ -35,7 +35,7 @@ public class ViewContentMessage extends SMSMessage {
      */
     @Override
     public SMSPeer getPeer() {
-        return this.from.getNodePeer();
+        return this.from.getPeer();
     }
 
 
