@@ -40,7 +40,6 @@ public class KademliaNetwork {
      *
      * @return Returns a single KademliaNetwork instance as per the
      * <a href="https://refactoring.guru/design-patterns/singleton">Singleton Design Pattern</a>.
-     *
      * @author Matteo Carnelos
      */
     public static KademliaNetwork getInstance() {
@@ -90,6 +89,7 @@ public class KademliaNetwork {
      * network's routing table
      * @param node The node to find in the routing table
      * @return True if node is in the routing table, false otherwise
+     * @author Marco Cognolato
      */
     public boolean isNodeInNetwork(SMSKademliaNode node){
         Contact nodeContact = new Contact(node);
@@ -99,6 +99,7 @@ public class KademliaNetwork {
     /**
      * Adds a given valid SMSKademliaNode to the routing table of this network
      * @param node The valid node to add to the net
+     * @author Marco Cognolato
      */
     public void addNodeToTable(SMSKademliaNode node){
         Contact nodeContact = new Contact(node);

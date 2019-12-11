@@ -1,5 +1,6 @@
 package com.eis0.kademlianetwork;
 
+import com.eis0.kademlia.KademliaId;
 import com.eis0.kademlia.SMSKademliaNode;
 import com.eis0.smslibrary.ReceivedMessageListener;
 import com.eis0.smslibrary.SMSManager;
@@ -48,7 +49,7 @@ public class ConnectionHandler implements ReceivedMessageListener<SMSMessage> {
         * creating contacts from the other network
         * */
 
-        String messageRequest = KademliaNetwork.RequestType.AcceptJoin.ordinal() + "";
+        String messageRequest = RequestTypes.AcceptJoin.ordinal() + "";
         SMSMessage message = new SMSMessage(peer, messageRequest);
         SMSManager.getInstance().sendMessage(message);
 
