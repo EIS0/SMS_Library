@@ -6,9 +6,6 @@ import androidx.annotation.NonNull;
 
 import com.eis0.smslibrary.SMSPeer;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
 import java.io.Serializable;
 import java.math.BigInteger;
 import java.security.MessageDigest;
@@ -27,7 +24,7 @@ import java.util.Random;
 public class KademliaId implements Serializable {
 
     private static final String HASHING_ALG = "SHA-256";
-    private static final String TAG = "KademliaId";
+    private static final String LOG_KEY = "KADEMLIA_ID";
     final static int ID_LENGTH = 160;
     final static int ID_LENGTH_BYTES = ID_LENGTH / 8;
     private byte[] keyBytes;
@@ -52,7 +49,7 @@ public class KademliaId implements Serializable {
             md.update(peer.getAddress().getBytes());
             keyBytes = Arrays.copyOfRange(md.digest(), 0, ID_LENGTH_BYTES);
         } catch (NoSuchAlgorithmException e) {
-            Log.e(TAG, HASHING_ALG + " is not a valid hashing algorithm");
+            Log.e(LOG_KEY, HASHING_ALG + " is not a valid hashing algorithm");
         }
     }
 

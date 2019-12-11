@@ -30,8 +30,8 @@ public class KeyComparator implements Comparator<SMSKademliaNode> {
      */
     @Override
     public int compare(SMSKademliaNode n1, SMSKademliaNode n2) {
-        BigInteger b1 = n1.getNodeId().getInt();
-        BigInteger b2 = n2.getNodeId().getInt();
+        BigInteger b1 = n1.getId().getInt();
+        BigInteger b2 = n2.getId().getInt();
 
         b1 = b1.xor(key);
         b2 = b2.xor(key);

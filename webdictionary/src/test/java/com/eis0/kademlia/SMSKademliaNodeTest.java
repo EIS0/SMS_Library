@@ -25,7 +25,7 @@ public class SMSKademliaNodeTest {
 
     @Test
     public void getNodeIdTest(){
-        assertEquals(NODE1.getNodeId(), RANDOM_ID1);
+        assertEquals(NODE1.getId(), RANDOM_ID1);
     }
 
     @Test
