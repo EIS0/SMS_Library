@@ -96,7 +96,7 @@ public class KademliaNetwork {
      */
     public boolean isNodeInNetwork(SMSKademliaNode node){
         Contact nodeContact = new Contact(node);
-        return table.getAllContacts().contains(nodeContact);
+        return localRoutingTable.getAllContacts().contains(nodeContact);
     }
 
     /**
@@ -105,7 +105,7 @@ public class KademliaNetwork {
      */
     public void addNodeToTable(SMSKademliaNode node){
         Contact nodeContact = new Contact(node);
-        table.insert(nodeContact);
+        localRoutingTable.insert(nodeContact);
     }
 
     /**
@@ -113,7 +113,7 @@ public class KademliaNetwork {
      */
     public void updateTable(){
         //calls the proper handler to update the routing table
-        TableUpdateHandler.updateTable(table);
+        TableUpdateHandler.updateTable(localRoutingTable);
     }
 
 
