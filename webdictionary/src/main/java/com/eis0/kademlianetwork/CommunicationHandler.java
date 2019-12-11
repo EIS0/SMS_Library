@@ -19,9 +19,10 @@ import com.eis0.smslibrary.SMSPeer;
 public class CommunicationHandler {
 
     /**
-     *
+     * Method to add a content to the dictionary
+     * @param content The String value to add to the Dictionary
      */
-    public void sendContent(String content) {
+    public static void addToDictionary(String content) {
     /*
     1. Find the set of the Nodes closest to a specified ID (the ID represents the Hash of the content to insert in the KademliaNetwork)
         => Use the SMSKademliaRoutingTable (created in the KademliaNetwork instance)
@@ -41,7 +42,7 @@ public class CommunicationHandler {
     /**
      *
      */
-    public void receiveContent() {
+    public static void receiveAddToDictionaryRequest() {
 
     }
 
@@ -49,7 +50,7 @@ public class CommunicationHandler {
     /**
      *
      */
-    public void viewContent() {
+    public static void viewContent() {
 
     }
 
