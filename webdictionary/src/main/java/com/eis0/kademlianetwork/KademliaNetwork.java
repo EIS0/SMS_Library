@@ -47,4 +47,14 @@ public class KademliaNetwork {
         UpdateDict,
         NodeLookup
     }
+
+    /**
+     * Returns if a given valid {@link SMSKademliaNode} is inside this
+     * network's routing table
+     * @param node The node to find in the routing table
+     * @return True if node is in the routing table, false otherwise
+     */
+    public boolean isNodeInNetwork(SMSKademliaNode node){
+        return false;
+    }
 }
