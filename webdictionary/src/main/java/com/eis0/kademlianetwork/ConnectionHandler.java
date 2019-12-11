@@ -43,9 +43,9 @@ public class ConnectionHandler implements ReceivedMessageListener<SMSMessage> {
         /*
         * If both the other peer sent me a request to join his network, or
         * a request to invite me to his network, I have to update my routing table
-        * from scratch adding him to the table as a contact. I also have to send
+        * from scratch adding him to the table as a contact, then I have to send
         * an acceptJoin event, so he can do the same thing.
-        *  This serves to more strongly fuse both networks by
+        * This serves to more strongly fuse both networks by
         * creating contacts from the other network
         * */
 
@@ -64,9 +64,8 @@ public class ConnectionHandler implements ReceivedMessageListener<SMSMessage> {
         /*
          * If both the other peer sent me a request to join his network, or
          * a request to invite me to his network, I have to update my routing table
-         * from scratch adding him to the table as a contact, then I have to send
-         * an acceptRequest event, so he can do the same thing.
-         *  This serves to more strongly fuse both networks by
+         * from scratch adding him to the table as a contact
+         * This serves to more strongly fuse both networks by
          * creating contacts from the other network
          * */
 
@@ -92,6 +91,9 @@ public class ConnectionHandler implements ReceivedMessageListener<SMSMessage> {
             case AcknowledgeMessage:
                 break;
             case JoinPermission:
+                sendAcceptRequest(peer);
+                break;
+            case AcceptJoin:
                 acceptRequest(peer);
                 break;
             case AddPeers:
