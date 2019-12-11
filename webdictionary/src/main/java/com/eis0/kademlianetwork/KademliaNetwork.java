@@ -118,7 +118,8 @@ public class KademliaNetwork {
      */
     public void updateTable(){
         //calls the proper handler to update the routing table
-        TableUpdateHandler.updateTable(localRoutingTable, localNode.getId());
+        SMSPeer netPeer = localNode.getPeer();
+        TableUpdateHandler.updateTable(localRoutingTable, localNode.getId(), netPeer);
     }
 
 

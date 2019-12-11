@@ -96,15 +96,15 @@ public class ConnectionHandler implements ReceivedMessageListener<SMSMessage> {
             case AcceptJoin:
                 acceptRequest(peer);
                 break;
-            case AddPeers:
+            case FindId:
+                String[] splitted = text.split(" ");
+                KademliaId idToFind = new KademliaId(splitted[1]);
+                SMSPeer searcher = new SMSPeer(splitted[2]);
+                IdFinderHandler.searchId(idToFind, searcher);
                 break;
-            case AddToDict:
-                break;
-            case RemoveFromDict:
-                break;
-            case UpdateDict:
-                break;
-            case NodeLookup:
+            case SearchResult:
+                KademliaId idFound = new KademliaId(text.split(" ")[1]);
+                TableUpdateHandler.stepTableUpdate(idFound);
                 break;
         }
     }

@@ -3,6 +3,7 @@ package com.eis0.kademlianetwork;
 import com.eis0.kademlia.KademliaId;
 import com.eis0.kademlia.SMSKademliaNode;
 import com.eis0.kademlia.SMSKademliaRoutingTable;
+import com.eis0.smslibrary.SMSPeer;
 
 /**
  * Iterator for the execution of the update-table algorithm.
@@ -13,13 +14,15 @@ public class TableUpdateIterator {
     private int currentCount;
     private int maxCount;
     private KademliaId netId;
-    SMSKademliaRoutingTable table;
+    private SMSKademliaRoutingTable table;
+    private SMSPeer netPeer;
 
-    public TableUpdateIterator(int maxCount, KademliaId netId, SMSKademliaRoutingTable table){
+    public TableUpdateIterator(int maxCount, KademliaId netId, SMSKademliaRoutingTable table, SMSPeer netPeer){
         this.maxCount = maxCount;
         this.currentCount = 0;
         this.netId = netId;
         this.table = table;
+        this.netPeer = netPeer;
 
         //step 1
         askForId();
@@ -27,20 +30,24 @@ public class TableUpdateIterator {
 
     /**
      * Steps execution of the algorithm once.
-     * @param receivedNode The SMSKademliaNode received because of the last step
-     * @return Returns true if the algorithm has finished
-     * execution, and updated the net, false otherwise
+     * @param receivedId The KademliaId received because of the last step
      */
-    public void step(SMSKademliaNode receivedNode){
-        if(currentCount > maxCount) {
+    public void step(KademliaId receivedId){
+        if(hasFinished()) {
             //finished execution
             return;
         }
         //check if I'm the id received: stop if I am
-        KademliaId receivedId = receivedNode.getId();
-        if(receivedId == netId) return; //stop or whatever
+        SMSKademliaNode receivedNode = new SMSKademliaNode(receivedId);
+        if(receivedId == netId){
+            currentCount = maxCount+1;
+            return;
+        }
         //check if the id received is already in the table: stop if it is
-        if(table.getAllNodes().contains(receivedNode)) return; //stop or whatever
+        if(table.getAllNodes().contains(receivedNode)){
+            currentCount = maxCount+1;
+            return;
+        }
         //if I'm here I have a new node, add him to the table
         table.insert(receivedNode);
         //re-start algorithm for the next id
@@ -49,10 +56,20 @@ public class TableUpdateIterator {
         askForId();
     }
 
+    /**
+     * @return Returns true if the algorithm has finished execution, false otherwise
+     */
+    public boolean hasFinished(){
+        return currentCount >= maxCount;
+    }
+
+    /**
+     * Generates an id to find and searches for it in the net sending a request
+     */
     private void askForId(){
         //create the fake id
         KademliaId fakeId = netId.generateNodeIdByDistance(currentCount);
         //search in the net for the fakeId and wait
-        //TODO: add this ^
+        IdFinderHandler.searchId(fakeId, netPeer);
     }
 }

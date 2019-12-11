@@ -12,5 +12,7 @@ public enum RequestTypes {
     AddToDict,
     RemoveFromDict,
     UpdateDict,
-    NodeLookup
+    NodeLookup,
+    FindId,
+    SearchResult
 }
