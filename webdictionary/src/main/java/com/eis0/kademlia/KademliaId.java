@@ -48,9 +48,7 @@ public class KademliaId implements Serializable {
             MessageDigest md = MessageDigest.getInstance(HASHING_ALG);
             md.update(peer.getAddress().getBytes());
             keyBytes = Arrays.copyOfRange(md.digest(), 0, ID_LENGTH_BYTES);
-            Log.e("ID_LOG", "keyBytes: " + keyBytes + " length: " + keyBytes.length);
         } catch (NoSuchAlgorithmException e) {
-            Log.e(LOG_KEY, HASHING_ALG + " is not a valid hashing algorithm");
         }
     }
 
