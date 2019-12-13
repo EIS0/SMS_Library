@@ -11,6 +11,7 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
+import java.util.BitSet;
 import java.util.Random;
 
 /**
@@ -24,10 +25,10 @@ import java.util.Random;
 public class KademliaId implements Serializable {
 
     private static final String HASHING_ALG = "SHA-256";
-    private static final String LOG_KEY = "KADEMLIA_ID";
     public final static int ID_LENGTH = 64;
     final static int ID_LENGTH_BYTES = ID_LENGTH / 8;
-    private byte[] keyBytes;
+    private static BitSet keySet = new BitSet();
+    private static byte[] keyBytes = keySet.toByteArray();
 
     /**
      * Generates a KademliaId using a random key
