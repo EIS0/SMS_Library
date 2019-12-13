@@ -175,7 +175,7 @@ public class KademliaId implements Serializable {
      *                 From 0 to 159, where 0 changes the most significant bit
      * @return The newly generated NodeId with a given distance from this.
      * @throws IllegalArgumentException if the distance is < 0 or >= 160
-     * @author Marco Cognolato
+     * @author Edordo Raimondi, improved by Marco Cognolato
      */
     public KademliaId generateNodeIdByDistance(int distance) {
         if(distance < 0 || distance >= ID_LENGTH) throw new IllegalArgumentException();
@@ -196,7 +196,7 @@ public class KademliaId implements Serializable {
      *
      * @return Integer representing the number of leading 0's,
      * also returns -1 if there's only leading 0's
-     * @author Marco Cognolato, Edoardo Raimondi
+     * @author EdoardoRaimondi, Marco Cognolato
      */
     public int getFirstSetBitIndex() {
         for(int byteIndex = 0; byteIndex < keyBytes.length; byteIndex++) {

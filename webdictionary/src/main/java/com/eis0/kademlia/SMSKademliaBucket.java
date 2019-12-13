@@ -116,7 +116,7 @@ public class SMSKademliaBucket implements KademliaBucket {
      */
     @Override
     public boolean removeContact(Contact c) {
-        /* If the contact does not exist, then we failed to remove it */
+        /* If the contact does not exist, doesn't throw an exception,we just failed to remove it */
         if (!this.contacts.contains(c)) {
             return false;
         }
@@ -216,6 +216,7 @@ public class SMSKademliaBucket implements KademliaBucket {
 
     /**
      * When the bucket is filled, we keep extra contacts in the replacement cache.
+     * Private because user has not to use it
      */
     private void insertIntoReplacementCache(Contact c) {
         /* Just return if this contact is already in our replacement cache */
@@ -238,6 +239,7 @@ public class SMSKademliaBucket implements KademliaBucket {
 
     /**
      * Remove a contact from the replacement cache
+     * Private because user has not to use it
      *
      * @param n Node to remove
      * @return Contact removed

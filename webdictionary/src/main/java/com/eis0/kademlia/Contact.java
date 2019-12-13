@@ -3,7 +3,7 @@ package com.eis0.kademlia;
 /**
  * Keeps information about contacts of the Node;
  * Such as how many times it didn't respond to a request (staleCount)
- * or his lastSeen.
+ * or its lastSeen.
  * If a node has a StaleCount > 0, it's supposed to be eliminated by the network
  *
  * A contact is "invisible" to user's eyes.

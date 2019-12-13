@@ -5,6 +5,8 @@ import com.eis0.webdictionary.SMSNetVocabulary;
 
 import org.junit.Test;
 
+import java.util.NoSuchElementException;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -12,13 +14,12 @@ import static org.junit.Assert.assertTrue;
 public class SMSKademliaBucketTest {
     KadConfiguration config = new DefaultConfiguration();
 
-    SMSNetVocabulary dic = new SMSNetVocabulary(); //creating a dictionary
     /*Creating some Nodes*/
     SMSKademliaNode test3 = new SMSKademliaNode(new SMSPeer("3408140326"));
     SMSKademliaNode test2 = new SMSKademliaNode(new SMSPeer("3497364511"));
     SMSKademliaNode test = new SMSKademliaNode(new SMSPeer("3497312345"));
 
-    /*configuration test*/
+    /*setup test*/
     SMSKademliaBucket toTest = new SMSKademliaBucket(5, config);
 
     @Test
@@ -58,7 +59,6 @@ public class SMSKademliaBucketTest {
     public void removeFromContactTest(){
         Contact c = new Contact(test);
         toTest.insert(c);
-        Contact toReturn = toTest.removeFromContacts(test);
         assertFalse(toTest.containsNode(test));
     }
 
@@ -86,6 +86,17 @@ public class SMSKademliaBucketTest {
     public void getReplacementCacheSizeTest(){
         assertEquals(toTest.getReplacementCacheSize(), 0);
     }
+
+    @Test(expected = NoSuchElementException.class)
+    public void getFromContact_NotInBucket(){
+        toTest.getFromContacts(test);
+    }
+
+    @Test(expected =  NoSuchElementException.class)
+    public void removeFromContacts_NotInBucket(){
+        toTest.removeFromContacts(test);
+    }
+
 
 
 }
