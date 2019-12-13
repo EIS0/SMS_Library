@@ -6,7 +6,6 @@ import com.eis0.smslibrary.SMSManager;
 import com.eis0.smslibrary.SMSMessage;
 import com.eis0.smslibrary.SMSPeer;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -33,6 +32,7 @@ public class CommunicationHandler {
      * @param content The String value to add to the Dictionary
      */
     public static void addToDictionary(SMSPeer peer, String key, String content) {
+
         SMSMessage contentMessage = new SMSMessage(peer, RequestTypes.AddToDict + " " + key + content);
         SMSManager.getInstance().sendMessage(contentMessage);
     }
