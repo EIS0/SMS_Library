@@ -31,6 +31,9 @@ public class SMSKademliaListener implements ReceivedMessageListener<SMSMessage> 
         //Converts the code number in the message to the related enum
         RequestTypes incomingRequest = RequestTypes
                 .values()[Integer.parseInt(text.split(" ")[0])];
+        //I suppose to have a predefine message space reserved to the key and to the content
+        String key = text.substring(2, 10);
+        String content = text.substring(11);
         //Starts a specific action depending upon the request or the command sent by other users
         switch (incomingRequest) {
             case AcknowledgeMessage:
@@ -53,10 +56,9 @@ public class SMSKademliaListener implements ReceivedMessageListener<SMSMessage> 
                 TableUpdateHandler.stepTableUpdate(idFound);
                 break;
             case AddToDictRequest:
-                //I suppose to have a predefine message space reserved to the key and to the content
-                String key = text.substring(2, 52);
-                String content = text.substring(53);
                 CommunicationHandler.receiveAddToDictionaryRequest(key, content);
+            case AddToDict:
+                AddToDictionaryHandler.add(key, content);
         }
     }
 }

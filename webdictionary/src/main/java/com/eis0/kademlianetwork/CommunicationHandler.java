@@ -41,7 +41,7 @@ public class CommunicationHandler {
     /**
      * Search for right receiver for the content
      *
-     * @param key to set
+     * @param key     to set
      * @param content to set
      */
     public static void receiveAddToDictionaryRequest(String key, String content) {

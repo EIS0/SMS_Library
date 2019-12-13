@@ -1,5 +1,7 @@
 package com.eis0.kademlianetwork;
 
+import androidx.annotation.NonNull;
+
 import com.eis0.kademlia.Contact;
 import com.eis0.kademlia.DefaultConfiguration;
 import com.eis0.kademlia.SMSKademliaNode;
@@ -7,6 +9,7 @@ import com.eis0.kademlia.SMSKademliaRoutingTable;
 import com.eis0.smslibrary.SMSManager;
 import com.eis0.smslibrary.SMSPeer;
 import com.eis0.webdictionary.SMSNetVocabulary;
+import com.eis0.webdictionary.SerializableObject;
 
 /**
  * Central class fo the KademliaNetwork. Instead of handling everything itself,
@@ -30,10 +33,6 @@ public class KademliaNetwork {
 
     // Singleton instance
     private static KademliaNetwork instance;
-    // Constructor following the Singleton Design Pattern
-    private KademliaNetwork() {
-        SMSManager.getInstance().setReceiveListener(connectionHandler);
-    }
 
     /**
      * Return an instance of KademliaNetwork.
@@ -124,10 +123,12 @@ public class KademliaNetwork {
 
 
     /**
-     *
+     * Add a key-content to this local node dictionary
+     * They have to be serialize in order to be add
+     * @param key     to add
+     * @param content to add
      */
-    public void addToLocalDictionary() {
-
+    public void addToLocalDictionary(String key, String content) {
     }
 
 
