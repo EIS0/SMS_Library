@@ -20,11 +20,11 @@ public class KademliaIdTest {
     private final KademliaId SIMPLE_ID3 = new KademliaId("\01"); //0x01
     /* SHA-256 hash of test SMSPeer, calculated with an external
      program, and truncated to the first 160 bits */
-    private final String NUMBER_HASH = "744d03373e3d5cc8e61259efe99e9dbc00fc6b69";
+    private final String NUMBER_HASH = "744d03373e3d5cc8";
 
     @Test
     public void creationId_BySMSPeer() {
-        KademliaId test = new KademliaId(new SMSPeer("3497463255"));
+        KademliaId test = new KademliaId(new SMSPeer("3408140326"));
         String id = test.getInt().toString(16);
         assertEquals(NUMBER_HASH, id);
     }

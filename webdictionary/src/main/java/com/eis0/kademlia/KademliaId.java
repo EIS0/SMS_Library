@@ -58,6 +58,7 @@ public class KademliaId implements Serializable {
      * Construct the NodeId from a string
      *
      * @param data The user generated key string
+     * @throws IllegalArgumentException if data has not the right fit
      */
     public KademliaId(String data) {
         this.keyBytes = data.getBytes();
@@ -83,6 +84,7 @@ public class KademliaId implements Serializable {
      * Use a given byte array as the NodeId.
      *
      * @param bytes The byte array to use as the NodeId.
+     * @throws IllegalArgumentException if data has not the right fit
      */
     public KademliaId(byte[] bytes) {
         if (bytes.length > ID_LENGTH_BYTES) {

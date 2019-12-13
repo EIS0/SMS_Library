@@ -19,19 +19,20 @@ public class SMSKademliaBucketTest {
     SMSKademliaNode test2 = new SMSKademliaNode(new SMSPeer("3497364511"));
     SMSKademliaNode test = new SMSKademliaNode(new SMSPeer("3497312345"));
 
+    /*Creating contact*/
+    Contact c = new Contact(test);
+
     /*setup test*/
     SMSKademliaBucket toTest = new SMSKademliaBucket(5, config);
 
     @Test
     public void insertTest(){
-        Contact c = new Contact(test);
         toTest.insert(c);
         assertTrue(toTest.containsContact(c));
     }
 
     @Test
     public void containsContactTest(){
-        Contact c = new Contact(test);
         assertFalse(toTest.containsContact(c));
     }
 
@@ -42,14 +43,12 @@ public class SMSKademliaBucketTest {
 
     @Test
     public void removeContactTest(){
-        Contact c = new Contact((test));
         toTest.insert(c);
         assertTrue(toTest.removeContact(c));
     }
 
     @Test
     public void getFromContactTest(){
-        Contact c = new Contact(test);
         toTest.insert(c);
         Contact toReturn = toTest.getFromContacts(test);
         assertTrue(toReturn.equals(c));
@@ -57,14 +56,12 @@ public class SMSKademliaBucketTest {
 
     @Test
     public void removeFromContactTest(){
-        Contact c = new Contact(test);
         toTest.insert(c);
         assertFalse(toTest.containsNode(test));
     }
 
     @Test
     public void removeNodeTest(){
-        Contact c = new Contact(test);
         toTest.insert(c);
         assertTrue(toTest.removeNode(test));
     }
