@@ -1,8 +1,13 @@
 package com.eis0.kademlianetwork;
 
+import com.eis0.kademlia.KademliaId;
+import com.eis0.kademlia.SMSKademliaNode;
 import com.eis0.smslibrary.SMSManager;
 import com.eis0.smslibrary.SMSMessage;
 import com.eis0.smslibrary.SMSPeer;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Class to send, view or set
@@ -15,41 +20,36 @@ import com.eis0.smslibrary.SMSPeer;
  *  to the dictionary
  *
  * @author Enrico Cestaro
+ * @autor Edoardo Raimondi
  */
 
 public class CommunicationHandler {
 
     /**
      * Method used to add a content to the dictionary
+     *
+     * @param peer    The receiver of the resource
+     * @param key     The String key to be add to the Dictionary
      * @param content The String value to add to the Dictionary
      */
-    public static void addToDictionary(String content) {
-    /*
-    1. Find the set of the Nodes closest to a specified ID (the ID represents the Hash of the content to insert in the KademliaNetwork)
-        => Use the SMSKademliaRoutingTable (created in the KademliaNetwork instance)
-        => Use its method findClosest(targetID, number of nodes = 1)
-        => This method returns a List<KademliaNode>
-    2. Extract the node from the List<>
-        => Get the Peer
-        => Send the message to the SMSPeer
-     */
-        //@TODO Complete, and remove your telephone number ffs
-        SMSPeer peer = new SMSPeer("+393479281192");
-        SMSMessage contentMessage = new SMSMessage(peer,  RequestTypes.AddToDict + " " + content);
+    public static void addToDictionary(SMSPeer peer, String key, String content) {
+        SMSMessage contentMessage = new SMSMessage(peer, RequestTypes.AddToDict + " " + key + content);
         SMSManager.getInstance().sendMessage(contentMessage);
     }
 
 
     /**
+     * Search for right receiver for the content
      *
+     * @param key to set
+     * @param content to set
      */
-    public static void receiveAddToDictionaryRequest(String content) {
-    /* This method is called by the Node already chosen as the closest one to the ID, and it's been
-    chosen before the request to store the content was sent; in fact, the Node requesting to store
-    the content ask for the closest ID and send the content directly to it
-     */
-    KademliaNetwork.getInstance();
-    //@TODO complete
+    public static void receiveAddToDictionaryRequest(String key, String content) {
+        KademliaId toFind = new KademliaId(key);
+        List<SMSKademliaNode> closerNode;
+        closerNode = KademliaNetwork.getInstance().getLocalRoutingTable().findClosest(toFind, 1);
+        SMSPeer receiver = closerNode.get(0).getPeer();
+        addToDictionary(receiver, key, content);
     }
 
 
@@ -68,3 +68,4 @@ public class CommunicationHandler {
 
     }
 }
+

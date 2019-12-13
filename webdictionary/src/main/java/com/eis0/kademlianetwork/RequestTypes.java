@@ -9,6 +9,7 @@ public enum RequestTypes {
     LeavePermission,
     AcceptLeave,
     AcknowledgeMessage,
+    AddToDictRequest,
     AddToDict,
     RemoveFromDict,
     UpdateDict,

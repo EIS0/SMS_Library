@@ -16,7 +16,7 @@ import com.eis0.smslibrary.SMSPeer;
  *
  * @author Marco Cognolato
  */
-public class ConnectionHandler implements ReceivedMessageListener<SMSMessage> {
+public class ConnectionHandler {
 
     /**
      * Invites a given valid SMSPeer to join my kademlia network
@@ -71,44 +71,9 @@ public class ConnectionHandler implements ReceivedMessageListener<SMSMessage> {
          * creating contacts from the other network
          * */
 
-        KademliaId nodeId = new KademliaId(peer);
         SMSKademliaNode node = new SMSKademliaNode(peer);
         KademliaNetwork.getInstance().addNodeToTable(node);
         KademliaNetwork.getInstance().updateTable();
     }
 
-    /**
-     * This method analyze the incoming messages, and extracts the content and the CODE
-     * @param message The message received.
-     */
-    @Override
-    public void onMessageReceived(SMSMessage message) {
-        String text = message.getData();
-        SMSPeer peer = message.getPeer();
-        //Converts the code number in the message to the related enum
-        RequestTypes incomingRequest = RequestTypes
-                .values()[Integer.parseInt(text.split(" ")[0])];
-        //Starts a specific action depending upon the request or the command sent by other users
-        switch (incomingRequest) {
-            case AcknowledgeMessage:
-                break;
-            case JoinPermission:
-                sendAcceptRequest(peer);
-                break;
-            case AcceptJoin:
-                acceptRequest(peer);
-                break;
-            case FindId:
-                String[] splitted = text.split(" ");
-                Log.e("CONN_LOG", "IdFound: " + splitted[1]);
-                KademliaId idToFind = new KademliaId(splitted[1]);
-                SMSPeer searcher = new SMSPeer(splitted[2]);
-                IdFinderHandler.searchId(idToFind, searcher);
-                break;
-            case SearchResult:
-                KademliaId idFound = new KademliaId(text.split(" ")[1]);
-                TableUpdateHandler.stepTableUpdate(idFound);
-                break;
-        }
-    }
 }
