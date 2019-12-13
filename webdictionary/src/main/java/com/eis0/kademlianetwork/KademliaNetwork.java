@@ -1,14 +1,12 @@
 package com.eis0.kademlianetwork;
 
-import androidx.annotation.NonNull;
-
 import com.eis0.kademlia.Contact;
 import com.eis0.kademlia.DefaultConfiguration;
 import com.eis0.kademlia.SMSKademliaNode;
 import com.eis0.kademlia.SMSKademliaRoutingTable;
-import com.eis0.smslibrary.SMSManager;
 import com.eis0.smslibrary.SMSPeer;
 import com.eis0.webdictionary.SMSNetVocabulary;
+import com.eis0.webdictionary.SMSSerialization;
 import com.eis0.webdictionary.SerializableObject;
 
 /**
@@ -29,7 +27,7 @@ public class KademliaNetwork {
     private ConnectionHandler connectionHandler = new ConnectionHandler();
     private KademliaListener listener;
     //Dictionary containing the resources stored by the local node
-    private SMSNetVocabulary kademliaDictionary;
+    private SMSNetVocabulary localKademliaDictionary;
 
     // Singleton instance
     private static KademliaNetwork instance;
@@ -123,35 +121,46 @@ public class KademliaNetwork {
 
 
     /**
-     * Add a key-content to this local node dictionary
-     * They have to be serialize in order to be add
-     * @param key     to add
-     * @param content to add
+     * Method used to add a pair <key, resource> to the local Dictionary
+     *
+     * @param key      The key of the pair <key, resource> the user is trying to add to the dictionary
+     * @param resource The resource of the pair <key, resource> the user is trying to add to the dictionary
+     * @author Enrico Cestaro
      */
-    public void addToLocalDictionary(String key, String content) {
+    public void addToLocalDictionary(String key, String resource) {
+
+        localKademliaDictionary.add(new SMSSerialization(key), new SMSSerialization(resource));
     }
 
-
     /**
+     * Method used to remove a pair <key, resource> from the local Dictionary
      *
+     * @param key The key of the pair <key, resource> the user is trying to remove the dictionary
+     * @author Enrico Cestaro
      */
-    public void removeFromLocalDictionary() {
-
+    public void removeFromLocalDictionary(String key) {
+        localKademliaDictionary.remove(new SMSSerialization(key));
     }
 
-
     /**
+     * Method used to get a resource specified by its key
      *
+     * @param key The key of the pair <key, resource> the user is trying to get from the dictionary
+     * @return The SerializableObject with the specified key
+     * @author Enrico Cestaro
      */
-    public void getFromLocalDictionary() {
-
+    public SerializableObject getFromLocalDictionary(String key) {
+        return localKademliaDictionary.getResource(new SMSSerialization(key));
     }
 
-
     /**
+     * Method used to update a resource with the specified key, with a new resource
      *
+     * @param key      The key of the pair <key, resource> the user is trying to update in the dictionary
+     * @param resource The new resource
+     * @author Enrico Cestaro
      */
-    public void updateLocalDictionary() {
-
+    public void updateLocalDictionary(String key, String resource) {
+        localKademliaDictionary.update(new SMSSerialization(key), new SMSSerialization(resource));
     }
 }
