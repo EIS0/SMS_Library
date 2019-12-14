@@ -18,7 +18,8 @@ import com.eis0.smslibrary.SMSPeer;
 
 public class SMSKademliaListener implements ReceivedMessageListener<SMSMessage> {
 
-
+    ResourceExchangeHandler resourceExchangeHandler = new ResourceExchangeHandler();
+    //TODO: remember to make it work (register the listener, somehow. How does it work?)
     /**
      * This method analyze the incoming messages, and extracts the content and the CODE
      *
@@ -31,9 +32,15 @@ public class SMSKademliaListener implements ReceivedMessageListener<SMSMessage> 
         //Converts the code number in the message to the related enum
         RequestTypes incomingRequest = RequestTypes
                 .values()[Integer.parseInt(text.split(" ")[0])];
-        //I suppose to have a predefine message space reserved to the key and to the content
+
+        /*I suppose to have a predefine message space reserved to the key and to the content
         String key = text.substring(2, 10);
         String content = text.substring(11);
+        TODO: verify
+         */
+
+        //Array of strings containing the message fields
+        String[] splitted = text.split(" ");
         //Starts a specific action depending upon the request or the command sent by other users
         switch (incomingRequest) {
             case AcknowledgeMessage:
@@ -45,38 +52,31 @@ public class SMSKademliaListener implements ReceivedMessageListener<SMSMessage> 
                 ConnectionHandler.acceptRequest(peer);
                 break;
             case FindId:
-                String[] splitted = text.split(" ");
                 Log.e("CONN_LOG", "IdFound: " + splitted[1]);
                 KademliaId idToFind = new KademliaId(splitted[1]);
                 SMSPeer searcher = new SMSPeer(splitted[2]);
                 IdFinderHandler.searchId(idToFind, searcher);
                 break;
             case SearchResult:
-                KademliaId idFound = new KademliaId(text.split(" ")[1]);
+                KademliaId idFound = new KademliaId(splitted[1]);
                 TableUpdateHandler.stepTableUpdate(idFound);
                 break;
-                
-                //Temporary copy of the cases above
+
             case FindIdForAddRequest:
-                splitted = text.split(" ");
-                //Log.e("CONN_LOG", "IdFound: " + splitted[1]);
+                Log.e("CONN_LOG", "IdFound: " + splitted[1]);
                 idToFind = new KademliaId(splitted[1]);
                 searcher = new SMSPeer(splitted[2]);
-                IdFinderHandler.searchId(idToFind, searcher);
+                resourceExchangeHandler.processAddRequest(idToFind, searcher);
                 break;
-                //Temporary copy of the cases above
             case AddRequestResult:
-                idFound = new KademliaId(text.split(" ")[1]);
-                //TableUpdateHandler.stepTableUpdate(idFound);
-                //Instead of adding the ID to the RoutingTable, it will send it to the
-                //ResourceExchangeHandler class, to complete the addRequest
+                idToFind = new KademliaId(splitted[1]);
+                resourceExchangeHandler.completeAddRequest(idToFind, peer);
                 break;
 
-            case AddToDictRequest:
-                //CommunicationHandler.receiveAddToDictionaryRequest(key, content);
-                break;
             case AddToDict:
-                //ResourceExchangeHandler
+                String key = splitted[1];
+                String resource = splitted[2];
+                KademliaNetwork.getInstance().addToLocalDictionary(key, resource);
                 break;
         }
     }

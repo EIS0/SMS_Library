@@ -74,7 +74,7 @@ public class IdFinderHandler {
         //If I'm the id return it
         //N.B. this state should be impossible, so it's a fail safe
         if(netId == idToFind){
-            String message = RequestTypes.AddRequestResult.ordinal() + " " + netId;
+            String message = RequestTypes.AddRequestResult.ordinal() + " " + idToFind;
             SMSMessage searchResult = new SMSMessage(searcher, message);
             SMSManager.getInstance().sendMessage(searchResult);
             return;
@@ -95,7 +95,7 @@ public class IdFinderHandler {
         if(idToFindDistanceFromClosest.compareTo(idToFindDistanceFromNetId) > 0){
             //I got further away from what I'm looking for, so I'm the closest,
             //so I return this id
-            String message = RequestTypes.AddRequestResult.ordinal() + " " + netId;
+            String message = RequestTypes.AddRequestResult.ordinal() + " " + idToFind;
             SMSMessage searchResult = new SMSMessage(searcher, message);
             SMSManager.getInstance().sendMessage(searchResult);
         }
