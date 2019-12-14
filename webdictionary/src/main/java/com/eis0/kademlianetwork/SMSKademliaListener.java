@@ -14,12 +14,13 @@ import com.eis0.smslibrary.SMSPeer;
  * @author Marco Cognolato
  * @author Matteo Carnelos
  * @author Edoardo Raimondi
+ * @author Enrico Cestaro
  */
 
 public class SMSKademliaListener implements ReceivedMessageListener<SMSMessage> {
 
     ResourceExchangeHandler resourceExchangeHandler = new ResourceExchangeHandler();
-    //TODO: remember to make it work (register the listener, somehow. How does it work?)
+    //TODO: remember to make it work (register the listener, somehow. How does it work again?)
     /**
      * This method analyze the incoming messages, and extracts the content and the CODE
      *

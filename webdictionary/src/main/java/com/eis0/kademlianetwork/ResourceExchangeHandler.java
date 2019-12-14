@@ -18,6 +18,7 @@ import java.util.Map;
  *
  * TODO: it needs a refresh method that removes from the list old requests, or try to solve them
  * (for a finite amount of attempts)
+ * @author Enrico Cestaro
  */
 public class ResourceExchangeHandler {
 
