@@ -8,6 +8,9 @@ import com.eis0.smslibrary.SMSPeer;
 
 import java.util.List;
 
+//This class is probrably gonna be deleted, to be replaced by ResourceExchangeHandler
+
+
 /**
  * Class to send, view or set
  * @TODO SO, will we use only String object? AND where do we store them?

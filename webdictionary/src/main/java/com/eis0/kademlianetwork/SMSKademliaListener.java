@@ -55,10 +55,29 @@ public class SMSKademliaListener implements ReceivedMessageListener<SMSMessage> 
                 KademliaId idFound = new KademliaId(text.split(" ")[1]);
                 TableUpdateHandler.stepTableUpdate(idFound);
                 break;
+                
+                //Temporary copy of the cases above
+            case FindIdForAddRequest:
+                splitted = text.split(" ");
+                //Log.e("CONN_LOG", "IdFound: " + splitted[1]);
+                idToFind = new KademliaId(splitted[1]);
+                searcher = new SMSPeer(splitted[2]);
+                IdFinderHandler.searchId(idToFind, searcher);
+                break;
+                //Temporary copy of the cases above
+            case AddRequestResult:
+                idFound = new KademliaId(text.split(" ")[1]);
+                //TableUpdateHandler.stepTableUpdate(idFound);
+                //Instead of adding the ID to the RoutingTable, it will send it to the
+                //ResourceExchangeHandler class, to complete the addRequest
+                break;
+
             case AddToDictRequest:
-                CommunicationHandler.receiveAddToDictionaryRequest(key, content);
+                //CommunicationHandler.receiveAddToDictionaryRequest(key, content);
+                break;
             case AddToDict:
-                AddToDictionaryHandler.add(key, content);
+                //ResourceExchangeHandler
+                break;
         }
     }
 }
