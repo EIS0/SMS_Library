@@ -14,6 +14,7 @@ import java.util.TreeSet;
  * @see <a href="https://pdos.csail.mit.edu/~petar/papers/maymounkov-kademlia-lncs.pdf">Kademlia's
  * *      paper</a> for more details.
  * @author Edoardo Raimondi
+ * @author edits by Marco Cognolato
  */
 public class SMSKademliaBucket implements KademliaBucket {
 
@@ -29,7 +30,10 @@ public class SMSKademliaBucket implements KademliaBucket {
     private KadConfiguration config;
 
     /**
+     * Constructor for the bucket
+     *
      * @param depth How deep in the routing tree is this bucket
+     * @param config Configuration for this kademlia bucket
      */
     public SMSKademliaBucket(int depth, KadConfiguration config) {
         this.depth = depth;
@@ -37,18 +41,18 @@ public class SMSKademliaBucket implements KademliaBucket {
     }
 
     /**
-     * Insert a contact in the bucket
+     * Insert a given valid contact in the bucket
      *
-     * @param c the new contact
+     * @param contact The contact to add
      */
     @Override
-    public void insert(Contact c) {
-        if (this.contacts.contains(c)) {
+    public void insert(Contact contact) {
+        if (this.contacts.contains(contact)) {
             /*
              * If the contact is already in the bucket, lets update that we've seen it
              * We need to remove and re-add the contact to get the Sorted Set to update sort order
              */
-            Contact tmp = this.removeFromContacts(c.getNode());
+            Contact tmp = this.removeFromContacts(contact.getNode());
             tmp.setSeenNow();
             tmp.resetStaleCount();
             this.contacts.add(tmp);
@@ -71,13 +75,13 @@ public class SMSKademliaBucket implements KademliaBucket {
                 /* If we have a stale contact, remove it and add the new contact to the bucket */
                 if (stalest != null) {
                     this.contacts.remove(stalest);
-                    this.contacts.add(c);
+                    this.contacts.add(contact);
                 } else {
                     /* No stale contact, lets insert this into replacement cache */
-                    this.insertIntoReplacementCache(c);
+                    this.insertIntoReplacementCache(contact);
                 }
             } else {
-                this.contacts.add(c);
+                this.contacts.add(contact);
             }
         }
     }
@@ -85,66 +89,64 @@ public class SMSKademliaBucket implements KademliaBucket {
     /**
      * Insert a contact form a node
      *
-     * @param n The node to create the contact from
+     * @param node The node to create the contact from
      */
     @Override
-    public void insert(SMSKademliaNode n) {
-        this.insert(new Contact(n));
+    public void insert(SMSKademliaNode node) {
+        this.insert(new Contact(node));
     }
 
     /**
-     * @param c The contact to check for
-     * @return true if there is c
+     * @param contact The contact to check for
+     * @return true if there is contact
      */
     @Override
-    public boolean containsContact(Contact c) {
-        return this.contacts.contains(c);
+    public boolean containsContact(Contact contact) {
+        return this.contacts.contains(contact);
     }
 
     /**
-     * @param n The node to check for
-     * @return true if there is n
+     * @param node The node to check for
+     * @return true if there is node
      */
     @Override
-    public boolean containsNode(SMSKademliaNode n) {
-        return this.containsContact(new Contact(n));
+    public boolean containsNode(SMSKademliaNode node) {
+        return this.containsContact(new Contact(node));
     }
 
     /**
-     * @param c The contact to remove
-     * @return true if well removed
+     * Removes a contact from the bucket
+     * @param contact The contact to remove
      */
     @Override
-    public boolean removeContact(Contact c) {
-        /* If the contact does not exist, doesn't throw an exception,we just failed to remove it */
-        if (!this.contacts.contains(c)) {
-            return false;
+    public void removeContact(Contact contact) {
+        /* If the contact does not exist, we don't have anything to remove */
+        if (!this.contacts.contains(contact)) {
+            return;
         }
 
         /* Contact exist, lets remove it only if our replacement cache has a replacement */
         if (!this.replacementCache.isEmpty()) {
             /* Replace the contact with one from the replacement cache */
-            this.contacts.remove(c);
+            this.contacts.remove(contact);
             Contact replacement = this.replacementCache.first();
             this.contacts.add(replacement);
             this.replacementCache.remove(replacement);
         } else {
             /* There is no replacement, just increment the contact's stale count */
-            this.getFromContacts(c.getNode()).incrementStaleCount();
+            this.getFromContacts(contact.getNode()).incrementStaleCount();
         }
-
-        return true;
     }
 
     /**
-     * @param n The node to get the contact from
-     * @return The contact
-     * @throw NoSuchElementException if the contact isn't in the list
+     * @param node The node to get the contact from
+     * @return The contact associated with that node
+     * @throws NoSuchElementException if the contact isn't in the list
      */
-    public Contact getFromContacts(SMSKademliaNode n) {
-        for (Contact c : this.contacts) {
-            if (c.getNode().equals(n)) {
-                return c;
+    public Contact getFromContacts(SMSKademliaNode node) {
+        for (Contact contact : this.contacts) {
+            if (contact.getNode().equals(node)) {
+                return contact;
             }
         }
 
@@ -153,15 +155,15 @@ public class SMSKademliaBucket implements KademliaBucket {
     }
 
     /**
-     * @param n The node representing the contact to remove
+     * @param node The node representing the contact to remove
      * @return The contact removed
      * @throw NoSuchElementException if the contact isn't in the list
      */
-    public Contact removeFromContacts(SMSKademliaNode n) {
-        for (Contact c : this.contacts) {
-            if (c.getNode().equals(n)) {
-                this.contacts.remove(c);
-                return c;
+    public Contact removeFromContacts(SMSKademliaNode node) {
+        for (Contact contact : this.contacts) {
+            if (contact.getNode().equals(node)) {
+                this.contacts.remove(contact);
+                return contact;
             }
         }
 
@@ -170,12 +172,11 @@ public class SMSKademliaBucket implements KademliaBucket {
     }
 
     /**
-     * @param n The node of the contact to remove
-     * @return true if well removed
+     * @param node The node of the contact to remove
      */
     @Override
-    public boolean removeNode(SMSKademliaNode n) {
-        return this.removeContact(new Contact(n));
+    public void removeNode(SMSKademliaNode node) {
+        this.removeContact(new Contact(node));
     }
 
     /**
@@ -207,8 +208,8 @@ public class SMSKademliaBucket implements KademliaBucket {
         }
 
         /* We have contacts, lets copy put them into the arraylist and return */
-        for (Contact c : this.contacts) {
-            ret.add(c);
+        for (Contact contact : this.contacts) {
+            ret.add(contact);
         }
 
         return ret;
@@ -218,22 +219,22 @@ public class SMSKademliaBucket implements KademliaBucket {
      * When the bucket is filled, we keep extra contacts in the replacement cache.
      * Private because user has not to use it
      */
-    private void insertIntoReplacementCache(Contact c) {
+    private void insertIntoReplacementCache(Contact contact) {
         /* Just return if this contact is already in our replacement cache */
-        if (this.replacementCache.contains(c)) {
+        if (this.replacementCache.contains(contact)) {
             /**
              * If the contact is already in the bucket, lets update that we've seen it
              * We need to remove and re-add the contact to get the Sorted Set to update sort order
              */
-            Contact tmp = this.removeFromReplacementCache(c.getNode());
+            Contact tmp = this.removeFromReplacementCache(contact.getNode());
             tmp.setSeenNow();
             this.replacementCache.add(tmp);
         } else if (this.replacementCache.size() > this.config.k()) {
             /* if our cache is filled, we remove the least recently seen contact */
             this.replacementCache.remove(this.replacementCache.last());
-            this.replacementCache.add(c);
+            this.replacementCache.add(contact);
         } else {
-            this.replacementCache.add(c);
+            this.replacementCache.add(contact);
         }
     }
 
@@ -241,15 +242,15 @@ public class SMSKademliaBucket implements KademliaBucket {
      * Remove a contact from the replacement cache
      * Private because user has not to use it
      *
-     * @param n Node to remove
+     * @param node Node to remove
      * @return Contact removed
      * @throw NoSuchElementException if the node isn't in the list
      */
-    private Contact removeFromReplacementCache(SMSKademliaNode n) {
-        for (Contact c : this.replacementCache) {
-            if (c.getNode().equals(n)) {
-                this.replacementCache.remove(c);
-                return c;
+    private Contact removeFromReplacementCache(SMSKademliaNode node) {
+        for (Contact contact : this.replacementCache) {
+            if (contact.getNode().equals(node)) {
+                this.replacementCache.remove(contact);
+                return contact;
             }
         }
 
@@ -272,11 +273,11 @@ public class SMSKademliaBucket implements KademliaBucket {
         StringBuilder sb = new StringBuilder("Bucket at depth: ");
         sb.append(this.depth);
         sb.append("\n Nodes: \n");
-        for (Contact n : this.contacts) {
+        for (Contact contact : this.contacts) {
             sb.append("Node: ");
-            sb.append(n.getNode().getId().toString());
+            sb.append(contact.getNode().getId().toString());
             sb.append(" (stale: ");
-            sb.append(n.staleCount());
+            sb.append(contact.staleCount());
             sb.append(")");
             sb.append("\n");
         }

@@ -40,20 +40,18 @@ public interface KademliaBucket {
     boolean containsNode(SMSKademliaNode n);
 
     /**
-     * Remove a contact from this bucket.
+     * Removes a contact from this bucket.
      *
      * @param c The contact to remove
-     * @return Boolean whether the removal was successful.
      */
-    boolean removeContact(Contact c);
+    void removeContact(Contact c);
 
     /**
-     * Remove the contact object related to a node from this bucket
+     * Removes the contact object related to a node from this bucket
      *
      * @param n The node of the contact to remove
-     * @return Boolean whether the removal was successful.
      */
-    boolean removeNode(SMSKademliaNode n);
+    void removeNode(SMSKademliaNode n);
 
     /**
      * Counts the number of contacts in this bucket.
