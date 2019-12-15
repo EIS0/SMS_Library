@@ -1,7 +1,5 @@
 package com.eis0.kademlianetwork;
 
-import android.util.Log;
-
 import com.eis0.kademlia.KademliaId;
 import com.eis0.kademlia.SMSKademliaNode;
 import com.eis0.kademlia.SMSKademliaRoutingTable;
@@ -71,8 +69,8 @@ public class TableUpdateIterator {
     private void askForId(){
         //create the fake id
         KademliaId fakeId = netId.generateNodeIdByDistance(currentCount);
-        Log.e("TABLE_LOG", "netId: " + netId + " Integer: " + netId.getInt());
-        Log.e("TABLE_LOG", "fakeId to find: " + fakeId + " Integer: " + fakeId.getInt());
+        //Log.e("TABLE_LOG", "netId: " + netId + " Integer: " + netId.getInt());
+        //Log.e("TABLE_LOG", "fakeId to find: " + fakeId + " Integer: " + fakeId.getInt());
         //search in the net for the fakeId and wait
         IdFinderHandler.searchId(fakeId, netPeer);
     }

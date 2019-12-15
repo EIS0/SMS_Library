@@ -78,7 +78,7 @@ public class ResourceExchangeHandler {
         // 1. The code of the message
         // 2. the ID of the resource
         // 3. the SMSPeer of the
-        IdFinderHandler.searchIdForAddRequest(idToFind, searcher);
+        IdFinderHandler.searchIdForAddRequest(idToFind, searcher, IdFinderHandler.ResearchMode.AddToDictionary);
     }
 
 
