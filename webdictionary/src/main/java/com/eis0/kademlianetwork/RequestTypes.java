@@ -18,18 +18,22 @@ public enum RequestTypes {
     AcknowledgeMessage,
 
     //Requests to handle the resource exchange
-    AddToDictRequest,
     AddToDict,
     RemoveFromDict,
     UpdateDict,
 
     NodeLookup,
 
-    //Request to handle the research closest ID
+    //Requests to handle the research closest ID
     FindId,
     SearchResult,
 
-    //Request to handle the research for the closest ID in the resource exchange
+    //Requests to handle the research for the closest ID in the resource exchange:
+    //Adding an element to the Dictionary
     FindIdForAddRequest,
     AddRequestResult
+    //Asking for an element in the Dictionary
+
+    //Deleting an element from the Dictionary
+
 }
