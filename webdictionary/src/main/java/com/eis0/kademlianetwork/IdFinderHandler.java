@@ -19,14 +19,15 @@ public class IdFinderHandler {
      * SMSPeer who's searching, else sends a request to find it to a
      * closer person than me. By a process chain, if the node is not found
      * it's sent to searcher the closest id found on the net
+     *
      * @param idToFind The id to find
      * @param searcher The SMSPeer who's searching the id
      */
-    public static void searchId(KademliaId idToFind, SMSPeer searcher){
+    public static void searchId(KademliaId idToFind, SMSPeer searcher) {
         KademliaId netId = KademliaNetwork.getInstance().getLocalNode().getId();
         //If I'm the id return it
         //N.B. this state should be impossible, so it's a fail safe
-        if(netId == idToFind){
+        if (netId == idToFind) {
             String message = RequestTypes.SearchResult.ordinal() + " " + idToFind;
             SMSMessage searchResult = new SMSMessage(searcher, message);
             SMSManager.getInstance().sendMessage(searchResult);
@@ -34,7 +35,7 @@ public class IdFinderHandler {
         }
 
         SMSKademliaNode nodeToFind = new SMSKademliaNode(idToFind);
-        if(KademliaNetwork.getInstance().isNodeInNetwork(nodeToFind)){
+        if (KademliaNetwork.getInstance().isNodeInNetwork(nodeToFind)) {
             String message = RequestTypes.SearchResult.ordinal() + " " + idToFind;
             SMSMessage searchResult = new SMSMessage(searcher, message);
             SMSManager.getInstance().sendMessage(searchResult);
@@ -42,17 +43,16 @@ public class IdFinderHandler {
         }
 
         SMSKademliaRoutingTable table = KademliaNetwork.getInstance().getLocalRoutingTable();
-        SMSKademliaNode closestNode = table.findClosest(idToFind,1).get(0);
+        SMSKademliaNode closestNode = table.findClosest(idToFind, 1).get(0);
         BigInteger idToFindDistanceFromNetId = idToFind.getXorDistance(netId);
         BigInteger idToFindDistanceFromClosest = idToFind.getXorDistance(closestNode.getId());
-        if(idToFindDistanceFromClosest.compareTo(idToFindDistanceFromNetId) > 0){
+        if (idToFindDistanceFromClosest.compareTo(idToFindDistanceFromNetId) > 0) {
             //I got further away from what I'm looking for, so I'm the closest,
             //so I return this id
             String message = RequestTypes.SearchResult.ordinal() + " " + netId;
             SMSMessage searchResult = new SMSMessage(searcher, message);
             SMSManager.getInstance().sendMessage(searchResult);
-        }
-        else{
+        } else {
             //I got closer to what I'm looking for, so I ask that id to find it.
             SMSPeer closer = closestNode.getPeer();
             String message = RequestTypes.FindId.ordinal() + " " + idToFind + " " + searcher;
@@ -63,50 +63,68 @@ public class IdFinderHandler {
 
 
     //TODO try to integrate these two methods, they are practically identical
+
     /**
      * Searches for a specific Id, which needs to be closer to a given resource Id.
      * If it's found it's sent to a given SMSPeer who's searching, else sends a request to find it
      * to a closer person than me. By a process chain, if the node is not found
      * it's sent to searcher the closest id found on the net
+     *
      * @param idToFind The id to find
      * @param searcher The SMSPeer who's searching the id
      */
-    public static void searchIdForAddRequest(KademliaId idToFind, SMSPeer searcher){
+    public static void searchIdForAddRequest(KademliaId idToFind, SMSPeer searcher, ResearchMode researchMode) {
+        RequestTypes findId = null;
+        RequestTypes requestResult = null;
+        switch (researchMode) {
+            case AddToDictionary:
+                findId = RequestTypes.FindIdForAddRequest;
+                requestResult =RequestTypes.AddRequestResult;
+                break;
+            case FindInDictionary:
+                findId = null;
+                requestResult = null;
+                break;
+        }
         KademliaId netId = KademliaNetwork.getInstance().getLocalNode().getId();
         //If I'm the id return it
         //N.B. this state should be impossible, so it's a fail safe
-        if(netId == idToFind){
-            String message = RequestTypes.AddRequestResult.ordinal() + " " + idToFind;
+        if (netId == idToFind) {
+            String message = requestResult.ordinal() + " " + idToFind;
             SMSMessage searchResult = new SMSMessage(searcher, message);
             SMSManager.getInstance().sendMessage(searchResult);
             return;
         }
 
         SMSKademliaNode nodeToFind = new SMSKademliaNode(idToFind);
-        if(KademliaNetwork.getInstance().isNodeInNetwork(nodeToFind)){
-            String message = RequestTypes.AddRequestResult.ordinal() + " " + idToFind;
+        if (KademliaNetwork.getInstance().isNodeInNetwork(nodeToFind)) {
+            String message = requestResult.ordinal() + " " + idToFind;
             SMSMessage searchResult = new SMSMessage(searcher, message);
             SMSManager.getInstance().sendMessage(searchResult);
             return;
         }
 
         SMSKademliaRoutingTable table = KademliaNetwork.getInstance().getLocalRoutingTable();
-        SMSKademliaNode closestNode = table.findClosest(idToFind,1).get(0);
+        SMSKademliaNode closestNode = table.findClosest(idToFind, 1).get(0);
         BigInteger idToFindDistanceFromNetId = idToFind.getXorDistance(netId);
         BigInteger idToFindDistanceFromClosest = idToFind.getXorDistance(closestNode.getId());
-        if(idToFindDistanceFromClosest.compareTo(idToFindDistanceFromNetId) > 0){
+        if (idToFindDistanceFromClosest.compareTo(idToFindDistanceFromNetId) > 0) {
             //I got further away from what I'm looking for, so I'm the closest,
             //so I return this id
-            String message = RequestTypes.AddRequestResult.ordinal() + " " + idToFind;
+            String message = requestResult.ordinal() + " " + idToFind;
             SMSMessage searchResult = new SMSMessage(searcher, message);
             SMSManager.getInstance().sendMessage(searchResult);
-        }
-        else{
+        } else {
             //I got closer to what I'm looking for, so I ask that id to find it.
             SMSPeer closer = closestNode.getPeer();
-            String message = RequestTypes.FindIdForAddRequest.ordinal() + " " + idToFind + " " + searcher;
+            String message = findId.ordinal() + " " + idToFind + " " + searcher;
             SMSMessage addRequestMessage = new SMSMessage(closer, message);
             SMSManager.getInstance().sendMessage(addRequestMessage);
         }
+    }
+
+    public enum ResearchMode {
+        AddToDictionary,
+        FindInDictionary
     }
 }
