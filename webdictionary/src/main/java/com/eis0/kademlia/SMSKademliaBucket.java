@@ -115,8 +115,12 @@ public class SMSKademliaBucket implements KademliaBucket {
     }
 
     /**
-     * Removes a contact from the bucket
+     * Removes a contact from the bucket, if a
+     * replacement exists in the cache it's also replaced
      * @param contact The contact to remove
+     *
+     * @author Edoardo Raimondi
+     * @author edits by Marco Cognolato
      */
     @Override
     public void removeContact(Contact contact) {
@@ -124,17 +128,15 @@ public class SMSKademliaBucket implements KademliaBucket {
         if (!this.contacts.contains(contact)) {
             return;
         }
+        //Contact exists, remove it
+        this.contacts.remove(contact);
 
-        /* Contact exist, lets remove it only if our replacement cache has a replacement */
+        //If we have a replacement...
         if (!this.replacementCache.isEmpty()) {
             /* Replace the contact with one from the replacement cache */
-            this.contacts.remove(contact);
             Contact replacement = this.replacementCache.first();
             this.contacts.add(replacement);
             this.replacementCache.remove(replacement);
-        } else {
-            /* There is no replacement, just increment the contact's stale count */
-            this.getFromContacts(contact.getNode()).incrementStaleCount();
         }
     }
 

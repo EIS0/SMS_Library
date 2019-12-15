@@ -29,6 +29,7 @@ public class SMSKademliaBucketTest {
     @Before
     public void setup(){
         bucket = new SMSKademliaBucket(5, config);
+        CONTACT1.resetStaleCount();
     }
 
     @Test
@@ -73,7 +74,7 @@ public class SMSKademliaBucketTest {
     }
 
     @Test
-    public void removeNode_getsRemoved(){
+    public void removeNode_removed(){
         bucket.insert(CONTACT1);
         bucket.removeNode(NODE1);
         assertFalse(bucket.containsNode(NODE1));
@@ -85,7 +86,7 @@ public class SMSKademliaBucketTest {
         Contact c1 = new Contact(NODE1);
         Contact c2 = new Contact(NODE2);
         /*I expect this CONTACT1 to be add to the replacement cache*/
-        Contact c3 = new Contact(NODE1);
+        Contact c3 = new Contact(NODE3);
         bucket.insert(c1);
         bucket.insert(c2);
         bucket.insert(c3);
