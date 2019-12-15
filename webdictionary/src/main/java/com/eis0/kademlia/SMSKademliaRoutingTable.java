@@ -119,9 +119,9 @@ public class SMSKademliaRoutingTable implements KademliaRoutingTable {
     public final List<SMSKademliaNode> getAllNodes() {
         List<SMSKademliaNode> nodes = new ArrayList<>();
 
-        for (KademliaBucket b : this.buckets) {
-            for (Contact c : b.getContacts()) {
-                nodes.add(c.getNode());
+        for (KademliaBucket bucket : this.buckets) {
+            for (Contact contact : bucket.getContacts()) {
+                nodes.add(contact.getNode());
             }
         }
 
