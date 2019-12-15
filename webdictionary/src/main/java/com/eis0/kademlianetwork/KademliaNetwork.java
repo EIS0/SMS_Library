@@ -4,6 +4,7 @@ import com.eis0.kademlia.Contact;
 import com.eis0.kademlia.DefaultConfiguration;
 import com.eis0.kademlia.SMSKademliaNode;
 import com.eis0.kademlia.SMSKademliaRoutingTable;
+import com.eis0.smslibrary.SMSManager;
 import com.eis0.smslibrary.SMSPeer;
 import com.eis0.webdictionary.SMSNetVocabulary;
 import com.eis0.webdictionary.SMSSerialization;
@@ -26,12 +27,17 @@ public class KademliaNetwork {
     private SMSKademliaRoutingTable localRoutingTable;
     private ConnectionHandler connectionHandler = new ConnectionHandler();
     private KademliaListener listener;
+    private SMSKademliaListener smsKademliaListener;
     //Dictionary containing the resources stored by the local node
     private SMSNetVocabulary localKademliaDictionary;
 
     // Singleton instance
     private static KademliaNetwork instance;
-
+    // Constructor following the Singleton Design Pattern
+    private KademliaNetwork() {
+        SMSManager.getInstance().setReceiveListener(smsKademliaListener);
+    }
+    
     /**
      * Return an instance of KademliaNetwork.
      *
