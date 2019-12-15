@@ -17,6 +17,7 @@ import com.eis0.webdictionary.SerializableObject;
  * itself (which would make it a really big class), redirects the work on the proper handler.
  *
  * @author Matteo Carnelos
+ * @author Edoardo Raimondi
  */
 public class KademliaNetwork {
 
@@ -28,6 +29,8 @@ public class KademliaNetwork {
     private KademliaListener listener;
     //Dictionary containing the resources stored by the local node
     private SMSNetVocabulary localKademliaDictionary;
+    //To know if I had a positive acknowledge respond to a sent command
+    private boolean hasRespond;
 
     // Singleton instance
     private static KademliaNetwork instance;
@@ -54,7 +57,22 @@ public class KademliaNetwork {
         this.localNode = localNode;
         this.listener = listener;
         localRoutingTable = new SMSKademliaRoutingTable(localNode, new DefaultConfiguration());
+        hasRespond = false;
     }
+
+    /**
+     * @return true if I had a acknowledge respond to a sent command, false otherwise
+     * @author Edoardo Raimondi
+     */
+    public boolean hasRespond() { return hasRespond; }
+
+    /**
+     * Set true if I had a acknowledge respond, false otherwise
+     *
+     * @param value
+     * @author Edoardo Raimondi
+     */
+    public void setRespond(boolean value){ hasRespond = value; }
 
     /**
      * Add a peer to the kademlia network.

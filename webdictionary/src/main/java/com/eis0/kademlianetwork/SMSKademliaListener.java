@@ -20,14 +20,12 @@ import com.eis0.smslibrary.SMSPeer;
 
 public class SMSKademliaListener implements ReceivedMessageListener<SMSMessage> {
 
-    /*Create a 10 second timer. If a don't receive an acknowledge message in that time, I quit*/
-    RespondTimer timer = new RespondTimer();
-    KademliaNetwork KadNet;
+    KademliaNetwork kadNet;
     ResourceExchangeHandler resourceExchangeHandler = new ResourceExchangeHandler();
     //TODO: remember to make it work (register the listener, somehow. How does it work again?)
 
     SMSKademliaListener(KademliaNetwork kadNet) {
-        this.KadNet = kadNet;
+        this.kadNet = kadNet;
     }
 
     /**
@@ -68,6 +66,7 @@ public class SMSKademliaListener implements ReceivedMessageListener<SMSMessage> 
         switch (incomingRequest) {
             case AcknowledgeMessage:
                 //that means the sent request has been taken by the node
+                kadNet.setRespond(true);
                 break;
 
             /**Joining a network */
