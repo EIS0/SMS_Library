@@ -3,6 +3,7 @@ package com.eis0.kademlianetwork;
 import android.util.Log;
 
 import com.eis0.kademlia.KademliaId;
+import com.eis0.kademlia.SMSKademliaNode;
 import com.eis0.smslibrary.ReceivedMessageListener;
 import com.eis0.smslibrary.SMSMessage;
 import com.eis0.smslibrary.SMSPeer;
@@ -20,6 +21,11 @@ import com.eis0.smslibrary.SMSPeer;
 public class SMSKademliaListener implements ReceivedMessageListener<SMSMessage> {
 
     ResourceExchangeHandler resourceExchangeHandler = new ResourceExchangeHandler();
+    KademliaNetwork kadNet;
+
+    SMSKademliaListener(KademliaNetwork kadNet){
+        this.kadNet = kadNet;
+    }
     //TODO: remember to make it work (register the listener, somehow. How does it work again?)
     /**
      * This method analyze the incoming messages, and extracts the content and the CODE
