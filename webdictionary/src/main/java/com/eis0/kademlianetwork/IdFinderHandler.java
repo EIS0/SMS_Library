@@ -16,7 +16,7 @@ import java.math.BigInteger;
  * @author Enrico Cestaro (edited the code, to implement multiple research modes)
  */
 public class IdFinderHandler {
-
+    //TODO: can be converted in an Object Pool?
     /**
      * Searches for a specific Id, which needs to be closer to a given resource Id.
      * If it's found it's sent to a given SMSPeer who's searching, else sends a request to find it

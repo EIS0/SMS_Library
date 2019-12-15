@@ -24,7 +24,6 @@ public class SMSKademliaListener implements ReceivedMessageListener<SMSMessage> 
     RespondTimer timer = new RespondTimer();
     KademliaNetwork KadNet;
     ResourceExchangeHandler resourceExchangeHandler = new ResourceExchangeHandler();
-    //TODO: remember to make it work (register the listener, somehow. How does it work again?)
 
     SMSKademliaListener(KademliaNetwork kadNet) {
         this.KadNet = kadNet;
