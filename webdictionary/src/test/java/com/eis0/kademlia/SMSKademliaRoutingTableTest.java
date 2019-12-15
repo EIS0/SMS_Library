@@ -13,8 +13,8 @@ import static org.junit.Assert.assertEquals;
 public class SMSKademliaRoutingTableTest {
 
     KadConfiguration config = new DefaultConfiguration();
-    KademliaId ID = new KademliaId("00000000000000000001");
-    KademliaId ID2 = new KademliaId("00000000000000000011");
+    KademliaId ID = new KademliaId("0000000000000001");
+    KademliaId ID2 = new KademliaId("0000000000000011");
     SMSKademliaNode test2 = new SMSKademliaNode(new SMSPeer("3497364511"));
     SMSKademliaNode test = new SMSKademliaNode(new SMSPeer("3497364511"));
 
@@ -41,12 +41,12 @@ public class SMSKademliaRoutingTableTest {
 
     @Test
     public void getBucketIdTest(){
-        assertEquals(toTest.getBucketId(ID), 0);
+        assertEquals(toTest.getBucketId(ID), KademliaId.ID_LENGTH-1);
     }
 
     @Test
     public void findClosestTest(){
-        KademliaId target = new KademliaId("00000000000000000010");
+        KademliaId target = new KademliaId("0000000000000010");
         SMSNetVocabulary dic = new SMSNetVocabulary();
         SMSKademliaNode toCompare = new SMSKademliaNode(new SMSPeer("3497364511"));
         toTest.insert(toCompare);

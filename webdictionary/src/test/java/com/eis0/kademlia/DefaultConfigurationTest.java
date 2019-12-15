@@ -21,6 +21,6 @@ public class DefaultConfigurationTest {
 
     @Test
     public void stale() {
-        assertEquals(test.stale(),0);
+        assertEquals(test.stale(),2);
     }
 }
