@@ -111,6 +111,7 @@ public class ResourceExchangeHandler {
         String resourceToAdd = RequestTypes.AddToDict.ordinal() + " " + key + " " + resource;
         SMSMessage message = new SMSMessage(targetPeer, resourceToAdd);
         SMSManager.getInstance().sendMessage(message);
+        //TODO: complete this piece of code
         //I wait 10 seconds
         timer.run();
         //check if I had a acknowledge respond to my request
