@@ -25,6 +25,7 @@ import java.util.Map;
  * MUST BE FIXED
  *
  * @author Enrico Cestaro
+ * @author Edoardo Raimondi
  */
 public class ResourceExchangeHandler {
     //Map containing the pending AddRequests waiting to be completed
@@ -112,7 +113,7 @@ public class ResourceExchangeHandler {
         timer.run();
         //check if I had a acknowledge respond to my request
         if(KademliaNetwork.getInstance().hasRespond()){
-            //I set false to be able to do it again
+            //I know my request has ben received successfully. I set false in order to do it again
             KademliaNetwork.getInstance().setRespond(false);
         }
         else { //My target node is broken
