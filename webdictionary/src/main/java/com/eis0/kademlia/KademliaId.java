@@ -1,7 +1,5 @@
 package com.eis0.kademlia;
 
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 
 import com.eis0.smslibrary.SMSPeer;
@@ -57,10 +55,12 @@ public class KademliaId implements Serializable {
      *
      * @param data The user generated key string
      * @throws IllegalArgumentException if data has not the right fit
+     * @author Marco Cognolato
      */
     public KademliaId(String data) {
         this.keyBytes = data.getBytes();
-        if(data.length() == ID_LENGTH_BYTES*2){
+        // if it's in hex form, convert to byte array
+        if(data.matches("[0-9A-F]{" + ID_LENGTH_BYTES*2+"}")){
             this.keyBytes = new byte[ID_LENGTH_BYTES];
             for (int i = 0; i < keyBytes.length; i++) {
                 int index = i * 2;
@@ -86,7 +86,9 @@ public class KademliaId implements Serializable {
      */
     public KademliaId(byte[] bytes) {
         if (bytes.length > ID_LENGTH_BYTES) {
-            throw new IllegalArgumentException("Specified Data need to be " + ID_LENGTH_BYTES + " characters long. Data Given: '" + new String(bytes) + "'");
+            throw new IllegalArgumentException(
+                    "Specified Data need to be " + ID_LENGTH_BYTES
+                    + " characters long. Data Given: '" + new String(bytes) + "'");
         }
         this.keyBytes = bytes;
         //if the byte array it's too short, add some leading null bytes
