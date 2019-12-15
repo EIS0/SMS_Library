@@ -28,17 +28,12 @@ import java.util.Map;
  * @author Edoardo Raimondi
  */
 public class ResourceExchangeHandler {
-    //Map containing the pending AddRequests waiting to be completed
+    //Maps containing the pending Requests waiting to be completed
     private Map<KademliaId, Request> pendingAddRequests;
     private Map<KademliaId, Request> pendingGetRequests;
     //Timer to know if my sent request has been taken by somebody (10 secs max)
     RespondTimer timer = new RespondTimer();
 
-    /**
-     * TODO: the list of AddRequests is reinitialized every time the node disconnect itself from the
-     * network, is this something to fix?
-     * Constructor of the ResourceExchangeHandler
-     */
     public ResourceExchangeHandler() {
         pendingAddRequests = new HashMap<KademliaId, Request>();
         pendingGetRequests = new HashMap<KademliaId, Request>();
@@ -54,8 +49,6 @@ public class ResourceExchangeHandler {
      * @throws IllegalArgumentException If the the key or the resource are null or invalid
      */
     public void createAddRequest(String key, String resource) {
-        if (key == null || resource == null) throw new IllegalArgumentException();
-        if (key.length() == 0 || resource.length() == 0) throw new IllegalArgumentException();
         //Create the Request object, insert it in the List
         Request currentRequest = new Request(key, resource);
         KademliaId idToFind = currentRequest.getKeyId();
@@ -115,11 +108,10 @@ public class ResourceExchangeHandler {
         //I wait 10 seconds
         timer.run();
         //check if I had a acknowledge respond to my request
-        if(KademliaNetwork.getInstance().hasRespond()){
+        if (KademliaNetwork.getInstance().hasRespond()) {
             //I know my request has ben received successfully. I set false in order to do it again
             KademliaNetwork.getInstance().setRespond(false);
-        }
-        else { //My target node is broken
+        } else { //My target node is broken
             //TODO
         }
     }
@@ -146,14 +138,17 @@ public class ResourceExchangeHandler {
         private KademliaId resourceKeyId;
         private String key;
         private String resource;
+
         /**
          * This is the only constructor of the class, it automatically creates the ID of the
          * resource key
          *
-         * @param key       The String value of the key of the <key, resource> pair
-         * @param resource  The String value of the resource of the <key, resource> pair
+         * @param key      The String value of the key of the <key, resource> pair
+         * @param resource The String value of the resource of the <key, resource> pair
          */
         public Request(String key, String resource) {
+            if (key == null || resource == null) throw new IllegalArgumentException();
+            if (key.length() == 0 || resource.length() == 0) throw new IllegalArgumentException();
             this.key = key;
             this.resource = resource;
             resourceKeyId = new KademliaId(key);
