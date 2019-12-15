@@ -26,22 +26,21 @@ public class SMSKademliaListener implements ReceivedMessageListener<SMSMessage> 
     ResourceExchangeHandler resourceExchangeHandler = new ResourceExchangeHandler();
     //TODO: remember to make it work (register the listener, somehow. How does it work again?)
 
-    SMSKademliaListener(KademliaNetwork kadNet){
+    SMSKademliaListener(KademliaNetwork kadNet) {
         this.KadNet = kadNet;
     }
 
     /**
      * Send an acknowledge message
      *
-     * @param peer of the node that contacted me
+     * @param peer \The {@link SMSPeer} of the node that contacted me
      * @author Edoardo Raimondi
      */
-    public void sendAcknowledge(SMSPeer peer){
+    public void sendAcknowledge(SMSPeer peer) {
         String message = RequestTypes.AcknowledgeMessage.ordinal() + " ";
         SMSMessage acknowoledgeMessage = new SMSMessage(peer, message);
         SMSManager.getInstance().sendMessage(acknowoledgeMessage);
     }
-
 
 
     /**
@@ -70,6 +69,8 @@ public class SMSKademliaListener implements ReceivedMessageListener<SMSMessage> 
             case AcknowledgeMessage:
                 //that means the sent request has been taken by the node
                 break;
+
+            /**Joining a network */
             case JoinPermission:
                 ConnectionHandler.sendAcceptRequest(peer);
                 break;
@@ -91,7 +92,7 @@ public class SMSKademliaListener implements ReceivedMessageListener<SMSMessage> 
                 TableUpdateHandler.stepTableUpdate(idFound);
                 break;
 
-            //Adding a resource to the Dictionary
+            /**Adding a resource to the Dictionary */
             case FindIdForAddRequest:
                 /*First at all, I make know that I can work*/
                 sendAcknowledge(peer);
