@@ -64,7 +64,6 @@ public class SMSKademliaListener implements ReceivedMessageListener<SMSMessage> 
                 break;
 
             case FindIdForAddRequest:
-                Log.e("CONN_LOG", "IdFound: " + splitted[1]);
                 idToFind = new KademliaId(splitted[1]);
                 searcher = new SMSPeer(splitted[2]);
                 resourceExchangeHandler.processAddRequest(idToFind, searcher);
