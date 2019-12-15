@@ -32,7 +32,7 @@ public class ResourceExchangeHandler {
 
     /**
      * TODO: the list of AddRequests is reinitialized every time the node disconnect itself from the
-     *  network, is this something to fix?
+     * network, is this something to fix?
      * Constructor of the ResourceExchangeHandler
      */
     public ResourceExchangeHandler() {
@@ -124,8 +124,8 @@ public class ResourceExchangeHandler {
          * This is the only constructor of the class, it automatically creates the ID of the
          * resource key
          *
-         * @param key
-         * @param resource
+         * @param key       The String value of the key of the <key, resource> pair
+         * @param resource  The String value of the resource of the <key, resource> pair
          */
         public AddRequest(String key, String resource) {
             this.key = key;

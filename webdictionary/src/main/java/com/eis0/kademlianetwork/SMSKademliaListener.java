@@ -22,10 +22,11 @@ public class SMSKademliaListener implements ReceivedMessageListener<SMSMessage> 
     ResourceExchangeHandler resourceExchangeHandler = new ResourceExchangeHandler();
     KademliaNetwork kadNet;
 
-    SMSKademliaListener(KademliaNetwork kadNet){
+    SMSKademliaListener(KademliaNetwork kadNet) {
         this.kadNet = kadNet;
     }
     //TODO: remember to make it work (register the listener, somehow. How does it work again?)
+
     /**
      * This method analyze the incoming messages, and extracts the content and the CODE
      *
@@ -68,6 +69,7 @@ public class SMSKademliaListener implements ReceivedMessageListener<SMSMessage> 
                 TableUpdateHandler.stepTableUpdate(idFound);
                 break;
 
+            //Adding a resource to the Dictionary
             case FindIdForAddRequest:
                 idToFind = new KademliaId(splitted[1]);
                 searcher = new SMSPeer(splitted[2]);
@@ -77,7 +79,6 @@ public class SMSKademliaListener implements ReceivedMessageListener<SMSMessage> 
                 idToFind = new KademliaId(splitted[1]);
                 resourceExchangeHandler.completeAddRequest(idToFind, peer);
                 break;
-
             case AddToDict:
                 String key = splitted[1];
                 String resource = splitted[2];

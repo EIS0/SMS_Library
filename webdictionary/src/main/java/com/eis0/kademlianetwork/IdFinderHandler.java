@@ -11,6 +11,7 @@ import java.math.BigInteger;
 
 /**
  * Class used to find the closest ID to the network to a specific Id
+ *
  * @author Marco Cognolato (wrote the class)
  * @author Enrico Cestaro (edited the code, to implement multiple research modes)
  */
@@ -22,21 +23,29 @@ public class IdFinderHandler {
      * to a closer person than the actual node. By a chain process, if the node is not found
      * it's sent to searcher the closest id found on the net
      *
-     * @param idToFind          The {@link KademliaId} to find
-     * @param searcher          The {@link SMSPeer} who's searching the id
-     * @param  researchMode     The {@link ResearchMode} enum, represents the final purpose of the
-     *                          research
+     * @param idToFind     The {@link KademliaId} to find
+     * @param searcher     The {@link SMSPeer} who's searching the id
+     * @param researchMode The {@link ResearchMode} enum, represents the final purpose of the
+     *                     research
+     * @throws IllegalArgumentException If the idToFind, the searcher or the researchMode are null
      */
     public static void searchId(KademliaId idToFind, SMSPeer searcher, ResearchMode researchMode) {
+        if (searcher == null || idToFind == null || researchMode == null)
+            throw new IllegalArgumentException();
+        /*Declaration of the two messages used to:
+        1. entrust the research to a close node
+        2. communicate the result of the research, or to
+         */
         RequestTypes findId = null;
         RequestTypes requestResult = null;
+        //Selection of the research mode
         switch (researchMode) {
             case JoinNetwork:
                 findId = RequestTypes.FindId;
                 requestResult = RequestTypes.SearchResult;
             case AddToDictionary:
                 findId = RequestTypes.FindIdForAddRequest;
-                requestResult =RequestTypes.AddRequestResult;
+                requestResult = RequestTypes.AddRequestResult;
                 break;
             case FindInDictionary:
                 findId = null;
