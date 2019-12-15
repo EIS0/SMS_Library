@@ -74,6 +74,6 @@ public class TableUpdateIterator {
         Log.e("TABLE_LOG", "netId: " + netId + " Integer: " + netId.getInt());
         Log.e("TABLE_LOG", "fakeId to find: " + fakeId + " Integer: " + fakeId.getInt());
         //search in the net for the fakeId and wait
-        IdFinderHandler.searchId(fakeId, netPeer);
+        IdFinderHandler.searchId(fakeId, netPeer, ResearchMode.JoinNetwork);
     }
 }
