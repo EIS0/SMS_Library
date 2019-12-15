@@ -27,7 +27,6 @@ import java.util.Map;
  * @author Enrico Cestaro
  */
 public class ResourceExchangeHandler {
-
     //Map containing the pending AddRequests waiting to be completed
     private Map<KademliaId, AddRequest> pendingRequests;
 
