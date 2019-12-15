@@ -45,6 +45,7 @@ public class SMSKademliaListener implements ReceivedMessageListener<SMSMessage> 
         //Starts a specific action depending upon the request or the command sent by other users
         switch (incomingRequest) {
             case AcknowledgeMessage:
+                //that means the sent request has been taken by the node
                 break;
             case JoinPermission:
                 ConnectionHandler.sendAcceptRequest(peer);
