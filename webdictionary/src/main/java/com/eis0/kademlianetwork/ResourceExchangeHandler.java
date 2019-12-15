@@ -27,13 +27,12 @@ import java.util.Map;
  * @author Enrico Cestaro
  */
 public class ResourceExchangeHandler {
-
     //Map containing the pending AddRequests waiting to be completed
     private Map<KademliaId, AddRequest> pendingRequests;
 
     /**
      * TODO: the list of AddRequests is reinitialized every time the node disconnect itself from the
-     *  network, is this something to fix?
+     * network, is this something to fix?
      * Constructor of the ResourceExchangeHandler
      */
     public ResourceExchangeHandler() {
@@ -79,7 +78,7 @@ public class ResourceExchangeHandler {
         // 1. The code of the message
         // 2. the ID of the resource
         // 3. the SMSPeer of the
-        IdFinderHandler.searchIdForAddRequest(idToFind, searcher);
+        IdFinderHandler.searchId(idToFind, searcher, ResearchMode.AddToDictionary);
     }
 
 
@@ -125,8 +124,8 @@ public class ResourceExchangeHandler {
          * This is the only constructor of the class, it automatically creates the ID of the
          * resource key
          *
-         * @param key
-         * @param resource
+         * @param key       The String value of the key of the <key, resource> pair
+         * @param resource  The String value of the resource of the <key, resource> pair
          */
         public AddRequest(String key, String resource) {
             this.key = key;

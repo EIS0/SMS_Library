@@ -5,8 +5,10 @@ import com.eis0.smslibrary.SMSPeer;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.NoSuchElementException;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -23,6 +25,8 @@ public class SMSKademliaBucketTest {
     private final SMSKademliaNode NODE3 = new SMSKademliaNode(PEER3);
 
     private final Contact CONTACT1 = new Contact(NODE1);
+    private final Contact CONTACT2 = new Contact(NODE2);
+    private final Contact CONTACT3 = new Contact(NODE3);
 
     private SMSKademliaBucket bucket;
 
@@ -40,6 +44,12 @@ public class SMSKademliaBucketTest {
     @Test
     public void insertContact_getsInserted(){
         bucket.insert(CONTACT1);
+        assertTrue(bucket.containsContact(CONTACT1));
+    }
+
+    @Test
+    public void insertNode_getsInserted(){
+        bucket.insert(NODE1);
         assertTrue(bucket.containsContact(CONTACT1));
     }
 
@@ -103,11 +113,47 @@ public class SMSKademliaBucketTest {
         bucket.getFromContacts(NODE1);
     }
 
-    @Test(expected =  NoSuchElementException.class)
-    public void removeFromContacts_NotInBucket(){
-        bucket.removeFromContacts(NODE1);
+    @Test
+    public void insertAlreadyPresent_getsUpdatedStaleCount(){
+        bucket.insert(CONTACT1);
+        CONTACT1.incrementStaleCount();
+        bucket.insert(CONTACT1);
+        assertEquals(CONTACT1.staleCount(), 0);
     }
 
+    @Test
+    public void insertAlreadyPresent_isStillPresent(){
+        bucket.insert(CONTACT1);
+        bucket.insert(CONTACT1);
+        assertTrue(bucket.containsContact(CONTACT1));
+    }
 
+    @Test
+    public void checkNumContacts_asExpected(){
+        bucket.insert(CONTACT1);
+        bucket.insert(CONTACT2);
+        assertEquals(bucket.numContacts(), 2);
+    }
 
+    @Test
+    public void getContactList(){
+        ArrayList<Contact> contList = new ArrayList<>();
+        contList.add(CONTACT1);
+        contList.add(CONTACT2);
+        bucket.insert(CONTACT1);
+        bucket.insert(CONTACT2);
+        assertArrayEquals(contList.toArray(), bucket.getContacts().toArray());
+    }
+
+    @Test
+    public void getContactList_withCache(){
+        ArrayList<Contact> contList = new ArrayList<>();
+        contList.add(CONTACT1);
+        contList.add(CONTACT2);
+        bucket.insert(CONTACT1);
+        bucket.insert(CONTACT2);
+        bucket.insert(CONTACT3);
+        assertArrayEquals(contList.toArray(), bucket.getContacts().toArray());
+        assertEquals(bucket.getReplacementCacheSize(), 1);
+    }
 }
