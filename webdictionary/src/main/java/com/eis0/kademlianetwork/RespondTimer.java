@@ -2,6 +2,7 @@ package com.eis0.kademlianetwork;
 
 import android.util.Log;
 
+import java.math.BigInteger;
 import java.util.TimerTask;
 
 /**
@@ -14,6 +15,7 @@ import java.util.TimerTask;
 
 public class RespondTimer extends TimerTask {
 
+    private static final int time  = 10000;
     private static final String LOG_KEY = "TIMER";
 
     @Override
@@ -31,9 +33,8 @@ public class RespondTimer extends TimerTask {
     private void completeTask() {
         try {
             //assuming it takes 10 secs to complete the task
-            Thread.sleep(10000);
+            Thread.sleep(time);
         } catch (InterruptedException e) {
-            e.printStackTrace();
         }
     }
 }

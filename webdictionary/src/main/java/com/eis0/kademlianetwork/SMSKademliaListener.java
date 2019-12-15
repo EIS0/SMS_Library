@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.eis0.kademlia.KademliaId;
 import com.eis0.smslibrary.ReceivedMessageListener;
+import com.eis0.smslibrary.SMSManager;
 import com.eis0.smslibrary.SMSMessage;
 import com.eis0.smslibrary.SMSPeer;
 
@@ -19,8 +20,30 @@ import com.eis0.smslibrary.SMSPeer;
 
 public class SMSKademliaListener implements ReceivedMessageListener<SMSMessage> {
 
+    /*Create a 10 second timer. If a don't receive an acknowledge message in that time, I quit*/
+    RespondTimer timer = new RespondTimer();
+    KademliaNetwork KadNet;
     ResourceExchangeHandler resourceExchangeHandler = new ResourceExchangeHandler();
     //TODO: remember to make it work (register the listener, somehow. How does it work again?)
+
+    SMSKademliaListener(KademliaNetwork kadNet){
+        this.KadNet = kadNet;
+    }
+
+    /**
+     * Send an acknowledge message
+     *
+     * @param peer of the node that contacted me
+     * @author Edoardo Raimondi
+     */
+    public void sendAcknowledge(SMSPeer peer){
+        String message = RequestTypes.AcknowledgeMessage.ordinal() + " ";
+        SMSMessage acknowoledgeMessage = new SMSMessage(peer, message);
+        SMSManager.getInstance().sendMessage(acknowoledgeMessage);
+    }
+
+
+
     /**
      * This method analyze the incoming messages, and extracts the content and the CODE
      *
@@ -54,27 +77,37 @@ public class SMSKademliaListener implements ReceivedMessageListener<SMSMessage> 
                 ConnectionHandler.acceptRequest(peer);
                 break;
             case FindId:
+                /*First at all, I make know that I can work*/
+                sendAcknowledge(peer);
                 Log.e("CONN_LOG", "IdFound: " + splitted[1]);
                 KademliaId idToFind = new KademliaId(splitted[1]);
                 SMSPeer searcher = new SMSPeer(splitted[2]);
                 IdFinderHandler.searchId(idToFind, searcher);
                 break;
             case SearchResult:
+                /*First at all, I make know that I can work*/
+                sendAcknowledge(peer);
                 KademliaId idFound = new KademliaId(splitted[1]);
                 TableUpdateHandler.stepTableUpdate(idFound);
                 break;
 
             case FindIdForAddRequest:
+                /*First at all, I make know that I can work*/
+                sendAcknowledge(peer);
                 idToFind = new KademliaId(splitted[1]);
                 searcher = new SMSPeer(splitted[2]);
                 resourceExchangeHandler.processAddRequest(idToFind, searcher);
                 break;
             case AddRequestResult:
+                /*First at all, I make know that I can work*/
+                sendAcknowledge(peer);
                 idToFind = new KademliaId(splitted[1]);
                 resourceExchangeHandler.completeAddRequest(idToFind, peer);
                 break;
 
             case AddToDict:
+                /*First at all, I make know that I can work*/
+                sendAcknowledge(peer);
                 String key = splitted[1];
                 String resource = splitted[2];
                 KademliaNetwork.getInstance().addToLocalDictionary(key, resource);
