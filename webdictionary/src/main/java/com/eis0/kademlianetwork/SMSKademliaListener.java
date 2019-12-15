@@ -98,7 +98,7 @@ public class SMSKademliaListener implements ReceivedMessageListener<SMSMessage> 
                 sendAcknowledge(peer);
                 idToFind = new KademliaId(splitted[1]);
                 searcher = new SMSPeer(splitted[2]);
-                resourceExchangeHandler.processAddRequest(idToFind, searcher);
+                resourceExchangeHandler.processRequest(idToFind, searcher, ResearchMode.AddToDictionary);
                 break;
             case AddRequestResult:
                 /*First at all, I make know that I can work*/
