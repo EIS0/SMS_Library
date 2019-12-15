@@ -1,7 +1,5 @@
 package com.eis0.kademlia;
 
-import java.io.File;
-
 /**
  * A set of Kademlia configuration parameters.
  * Default values are supplied and can be changed by the application as necessary.

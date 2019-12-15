@@ -43,29 +43,24 @@ public class SMSKademliaNode implements Serializable {
         this.peer = phoneNumber;
     }
 
-
     /**
-     * Get the local node id.
+     * @return Returns this node id
      *
-     * @return This node's Id.
      * @author Marco Cognloato
      */
     public KademliaId getId() {
         return this.id;
     }
 
-
     /**
-     * Get the local peer.
+     * @return Returns this node's SMSPeer if it's present, else returns null.
      *
-     * @return The node's Peer.
      * @author Edoardo Raimondi
      * @author Matteo Carnelos
      */
     public SMSPeer getPeer() {
         return peer;
     }
-
 
     /**
      * Method to compare two Nodes.
@@ -83,7 +78,6 @@ public class SMSKademliaNode implements Serializable {
         return this.getId().equals(toCompare.getId());
     }
 
-
     /**
      * @return NodeId's hashCode
      */
@@ -91,7 +85,6 @@ public class SMSKademliaNode implements Serializable {
     public int hashCode() {
         return this.getId().hashCode();
     }
-
 
     /**
      * Convert the NodeId to a string.

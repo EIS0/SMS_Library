@@ -22,6 +22,10 @@ public class KademliaIdTest {
      program, and truncated to the first 160 bits */
     private final String NUMBER_HASH = "108877ecc3a9b2c2";
 
+    private final String TEXT_TOO_LONG =
+            new String(new char[ID_LENGTH+3]).replace('\0', 'a');
+
+
     @Test
     public void creationId_BySMSPeer() {
         KademliaId test = new KademliaId(new SMSPeer("3408140326"));
@@ -134,5 +138,37 @@ public class KademliaIdTest {
     @Test(expected = IllegalArgumentException.class)
     public void idByDistanceOutOfRangePositive_throws(){
         SIMPLE_ID1.generateNodeIdByDistance(160);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void generateIdTooLong_throws(){
+        new KademliaId(TEXT_TOO_LONG);
+    }
+
+    @Test
+    public void generateIdByHex(){
+        new KademliaId("1745AF3B726C7C6F");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void generateIdByByteArray_tooLongThrows(){
+        new KademliaId(new byte[20]);
+    }
+
+    @Test
+    public void compareIdWithAnother_different(){
+        assertNotEquals(SIMPLE_ID1, new Object());
+    }
+
+    @Test
+    public void firstSetIndexOfZeros_returnsNegative(){
+        byte[] arr = new byte[ID_LENGTH_BYTES];
+        KademliaId id = new KademliaId(arr);
+        assertEquals(id.getFirstSetBitIndex(), -1);
+    }
+
+    @Test
+    public void distanceToSame_distanzeZero(){
+        assertEquals(STRING_ID.getDistance(STRING_ID), 0);
     }
 }
