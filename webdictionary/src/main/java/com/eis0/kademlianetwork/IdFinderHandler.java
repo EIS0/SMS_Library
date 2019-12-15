@@ -61,6 +61,8 @@ public class IdFinderHandler {
         }
     }
 
+
+    //TODO try to integrate these two methods, they are practically identical
     /**
      * Searches for a specific Id, which needs to be closer to a given resource Id.
      * If it's found it's sent to a given SMSPeer who's searching, else sends a request to find it
