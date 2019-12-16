@@ -2,6 +2,7 @@ package com.eis0.kademlianetwork;
 
 import com.eis0.kademlia.Contact;
 import com.eis0.kademlia.DefaultConfiguration;
+import com.eis0.kademlia.KademliaId;
 import com.eis0.kademlia.SMSKademliaNode;
 import com.eis0.kademlia.SMSKademliaRoutingTable;
 import com.eis0.smslibrary.SMSManager;
@@ -86,21 +87,28 @@ public class KademliaNetwork {
     /**
      * Check if I received an acknowledge respond to my request.
      * (so if the node is alive)
-     * Act accordingly
+     * If death, the {@link SMSKademliaNode} of the target peer is removed from the routing table
      *
      * @param  targetPeer the receiver {@link SMSPeer}
+     * @return true if alive, false otherwise
      * @author Edoardo Raimondi
      */
-    public void checkIfAlive(SMSPeer targetPeer){
+    public boolean isAlive(SMSPeer targetPeer){
         //I wait 10 secs
         timer.run();
         //check if I had an acknowledge respond to my request
         if(hasRespond()){
             //I know my request has ben received successfully. I set false in order to do it again
             setRespond(false);
+            return true;
         }
-        else { //My target node is broken. I remove it from the network
-            //TODO
+        else { //My target node is broken. I remove it from my routing table
+            //create the node by the peer
+            SMSKademliaNode toRemove = new SMSKademliaNode(new KademliaId(targetPeer));
+            //remove it
+            this.localRoutingTable.getBuckets()[0].removeNode(toRemove);
+            //the node is not alive
+            return false;
         }
     }
 
