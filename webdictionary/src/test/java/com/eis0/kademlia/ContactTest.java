@@ -1,12 +1,11 @@
 package com.eis0.kademlia;
 
-import com.eis0.smslibrary.SMSPeer;
-import com.eis0.webdictionary.SMSNetVocabulary;
+import com.eis.smslibrary.SMSPeer;
 
 import org.junit.Test;
 
-
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class ContactTest {
 

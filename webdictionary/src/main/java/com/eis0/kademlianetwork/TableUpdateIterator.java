@@ -1,9 +1,9 @@
 package com.eis0.kademlianetwork;
 
+import com.eis.smslibrary.SMSPeer;
 import com.eis0.kademlia.KademliaId;
 import com.eis0.kademlia.SMSKademliaNode;
 import com.eis0.kademlia.SMSKademliaRoutingTable;
-import com.eis0.smslibrary.SMSPeer;
 
 /**
  * Iterator for the execution of the update-table algorithm.

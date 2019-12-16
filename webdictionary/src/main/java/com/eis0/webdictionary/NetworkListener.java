@@ -1,13 +1,14 @@
 package com.eis0.webdictionary;
 
-import com.eis0.smslibrary.ReceivedMessageListener;
-import com.eis0.smslibrary.SMSMessage;
-import com.eis0.smslibrary.SMSPeer;
+
+import com.eis.smslibrary.SMSMessage;
+import com.eis.smslibrary.SMSPeer;
+import com.eis.smslibrary.listeners.SMSReceivedServiceListener;
 
 /**
  * Network listener listening for incoming Network-related Events
  */
-class NetworkListener implements ReceivedMessageListener<SMSMessage> {
+class NetworkListener extends SMSReceivedServiceListener {
     private NetworkConnection net;
     private final String LOG_KEY = "NetListener";
     NetworkListener(NetworkConnection net){

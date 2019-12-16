@@ -1,9 +1,9 @@
 package com.eis0.kademlianetwork;
 
+import com.eis.smslibrary.SMSHandler;
+import com.eis.smslibrary.SMSMessage;
+import com.eis.smslibrary.SMSPeer;
 import com.eis0.kademlia.KademliaId;
-import com.eis0.smslibrary.SMSManager;
-import com.eis0.smslibrary.SMSMessage;
-import com.eis0.smslibrary.SMSPeer;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -102,7 +102,7 @@ public class ResourceExchangeHandler {
         //2. Send the <key, resource> pair
         String resourceToAdd = RequestTypes.AddToDict.ordinal() + " " + key + " " + resource;
         SMSMessage message = new SMSMessage(targetPeer, resourceToAdd);
-        SMSManager.getInstance().sendMessage(message);
+        SMSHandler.getInstance().sendMessage(message);
         KademliaNetwork.getInstance().checkIfAlive(targetPeer);
     }
 

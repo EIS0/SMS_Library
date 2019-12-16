@@ -1,7 +1,7 @@
 package com.eis0.webdictionary;
 
 
-import com.eis0.smslibrary.Peer;
+import com.eis.communication.Peer;
 
 /**
  * Extend this class to extend your type of NetworkDictionary,

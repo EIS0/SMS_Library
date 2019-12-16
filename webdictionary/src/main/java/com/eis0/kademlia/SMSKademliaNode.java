@@ -2,7 +2,7 @@ package com.eis0.kademlia;
 
 import androidx.annotation.NonNull;
 
-import com.eis0.smslibrary.SMSPeer;
+import com.eis.smslibrary.SMSPeer;
 
 import java.io.Serializable;
 

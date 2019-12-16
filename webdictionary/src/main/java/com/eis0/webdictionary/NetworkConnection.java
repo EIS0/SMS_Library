@@ -1,8 +1,8 @@
 package com.eis0.webdictionary;
 
-import com.eis0.smslibrary.SMSManager;
-import com.eis0.smslibrary.SMSMessage;
-import com.eis0.smslibrary.SMSPeer;
+import com.eis.smslibrary.SMSHandler;
+import com.eis.smslibrary.SMSMessage;
+import com.eis.smslibrary.SMSPeer;
 
 import java.util.ArrayList;
 import java.util.Timer;
@@ -20,7 +20,7 @@ public class NetworkConnection {
             subscribers.add(myPeer);
         }
         NetworkListener listener = new NetworkListener(this);
-        SMSManager.getInstance().setReceiveListener(listener);
+        SMSHandler.getInstance().setReceivedListener(listener.getClass());
     }
 
     public static NetworkConnection getInstance(SMSPeer myPeer) {
@@ -49,7 +49,7 @@ public class NetworkConnection {
         String textRequest = RequestType.JoinPermission.ordinal() + " " + peersInNetwork();
         SMSMessage message = new SMSMessage(peer, textRequest);
 
-        SMSManager.getInstance().sendMessage(message);
+        SMSHandler.getInstance().sendMessage(message);
     }
 
     /**
@@ -115,7 +115,7 @@ public class NetworkConnection {
     public void partCast(SMSPeer[] peers, String message) {
         for (SMSPeer peer : peers) {
             SMSMessage wholeMessage = new SMSMessage(peer, message);
-            SMSManager.getInstance().sendMessage(wholeMessage);
+            SMSHandler.getInstance().sendMessage(wholeMessage);
         }
     }
     //endregion
@@ -131,7 +131,7 @@ public class NetworkConnection {
     public void askToLeave(SMSPeer peer) {
         if (peer == null) throw new IllegalArgumentException();
         SMSMessage message = new SMSMessage(peer, RequestType.LeavePermission.ordinal() + "");
-        SMSManager.getInstance().sendMessage(message);
+        SMSHandler.getInstance().sendMessage(message);
     }
 
     /**
@@ -170,7 +170,7 @@ public class NetworkConnection {
     public void sendPing(SMSPeer peer) {
         if (peer == null) throw new IllegalArgumentException();
         SMSMessage message = new SMSMessage(peer, RequestType.Ping.ordinal() + "");
-        SMSManager.getInstance().sendMessage(message);
+        SMSHandler.getInstance().sendMessage(message);
     }
 
     /**

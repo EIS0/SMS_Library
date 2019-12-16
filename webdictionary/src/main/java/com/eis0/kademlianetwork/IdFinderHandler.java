@@ -1,11 +1,11 @@
 package com.eis0.kademlianetwork;
 
+import com.eis.smslibrary.SMSHandler;
+import com.eis.smslibrary.SMSMessage;
+import com.eis.smslibrary.SMSPeer;
 import com.eis0.kademlia.KademliaId;
 import com.eis0.kademlia.SMSKademliaNode;
 import com.eis0.kademlia.SMSKademliaRoutingTable;
-import com.eis0.smslibrary.SMSManager;
-import com.eis0.smslibrary.SMSMessage;
-import com.eis0.smslibrary.SMSPeer;
 
 import java.math.BigInteger;
 
@@ -58,7 +58,7 @@ public class IdFinderHandler {
         if (netId == idToFind) {
             String message = taskResult.ordinal() + " " + idToFind;
             SMSMessage searchResult = new SMSMessage(searcher, message);
-            SMSManager.getInstance().sendMessage(searchResult);
+            SMSHandler.getInstance().sendMessage(searchResult);
             KademliaNetwork.getInstance().checkIfAlive(searcher);
             return;
         }
@@ -67,7 +67,7 @@ public class IdFinderHandler {
         if (KademliaNetwork.getInstance().isNodeInNetwork(nodeToFind)) {
             String message = taskResult.ordinal() + " " + idToFind;
             SMSMessage searchResult = new SMSMessage(searcher, message);
-            SMSManager.getInstance().sendMessage(searchResult);
+            SMSHandler.getInstance().sendMessage(searchResult);
             KademliaNetwork.getInstance().checkIfAlive(searcher);
             return;
         }
@@ -81,14 +81,14 @@ public class IdFinderHandler {
             //so I return this id
             String message = taskResult.ordinal() + " " + idToFind;
             SMSMessage searchResult = new SMSMessage(searcher, message);
-            SMSManager.getInstance().sendMessage(searchResult);
+            SMSHandler.getInstance().sendMessage(searchResult);
             KademliaNetwork.getInstance().checkIfAlive(searcher);
         } else {
             //I got closer to what I'm looking for, so I ask that id to find it.
             SMSPeer closer = closestNode.getPeer();
             String message = findId.ordinal() + " " + idToFind + " " + searcher;
             SMSMessage addRequestMessage = new SMSMessage(closer, message);
-            SMSManager.getInstance().sendMessage(addRequestMessage);
+            SMSHandler.getInstance().sendMessage(addRequestMessage);
             KademliaNetwork.getInstance().checkIfAlive(closer);
         }
     }
