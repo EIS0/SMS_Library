@@ -31,6 +31,9 @@ public class KademliaNetwork {
     private SMSNetVocabulary localKademliaDictionary;
     //To know if I had a positive acknowledge respond to a sent command
     private boolean hasRespond;
+    //Create a 10 secs responds timer. If a node doesn't respond with an acknowledge message
+    //in that time, it is considered broken
+    RespondTimer timer = new RespondTimer();
 
     // Singleton instance
     private static KademliaNetwork instance;
@@ -61,18 +64,39 @@ public class KademliaNetwork {
     }
 
     /**
-     * @return true if I had a acknowledge respond to a sent command, false otherwise
+     * @return true if I had an acknowledge respond to a sent command, false otherwise
      * @author Edoardo Raimondi
      */
     public boolean hasRespond() { return hasRespond; }
 
     /**
-     * Set true if I had a acknowledge respond, false otherwise
+     * Set true if I had an acknowledge respond, false otherwise
      *
-     * @param value
+     * @param  value of the respond state
      * @author Edoardo Raimondi
      */
     public void setRespond(boolean value){ hasRespond = value; }
+
+    /**
+     * Check if I received an acknowledge respond to my request.
+     * (so if the node is alive)
+     * Act accordingly
+     *
+     * @param  targetPeer the receiver {@link SMSPeer}
+     * @author Edoardo Raimondi
+     */
+    public void checkIfAlive(SMSPeer targetPeer){
+        //I wait 10 secs
+        timer.run();
+        //check if I had an acknowledge respond to my request
+        if(hasRespond()){
+            //I know my request has ben received successfully. I set false in order to do it again
+            setRespond(false);
+        }
+        else { //My target node is broken. I remove it from the network
+            //TODO
+        }
+    }
 
     /**
      * Add a peer to the kademlia network.

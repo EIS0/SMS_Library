@@ -30,8 +30,7 @@ import java.util.Map;
 public class ResourceExchangeHandler {
     //Map containing the pending AddRequests waiting to be completed
     private Map<KademliaId, AddRequest> pendingRequests;
-    //Timer to know if my sent request has been taken by somebody (10 secs max)
-    RespondTimer timer = new RespondTimer();
+
 
     /**
      * TODO: the list of AddRequests is reinitialized every time the node disconnect itself from the
@@ -109,16 +108,7 @@ public class ResourceExchangeHandler {
         String resourceToAdd = RequestTypes.AddToDict.ordinal() + " " + key + " " + resource;
         SMSMessage message = new SMSMessage(targetPeer, resourceToAdd);
         SMSManager.getInstance().sendMessage(message);
-        //I wait 10 seconds
-        timer.run();
-        //check if I had a acknowledge respond to my request
-        if(KademliaNetwork.getInstance().hasRespond()){
-            //I know my request has ben received successfully. I set false in order to do it again
-            KademliaNetwork.getInstance().setRespond(false);
-        }
-        else { //My target node is broken
-            //TODO
-        }
+        KademliaNetwork.getInstance().checkIfAlive(targetPeer);
     }
 
 
