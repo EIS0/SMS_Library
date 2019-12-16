@@ -16,7 +16,7 @@ import java.math.BigInteger;
  * @author Enrico Cestaro (edited the code, to implement multiple research modes)
  */
 public class IdFinderHandler {
-
+    //TODO: can be converted in an Object Pool?
     /**
      * Searches for a specific Id, which needs to be closer to a given resource Id.
      * If it's found it's sent to a given SMSPeer who's searching, else sends a request to find it
@@ -37,26 +37,26 @@ public class IdFinderHandler {
         2. communicate the result of the research, or to
          */
         RequestTypes findId = null;
-        RequestTypes requestResult = null;
+        RequestTypes taskResult = null;
         //Selection of the research mode
         switch (researchMode) {
             case JoinNetwork:
                 findId = RequestTypes.FindId;
-                requestResult = RequestTypes.SearchResult;
+                taskResult = RequestTypes.SearchResult;
             case AddToDictionary:
                 findId = RequestTypes.FindIdForAddRequest;
-                requestResult = RequestTypes.AddRequestResult;
+                taskResult = RequestTypes.AddRequestResult;
                 break;
             case FindInDictionary:
                 findId = null;
-                requestResult = null;
+                taskResult = null;
                 break;
         }
         KademliaId netId = KademliaNetwork.getInstance().getLocalNode().getId();
         //If I'm the id return it
         //N.B. this state should be impossible, so it's a fail safe
         if (netId == idToFind) {
-            String message = requestResult.ordinal() + " " + idToFind;
+            String message = taskResult.ordinal() + " " + idToFind;
             SMSMessage searchResult = new SMSMessage(searcher, message);
             SMSManager.getInstance().sendMessage(searchResult);
             KademliaNetwork.getInstance().checkIfAlive(searcher);
@@ -65,7 +65,7 @@ public class IdFinderHandler {
 
         SMSKademliaNode nodeToFind = new SMSKademliaNode(idToFind);
         if (KademliaNetwork.getInstance().isNodeInNetwork(nodeToFind)) {
-            String message = requestResult.ordinal() + " " + idToFind;
+            String message = taskResult.ordinal() + " " + idToFind;
             SMSMessage searchResult = new SMSMessage(searcher, message);
             SMSManager.getInstance().sendMessage(searchResult);
             KademliaNetwork.getInstance().checkIfAlive(searcher);
@@ -79,7 +79,7 @@ public class IdFinderHandler {
         if (idToFindDistanceFromClosest.compareTo(idToFindDistanceFromNetId) > 0) {
             //I got further away from what I'm looking for, so I'm the closest,
             //so I return this id
-            String message = requestResult.ordinal() + " " + idToFind;
+            String message = taskResult.ordinal() + " " + idToFind;
             SMSMessage searchResult = new SMSMessage(searcher, message);
             SMSManager.getInstance().sendMessage(searchResult);
             KademliaNetwork.getInstance().checkIfAlive(searcher);

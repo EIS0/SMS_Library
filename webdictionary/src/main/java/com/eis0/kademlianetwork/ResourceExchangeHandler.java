@@ -28,38 +28,33 @@ import java.util.Map;
  * @author Edoardo Raimondi
  */
 public class ResourceExchangeHandler {
-    //Map containing the pending AddRequests waiting to be completed
-    private Map<KademliaId, AddRequest> pendingRequests;
+    //Timer to know if my sent request has been taken by somebody (10 secs max)
+    RespondTimer timer = new RespondTimer();
+    //Maps containing the pending Requests waiting to be completed
+    private Map<KademliaId, Request> pendingAddRequests;
+    private Map<KademliaId, Request> pendingGetRequests;
 
-
-    /**
-     * TODO: the list of AddRequests is reinitialized every time the node disconnect itself from the
-     * network, is this something to fix?
-     * Constructor of the ResourceExchangeHandler
-     */
     public ResourceExchangeHandler() {
-        pendingRequests = new HashMap<KademliaId, AddRequest>();
+        pendingAddRequests = new HashMap<KademliaId, Request>();
+        pendingGetRequests = new HashMap<KademliaId, Request>();
     }
 
 
     /**
-     * This method adds to the list of {@link AddRequest} the new request, and send a message in the
+     * This method adds to the list of {@link Request} the new request, and send a message in the
      * network asking for a receiver, that is the node with the closest ID to the resource ID
      *
      * @param key      The String value of the key of the resource to add to the Dictionary
      * @param resource The String value of the resource itself to be added to the Dictionary
-     * @throws IllegalArgumentException If the the key or the resource are null or invalid
      */
     public void createAddRequest(String key, String resource) {
-        if (key == null || resource == null) throw new IllegalArgumentException();
-        if (key.length() == 0 || resource.length() == 0) throw new IllegalArgumentException();
-        //Create the AddRequest object, insert it in the List
-        AddRequest currentRequest = new AddRequest(key, resource);
+        //Create the Request object, insert it in the List
+        Request currentRequest = new Request(key, resource);
         KademliaId idToFind = currentRequest.getKeyId();
-        pendingRequests.put(currentRequest.getKeyId(), currentRequest);
+        pendingAddRequests.put(currentRequest.getKeyId(), currentRequest);
         //Start to search for the closest ID
         SMSPeer searcher = KademliaNetwork.getInstance().getLocalNode().getPeer();
-        processAddRequest(idToFind, searcher);
+        processRequest(idToFind, searcher, ResearchMode.AddToDictionary);
     }
 
 
@@ -73,34 +68,34 @@ public class ResourceExchangeHandler {
      *                 network to allow the final receiver to send the answer right to the initial node
      * @throws IllegalArgumentException If the idToFind or the searcher are null
      */
-    public void processAddRequest(KademliaId idToFind, SMSPeer searcher) {
+    public void processRequest(KademliaId idToFind, SMSPeer searcher, ResearchMode researchMode) {
         if (searcher == null) throw new IllegalArgumentException();
         if (idToFind == null) throw new IllegalArgumentException();
         //If it's found, the Node with the closest id will send message containing:
         // 1. The code of the message
         // 2. the ID of the resource
         // 3. the SMSPeer of the
-        IdFinderHandler.searchId(idToFind, searcher, ResearchMode.AddToDictionary);
+        IdFinderHandler.searchId(idToFind, searcher, researchMode);
     }
 
 
     /**
      * This method is called whenever the network returns the node ID closest to the resource ID
-     * It search for the corresponding {@link AddRequest} which sent the request in the network,
+     * It search for the corresponding {@link Request} which sent the request in the network,
      * extract it from the list of pending requests, and send the <key, resource> pair contained in
      * the request to the targetPeer, that is the node which answered to the research
      *
      * @param idToFind   The {@link KademliaId} of the resource key; it's used to trace back the
-     *                   AddRequest in the pending requests list
+     *                   Request in the pending requests list
      * @param targetPeer The {@link SMSPeer} of the node which answered the research and receive the
      *                   <key, resurce> pair
      * @throws IllegalArgumentException if the idToFind or the target peer are null
      */
     public void completeAddRequest(KademliaId idToFind, SMSPeer targetPeer) {
         if (idToFind == null || targetPeer == null) throw new IllegalArgumentException();
-        //1. Find in the pendingRequests the AddRequest to complete, remove it from the list
-        AddRequest toClose = pendingRequests.get(idToFind);
-        pendingRequests.remove(idToFind);
+        //1. Find in the pendingAddRequests the Request to complete, remove it from the list
+        Request toClose = pendingAddRequests.get(idToFind);
+        pendingAddRequests.remove(idToFind);
         //Initialization of the values to send
         String key = toClose.getKey();
         String resource = toClose.getResource();
@@ -113,12 +108,23 @@ public class ResourceExchangeHandler {
 
 
     /**
-     * This class allows to create AddRequest objects, which will be stored in the pendingRequests
-     * list; every AddRequest object contains the <key, resource> pair which will be stored in the
-     * distributed dictionary, plus the {@link KademliaId} of the resource key, used to distinguish
-     * each AddRequest from the other
+     *
      */
-    private class AddRequest {
+    public void createGetRequest() {
+        //Create the Request object, insert it in the List
+
+        //Start to search for the closest ID
+
+    }
+
+
+    /**
+     * This class allows to create Request objects, which will be stored in the pendingAddRequests
+     * list; every Request object contains the <key, resource> pair which will be stored in the
+     * distributed dictionary, plus the {@link KademliaId} of the resource key, used to distinguish
+     * each Request from the other
+     */
+    private class Request {
         private KademliaId resourceKeyId;
         private String key;
         private String resource;
@@ -127,25 +133,26 @@ public class ResourceExchangeHandler {
          * This is the only constructor of the class, it automatically creates the ID of the
          * resource key
          *
-         * @param key       The String value of the key of the <key, resource> pair
-         * @param resource  The String value of the resource of the <key, resource> pair
+         * @param key      The String value of the key of the <key, resource> pair
+         * @param resource The String value of the resource of the <key, resource> pair
+         * @throws IllegalArgumentException If the the key or the resource are null or invalid
          */
-        public AddRequest(String key, String resource) {
+        public Request(String key, String resource) {
+            if (key == null || resource == null) throw new IllegalArgumentException();
+            if (key.length() == 0 || resource.length() == 0) throw new IllegalArgumentException();
             this.key = key;
             this.resource = resource;
             resourceKeyId = new KademliaId(key);
         }
 
-
         /**
-         * This method returns the key of the <key, resource> pair stored in the AddRequest
+         * This method returns the key of the <key, resource> pair stored in the Request
          *
          * @return The String value of the key of the <key, resource> pair
          */
         protected String getKey() {
             return key;
         }
-
 
         /**
          * This method returns the key ID
@@ -156,9 +163,8 @@ public class ResourceExchangeHandler {
             return resourceKeyId;
         }
 
-
         /**
-         * This method returns the resource of the <key, resource> stored in the AddRequest
+         * This method returns the resource of the <key, resource> stored in the Request
          *
          * @return The String value of the resource of the <key, resource> pair
          */

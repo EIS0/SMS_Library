@@ -19,10 +19,9 @@ import com.eis0.smslibrary.SMSPeer;
  */
 
 public class SMSKademliaListener implements ReceivedMessageListener<SMSMessage> {
-
+    private final static String LOG_TAG = "MSG_LSTNR";
     KademliaNetwork kadNet;
     ResourceExchangeHandler resourceExchangeHandler = new ResourceExchangeHandler();
-    //TODO: remember to make it work (register the listener, somehow. How does it work again?)
 
     SMSKademliaListener(KademliaNetwork kadNet) {
         this.kadNet = kadNet;
@@ -31,7 +30,7 @@ public class SMSKademliaListener implements ReceivedMessageListener<SMSMessage> 
     /**
      * Send an acknowledge message
      *
-     * @param peer \The {@link SMSPeer} of the node that contacted me
+     * @param peer The {@link SMSPeer} of the node that contacted me
      * @author Edoardo Raimondi
      */
     public void sendAcknowledge(SMSPeer peer) {
@@ -42,7 +41,7 @@ public class SMSKademliaListener implements ReceivedMessageListener<SMSMessage> 
 
 
     /**
-     * This method analyze the incoming messages, and extracts the content and the CODE
+     * This method analyzes the incoming messages, and extracts the content and the CODE
      *
      * @param message The message received.
      */
@@ -77,39 +76,49 @@ public class SMSKademliaListener implements ReceivedMessageListener<SMSMessage> 
                 ConnectionHandler.acceptRequest(peer);
                 break;
             case FindId:
-                /*First at all, I make know that I can work*/
+                //1. Create the response addressed to the sender, to inform him of my activity status
                 sendAcknowledge(peer);
+                //2. Processes the information brought by the message received
                 Log.e("CONN_LOG", "IdFound: " + splitted[1]);
                 KademliaId idToFind = new KademliaId(splitted[1]);
                 SMSPeer searcher = new SMSPeer(splitted[2]);
                 IdFinderHandler.searchId(idToFind, searcher, ResearchMode.JoinNetwork);
                 break;
             case SearchResult:
-                /*First at all, I make know that I can work*/
+                //1. Create the response addressed to the sender, to inform him of my activity status
                 sendAcknowledge(peer);
+                //2. Processes the information brought by the message received
                 KademliaId idFound = new KademliaId(splitted[1]);
                 TableUpdateHandler.stepTableUpdate(idFound);
                 break;
 
             /**Adding a resource to the Dictionary */
             case FindIdForAddRequest:
-                /*First at all, I make know that I can work*/
+                //1. Create the response addressed to the sender, to inform him of my activity status
                 sendAcknowledge(peer);
+                //2. Processes the information brought by the message received
                 idToFind = new KademliaId(splitted[1]);
                 searcher = new SMSPeer(splitted[2]);
-                resourceExchangeHandler.processAddRequest(idToFind, searcher);
+                Log.i(LOG_TAG, "Received ID research request from: " + searcher + ".\nTarget: " +
+                        idToFind);
+                resourceExchangeHandler.processRequest(idToFind, searcher, ResearchMode.AddToDictionary);
                 break;
             case AddRequestResult:
-                /*First at all, I make know that I can work*/
+                //1. Create the response addressed to the sender, to inform him of my activity status
                 sendAcknowledge(peer);
+                //2. Processes the information brought by the message received
                 idToFind = new KademliaId(splitted[1]);
+                Log.i(LOG_TAG, "Received ID research request result: " + idToFind);
                 resourceExchangeHandler.completeAddRequest(idToFind, peer);
                 break;
             case AddToDict:
-                /*First at all, I make know that I can work*/
+                //1. Create the response addressed to the sender, to inform him of my activity status
                 sendAcknowledge(peer);
+                //2. Processes the information brought by the message received
                 String key = splitted[1];
                 String resource = splitted[2];
+                Log.i(LOG_TAG, "Received AddToDictionary request.\nKey: " + key + ",\nResource:" +
+                        resource);
                 KademliaNetwork.getInstance().addToLocalDictionary(key, resource);
                 break;
         }
