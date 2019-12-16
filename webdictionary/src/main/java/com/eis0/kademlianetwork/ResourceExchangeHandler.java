@@ -28,11 +28,11 @@ import java.util.Map;
  * @author Edoardo Raimondi
  */
 public class ResourceExchangeHandler {
+    //Timer to know if my sent request has been taken by somebody (10 secs max)
+    RespondTimer timer = new RespondTimer();
     //Maps containing the pending Requests waiting to be completed
     private Map<KademliaId, Request> pendingAddRequests;
     private Map<KademliaId, Request> pendingGetRequests;
-    //Timer to know if my sent request has been taken by somebody (10 secs max)
-    RespondTimer timer = new RespondTimer();
 
     public ResourceExchangeHandler() {
         pendingAddRequests = new HashMap<KademliaId, Request>();
@@ -103,16 +103,7 @@ public class ResourceExchangeHandler {
         String resourceToAdd = RequestTypes.AddToDict.ordinal() + " " + key + " " + resource;
         SMSMessage message = new SMSMessage(targetPeer, resourceToAdd);
         SMSManager.getInstance().sendMessage(message);
-        //TODO: complete this piece of code
-        //I wait 10 seconds
-        timer.run();
-        //check if I had a acknowledge respond to my request
-        if (KademliaNetwork.getInstance().hasRespond()) {
-            //I know my request has ben received successfully. I set false in order to do it again
-            KademliaNetwork.getInstance().setRespond(false);
-        } else { //My target node is broken
-            //TODO
-        }
+        KademliaNetwork.getInstance().checkIfAlive(targetPeer);
     }
 
 

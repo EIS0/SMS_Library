@@ -59,6 +59,7 @@ public class IdFinderHandler {
             String message = taskResult.ordinal() + " " + idToFind;
             SMSMessage searchResult = new SMSMessage(searcher, message);
             SMSManager.getInstance().sendMessage(searchResult);
+            KademliaNetwork.getInstance().checkIfAlive(searcher);
             return;
         }
 
@@ -67,6 +68,7 @@ public class IdFinderHandler {
             String message = taskResult.ordinal() + " " + idToFind;
             SMSMessage searchResult = new SMSMessage(searcher, message);
             SMSManager.getInstance().sendMessage(searchResult);
+            KademliaNetwork.getInstance().checkIfAlive(searcher);
             return;
         }
 
@@ -80,12 +82,14 @@ public class IdFinderHandler {
             String message = taskResult.ordinal() + " " + idToFind;
             SMSMessage searchResult = new SMSMessage(searcher, message);
             SMSManager.getInstance().sendMessage(searchResult);
+            KademliaNetwork.getInstance().checkIfAlive(searcher);
         } else {
             //I got closer to what I'm looking for, so I ask that id to find it.
             SMSPeer closer = closestNode.getPeer();
             String message = findId.ordinal() + " " + idToFind + " " + searcher;
             SMSMessage addRequestMessage = new SMSMessage(closer, message);
             SMSManager.getInstance().sendMessage(addRequestMessage);
+            KademliaNetwork.getInstance().checkIfAlive(closer);
         }
     }
 }

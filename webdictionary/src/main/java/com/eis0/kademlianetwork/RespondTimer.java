@@ -2,13 +2,12 @@ package com.eis0.kademlianetwork;
 
 import android.util.Log;
 
-import java.math.BigInteger;
 import java.util.TimerTask;
 
 /**
- * Class that define a 10 seconds timer
+ * Class that define a 10 secs timer
  * If a send a command and I don't receive an acknowledge message
- * in 10 seconds, then the command receiver is considered broken
+ * in that time, then the receiver is considered broken.
  *
  * @author Edoardo Raimondi
  */
