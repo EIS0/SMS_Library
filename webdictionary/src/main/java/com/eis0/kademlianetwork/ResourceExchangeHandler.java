@@ -46,7 +46,6 @@ public class ResourceExchangeHandler {
      *
      * @param key      The String value of the key of the resource to add to the Dictionary
      * @param resource The String value of the resource itself to be added to the Dictionary
-     * @throws IllegalArgumentException If the the key or the resource are null or invalid
      */
     public void createAddRequest(String key, String resource) {
         //Create the Request object, insert it in the List
@@ -145,6 +144,7 @@ public class ResourceExchangeHandler {
          *
          * @param key      The String value of the key of the <key, resource> pair
          * @param resource The String value of the resource of the <key, resource> pair
+         * @throws IllegalArgumentException If the the key or the resource are null or invalid
          */
         public Request(String key, String resource) {
             if (key == null || resource == null) throw new IllegalArgumentException();
