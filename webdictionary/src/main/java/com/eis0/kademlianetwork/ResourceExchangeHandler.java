@@ -31,12 +31,12 @@ public class ResourceExchangeHandler {
     //Timer to know if my sent request has been taken by somebody (10 secs max)
     RespondTimer timer = new RespondTimer();
     //Maps containing the pending Requests waiting to be completed
-    private Map<KademliaId, Request> pendingAddRequests;
-    private Map<KademliaId, Request> pendingGetRequests;
+    private Map<KademliaId, IRequest> pendingAddRequests;
+    private Map<KademliaId, IRequest> pendingGetRequests;
 
     public ResourceExchangeHandler() {
-        pendingAddRequests = new HashMap<KademliaId, Request>();
-        pendingGetRequests = new HashMap<KademliaId, Request>();
+        pendingAddRequests = new HashMap<KademliaId, IRequest>();
+        pendingGetRequests = new HashMap<KademliaId, IRequest>();
     }
 
 
@@ -71,6 +71,7 @@ public class ResourceExchangeHandler {
     public void processRequest(KademliaId idToFind, SMSPeer searcher, ResearchMode researchMode) {
         if (searcher == null) throw new IllegalArgumentException();
         if (idToFind == null) throw new IllegalArgumentException();
+        if (researchMode == null) throw new IllegalArgumentException();
         //If it's found, the Node with the closest id will send message containing:
         // 1. The code of the message
         // 2. the ID of the resource
@@ -94,7 +95,7 @@ public class ResourceExchangeHandler {
     public void completeAddRequest(KademliaId idToFind, SMSPeer targetPeer) {
         if (idToFind == null || targetPeer == null) throw new IllegalArgumentException();
         //1. Find in the pendingAddRequests the Request to complete, remove it from the list
-        Request toClose = pendingAddRequests.get(idToFind);
+        IRequest toClose = pendingAddRequests.get(idToFind);
         pendingAddRequests.remove(idToFind);
         //Initialization of the values to send
         String key = toClose.getKey();
@@ -117,6 +118,20 @@ public class ResourceExchangeHandler {
 
     }
 
+    /**
+     * @return
+     */
+    public Map<KademliaId, IRequest> getPendingAddRequests() {
+        return pendingAddRequests;
+    }
+
+    /**
+     * @return
+     */
+    public Map<KademliaId, IRequest> getPendingGetRequests() {
+        return pendingGetRequests;
+    }
+
 
     /**
      * This class allows to create Request objects, which will be stored in the pendingAddRequests
@@ -124,7 +139,7 @@ public class ResourceExchangeHandler {
      * distributed dictionary, plus the {@link KademliaId} of the resource key, used to distinguish
      * each Request from the other
      */
-    private class Request {
+    public class Request implements IRequest {
         private KademliaId resourceKeyId;
         private String key;
         private String resource;
@@ -150,7 +165,7 @@ public class ResourceExchangeHandler {
          *
          * @return The String value of the key of the <key, resource> pair
          */
-        protected String getKey() {
+        public String getKey() {
             return key;
         }
 
@@ -159,7 +174,7 @@ public class ResourceExchangeHandler {
          *
          * @return The {@link KademliaId} created from the key of the <key, resource> pair
          */
-        protected KademliaId getKeyId() {
+        public KademliaId getKeyId() {
             return resourceKeyId;
         }
 
@@ -168,10 +183,22 @@ public class ResourceExchangeHandler {
          *
          * @return The String value of the resource of the <key, resource> pair
          */
-        protected String getResource() {
+        public String getResource() {
             return resource;
         }
+
+
+        @Override
+        public boolean equals(Object obj) {
+            if (obj == null) throw new IllegalArgumentException();
+            if (!(obj instanceof Request)) return false;
+            Request toCompare = (Request) obj;
+            return toCompare.getKeyId().toString().equals(this.getKeyId().toString());
+        }
+
+        @Override
+        public String toString() {
+            return this.getKeyId().toString();
+        }
     }
-
-
 }

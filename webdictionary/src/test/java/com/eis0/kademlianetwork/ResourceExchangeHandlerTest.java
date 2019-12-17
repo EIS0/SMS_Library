@@ -1,29 +1,77 @@
 package com.eis0.kademlianetwork;
 
+import com.eis0.kademlia.KademliaId;
+
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import java.util.Map;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class ResourceExchangeHandlerTest {
+    private ResourceExchangeHandler resourceExchangeHandler;
+    private final String KEY1 = "Key1";
+    private final String KEY2 = "Key1";
+    private final String RESOURCE1 = "Resource1";
+    private final String RESOURCE2 = "Resource2";
+    private final KademliaId KAD_ID1 = new KademliaId(KEY1);
+    private final KademliaId KAD_ID2 = new KademliaId(KEY2);
+
 
     @Before
     public void setUp() throws Exception {
+        resourceExchangeHandler = new ResourceExchangeHandler();
+        IRequest REQUEST1 = mock(IRequest.class);
+        when(REQUEST1.getKey()).thenReturn(KEY1);
+        when(REQUEST1.getKeyId()).thenReturn(KAD_ID1);
+        when(REQUEST1.getResource()).thenReturn(RESOURCE1);
+
+        IRequest REQUEST2 = mock(IRequest.class);
+        when(REQUEST2.getKey()).thenReturn(KEY2);
+        when(REQUEST2.getKeyId()).thenReturn(KAD_ID2);
+        when(REQUEST2.getResource()).thenReturn(RESOURCE2);
+
+        KademliaNetwork kadNet = KademliaNetwork.getInstance();
+        SMSKademliaListener listener = new SMSKademliaListener(kadNet);
+        resourceExchangeHandler.createAddRequest(KEY1, RESOURCE1);
+        resourceExchangeHandler.createAddRequest(KEY2, RESOURCE2);
     }
 
     @Test
-    public void createAddRequest() {
+    public void createAddRequest_equals() {
+        Map<KademliaId, IRequest> addRequests = resourceExchangeHandler.getPendingAddRequests();
+        IRequest request1 = addRequests.get(KAD_ID1);
+        assertTrue(request1.getKeyId().equals(KAD_ID1));
     }
 
-    @Test
-    public void processRequest() {
+    public void createAddRequest_notEquals() {
+        Map<KademliaId, IRequest> addRequests = resourceExchangeHandler.getPendingAddRequests();
+        IRequest request1 = addRequests.get(KAD_ID1);
+        IRequest request2 = addRequests.get(KAD_ID2);
+        assertFalse(request1.getKeyId().equals(request2.getKeyId()));
     }
 
-    @Test
-    public void completeAddRequest() {
+    @Test(expected = IllegalArgumentException.class)
+    public void createAddRequest_nullParameters() {
+        resourceExchangeHandler.createAddRequest(null, null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void processRequest_nullParameters() {
+        resourceExchangeHandler.processRequest(null, null, null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void completeAddRequest_nullParameters() {
+        resourceExchangeHandler.processRequest(null, null, null);
     }
 
     @Test
     public void createGetRequest() {
     }
+
 }
