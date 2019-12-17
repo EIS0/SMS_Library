@@ -102,7 +102,7 @@ public class ResourceExchangeHandler {
         //2. Send the <key, resource> pair
         String resourceToAdd = RequestTypes.AddToDict.ordinal() + " " + key + " " + resource;
         SMSMessage message = new SMSMessage(targetPeer, resourceToAdd);
-        SMSManager.getInstance().sendMessage(message);
+        SMSHandler.getInstance().sendMessage(message);
     }
 
 
