@@ -102,12 +102,7 @@ public class ResourceExchangeHandler {
         //2. Send the <key, resource> pair
         String resourceToAdd = RequestTypes.AddToDict.ordinal() + " " + key + " " + resource;
         SMSMessage message = new SMSMessage(targetPeer, resourceToAdd);
-<<<<<<< HEAD
         SMSManager.getInstance().sendMessage(message);
-=======
-        SMSHandler.getInstance().sendMessage(message);
-        KademliaNetwork.getInstance().checkIfAlive(targetPeer);
->>>>>>> e6bc994d608fd27fccc7ea2489f4a732e76dded5
     }
 
 
