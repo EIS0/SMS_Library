@@ -59,7 +59,11 @@ public class IdFinderHandler {
             String message = taskResult.ordinal() + " " + idToFind;
             SMSMessage searchResult = new SMSMessage(searcher, message);
             SMSHandler.getInstance().sendMessage(searchResult);
-            KademliaNetwork.getInstance().checkIfAlive(searcher);
+            if(!KademliaNetwork.getInstance().isAlive(searcher)) {
+                //the target node is not alive. It isn't no more in my routing table
+                //I try with another one
+                searchId(idToFind, searcher, researchMode);
+            }
             return;
         }
 
@@ -68,7 +72,11 @@ public class IdFinderHandler {
             String message = taskResult.ordinal() + " " + idToFind;
             SMSMessage searchResult = new SMSMessage(searcher, message);
             SMSHandler.getInstance().sendMessage(searchResult);
-            KademliaNetwork.getInstance().checkIfAlive(searcher);
+            if(!KademliaNetwork.getInstance().isAlive(searcher)){
+                //the target node is not alive. It isn't no more in my routing table
+                //I try with another one
+                searchId(idToFind, searcher, researchMode);
+            }
             return;
         }
 
@@ -82,14 +90,29 @@ public class IdFinderHandler {
             String message = taskResult.ordinal() + " " + idToFind;
             SMSMessage searchResult = new SMSMessage(searcher, message);
             SMSHandler.getInstance().sendMessage(searchResult);
-            KademliaNetwork.getInstance().checkIfAlive(searcher);
+            if(!KademliaNetwork.getInstance().isAlive(searcher)){
+                //the target node is not alive. It isn't no more in my routing table
+                //I try with another one
+                searchId(idToFind, searcher, researchMode);
+            }
+
         } else {
             //I got closer to what I'm looking for, so I ask that id to find it.
             SMSPeer closer = closestNode.getPeer();
             String message = findId.ordinal() + " " + idToFind + " " + searcher;
             SMSMessage addRequestMessage = new SMSMessage(closer, message);
             SMSHandler.getInstance().sendMessage(addRequestMessage);
-            KademliaNetwork.getInstance().checkIfAlive(closer);
+            if(!KademliaNetwork.getInstance().isAlive(closer)){
+                //the target node is not alive. It isn't no more in my routing table
+                //I try with another one
+                searchId(idToFind, searcher, researchMode);
+            }
+            SMSHandler.getInstance().sendMessage(addRequestMessage);
+            if(!KademliaNetwork.getInstance().isAlive(closer)){
+                //the target node is not alive. It isn't no more in my routing table
+                //I try with another one
+                searchId(idToFind, closer, researchMode);
+            }
         }
     }
 }
