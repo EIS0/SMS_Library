@@ -2,11 +2,11 @@ package com.eis0.kademlianetwork;
 
 import android.util.Log;
 
+import com.eis.smslibrary.SMSHandler;
+import com.eis.smslibrary.SMSMessage;
+import com.eis.smslibrary.SMSPeer;
+import com.eis.smslibrary.listeners.SMSReceivedServiceListener;
 import com.eis0.kademlia.KademliaId;
-import com.eis0.smslibrary.ReceivedMessageListener;
-import com.eis0.smslibrary.SMSManager;
-import com.eis0.smslibrary.SMSMessage;
-import com.eis0.smslibrary.SMSPeer;
 
 /**
  * Listener class that send the appropriate command to
@@ -18,7 +18,7 @@ import com.eis0.smslibrary.SMSPeer;
  * @author Enrico Cestaro
  */
 
-public class SMSKademliaListener implements ReceivedMessageListener<SMSMessage> {
+public class SMSKademliaListener extends SMSReceivedServiceListener {
     private final static String LOG_TAG = "MSG_LSTNR";
     KademliaNetwork kadNet;
     ResourceExchangeHandler resourceExchangeHandler = new ResourceExchangeHandler();
@@ -36,7 +36,7 @@ public class SMSKademliaListener implements ReceivedMessageListener<SMSMessage> 
     public void sendAcknowledge(SMSPeer peer) {
         String message = RequestTypes.AcknowledgeMessage.ordinal() + " ";
         SMSMessage acknowoledgeMessage = new SMSMessage(peer, message);
-        SMSManager.getInstance().sendMessage(acknowoledgeMessage);
+        SMSHandler.getInstance().sendMessage(acknowoledgeMessage);
     }
 
 

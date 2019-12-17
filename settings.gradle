@@ -1,2 +1,2 @@
-include ':app', ':smslibrary', ':webdictionary'
+include ':app', ':webdictionary'
 rootProject.name='SMS_Library'

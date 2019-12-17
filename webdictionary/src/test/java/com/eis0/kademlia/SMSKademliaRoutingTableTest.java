@@ -1,7 +1,7 @@
 package com.eis0.kademlia;
 
 
-import com.eis0.smslibrary.SMSPeer;
+import com.eis.smslibrary.SMSPeer;
 
 import org.junit.Before;
 import org.junit.Test;

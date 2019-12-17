@@ -1,6 +1,6 @@
 package com.eis0.webdictionary;
 
-import com.eis0.smslibrary.SMSPeer;
+import com.eis.smslibrary.SMSPeer;
 
 import java.util.TimerTask;
 

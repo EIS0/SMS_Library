@@ -1,12 +1,12 @@
 package com.eis0.kademlianetwork;
 
+import com.eis.smslibrary.SMSHandler;
+import com.eis.smslibrary.SMSPeer;
 import com.eis0.kademlia.Contact;
 import com.eis0.kademlia.DefaultConfiguration;
 import com.eis0.kademlia.KademliaId;
 import com.eis0.kademlia.SMSKademliaNode;
 import com.eis0.kademlia.SMSKademliaRoutingTable;
-import com.eis0.smslibrary.SMSManager;
-import com.eis0.smslibrary.SMSPeer;
 import com.eis0.webdictionary.SMSNetVocabulary;
 import com.eis0.webdictionary.SMSSerialization;
 import com.eis0.webdictionary.SerializableObject;
@@ -42,7 +42,7 @@ public class KademliaNetwork {
     private static KademliaNetwork instance;
     // Constructor following the Singleton Design Pattern
     private KademliaNetwork() {
-        SMSManager.getInstance().setReceiveListener(smsKademliaListener);
+        SMSHandler.getInstance().setReceivedListener(smsKademliaListener.getClass());
     }
     
     /**

@@ -1,9 +1,9 @@
 package com.eis0.kademlianetwork;
 
 
+import com.eis.smslibrary.SMSPeer;
 import com.eis0.kademlia.Contact;
 import com.eis0.kademlia.SMSKademliaNode;
-import com.eis0.smslibrary.SMSPeer;
 
 import org.junit.Before;
 import org.junit.Test;
