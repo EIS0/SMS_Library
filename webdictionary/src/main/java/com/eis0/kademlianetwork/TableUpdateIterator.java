@@ -8,7 +8,10 @@ import com.eis0.kademlia.SMSKademliaRoutingTable;
 /**
  * Iterator for the execution of the update-table algorithm.
  * I'm using an iterator because in the future where we have more KademliaNetwork to keep
- * track of, this iterator is specific for the single network.
+ * track of, this iterator is specific for the single network, so we can have more than once
+ * running on different tables at the same time
+ *
+ * @author Marco Cognolato
  */
 public class TableUpdateIterator {
     private int currentCount;
@@ -17,7 +20,7 @@ public class TableUpdateIterator {
     private SMSKademliaRoutingTable table;
     private SMSPeer netPeer;
 
-    public TableUpdateIterator(int maxCount, KademliaId netId, SMSKademliaRoutingTable table, SMSPeer netPeer){
+    public TableUpdateIterator(int maxCount, KademliaId netId, SMSKademliaRoutingTable table, SMSPeer netPeer) {
         this.maxCount = maxCount;
         this.currentCount = 0;
         this.netId = netId;
@@ -30,22 +33,23 @@ public class TableUpdateIterator {
 
     /**
      * Steps execution of the algorithm once.
+     *
      * @param receivedId The KademliaId received because of the last step
      */
-    public void step(KademliaId receivedId){
-        if(hasFinished()) {
+    public void step(KademliaId receivedId) {
+        if (hasFinished()) {
             //finished execution
             return;
         }
         //check if I'm the id received: stop if I am
         SMSKademliaNode receivedNode = new SMSKademliaNode(receivedId);
-        if(receivedId == netId){
-            currentCount = maxCount+1;
+        if (receivedId == netId) {
+            currentCount = maxCount + 1;
             return;
         }
         //check if the id received is already in the table: stop if it is
-        if(table.getAllNodes().contains(receivedNode)){
-            currentCount = maxCount+1;
+        if (table.getAllNodes().contains(receivedNode)) {
+            currentCount = maxCount + 1;
             return;
         }
         //if I'm here I have a new node, add him to the table
@@ -59,18 +63,16 @@ public class TableUpdateIterator {
     /**
      * @return Returns true if the algorithm has finished execution, false otherwise
      */
-    public boolean hasFinished(){
+    public boolean hasFinished() {
         return currentCount >= maxCount;
     }
 
     /**
      * Generates an id to find and searches for it in the net sending a request
      */
-    private void askForId(){
+    private void askForId() {
         //create the fake id
         KademliaId fakeId = netId.generateNodeIdByDistance(currentCount);
-        //Log.e("TABLE_LOG", "netId: " + netId + " Integer: " + netId.getInt());
-        //Log.e("TABLE_LOG", "fakeId to find: " + fakeId + " Integer: " + fakeId.getInt());
         //search in the net for the fakeId and wait
         IdFinderHandler.searchId(fakeId, netPeer, ResearchMode.JoinNetwork);
     }
