@@ -1,7 +1,7 @@
 package com.eis0.webdictionary;
 
 import com.eis.smslibrary.SMSPeer;
-import com.eis0.ContextMockOfPreferences;
+import com.eis0.UtilityMocks;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -23,7 +23,7 @@ public class PingTrackerTest {
 
     @Before
     public void setupTests(){
-        net = NetworkConnection.getInstance(null, ContextMockOfPreferences.setupMocks());
+        net = NetworkConnection.getInstance(null, UtilityMocks.setupMocks());
         net.clearNet();
         net.addToNet(VALID_PEER);
         net.addToNet(VALID_PEER2);

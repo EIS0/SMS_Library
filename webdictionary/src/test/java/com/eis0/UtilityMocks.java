@@ -8,7 +8,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class ContextMockOfPreferences {
+public class UtilityMocks {
 
     private static Context mockContext = mock(Context.class);
     private static SharedPreferences mockPref = mock(SharedPreferences.class);

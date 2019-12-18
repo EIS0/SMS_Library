@@ -2,7 +2,7 @@ package com.eis0.kademlianetwork;
 
 
 import com.eis.smslibrary.SMSPeer;
-import com.eis0.ContextMockOfPreferences;
+import com.eis0.UtilityMocks;
 import com.eis0.kademlia.Contact;
 import com.eis0.kademlia.SMSKademliaNode;
 
@@ -32,7 +32,7 @@ public class ConnectionHandlerTest {
     public void setup(){
         instance = KademliaNetwork.getInstance();
 
-        instance.init(VALID_NODE, mockListener, ContextMockOfPreferences.setupMocks());
+        instance.init(VALID_NODE, mockListener, UtilityMocks.setupMocks());
     }
 
     @Test()
