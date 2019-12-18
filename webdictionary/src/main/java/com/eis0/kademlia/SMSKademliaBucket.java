@@ -39,7 +39,8 @@ public class SMSKademliaBucket implements KademliaBucket {
     }
 
     /**
-     * Insert a given valid contact in the bucket
+     * Insert a given valid contact in the bucket.
+     * If the bucket is filled, it puts the contact in the replacement cache
      *
      * @param contact The contact to add
      */

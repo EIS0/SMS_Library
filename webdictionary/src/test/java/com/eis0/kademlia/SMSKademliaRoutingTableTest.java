@@ -7,10 +7,13 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.EmptyStackException;
 import java.util.List;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class SMSKademliaRoutingTableTest {
 
@@ -18,6 +21,8 @@ public class SMSKademliaRoutingTableTest {
 
     private final KademliaId ID1 = new KademliaId("0000000000000001");
     private final KademliaId ID2 = new KademliaId("0000000000000011");
+    private final KademliaId ID4 = new KademliaId("9012dfgj");
+    private final KademliaId ID5 = new KademliaId("ciaociao");
 
     private final SMSPeer PEER1 = new SMSPeer("+393423541604");
     private final SMSPeer PEER2 = new SMSPeer("+393423541606");
@@ -93,15 +98,85 @@ public class SMSKademliaRoutingTableTest {
     }
 
     @Test
-    public void findClosestTest(){
+    public void getAllNodes(){
+        routingTable.insert(NODE1);
+        routingTable.insert(NODE2);
+        List<SMSKademliaNode> result = new ArrayList<>();
+        result.add(MAIN_NODE);
+        result.add(NODE1);
+        result.add(NODE2);
+        assertEquals(routingTable.getAllNodes(), result);
+    }
+
+    @Test
+    public void getAllNodes_OnlyLocalNodeInside(){
+        List<SMSKademliaNode> result = new ArrayList<>();
+        result.add(MAIN_NODE);
+        assertEquals(routingTable.getAllNodes(), result);
+    }
+
+    @Test
+    public void findClosestTest_OneElement(){
         routingTable.insert(NODE2);
         List<SMSKademliaNode> result = routingTable.findClosest(ID2, 1);
         assertEquals(result.get(0), NODE2);
     }
 
     @Test
+    public void findClosestTest_MoreElement(){
+        routingTable.insert(NODE1);
+        routingTable.insert(NODE2);
+        routingTable.insert(MAIN_NODE);
+        List<SMSKademliaNode> result = routingTable.findClosest(ID2, 1);
+        assertEquals(result.get(0), NODE2);
+    }
+
+    @Test
+    public void findClosestTest_MoreElement2(){
+        routingTable.insert(NODE1);
+        routingTable.insert(NODE2);
+        routingTable.insert(MAIN_NODE);
+        List<SMSKademliaNode> result = routingTable.findClosest(ID1, 1);
+        assertEquals(result.get(0), NODE2);
+    }
+
+    @Test
+    public void findClosestTest_MoreElement3(){
+        routingTable.insert(NODE1);
+        routingTable.insert(NODE2);
+        routingTable.insert(MAIN_NODE);
+        List<SMSKademliaNode> result = routingTable.findClosest(ID4, 1);
+        assertEquals(result.get(0), NODE1);
+    }
+
+    @Test
+    public void findClosestTest_MoreElement4(){
+        routingTable.insert(NODE1);
+        routingTable.insert(NODE2);
+        routingTable.insert(MAIN_NODE);
+        List<SMSKademliaNode> result = routingTable.findClosest(ID5, 1);
+        assertEquals(result.get(0), MAIN_NODE);
+    }
+
+    @Test
+    public void findClosestTest_MoreElement_MoreResults(){
+        routingTable.insert(NODE1);
+        routingTable.insert(NODE2);
+        routingTable.insert(MAIN_NODE);
+        List<SMSKademliaNode> result = routingTable.findClosest(ID4, 2);
+        assertEquals(result.get(0), NODE1);
+        assertEquals(result.get(1), NODE2);
+    }
+
+    @Test
     public void getBucketTest(){
         SMSKademliaBucket[] result = routingTable.getBuckets();
         assertEquals(result[0], routingTable.getBuckets()[0]);
+    }
+
+    @Test
+    public void removeNode_CheckByRoutingTable(){
+        routingTable.getBuckets()[0].removeNode(MAIN_NODE);
+        assertFalse(routingTable.getBuckets()[0].containsNode(MAIN_NODE));
     }
 }

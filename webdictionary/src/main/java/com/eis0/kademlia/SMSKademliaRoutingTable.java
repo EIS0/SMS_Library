@@ -8,8 +8,8 @@ import java.util.TreeSet;
 /**
  * Implementation of a Kademlia routing table.
  * Every Node has his own table. It contains his well known contacts.
- * A routing table is composed by different Buckets (see SMSKademliaBucket)
- * Every routing table has a configuration that, at the creation, will be a DefaultConfiguration
+ * A routing table is composed by different Buckets {@link SMSKademliaBucket}
+ * Every routing table has a configuration that, at the creation, will be a {@link DefaultConfiguration}
  *
  * @see <a href="https://pdos.csail.mit.edu/~petar/papers/maymounkov-kademlia-lncs.pdf">Kademlia's
  * paper</a> for more details.
@@ -89,6 +89,7 @@ public class SMSKademliaRoutingTable implements KademliaRoutingTable {
 
     /**
      * Find the closest set of contacts to a given NodeId
+     * It used a treeSet in order to add elements using a {@link KeyComparator}
      *
      * @param target           The NodeId to find contacts close to
      * @param numNodesRequired The number of contacts to find
@@ -97,6 +98,8 @@ public class SMSKademliaRoutingTable implements KademliaRoutingTable {
     @Override
     public synchronized final List<SMSKademliaNode> findClosest(KademliaId target, int numNodesRequired) {
         TreeSet<SMSKademliaNode> sortedSet = new TreeSet<>(new KeyComparator(target));
+        /*Now every element added will be in a coerent position to the target Id
+        * (so the first element will be the closer one, second will be the second one...)*/
         sortedSet.addAll(this.getAllNodes());
 
         List<SMSKademliaNode> closest = new ArrayList<>(numNodesRequired);
@@ -129,7 +132,8 @@ public class SMSKademliaRoutingTable implements KademliaRoutingTable {
     }
 
     /**
-     * @return List A List of all Contacts in this RoutingTable
+     * @return List A List of all Contacts in this RoutingTable.
+     * If there are not contact, it returns an empty list.
      */
     @Override
     public final List<Contact> getAllContacts() {
