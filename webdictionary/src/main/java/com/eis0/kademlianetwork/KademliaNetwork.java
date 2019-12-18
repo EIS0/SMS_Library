@@ -2,7 +2,7 @@ package com.eis0.kademlianetwork;
 
 import android.content.Context;
 
-import com.eis.smslibrary.SMSHandler;
+import com.eis.smslibrary.SMSManager;
 import com.eis.smslibrary.SMSPeer;
 import com.eis0.kademlia.Contact;
 import com.eis0.kademlia.DefaultConfiguration;
@@ -44,8 +44,7 @@ public class KademliaNetwork {
     private static KademliaNetwork instance;
     // Constructor following the Singleton Design Pattern
     private KademliaNetwork(Context context) {
-        SMSHandler.getInstance().setup(context);
-        SMSHandler.getInstance().setReceivedListener(smsKademliaListener.getClass());
+        SMSManager.getInstance().setReceivedListener(smsKademliaListener.getClass(), context);
     }
     
     /**

@@ -21,7 +21,7 @@ public class PingTrackerTest {
 
     @Before
     public void setupTests(){
-        net = NetworkConnection.getInstance(null);
+        net = NetworkConnection.getInstance(null, null);
         net.clearNet();
         net.addToNet(VALID_PEER);
         net.addToNet(VALID_PEER2);

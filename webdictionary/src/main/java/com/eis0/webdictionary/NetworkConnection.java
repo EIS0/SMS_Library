@@ -1,6 +1,8 @@
 package com.eis0.webdictionary;
 
-import com.eis.smslibrary.SMSHandler;
+import android.content.Context;
+
+import com.eis.smslibrary.SMSManager;
 import com.eis.smslibrary.SMSMessage;
 import com.eis.smslibrary.SMSPeer;
 
@@ -15,18 +17,17 @@ public class NetworkConnection {
     //Singleton Design Pattern https://refactoring.guru/design-patterns/singleton
     private static NetworkConnection net;
 
-    private NetworkConnection(SMSPeer myPeer) {
+    private NetworkConnection(SMSPeer myPeer, Context context) {
         if (myPeer != null) {
             subscribers.add(myPeer);
         }
         NetworkListener listener = new NetworkListener(this);
-        SMSHandler.getInstance().setup(null);
-        SMSHandler.getInstance().setReceivedListener(listener.getClass());
+        SMSManager.getInstance().setReceivedListener(listener.getClass(), context);
     }
 
-    public static NetworkConnection getInstance(SMSPeer myPeer) {
+    public static NetworkConnection getInstance(SMSPeer myPeer, Context context) {
         if (net == null) {
-            net = new NetworkConnection(myPeer);
+            net = new NetworkConnection(myPeer, context);
         }
         return net;
     }
@@ -50,7 +51,7 @@ public class NetworkConnection {
         String textRequest = RequestType.JoinPermission.ordinal() + " " + peersInNetwork();
         SMSMessage message = new SMSMessage(peer, textRequest);
 
-        SMSHandler.getInstance().sendMessage(message);
+        SMSManager.getInstance().sendMessage(message);
     }
 
     /**
@@ -116,7 +117,7 @@ public class NetworkConnection {
     public void partCast(SMSPeer[] peers, String message) {
         for (SMSPeer peer : peers) {
             SMSMessage wholeMessage = new SMSMessage(peer, message);
-            SMSHandler.getInstance().sendMessage(wholeMessage);
+            SMSManager.getInstance().sendMessage(wholeMessage);
         }
     }
     //endregion
@@ -132,7 +133,7 @@ public class NetworkConnection {
     public void askToLeave(SMSPeer peer) {
         if (peer == null) throw new IllegalArgumentException();
         SMSMessage message = new SMSMessage(peer, RequestType.LeavePermission.ordinal() + "");
-        SMSHandler.getInstance().sendMessage(message);
+        SMSManager.getInstance().sendMessage(message);
     }
 
     /**
@@ -171,7 +172,7 @@ public class NetworkConnection {
     public void sendPing(SMSPeer peer) {
         if (peer == null) throw new IllegalArgumentException();
         SMSMessage message = new SMSMessage(peer, RequestType.Ping.ordinal() + "");
-        SMSHandler.getInstance().sendMessage(message);
+        SMSManager.getInstance().sendMessage(message);
     }
 
     /**

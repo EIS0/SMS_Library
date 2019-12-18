@@ -1,6 +1,6 @@
 package com.eis0.kademlianetwork;
 
-import com.eis.smslibrary.SMSHandler;
+import com.eis.smslibrary.SMSManager;
 import com.eis.smslibrary.SMSMessage;
 import com.eis.smslibrary.SMSPeer;
 import com.eis0.kademlia.KademliaId;
@@ -52,14 +52,13 @@ public class IdFinderHandler {
                 taskResult = null;
                 break;
         }
-        SMSHandler.getInstance().setup(null);
         KademliaId netId = KademliaNetwork.getInstance(null).getLocalNode().getId();
         //If I'm the id return it
         //N.B. this state should be impossible, so it's a fail safe
         if (netId == idToFind) {
             String message = taskResult.ordinal() + " " + idToFind;
             SMSMessage searchResult = new SMSMessage(searcher, message);
-            SMSHandler.getInstance().sendMessage(searchResult);
+            SMSManager.getInstance().sendMessage(searchResult);
             if(!KademliaNetwork.getInstance(null).isAlive(searcher)) {
                 //the target node is not alive. It isn't no more in my routing table
                 //I try with another one
@@ -72,7 +71,7 @@ public class IdFinderHandler {
         if (KademliaNetwork.getInstance(null).isNodeInNetwork(nodeToFind)) {
             String message = taskResult.ordinal() + " " + idToFind;
             SMSMessage searchResult = new SMSMessage(searcher, message);
-            SMSHandler.getInstance().sendMessage(searchResult);
+            SMSManager.getInstance().sendMessage(searchResult);
             if(!KademliaNetwork.getInstance(null).isAlive(searcher)){
                 //the target node is not alive. It isn't no more in my routing table
                 //I try with another one
@@ -90,7 +89,7 @@ public class IdFinderHandler {
             //so I return this id
             String message = taskResult.ordinal() + " " + idToFind;
             SMSMessage searchResult = new SMSMessage(searcher, message);
-            SMSHandler.getInstance().sendMessage(searchResult);
+            SMSManager.getInstance().sendMessage(searchResult);
             if(!KademliaNetwork.getInstance(null).isAlive(searcher)){
                 //the target node is not alive. It isn't no more in my routing table
                 //I try with another one
@@ -102,13 +101,13 @@ public class IdFinderHandler {
             SMSPeer closer = closestNode.getPeer();
             String message = findId.ordinal() + " " + idToFind + " " + searcher;
             SMSMessage addRequestMessage = new SMSMessage(closer, message);
-            SMSHandler.getInstance().sendMessage(addRequestMessage);
+            SMSManager.getInstance().sendMessage(addRequestMessage);
             if(!KademliaNetwork.getInstance(null).isAlive(closer)){
                 //the target node is not alive. It isn't no more in my routing table
                 //I try with another one
                 searchId(idToFind, searcher, researchMode);
             }
-            SMSHandler.getInstance().sendMessage(addRequestMessage);
+            SMSManager.getInstance().sendMessage(addRequestMessage);
             if(!KademliaNetwork.getInstance(null).isAlive(closer)){
                 //the target node is not alive. It isn't no more in my routing table
                 //I try with another one

@@ -1,6 +1,6 @@
 package com.eis0.kademlianetwork;
 
-import com.eis.smslibrary.SMSHandler;
+import com.eis.smslibrary.SMSManager;
 import com.eis.smslibrary.SMSMessage;
 import com.eis.smslibrary.SMSPeer;
 import com.eis0.kademlia.SMSKademliaNode;
@@ -22,7 +22,7 @@ public class ConnectionHandler {
     public void inviteToJoin(SMSPeer peer) {
         String messageRequest = RequestTypes.JoinPermission.ordinal() + "";
         SMSMessage message = new SMSMessage(peer, messageRequest);
-        SMSHandler.getInstance().sendMessage(message);
+        SMSManager.getInstance().sendMessage(message);
     }
 
     /**
@@ -52,7 +52,7 @@ public class ConnectionHandler {
 
         String messageRequest = RequestTypes.AcceptJoin.ordinal() + "";
         SMSMessage message = new SMSMessage(peer, messageRequest);
-        SMSHandler.getInstance().sendMessage(message);
+        SMSManager.getInstance().sendMessage(message);
 
         acceptRequest(peer);
     }

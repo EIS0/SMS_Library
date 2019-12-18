@@ -2,7 +2,7 @@ package com.eis0.kademlianetwork;
 
 import android.util.Log;
 
-import com.eis.smslibrary.SMSHandler;
+import com.eis.smslibrary.SMSManager;
 import com.eis.smslibrary.SMSMessage;
 import com.eis.smslibrary.SMSPeer;
 import com.eis.smslibrary.listeners.SMSReceivedServiceListener;
@@ -36,7 +36,7 @@ public class SMSKademliaListener extends SMSReceivedServiceListener {
     public void sendAcknowledge(SMSPeer peer) {
         String message = RequestTypes.AcknowledgeMessage.ordinal() + " ";
         SMSMessage acknowoledgeMessage = new SMSMessage(peer, message);
-        SMSHandler.getInstance().sendMessage(acknowoledgeMessage);
+        SMSManager.getInstance().sendMessage(acknowoledgeMessage);
     }
 
 
