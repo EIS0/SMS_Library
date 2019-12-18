@@ -53,7 +53,7 @@ public class ResourceExchangeHandler {
         KademliaId idToFind = currentRequest.getKeyId();
         pendingAddRequests.put(currentRequest.getKeyId(), currentRequest);
         //Start to search for the closest ID
-        SMSPeer searcher = KademliaNetwork.getInstance(null).getLocalNode().getPeer();
+        SMSPeer searcher = KademliaNetwork.getInstance().getLocalNode().getPeer();
         processRequest(idToFind, searcher, ResearchMode.AddToDictionary);
     }
 

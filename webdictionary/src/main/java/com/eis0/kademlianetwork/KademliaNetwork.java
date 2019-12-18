@@ -43,8 +43,8 @@ public class KademliaNetwork {
     // Singleton instance
     private static KademliaNetwork instance;
     // Constructor following the Singleton Design Pattern
-    private KademliaNetwork(Context context) {
-        SMSManager.getInstance().setReceivedListener(smsKademliaListener.getClass(), context);
+    private KademliaNetwork() {
+
     }
     
     /**
@@ -54,8 +54,8 @@ public class KademliaNetwork {
      * <a href="https://refactoring.guru/design-patterns/singleton">Singleton Design Pattern</a>.
      * @author Matteo Carnelos
      */
-    public static KademliaNetwork getInstance(Context context) {
-        if(instance == null) instance = new KademliaNetwork(context);
+    public static KademliaNetwork getInstance() {
+        if(instance == null) instance = new KademliaNetwork();
         return instance;
     }
 
@@ -65,7 +65,8 @@ public class KademliaNetwork {
      * @param localNode The SMSKademliaNode to set.
      * @author Matteo Carnelos
      */
-    public void init(SMSKademliaNode localNode, KademliaListener listener) {
+    public void init(SMSKademliaNode localNode, KademliaListener listener, Context context) {
+        SMSManager.getInstance().setReceivedListener(smsKademliaListener.getClass(), context);
         this.localNode = localNode;
         this.listener = listener;
         localRoutingTable = new SMSKademliaRoutingTable(localNode, new DefaultConfiguration());

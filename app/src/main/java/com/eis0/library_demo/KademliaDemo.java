@@ -47,7 +47,7 @@ public class KademliaDemo extends AppCompatActivity implements KademliaListener 
     RecyclerView routingTableRclView;
     RoutingTableAdapter routingTableAdapter;
 
-    KademliaNetwork network = KademliaNetwork.getInstance(this);
+    KademliaNetwork network = KademliaNetwork.getInstance();
 
     /**
      * Called on the creation of the activity.
@@ -77,7 +77,7 @@ public class KademliaDemo extends AppCompatActivity implements KademliaListener 
         routingTableRclView.setLayoutManager(new LinearLayoutManager(this));
 
         // Instantiates a new kademlia network with only this phone
-        network.init(new SMSKademliaNode(getPhoneNumber()), this);
+        network.init(new SMSKademliaNode(getPhoneNumber()), this, this);
 
         // Display initialization data
         myPhoneNumberLbl.setText(network.getLocalNode().getPeer().toString());
