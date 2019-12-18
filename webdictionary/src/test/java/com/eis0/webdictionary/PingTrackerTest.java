@@ -1,6 +1,7 @@
 package com.eis0.webdictionary;
 
 import com.eis.smslibrary.SMSPeer;
+import com.eis0.ContextMockOfPreferences;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -19,9 +20,10 @@ public class PingTrackerTest {
     private PingTracker tracker2;
     private final int MAX_PING_MISSES = 4;
 
+
     @Before
     public void setupTests(){
-        net = NetworkConnection.getInstance(null, null);
+        net = NetworkConnection.getInstance(null, ContextMockOfPreferences.setupMocks());
         net.clearNet();
         net.addToNet(VALID_PEER);
         net.addToNet(VALID_PEER2);
