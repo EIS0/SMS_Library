@@ -10,8 +10,9 @@ public enum RequestTypes {
 
     //Requests to handle the resource exchange
     AddToDict,
+    GetFromDict,
     RemoveFromDict,
-    
+
     //Requests to handle the research closest ID
     FindId,
     SearchResult,
