@@ -119,7 +119,7 @@ public class SMSKademliaListener extends SMSReceivedServiceListener {
                 String resource = splitted[2];
                 Log.i(LOG_TAG, "Received AddToDictionary request.\nKey: " + key + ",\nResource:" +
                         resource);
-                KademliaNetwork.getInstance().addToLocalDictionary(key, resource);
+                KademliaNetwork.getInstance(null).addToLocalDictionary(key, resource);
                 break;
         }
     }

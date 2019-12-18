@@ -16,9 +16,9 @@ import static org.junit.Assert.assertTrue;
 public class SMSKademliaBucketTest {
     private KadConfiguration config = new DefaultConfiguration();
 
-    private final SMSPeer PEER1 = new SMSPeer("3408140326");
-    private final SMSPeer PEER2 = new SMSPeer("3497364511");
-    private final SMSPeer PEER3 = new SMSPeer("3497312345");
+    private final SMSPeer PEER1 = new SMSPeer("+393408140326");
+    private final SMSPeer PEER2 = new SMSPeer("+393497364511");
+    private final SMSPeer PEER3 = new SMSPeer("+393497312345");
 
     private final SMSKademliaNode NODE1 = new SMSKademliaNode(PEER1);
     private final SMSKademliaNode NODE2 = new SMSKademliaNode(PEER2);

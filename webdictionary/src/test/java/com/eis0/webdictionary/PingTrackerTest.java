@@ -13,8 +13,8 @@ import static org.junit.Assert.assertTrue;
 public class PingTrackerTest {
 
     private NetworkConnection net;
-    private final SMSPeer VALID_PEER = new SMSPeer("3423541601");
-    private final SMSPeer VALID_PEER2 = new SMSPeer("3423541602");
+    private final SMSPeer VALID_PEER = new SMSPeer("+393423541601");
+    private final SMSPeer VALID_PEER2 = new SMSPeer("+393423541602");
     private PingTracker tracker1;
     private PingTracker tracker2;
     private final int MAX_PING_MISSES = 4;

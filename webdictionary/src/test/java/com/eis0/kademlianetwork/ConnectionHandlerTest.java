@@ -27,7 +27,7 @@ public class ConnectionHandlerTest {
 
     @Before
     public void setup(){
-        instance = KademliaNetwork.getInstance();
+        instance = KademliaNetwork.getInstance(null);
         instance.init(VALID_NODE, mockListener);
     }
 
@@ -35,6 +35,6 @@ public class ConnectionHandlerTest {
     @Test(expected = ExceptionInInitializerError.class)
     public void correctRequest(){
         ConnectionHandler.acceptRequest(VALID_PEER2);
-        assertTrue(KademliaNetwork.getInstance().isNodeInNetwork(VALID_NODE));
+        assertTrue(KademliaNetwork.getInstance(null).isNodeInNetwork(VALID_NODE));
     }
 }

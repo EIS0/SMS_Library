@@ -19,9 +19,9 @@ public class SMSKademliaRoutingTableTest {
     private final KademliaId ID1 = new KademliaId("0000000000000001");
     private final KademliaId ID2 = new KademliaId("0000000000000011");
 
-    private final SMSPeer PEER1 = new SMSPeer("5554");
-    private final SMSPeer PEER2 = new SMSPeer("5556");
-    private final SMSPeer PEER3 = new SMSPeer("5551");
+    private final SMSPeer PEER1 = new SMSPeer("+393423541604");
+    private final SMSPeer PEER2 = new SMSPeer("+393423541606");
+    private final SMSPeer PEER3 = new SMSPeer("+393423541601");
 
     private final SMSKademliaNode NODE1 = new SMSKademliaNode(PEER1);
     private final SMSKademliaNode NODE2 = new SMSKademliaNode(PEER2);

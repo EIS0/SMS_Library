@@ -35,7 +35,7 @@ public class ResourceExchangeHandlerTest {
         when(REQUEST2.getKeyId()).thenReturn(KAD_ID2);
         when(REQUEST2.getResource()).thenReturn(RESOURCE2);
 
-        KademliaNetwork kadNet = KademliaNetwork.getInstance();
+        KademliaNetwork kadNet = KademliaNetwork.getInstance(null);
         SMSKademliaListener listener = new SMSKademliaListener(kadNet);
         resourceExchangeHandler.createAddRequest(KEY1, RESOURCE1);
         resourceExchangeHandler.createAddRequest(KEY2, RESOURCE2);

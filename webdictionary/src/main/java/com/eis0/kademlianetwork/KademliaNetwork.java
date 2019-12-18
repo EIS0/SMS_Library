@@ -1,5 +1,7 @@
 package com.eis0.kademlianetwork;
 
+import android.content.Context;
+
 import com.eis.smslibrary.SMSHandler;
 import com.eis.smslibrary.SMSPeer;
 import com.eis0.kademlia.Contact;
@@ -29,7 +31,7 @@ public class KademliaNetwork {
     private SMSKademliaRoutingTable localRoutingTable;
     private ConnectionHandler connectionHandler = new ConnectionHandler();
     private KademliaListener listener;
-    private SMSKademliaListener smsKademliaListener;
+    private SMSKademliaListener smsKademliaListener = new SMSKademliaListener(this);
     //Dictionary containing the resources stored by the local node
     private SMSNetVocabulary localKademliaDictionary;
     //To know if I had a positive acknowledge respond to a sent command
@@ -41,7 +43,8 @@ public class KademliaNetwork {
     // Singleton instance
     private static KademliaNetwork instance;
     // Constructor following the Singleton Design Pattern
-    private KademliaNetwork() {
+    private KademliaNetwork(Context context) {
+        SMSHandler.getInstance().setup(context);
         SMSHandler.getInstance().setReceivedListener(smsKademliaListener.getClass());
     }
     
@@ -52,8 +55,8 @@ public class KademliaNetwork {
      * <a href="https://refactoring.guru/design-patterns/singleton">Singleton Design Pattern</a>.
      * @author Matteo Carnelos
      */
-    public static KademliaNetwork getInstance() {
-        if(instance == null) instance = new KademliaNetwork();
+    public static KademliaNetwork getInstance(Context context) {
+        if(instance == null) instance = new KademliaNetwork(context);
         return instance;
     }
 

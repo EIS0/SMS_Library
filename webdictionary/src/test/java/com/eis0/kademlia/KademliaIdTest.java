@@ -12,9 +12,10 @@ public class KademliaIdTest {
     private int ID_LENGTH = KademliaId.ID_LENGTH;
     private int ID_LENGTH_BYTES = KademliaId.ID_LENGTH_BYTES;
 
+    private final SMSPeer VALID_PEER = new SMSPeer("+393408140326");
     private final KademliaId RANDOM_ID = new KademliaId();
     private final KademliaId STRING_ID = new KademliaId("11111111");
-    private final KademliaId NUMBER_ID = new KademliaId(new SMSPeer("3408140326"));
+    private final KademliaId NUMBER_ID = new KademliaId(VALID_PEER);
     private final KademliaId SIMPLE_ID1 = new KademliaId("\03"); //0x03
     private final KademliaId SIMPLE_ID2 = new KademliaId("\02"); //0x02
     //by construction SIMPLE_ID1 xor SIMPLE_ID2 = SIMPLE_ID3
@@ -29,7 +30,7 @@ public class KademliaIdTest {
 
     @Test
     public void creationId_BySMSPeer() {
-        KademliaId test = new KademliaId(new SMSPeer("3408140326"));
+        KademliaId test = new KademliaId(VALID_PEER);
         String id = test.getInt().toString(16);
         assertEquals(NUMBER_HASH, id);
     }
@@ -92,8 +93,7 @@ public class KademliaIdTest {
 
     @Test
     public void xorDistanceTest_ByPhoneNumber() {
-        SMSPeer distance = new SMSPeer("3497463254");
-        KademliaId toCompareDistance = new KademliaId(distance);
+        KademliaId toCompareDistance = new KademliaId(VALID_PEER);
         /*distance calculated with external programs*/
         String hashCodeResultDistance = "4e936a93940ab311";
         KademliaId toReturn = NUMBER_ID.xor(toCompareDistance);
@@ -114,8 +114,7 @@ public class KademliaIdTest {
 
     @Test
     public void getDistanceTest() {
-        SMSPeer distance = new SMSPeer("3497463254");
-        KademliaId toHaveDistance = new KademliaId(distance);
+        KademliaId toHaveDistance = new KademliaId(VALID_PEER);
         int result = 63; // calculated with an external problem
         int shouldResult = NUMBER_ID.getDistance(toHaveDistance);
         assertEquals(shouldResult, result);

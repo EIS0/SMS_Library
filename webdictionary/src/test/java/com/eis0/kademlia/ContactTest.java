@@ -8,9 +8,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class ContactTest {
-
-    SMSKademliaNode toTest = new SMSKademliaNode(new SMSPeer("3497364511"));
-    Contact test = new Contact(toTest);
+    private SMSPeer peer = new SMSPeer("+393497364511");
+    private SMSKademliaNode toTest = new SMSKademliaNode(peer);
+    private Contact test = new Contact(toTest);
 
     @Test
     public void getNodeTest(){

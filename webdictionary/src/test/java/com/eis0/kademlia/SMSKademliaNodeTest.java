@@ -10,8 +10,8 @@ import static org.junit.Assert.assertNull;
 
 public class SMSKademliaNodeTest {
 
-    private final SMSPeer PEER1 = new SMSPeer("5554");
-    private final SMSPeer PEER2 = new SMSPeer("5556");
+    private final SMSPeer PEER1 = new SMSPeer("+5554");
+    private final SMSPeer PEER2 = new SMSPeer("+5556");
     private final KademliaId RANDOM_ID1 = new KademliaId();
     private final SMSKademliaNode NODE1 = new SMSKademliaNode(PEER1);
     private final SMSKademliaNode NODE1_V2 = new SMSKademliaNode(PEER1);
