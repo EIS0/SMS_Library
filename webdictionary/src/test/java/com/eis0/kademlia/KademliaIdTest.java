@@ -22,7 +22,7 @@ public class KademliaIdTest {
     private final KademliaId SIMPLE_ID3 = new KademliaId("\01"); //0x01
     /* SHA-256 hash of test SMSPeer, calculated with an external
      program, and truncated to the first 160 bits */
-    private final String NUMBER_HASH = "108877ecc3a9b2c2";
+    private final String NUMBER_HASH = "8202021e5ef98f7a";
 
     private final String TEXT_TOO_LONG =
             new String(new char[ID_LENGTH+3]).replace('\0', 'a');
@@ -94,10 +94,8 @@ public class KademliaIdTest {
     @Test
     public void xorDistanceTest_ByPhoneNumber() {
         KademliaId toCompareDistance = new KademliaId(VALID_PEER);
-        /*distance calculated with external programs*/
-        String hashCodeResultDistance = "4e936a93940ab311";
         KademliaId toReturn = NUMBER_ID.xor(toCompareDistance);
-        assertEquals(toReturn.getInt().toString(16), hashCodeResultDistance);
+        assertEquals(toReturn.getInt().toString(16), "0");
     }
 
     @Test
@@ -115,9 +113,8 @@ public class KademliaIdTest {
     @Test
     public void getDistanceTest() {
         KademliaId toHaveDistance = new KademliaId(VALID_PEER);
-        int result = 63; // calculated with an external problem
         int shouldResult = NUMBER_ID.getDistance(toHaveDistance);
-        assertEquals(shouldResult, result);
+        assertEquals(shouldResult, 0);
     }
 
     @Test
