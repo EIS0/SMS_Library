@@ -10,25 +10,24 @@ import java.util.Map;
 
 /**
  * This class handle the resource requests, it allows the user to:
- * 1. Create a request for adding a resource to the dictionary
+ * 1. Create a request to process a resource inside the dictionary
  * 2. Rack up multiple pending requests, waiting to be triggered
- * 3. Handle the response to the request, containing the node ID closest to the resource ID that the
- * request is trying to add to the network
- * 4. Send the resource, close the pending request, remove it from the list
+ * 3. Handle the response to the request, which contains the node ID closest to the resource ID that
+ * the request is trying to process
+ * 4. Process the resource, closing the pending request and removing it from the list
+ * => Resources can be added, removed, or obtained from the Dictionary
  *
  * @author Enrico Cestaro
  * @author Edoardo Raimondi
  */
 public class ResourceExchangeHandler {
-    //Timer to know if my sent request has been taken by somebody (10 secs max)
-    RespondTimer timer = new RespondTimer();
     //Maps containing the pending Requests waiting to be completed
     private Map<KademliaId, IRequest> pendingAddRequests;
     private Map<KademliaId, IRequest> pendingGetRequests;
 
     public ResourceExchangeHandler() {
-        pendingAddRequests = new HashMap<KademliaId, IRequest>();
-        pendingGetRequests = new HashMap<KademliaId, IRequest>();
+        pendingAddRequests = new HashMap<>();
+        pendingGetRequests = new HashMap<>();
     }
 
 
@@ -56,7 +55,7 @@ public class ResourceExchangeHandler {
      * a message in the network asking for a receiver, that is the node with the closest ID to the
      * resource ID
      *
-     * @param key      The String value of the key of the resource to get from the Dictionary
+     * @param key The String value of the key of the resource to get from the Dictionary
      */
     public void createGetRequest(String key) {
         //Create the Request object, insert it in the List

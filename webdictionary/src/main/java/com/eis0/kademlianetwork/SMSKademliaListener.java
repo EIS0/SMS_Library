@@ -42,7 +42,9 @@ public class SMSKademliaListener extends SMSReceivedServiceListener {
 
 
     /**
-     * This method analyzes the incoming messages, and extracts the content and the CODE
+     * This method analyzes the incoming messages, extracts the content, and processes it depending
+     * upon the {@link RequestTypes} contained at the beginning of the message
+     * it
      *
      * @param message The message received.
      */
@@ -57,6 +59,7 @@ public class SMSKademliaListener extends SMSReceivedServiceListener {
         String[] splitted = text.split(" ");
         //Starts a specific action depending upon the request or the command sent by other users
         switch (incomingRequest) {
+            /**Acknowledge another node ab*/
             case AcknowledgeMessage:
                 //that means the sent request has been taken by the node
                 kadNet.setRespond(true);
@@ -70,16 +73,18 @@ public class SMSKademliaListener extends SMSReceivedServiceListener {
                 ConnectionHandler.acceptRequest(peer);
                 break;
             case FindId:
-                //1. Create the response addressed to the sender, to inform him of my activity status
+                //1. Creates the response addressed to the sender, to inform him of my activity
+                //status, that is that I'm alive and still active inside the network
                 sendAcknowledge(peer);
                 //2. Processes the information brought by the message received
-                Log.e("CONN_LOG", "IdFound: " + splitted[1]);
+                Log.i("CONN_LOG", "IdFound: " + splitted[1]);
                 KademliaId idToFind = new KademliaId(splitted[1]);
                 SMSPeer searcher = new SMSPeer(splitted[2]);
                 IdFinderHandler.searchId(idToFind, searcher, ResearchMode.JoinNetwork);
                 break;
             case SearchResult:
-                //1. Create the response addressed to the sender, to inform him of my activity status
+                //1. Creates the response addressed to the sender, to inform him of my activity
+                //status, that is that I'm alive and still active inside the network
                 sendAcknowledge(peer);
                 //2. Processes the information brought by the message received
                 KademliaId idFound = new KademliaId(splitted[1]);
@@ -88,7 +93,8 @@ public class SMSKademliaListener extends SMSReceivedServiceListener {
 
             /**Adding a resource to the Dictionary */
             case FindIdForAddRequest:
-                //1. Create the response addressed to the sender, to inform him of my activity status
+                //1. Creates the response addressed to the sender, to inform him of my activity
+                //status, that is that I'm alive and still active inside the network
                 sendAcknowledge(peer);
                 //2. Processes the information brought by the message received
                 idToFind = new KademliaId(splitted[1]);
@@ -98,7 +104,8 @@ public class SMSKademliaListener extends SMSReceivedServiceListener {
                 resourceExchangeHandler.processRequest(idToFind, searcher, ResearchMode.AddToDictionary);
                 break;
             case AddRequestResult:
-                //1. Create the response addressed to the sender, to inform him of my activity status
+                //1. Creates the response addressed to the sender, to inform him of my activity
+                //status, that is that I'm alive and still active inside the network
                 sendAcknowledge(peer);
                 //2. Add the node that answered the research to the local RoutingTable
                 KademliaNetwork.getInstance().addNodeToTable(new SMSKademliaNode(peer));
@@ -108,7 +115,8 @@ public class SMSKademliaListener extends SMSReceivedServiceListener {
                 resourceExchangeHandler.completeAddRequest(idToFind, peer);
                 break;
             case AddToDict:
-                //1. Create the response addressed to the sender, to inform him of my activity status
+                //1. Creates the response addressed to the sender, to inform him of my activity
+                //status, that is that I'm alive and still active inside the network
                 sendAcknowledge(peer);
                 //2. Processes the information brought by the message received
                 String key = splitted[1];
@@ -120,7 +128,8 @@ public class SMSKademliaListener extends SMSReceivedServiceListener {
 
             /**Asking for a resource to the Dictionary*/
             case FindIdForGetRequest:
-                //1. Create the response addressed to the sender, to inform him of my activity status
+                //1. Creates the response addressed to the sender, to inform him of my activity
+                //status, that is that I'm alive and still active inside the network
                 sendAcknowledge(peer);
                 //2. Processes the information brought by the message received
                 idToFind = new KademliaId(splitted[1]);
@@ -130,7 +139,8 @@ public class SMSKademliaListener extends SMSReceivedServiceListener {
                 resourceExchangeHandler.processRequest(idToFind, searcher, ResearchMode.FindInDictionary);
                 break;
             case GetRequestResult:
-                //1. Create the response addressed to the sender, to inform him of my activity status
+                //1. Creates the response addressed to the sender, to inform him of my activity
+                //status, that is that I'm alive and still active inside the network
                 sendAcknowledge(peer);
                 //2. Add the node that answered the research to the local RoutingTable
                 KademliaNetwork.getInstance().addNodeToTable(new SMSKademliaNode(peer));
@@ -140,7 +150,8 @@ public class SMSKademliaListener extends SMSReceivedServiceListener {
                 resourceExchangeHandler.completeGetRequest(idToFind, peer);
                 break;
             case GetFromDict:
-                //1. Create the response addressed to the sender, to inform him of my activity status
+                //1. Creates the response addressed to the sender, to inform him of my activity
+                //status, that is that I'm alive and still active inside the network
                 sendAcknowledge(peer);
                 //2. Processes the information brought by the message received
                 key = splitted[1];
