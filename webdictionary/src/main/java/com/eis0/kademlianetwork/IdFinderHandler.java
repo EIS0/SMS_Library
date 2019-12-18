@@ -10,7 +10,7 @@ import com.eis0.kademlia.SMSKademliaRoutingTable;
 import java.math.BigInteger;
 
 /**
- * Class used to find the closest ID to the network to a specific Id
+ * This Class is used to find the closest node ID to a specific resource ID inside the network
  *
  * @author Marco Cognolato (wrote the class)
  * @author Enrico Cestaro (edited adn restored the code, to implement multiple research modes)

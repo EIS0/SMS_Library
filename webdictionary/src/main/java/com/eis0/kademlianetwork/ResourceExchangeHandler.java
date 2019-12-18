@@ -89,18 +89,17 @@ public class ResourceExchangeHandler {
         IdFinderHandler.searchId(idToFind, searcher, researchMode);
     }
 
-
     /**
      * This method is called whenever the network returns the node ID closest to the resource ID
-     * It search for the corresponding {@link Request} which sent the request in the network,
-     * extract it from the list of pending requests, and send the <key, resource> pair contained in
+     * It searches for the corresponding {@link Request} which sent the ID research in the network,
+     * extracts it from the list of pending requests, and sends the <key, resource> pair contained in
      * the request to the targetPeer, that is the node which answered to the research
      *
      * @param idToFind   The {@link KademliaId} of the resource key; it's used to trace back the
      *                   Request in the pending requests list
      * @param targetPeer The {@link SMSPeer} of the node which answered the research and receive the
      *                   <key, resurce> pair
-     * @throws IllegalArgumentException if the idToFind or the target peer are null
+     * @throws IllegalArgumentException If the idToFind or the targetPeer are null
      */
     public void completeAddRequest(KademliaId idToFind, SMSPeer targetPeer) {
         if (idToFind == null || targetPeer == null) throw new IllegalArgumentException();
@@ -116,6 +115,18 @@ public class ResourceExchangeHandler {
         SMSManager.getInstance().sendMessage(message);
     }
 
+    /**
+     * This method is called whenever the network returns the node ID closest to the resource ID
+     * It searches for the corresponding {@link Request} which sent the ID research in the network,
+     * extracts it from the list of pending requests, and sends the <key, resource> pair contained in
+     * the request to the targetPeer, that is the node which answered to the research
+     *
+     * @param idToFind   The {@link KademliaId} of the resource key; it's used to trace back the
+     *                   Request in the pending requests list
+     * @param targetPeer The {@link SMSPeer} of the node which answered the research and receive the
+     *                   <key, resurce> pair
+     * @throws IllegalArgumentException If the idToFind or the targetPeer are null
+     */
     public void completeGetRequest(KademliaId idToFind, SMSPeer targetPeer) {
         if (idToFind == null || targetPeer == null) throw new IllegalArgumentException();
         //1. Find in the pendingAddRequests the Request to complete, remove it from the list
@@ -132,14 +143,18 @@ public class ResourceExchangeHandler {
 
 
     /**
-     * @return
+     * This method returns the pendingAddRequests object of the class
+     *
+     * @return The pendingAddRequests map of the ResourceExchangeHandler class
      */
     public Map<KademliaId, IRequest> getPendingAddRequests() {
         return pendingAddRequests;
     }
 
     /**
-     * @return
+     * This method returns the pendingGetRequests object of the class
+     *
+     * @return The pendingGetRequests map of the ResourceExchangeHandler class
      */
     public Map<KademliaId, IRequest> getPendingGetRequests() {
         return pendingGetRequests;
