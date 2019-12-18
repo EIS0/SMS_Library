@@ -7,6 +7,7 @@ import com.eis.smslibrary.SMSMessage;
 import com.eis.smslibrary.SMSPeer;
 import com.eis.smslibrary.listeners.SMSReceivedServiceListener;
 import com.eis0.kademlia.KademliaId;
+import com.eis0.kademlia.SMSKademliaNode;
 
 /**
  * Listener class that send the appropriate command to
@@ -52,13 +53,6 @@ public class SMSKademliaListener extends SMSReceivedServiceListener {
         //Converts the code number in the message to the related enum
         RequestTypes incomingRequest = RequestTypes
                 .values()[Integer.parseInt(text.split(" ")[0])];
-
-        /*I suppose to have a predefine message space reserved to the key and to the content
-        String key = text.substring(2, 10);
-        String content = text.substring(11);
-        TODO: verify
-         */
-
         //Array of strings containing the message fields
         String[] splitted = text.split(" ");
         //Starts a specific action depending upon the request or the command sent by other users
@@ -106,9 +100,11 @@ public class SMSKademliaListener extends SMSReceivedServiceListener {
             case AddRequestResult:
                 //1. Create the response addressed to the sender, to inform him of my activity status
                 sendAcknowledge(peer);
-                //2. Processes the information brought by the message received
+                //2. Add the node that answered the research to the local RoutingTable
+                KademliaNetwork.getInstance().addNodeToTable(new SMSKademliaNode(peer));
+                //3. Processes the information brought by the message received
                 idToFind = new KademliaId(splitted[1]);
-                Log.i(LOG_TAG, "Received ID research request result: " + idToFind);
+                Log.i(LOG_TAG, "Received ID research request RESULT: " + idToFind);
                 resourceExchangeHandler.completeAddRequest(idToFind, peer);
                 break;
             case AddToDict:
@@ -120,6 +116,40 @@ public class SMSKademliaListener extends SMSReceivedServiceListener {
                 Log.i(LOG_TAG, "Received AddToDictionary request.\nKey: " + key + ",\nResource:" +
                         resource);
                 KademliaNetwork.getInstance().addToLocalDictionary(key, resource);
+                break;
+
+            /**Asking for a resource to the Dictionary*/
+            case FindIdForGetRequest:
+                //1. Create the response addressed to the sender, to inform him of my activity status
+                sendAcknowledge(peer);
+                //2. Processes the information brought by the message received
+                idToFind = new KademliaId(splitted[1]);
+                searcher = new SMSPeer(splitted[2]);
+                Log.i(LOG_TAG, "Received ID research request from: " + searcher + ".\nTarget: " +
+                        idToFind);
+                resourceExchangeHandler.processRequest(idToFind, searcher, ResearchMode.FindInDictionary);
+                break;
+            case GetRequestResult:
+                //1. Create the response addressed to the sender, to inform him of my activity status
+                sendAcknowledge(peer);
+                //2. Add the node that answered the research to the local RoutingTable
+                KademliaNetwork.getInstance().addNodeToTable(new SMSKademliaNode(peer));
+                //3. Processes the information brought by the message received
+                idToFind = new KademliaId(splitted[1]);
+                Log.i(LOG_TAG, "Received ID research request RESULT: " + idToFind);
+                resourceExchangeHandler.completeGetRequest(idToFind, peer);
+                break;
+            case GetFromDict:
+                //1. Create the response addressed to the sender, to inform him of my activity status
+                sendAcknowledge(peer);
+                //2. Processes the information brought by the message received
+                key = splitted[1];
+                Log.i(LOG_TAG, "Received GetFromDictionary request.\nKey: " + key);
+                resource = KademliaNetwork.getInstance().getFromLocalDictionary(key).toString();
+                //3. Send the <key, resource> pair
+                String resourceToAdd = RequestTypes.AddToDict.ordinal() + " " + key + " " + resource;
+                message = new SMSMessage(peer, resourceToAdd);
+                SMSManager.getInstance().sendMessage(message);
                 break;
         }
     }

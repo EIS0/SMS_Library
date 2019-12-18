@@ -18,13 +18,14 @@ import java.math.BigInteger;
  */
 public class IdFinderHandler {
     //TODO: can be converted in an Object Pool?
+
     /**
      * Searches for a specific Id, which needs to be closer to a given resource Id.
      * If it's found it's sent to a given SMSPeer who's searching, else sends a request to find it
      * to a closer person than the actual node. By a chain process, if the node is not found
      * it's sent to searcher the closest id found on the net
      *
-     * @param idToFind     The {@link KademliaId} to find
+     * @param idToFind     The {@link KademliaId} to find in the network
      * @param searcher     The {@link SMSPeer} who's searching the id
      * @param researchMode The {@link ResearchMode} enum, represents the final purpose of the
      *                     research
@@ -49,23 +50,25 @@ public class IdFinderHandler {
                 taskResult = RequestTypes.AddRequestResult;
                 break;
             case FindInDictionary:
-                findId = null;
-                taskResult = null;
+                findId = RequestTypes.FindIdForGetRequest;
+                taskResult = RequestTypes.GetRequestResult;
                 break;
         }
+
+        //Research of the KademliaId
         KademliaId netId = KademliaNetwork.getInstance().getLocalNode().getId();
         //If I'm the id return it
         //N.B. this state should be impossible, so it's a fail safe
         if (netId == idToFind) {
             sendResult(taskResult, idToFind, searcher);
-            retryIfDead(researchMode, idToFind, searcher, searcher);
+            retryIfDead(idToFind, searcher, researchMode, searcher);
             return;
         }
 
         SMSKademliaNode nodeToFind = new SMSKademliaNode(idToFind);
         if (KademliaNetwork.getInstance().isNodeInNetwork(nodeToFind)) {
             sendResult(taskResult, idToFind, searcher);
-            retryIfDead(researchMode, idToFind, searcher, searcher);
+            retryIfDead(idToFind, searcher, researchMode, searcher);
             return;
         }
 
@@ -77,38 +80,66 @@ public class IdFinderHandler {
             //I got further away from what I'm looking for, so I'm the closest,
             //so I return this id
             sendResult(taskResult, idToFind, searcher);
-            retryIfDead(researchMode, idToFind, searcher, searcher);
+            retryIfDead(idToFind, searcher, researchMode, searcher);
 
         } else {
             //I got closer to what I'm looking for, so I ask that id to find it.
             SMSPeer closer = closestNode.getPeer();
-           keepLooking(findId, idToFind, searcher, closer);
-           retryIfDead(researchMode, idToFind, searcher, closer);
+            keepLooking(findId, idToFind, searcher, closer);
+            retryIfDead(idToFind, searcher, researchMode, closer);
         }
     }
 
 
-
-    public static void sendResult(RequestTypes taskResult, KademliaId idToFind, SMSPeer searcher) {
+    /**
+     * This method sens to the specified target {@link SMSPeer} the result of the previously
+     * carried out research
+     *
+     * @param taskResult The {@link RequestTypes} of the result, sent to allow the receiver of the
+     *                   result to define which request the result itself belongs to
+     *                   (There may be multiple pending requests, each of a different nature)
+     * @param idToFind   The {@link KademliaId} whose research originated the request
+     *                   It's sent back as response to the research
+     * @param targetPeer The {@link SMSPeer} representing the target that will receive the result
+     */
+    public static void sendResult(RequestTypes taskResult, KademliaId idToFind, SMSPeer targetPeer) {
         String message = taskResult.ordinal() + " " + idToFind;
-        SMSMessage searchResult = new SMSMessage(searcher, message);
+        SMSMessage searchResult = new SMSMessage(targetPeer, message);
         SMSManager.getInstance().sendMessage(searchResult);
     }
 
+    /**
+     * @param findId       The {@link RequestTypes} of the research, there are multiple processes
+     *                     that need to search for a specific ID, this value allows the receiver of
+     *                     the message to define which process asked for the ID, and to answer
+     *                     appropriately
+     * @param idToFind     The {@link KademliaId} whose research originated the request
+     *                     It's sent back as response to the research
+     * @param searcherNode The {@link SMSPeer} which started the research
+     * @param closerNode   The node with the {@link KademliaId} closer to the idToFind
+     */
     public static void keepLooking(RequestTypes findId, KademliaId idToFind, SMSPeer searcherNode, SMSPeer closerNode) {
         String message = findId.ordinal() + " " + idToFind + " " + searcherNode;
         SMSMessage requestMessage = new SMSMessage(closerNode, message);
         SMSManager.getInstance().sendMessage(requestMessage);
     }
 
-    public static void retryIfDead(ResearchMode researchMode, KademliaId idToFind, SMSPeer searcherNode, SMSPeer nodeToCheck) {
-        if(!KademliaNetwork.getInstance().isAlive(nodeToCheck)){
+    /**
+     * @param idToFind     The {@link KademliaId} to find in the network
+     * @param searcherNode The {@link SMSPeer} who's searching the id
+     * @param researchMode The {@link ResearchMode} enum, represents the final purpose of the
+     *                     research
+     * @param nodeToCheck  The {@link SMSPeer} whose validity must be checked; if it's not active
+     *                     anymore, it is removed from the RoutingTable, and the research is started
+     *                     again
+     */
+    public static void retryIfDead(KademliaId idToFind, SMSPeer searcherNode, ResearchMode researchMode, SMSPeer nodeToCheck) {
+        if (!KademliaNetwork.getInstance().isAlive(nodeToCheck)) {
             //the target node is not alive. It isn't no more in my routing table
             //I try with another one
             searchId(idToFind, searcherNode, researchMode);
         }
     }
-
 
 
 }
