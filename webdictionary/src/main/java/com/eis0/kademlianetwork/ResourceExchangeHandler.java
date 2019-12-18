@@ -141,7 +141,6 @@ public class ResourceExchangeHandler {
         SMSManager.getInstance().sendMessage(message);
     }
 
-
     /**
      * This method returns the pendingAddRequests object of the class
      *

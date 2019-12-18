@@ -10,8 +10,7 @@ import com.eis0.kademlia.KademliaId;
 import com.eis0.kademlia.SMSKademliaNode;
 
 /**
- * Listener class that send the appropriate command to
- * the relative appropriate handler
+ * Listener class that send the appropriate command to the relative appropriate handler
  *
  * @author Marco Cognolato
  * @author Matteo Carnelos
@@ -22,10 +21,11 @@ import com.eis0.kademlia.SMSKademliaNode;
 public class SMSKademliaListener extends SMSReceivedServiceListener {
     private final static String LOG_TAG = "MSG_LSTNR";
     KademliaNetwork kadNet;
-    ResourceExchangeHandler resourceExchangeHandler = new ResourceExchangeHandler();
+    ResourceExchangeHandler resourceExchangeHandler;
 
     SMSKademliaListener(KademliaNetwork kadNet) {
         this.kadNet = kadNet;
+        resourceExchangeHandler = new ResourceExchangeHandler();
     }
 
     /**
@@ -57,7 +57,14 @@ public class SMSKademliaListener extends SMSReceivedServiceListener {
                 .values()[Integer.parseInt(text.split(" ")[0])];
         //Array of strings containing the message fields
         String[] splitted = text.split(" ");
+
         //Starts a specific action depending upon the request or the command sent by other users
+        KademliaId idToFind;
+        SMSPeer searcher;
+        KademliaId idFound;
+        String key;
+        String resource;
+
         switch (incomingRequest) {
             /**Acknowledge another node ab*/
             case AcknowledgeMessage:
@@ -78,8 +85,8 @@ public class SMSKademliaListener extends SMSReceivedServiceListener {
                 sendAcknowledge(peer);
                 //2. Processes the information brought by the message received
                 Log.i("CONN_LOG", "IdFound: " + splitted[1]);
-                KademliaId idToFind = new KademliaId(splitted[1]);
-                SMSPeer searcher = new SMSPeer(splitted[2]);
+                idToFind = new KademliaId(splitted[1]);
+                searcher = new SMSPeer(splitted[2]);
                 IdFinderHandler.searchId(idToFind, searcher, ResearchMode.JoinNetwork);
                 break;
             case SearchResult:
@@ -87,7 +94,7 @@ public class SMSKademliaListener extends SMSReceivedServiceListener {
                 //status, that is that I'm alive and still active inside the network
                 sendAcknowledge(peer);
                 //2. Processes the information brought by the message received
-                KademliaId idFound = new KademliaId(splitted[1]);
+                idFound = new KademliaId(splitted[1]);
                 TableUpdateHandler.stepTableUpdate(idFound);
                 break;
 
@@ -119,8 +126,8 @@ public class SMSKademliaListener extends SMSReceivedServiceListener {
                 //status, that is that I'm alive and still active inside the network
                 sendAcknowledge(peer);
                 //2. Processes the information brought by the message received
-                String key = splitted[1];
-                String resource = splitted[2];
+                key = splitted[1];
+                resource = splitted[2];
                 Log.i(LOG_TAG, "Received AddToDictionary request.\nKey: " + key + ",\nResource:" +
                         resource);
                 KademliaNetwork.getInstance().addToLocalDictionary(key, resource);

@@ -135,8 +135,10 @@ public class IdFinderHandler {
      */
     public static void retryIfDead(KademliaId idToFind, SMSPeer searcherNode, ResearchMode researchMode, SMSPeer nodeToCheck) {
         if (!KademliaNetwork.getInstance().isAlive(nodeToCheck)) {
-            //the target node is not alive. It isn't no more in my routing table
-            //I try with another one
+            //The target node is not alive. It is no more in my routing table
+            //I try with another one, starting another ID research, with the same values, but now
+            //that I executed the .isAlive(nodeToCheck) method, the invalid node it's been removed
+            //from my routing table
             searchId(idToFind, searcherNode, researchMode);
         }
     }
