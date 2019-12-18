@@ -19,7 +19,6 @@ import androidx.core.app.NotificationManagerCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.eis.smslibrary.SMSHandler;
 import com.eis.smslibrary.SMSPeer;
 import com.eis0.kademlia.Contact;
 import com.eis0.kademlia.SMSKademliaNode;
@@ -48,7 +47,7 @@ public class KademliaDemo extends AppCompatActivity implements KademliaListener 
     RecyclerView routingTableRclView;
     RoutingTableAdapter routingTableAdapter;
 
-    KademliaNetwork network = KademliaNetwork.getInstance();
+    KademliaNetwork network = KademliaNetwork.getInstance(this);
 
     /**
      * Called on the creation of the activity.
@@ -85,9 +84,6 @@ public class KademliaDemo extends AppCompatActivity implements KademliaListener 
         myIdLbl.setText(network.getLocalNode().getId().toString());
         routingTableAdapter = new RoutingTableAdapter(network.getLocalRoutingTable().getAllContacts());
         routingTableRclView.setAdapter(routingTableAdapter);
-
-        //Setups the context for the sms library
-        SMSHandler.getInstance().setup(this);
     }
 
     /**
