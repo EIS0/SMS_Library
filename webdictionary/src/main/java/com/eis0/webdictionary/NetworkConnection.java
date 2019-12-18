@@ -20,6 +20,7 @@ public class NetworkConnection {
             subscribers.add(myPeer);
         }
         NetworkListener listener = new NetworkListener(this);
+        SMSHandler.getInstance().setup(null);
         SMSHandler.getInstance().setReceivedListener(listener.getClass());
     }
 
