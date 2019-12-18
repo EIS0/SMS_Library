@@ -13,7 +13,7 @@ import java.math.BigInteger;
  * This Class is used to find the closest node ID to a specific resource ID inside the network
  *
  * @author Marco Cognolato (wrote the class)
- * @author Enrico Cestaro (edited adn restored the code, to implement multiple research modes)
+ * @author Enrico Cestaro (edited and restored the code, to implement multiple research modes)
  * @author Edoardo Raimondi (added the check cicle to verify if the target node is alive)
  */
 public class IdFinderHandler {

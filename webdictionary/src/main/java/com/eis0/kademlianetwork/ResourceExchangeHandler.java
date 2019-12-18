@@ -40,7 +40,7 @@ public class ResourceExchangeHandler {
      * @param resource The String value of the resource itself to be added to the Dictionary
      */
     public void createAddRequest(String key, String resource) {
-        //Create the Request object, insert it in the List
+        //Create the Request object, insert it inside the pendingAddRequests list
         Request currentRequest = new Request(key, resource);
         KademliaId idToFind = currentRequest.getKeyId();
         pendingAddRequests.put(idToFind, currentRequest);
@@ -58,7 +58,7 @@ public class ResourceExchangeHandler {
      * @param key The String value of the key of the resource to get from the Dictionary
      */
     public void createGetRequest(String key) {
-        //Create the Request object, insert it in the List
+        //Create the Request object, insert it inside the pendingGetRequests list
         Request currentRequest = new Request(key, null);
         KademliaId idToFind = currentRequest.getKeyId();
         pendingGetRequests.put(idToFind, currentRequest);
@@ -69,8 +69,9 @@ public class ResourceExchangeHandler {
     }
 
     /**
-     * This method uses an adapted method, the SearchIdForAddRequest in the {@link IdFinderHandler}
-     * class
+     * This method starts the ID research inside the network, according to the type of research the
+     * request is asking for; the same method is called by both the createAddRequest and
+     * createGetRequest methods, which specify the {@link ResearchMode} that will be used
      *
      * @param idToFind The {@link KademliaId} of the resource key, sent in the network asking for
      *                 the node with the closest node ID
@@ -79,9 +80,8 @@ public class ResourceExchangeHandler {
      * @throws IllegalArgumentException If the idToFind or the searcher are null
      */
     public void processRequest(KademliaId idToFind, SMSPeer searcher, ResearchMode researchMode) {
-        if (searcher == null) throw new IllegalArgumentException();
-        if (idToFind == null) throw new IllegalArgumentException();
-        if (researchMode == null) throw new IllegalArgumentException();
+        if (searcher == null || idToFind == null || researchMode == null)
+            throw new IllegalArgumentException();
         //If it's found, the Node with the closest id will send message containing:
         // 1. The code of the message
         // 2. the ID of the resource
@@ -118,8 +118,9 @@ public class ResourceExchangeHandler {
     /**
      * This method is called whenever the network returns the node ID closest to the resource ID
      * It searches for the corresponding {@link Request} which sent the ID research in the network,
-     * extracts it from the list of pending requests, and sends the <key, resource> pair contained in
-     * the request to the targetPeer, that is the node which answered to the research
+     * extracts it from the list of pending requests, and sends the key contained in
+     * the request to the targetPeer, that is the node which answered to the research; the targetPeer
+     * now identified and added to the RoutingTable will respond with tha <key, resource pair>
      *
      * @param idToFind   The {@link KademliaId} of the resource key; it's used to trace back the
      *                   Request in the pending requests list
@@ -136,7 +137,7 @@ public class ResourceExchangeHandler {
         String key = aboutToClose.getKey();
         String resource = aboutToClose.getResource();
         //2. Send the <key, resource> pair
-        String resourceToGet = RequestTypes.GetFromDict.ordinal() + " " + key + " ";
+        String resourceToGet = RequestTypes.GetFromDict.ordinal() + " " + key;
         SMSMessage message = new SMSMessage(targetPeer, resourceToGet);
         SMSManager.getInstance().sendMessage(message);
     }
@@ -161,8 +162,8 @@ public class ResourceExchangeHandler {
 
 
     /**
-     * This class allows to create Request objects, which will be stored in the pendingAddRequests
-     * list; every Request object contains the <key, resource> pair which will be stored in the
+     * This class allows to create Request objects, which will be stored in the pending requests
+     * lists; every Request object contains the <key, resource> pair which will be stored in the
      * distributed dictionary, plus the {@link KademliaId} of the resource key, used to distinguish
      * each Request from the other
      */

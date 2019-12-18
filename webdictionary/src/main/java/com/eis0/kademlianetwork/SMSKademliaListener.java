@@ -44,7 +44,6 @@ public class SMSKademliaListener extends SMSReceivedServiceListener {
     /**
      * This method analyzes the incoming messages, extracts the content, and processes it depending
      * upon the {@link RequestTypes} contained at the beginning of the message
-     * it
      *
      * @param message The message received.
      */
