@@ -13,12 +13,10 @@ import java.math.BigInteger;
  * Class used to find the closest ID to the network to a specific Id
  *
  * @author Marco Cognolato (wrote the class)
- * @author Enrico Cestaro (edited the code, to implement multiple research modes)
+ * @author Enrico Cestaro (edited adn restored the code, to implement multiple research modes)
  * @author Edoardo Raimondi (added the check cicle to verify if the target node is alive)
  */
 public class IdFinderHandler {
-    //TODO: can be converted in an Object Pool?
-
     /**
      * Searches for a specific Id, which needs to be closer to a given resource Id.
      * If it's found it's sent to a given SMSPeer who's searching, else sends a request to find it
@@ -35,12 +33,14 @@ public class IdFinderHandler {
         if (searcher == null || idToFind == null || researchMode == null)
             throw new IllegalArgumentException();
         /*Declaration of the two messages used to:
-        1. entrust the research to a close node
-        2. communicate the result of the research
+        1. entrust the research to a closer node
+        2. communicate the result of the research to the originating node
          */
         RequestTypes findId = null;
         RequestTypes taskResult = null;
-        //Selection of the research mode
+        /*Selection of the research mode: the ID research in the network can be originated for
+        different tasks, the researchMode specifies the target that the node which originated the
+        research was trying to accomplish */
         switch (researchMode) {
             case JoinNetwork:
                 findId = RequestTypes.FindId;
@@ -55,9 +55,9 @@ public class IdFinderHandler {
                 break;
         }
 
-        //Research of the KademliaId
+        //Obtain the KademliaId belonging to the local node (myself)
         KademliaId netId = KademliaNetwork.getInstance().getLocalNode().getId();
-        //If I'm the id return it
+        //Checking if I'm the searched id
         //N.B. this state should be impossible, so it's a fail safe
         if (netId == idToFind) {
             sendResult(taskResult, idToFind, searcher);
@@ -65,6 +65,7 @@ public class IdFinderHandler {
             return;
         }
 
+        //Checking if inside my RoutingTable there is a node with the ID to find
         SMSKademliaNode nodeToFind = new SMSKademliaNode(idToFind);
         if (KademliaNetwork.getInstance().isNodeInNetwork(nodeToFind)) {
             sendResult(taskResult, idToFind, searcher);
@@ -77,13 +78,12 @@ public class IdFinderHandler {
         BigInteger idToFindDistanceFromNetId = idToFind.getXorDistance(netId);
         BigInteger idToFindDistanceFromClosest = idToFind.getXorDistance(closestNode.getId());
         if (idToFindDistanceFromClosest.compareTo(idToFindDistanceFromNetId) > 0) {
-            //I got further away from what I'm looking for, so I'm the closest,
-            //so I return this id
+            //I got further away from what I'm looking for, so I'm the closest one: I return this ID
             sendResult(taskResult, idToFind, searcher);
             retryIfDead(idToFind, searcher, researchMode, searcher);
 
         } else {
-            //I got closer to what I'm looking for, so I ask that id to find it.
+            //I got closer to what I'm looking for: I ask that ID to search deeper.
             SMSPeer closer = closestNode.getPeer();
             keepLooking(findId, idToFind, searcher, closer);
             retryIfDead(idToFind, searcher, researchMode, closer);
