@@ -1,6 +1,7 @@
 package com.eis0.kademlianetwork;
 
 import com.eis.smslibrary.SMSPeer;
+import com.eis0.UtilityMocks;
 import com.eis0.kademlia.KademliaId;
 import com.eis0.kademlia.SMSKademliaNode;
 
@@ -25,27 +26,32 @@ public class ResourceExchangeHandlerTest {
     private final KademliaId KAD_ID2 = new KademliaId(KEY2);
     private final SMSPeer VALID_PEER = new SMSPeer("+393423541601");
     private final SMSKademliaNode MAIN_NODE = new SMSKademliaNode(VALID_PEER);
-
-    //private final KademliaListener mockListener = mock(KademliaListener.class);
+    private final IdFinderHandler idFinderHandler = new IdFinderHandler();
+    private final KademliaListener mockListener = mock(KademliaListener.class);
 
     @Before
     public void setUp() throws Exception {
         resourceExchangeHandler = new ResourceExchangeHandler();
-        IRequest REQUEST1 = mock(IRequest.class);
+        ResourceExchangeHandler.Request REQUEST1 = mock(ResourceExchangeHandler.Request.class);
         when(REQUEST1.getKey()).thenReturn(KEY1);
         when(REQUEST1.getKeyId()).thenReturn(KAD_ID1);
         when(REQUEST1.getResource()).thenReturn(RESOURCE1);
 
-        IRequest REQUEST2 = mock(IRequest.class);
+        ResourceExchangeHandler.Request REQUEST2 = mock(ResourceExchangeHandler.Request.class);
         when(REQUEST2.getKey()).thenReturn(KEY2);
         when(REQUEST2.getKeyId()).thenReturn(KAD_ID2);
         when(REQUEST2.getResource()).thenReturn(RESOURCE2);
 
+        /*
+        SMSManager smsManager = mock(SMSManager.class);
+        when(smsManager.sendMessage());
+         */
+
         KademliaNetwork kadNet = KademliaNetwork.getInstance();
-        //kadNet.init(MAIN_NODE, mockListener, UtilityMocks.setupMocks());
+        kadNet.init(MAIN_NODE, mockListener, UtilityMocks.setupMocks());
         SMSKademliaListener listener = new SMSKademliaListener(kadNet);
-        //resourceExchangeHandler.createAddRequest(KEY1, RESOURCE1);
-        //resourceExchangeHandler.createAddRequest(KEY2, RESOURCE2);
+        resourceExchangeHandler.createAddRequest(KEY1, RESOURCE1);
+        resourceExchangeHandler.createAddRequest(KEY2, RESOURCE2);
     }
 
     @Test

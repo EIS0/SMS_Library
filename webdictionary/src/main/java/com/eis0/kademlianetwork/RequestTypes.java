@@ -1,5 +1,11 @@
 package com.eis0.kademlianetwork;
 
+/**
+ * This enum contains the Request Types, which are the CODE placed at the beginning of every message
+ * sent through the network; they identify the Request contained in each message, depending upon
+ * the RequestType received nodes act differently, they recognize the nature of the request with the
+ * {@link SMSKademliaListener} class
+ */
 public enum RequestTypes {
     //Requests for joining the network
     JoinPermission,
@@ -23,7 +29,8 @@ public enum RequestTypes {
     AddRequestResult,
     //Asking for an element in the Dictionary
     FindIdForGetRequest,
-    GetRequestResult
+    GetRequestResult,
     //Deleting an element from the Dictionary
-
+    FindIdForDeleteRequest,
+    DeleteRequestResult
 }

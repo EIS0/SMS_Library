@@ -24,10 +24,12 @@ public class ResourceExchangeHandler {
     //Maps containing the pending Requests waiting to be completed
     private Map<KademliaId, IRequest> pendingAddRequests;
     private Map<KademliaId, IRequest> pendingGetRequests;
+    private Map<KademliaId, IRequest> pendingDeleteRequests;
 
     public ResourceExchangeHandler() {
         pendingAddRequests = new HashMap<>();
         pendingGetRequests = new HashMap<>();
+        pendingDeleteRequests = new HashMap<>();
     }
 
 
@@ -65,7 +67,23 @@ public class ResourceExchangeHandler {
         //Start to search for the closest ID
         SMSPeer searcher = KademliaNetwork.getInstance().getLocalNode().getPeer();
         processRequest(idToFind, searcher, ResearchMode.FindInDictionary);
+    }
 
+    /**
+     * This method adds to the pendingDeleteRequests list of {@link Request} the new request, and send
+     * a message in the network asking for a receiver, that is the node with the closest ID to the
+     * resource ID
+     *
+     * @param key The String value of the key of the resource to delete from the Dictionary
+     */
+    public void createDeleteRequest(String key) {
+        //Create the Request object, insert it inside the pendingGetRequests list
+        Request currentRequest = new Request(key, null);
+        KademliaId idToFind = currentRequest.getKeyId();
+        pendingDeleteRequests.put(idToFind, currentRequest);
+        //Start to search for the closest ID
+        SMSPeer searcher = KademliaNetwork.getInstance().getLocalNode().getPeer();
+        processRequest(idToFind, searcher, ResearchMode.RemoveFromDictionary);
     }
 
     /**
@@ -120,7 +138,7 @@ public class ResourceExchangeHandler {
      * It searches for the corresponding {@link Request} which sent the ID research in the network,
      * extracts it from the list of pending requests, and sends the key contained in
      * the request to the targetPeer, that is the node which answered to the research; the targetPeer
-     * now identified and added to the RoutingTable will respond with tha <key, resource pair>
+     * now identified and added to the RoutingTable will respond with the <key, resource> pair
      *
      * @param idToFind   The {@link KademliaId} of the resource key; it's used to trace back the
      *                   Request in the pending requests list
@@ -141,6 +159,33 @@ public class ResourceExchangeHandler {
         SMSMessage message = new SMSMessage(targetPeer, resourceToGet);
         SMSManager.getInstance().sendMessage(message);
     }
+
+    /**
+     * This method is called whenever the network returns the node ID closest to the resource ID
+     * It searches for the corresponding {@link Request} which sent the ID research in the network,
+     * extracts it from the list of pending requests, and sends the <key, resource> pair contained in
+     * the request to the targetPeer, that is the node which answered to the research
+     *
+     * @param idToFind   The {@link KademliaId} of the resource key; it's used to trace back the
+     *                   Request in the pending requests list
+     * @param targetPeer The {@link SMSPeer} of the node which answered the research and receive the
+     *                   <key, resurce> pair
+     * @throws IllegalArgumentException If the idToFind or the targetPeer are null
+     */
+    public void completeDeleteRequest(KademliaId idToFind, SMSPeer targetPeer) {
+        if (idToFind == null || targetPeer == null) throw new IllegalArgumentException();
+        //1. Find in the pendingAddRequests the Request to complete, remove it from the list
+        IRequest aboutToClose = pendingAddRequests.get(idToFind);
+        pendingAddRequests.remove(idToFind);
+        //Initialization of the values to send
+        String key = aboutToClose.getKey();
+        String resource = aboutToClose.getResource();
+        //2. Send the <key, resource> pair
+        String resourceToAdd = RequestTypes.RemoveFromDict.ordinal() + " " + key + " " + resource;
+        SMSMessage message = new SMSMessage(targetPeer, resourceToAdd);
+        SMSManager.getInstance().sendMessage(message);
+    }
+
 
     /**
      * This method returns the pendingAddRequests object of the class
@@ -226,7 +271,7 @@ public class ResourceExchangeHandler {
 
         @Override
         public String toString() {
-            return this.getKeyId().toString();
+            return "Request_ID: " + this.getKeyId().toString();
         }
     }
 }

@@ -53,6 +53,9 @@ public class IdFinderHandler {
                 findId = RequestTypes.FindIdForGetRequest;
                 taskResult = RequestTypes.GetRequestResult;
                 break;
+            case RemoveFromDictionary:
+                findId = RequestTypes.FindIdForDeleteRequest;
+                taskResult = RequestTypes.DeleteRequestResult;
         }
 
         //Obtain the KademliaId belonging to the local node (myself)

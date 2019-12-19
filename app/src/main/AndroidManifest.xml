@@ -23,7 +23,7 @@
         </activity>
 
         <receiver
-            android:name="com.eis0.smslibrary.SMSCore"
+            android:name="com.eis.smslibrary.SMSCore"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
@@ -32,7 +32,7 @@
         </receiver>
 
         <service
-            android:name="com.eis0.smslibrary.SMSHandler"
+            android:name="com.eis.smslibrary.SMSManager"
             android:label="Access requested to cancel boring app notification"
             android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
             <intent-filter>
