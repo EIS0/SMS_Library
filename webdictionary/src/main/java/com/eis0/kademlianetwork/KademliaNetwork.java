@@ -36,6 +36,8 @@ public class KademliaNetwork {
     private SMSNetVocabulary localKademliaDictionary;
     //To know if I had a positive acknowledge respond to a sent command
     private boolean hasRespond;
+    //To know if I had a pong for the refreshing task
+    private boolean hasPong;
     //Create a 10 secs responds timer. If a node doesn't respond with an acknowledge message
     //in that time, it is considered broken
     RespondTimer timer = new RespondTimer();
@@ -71,6 +73,7 @@ public class KademliaNetwork {
         this.listener = listener;
         localRoutingTable = new SMSKademliaRoutingTable(localNode, new DefaultConfiguration());
         hasRespond = false;
+        hasPong = false;
     }
 
     /**
@@ -80,12 +83,24 @@ public class KademliaNetwork {
     public boolean hasRespond() { return hasRespond; }
 
     /**
-     * Set true if I had an acknowledge respond, false otherwise
+     * Set the respond state
      *
      * @param  value of the respond state
      * @author Edoardo Raimondi
      */
     public void setRespond(boolean value){ hasRespond = value; }
+
+    /**
+     * @return true if I had a pong respond
+     * @author Edoardo Raimondi
+     */
+    public boolean getPongKnown(){ return hasPong; }
+
+    /**
+     * Set the pong state
+     * @author Edoardo Raimondi
+     */
+    public void setPong(boolean value) { hasPong = value; }
 
     /**
      * Check if I received an acknowledge respond to my request.

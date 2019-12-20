@@ -14,7 +14,7 @@ import java.util.TimerTask;
 
 public class RespondTimer extends TimerTask {
 
-    private static final int time  = 10000;
+    private static final long time  = 10000;
     private static final String LOG_KEY = "TIMER";
 
     @Override

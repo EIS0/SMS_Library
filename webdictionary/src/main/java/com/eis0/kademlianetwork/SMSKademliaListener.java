@@ -22,22 +22,36 @@ public class SMSKademliaListener extends SMSReceivedServiceListener {
     private final static String LOG_TAG = "MSG_LSTNR";
     KademliaNetwork kadNet;
     ResourceExchangeHandler resourceExchangeHandler;
+    private boolean hasPong;
 
     SMSKademliaListener(KademliaNetwork kadNet) {
         this.kadNet = kadNet;
         resourceExchangeHandler = new ResourceExchangeHandler();
+        hasPong = false;
     }
 
     /**
      * Send an acknowledge message
      *
-     * @param peer The {@link SMSPeer} of the node that contacted me
+     * @param  peer The {@link SMSPeer} of the node that contacted me
      * @author Edoardo Raimondi
      */
     public void sendAcknowledge(SMSPeer peer) {
         String message = RequestTypes.AcknowledgeMessage.ordinal() + " ";
-        SMSMessage acknowoledgeMessage = new SMSMessage(peer, message);
-        SMSManager.getInstance().sendMessage(acknowoledgeMessage);
+        SMSMessage acknowledgeMessage = new SMSMessage(peer, message);
+        SMSManager.getInstance().sendMessage(acknowledgeMessage);
+    }
+
+    /**
+     * Send a Pong message
+     *
+     * @param  peer The {@link SMSPeer} of the node that contacted me
+     * @author Edoardo Raimondi
+     */
+    public void sendPong(SMSPeer peer){
+        String pong = RequestTypes.Pong.ordinal() + " ";
+        SMSMessage pongMessage = new SMSMessage(peer, pong);
+        SMSManager.getInstance().sendMessage(pongMessage);
     }
 
 
@@ -69,6 +83,16 @@ public class SMSKademliaListener extends SMSReceivedServiceListener {
             case AcknowledgeMessage:
                 //that means the sent request has been taken by the node
                 kadNet.setRespond(true);
+                break;
+
+            /**Refreshing operations*/
+            case Ping:
+                //let others know I'm alive and I'm happy to be
+                sendPong(peer);
+                break;
+            case Pong:
+                //I know that someone is alive
+                kadNet.setPong(true);
                 break;
 
             /**Joining a network */
