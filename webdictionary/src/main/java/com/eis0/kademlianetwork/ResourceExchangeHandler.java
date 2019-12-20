@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * This class handle the resource requests, it allows the user to:
+ * This class handle the resource {@link Request}, it allows the user to:
  * 1. Create a request to process a resource inside the dictionary
  * 2. Rack up multiple pending requests, waiting to be triggered
  * 3. Handle the response to the request, which contains the node ID closest to the resource ID that
@@ -205,6 +205,14 @@ public class ResourceExchangeHandler {
         return pendingGetRequests;
     }
 
+    /**
+     * This method returns the pendingGetRequests object of the class
+     *
+     * @return The pendingGetRequests map of the ResourceExchangeHandler class
+     */
+    public Map<KademliaId, IRequest> getPendingDeleteRequests() {
+        return pendingDeleteRequests;
+    }
 
     /**
      * This class allows to create Request objects, which will be stored in the pending requests
