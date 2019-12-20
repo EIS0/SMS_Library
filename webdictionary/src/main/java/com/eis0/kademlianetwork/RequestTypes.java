@@ -32,5 +32,9 @@ public enum RequestTypes {
     GetRequestResult,
     //Deleting an element from the Dictionary
     FindIdForDeleteRequest,
-    DeleteRequestResult
+    DeleteRequestResult,
+
+    //Refreshing operation
+    Ping,
+    Pong
 }
