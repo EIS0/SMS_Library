@@ -68,7 +68,7 @@ public class SMSKademliaRoutingTable implements KademliaRoutingTable {
      * @param node The node to add
      */
 
-    public synchronized final void insert(SMSKademliaNode node) {
+    public final void insert(SMSKademliaNode node) {
         this.buckets[this.getBucketId(node.getId())].insert(node);
     }
 
@@ -96,10 +96,10 @@ public class SMSKademliaRoutingTable implements KademliaRoutingTable {
      * @return List A List of contacts closest to target
      */
     @Override
-    public synchronized final List<SMSKademliaNode> findClosest(KademliaId target, int numNodesRequired) {
+    public final List<SMSKademliaNode> findClosest(KademliaId target, int numNodesRequired) {
         TreeSet<SMSKademliaNode> sortedSet = new TreeSet<>(new KeyComparator(target));
-        /*Now every element added will be in a coerent position to the target Id
-        * (so the first element will be the closer one, second will be the second one...)*/
+        /*Now every element added will be in a coherent position to the target Id
+        * (first element will be the closer one, second will be the second one...)*/
         sortedSet.addAll(this.getAllNodes());
 
         List<SMSKademliaNode> closest = new ArrayList<>(numNodesRequired);
@@ -133,7 +133,7 @@ public class SMSKademliaRoutingTable implements KademliaRoutingTable {
 
     /**
      * @return List A List of all Contacts in this RoutingTable.
-     * If there are not contact, it returns an empty list.
+     * If there are not contacts, it returns an empty list.
      */
     @Override
     public final List<Contact> getAllContacts() {
@@ -152,15 +152,6 @@ public class SMSKademliaRoutingTable implements KademliaRoutingTable {
     @Override
     public final SMSKademliaBucket[] getBuckets() {
         return this.buckets;
-    }
-
-    /**
-     * Set the Buckets of this routing table, mainly used when retrieving saved state
-     *
-     * @param buckets The buckets to use.
-     */
-    public final void setBuckets(SMSKademliaBucket[] buckets) {
-        this.buckets = buckets;
     }
 
     /**

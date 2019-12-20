@@ -17,7 +17,9 @@ import java.util.Random;
  *
  * @see <a href="https://pdos.csail.mit.edu/~petar/papers/maymounkov-kademlia-lncs.pdf">Kademlia's
  * paper</a> for more details.
- * @author Edoardo Raimondi, edits by Marco Cognolato
+ * @author Edoardo Raimondi
+ * @author Marco Cognolato
+ * @author Giovanni Velludo
  */
 public class KademliaId implements Serializable {
 

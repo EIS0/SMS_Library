@@ -168,4 +168,16 @@ public class KademliaIdTest {
     public void distanceToSame_distanzeZero(){
         assertEquals(STRING_ID.getDistance(STRING_ID), 0);
     }
+
+    @Test
+    public void hexRapresentation_ByPhoneNumber(){
+        String shouldBe = "8202021E5EF98F7A"; //calculated outside
+        assertEquals(NUMBER_ID.hexRepresentation(), shouldBe);
+    }
+
+    @Test
+    public void hexRapresentation_ByString(){
+        String shouldBe = "3131313131313131"; //calculated outside
+        assertEquals(STRING_ID.hexRepresentation(), shouldBe);
+    }
 }

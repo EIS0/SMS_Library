@@ -22,7 +22,7 @@ public class SMSKademliaNode implements Serializable {
 
     /**
      * Create a Node in a traditional way
-     * in order to have a generic method to create a node
+     * in order to always have a generic method to create a node
      *
      * @param id KademliaId that identify the node
      *

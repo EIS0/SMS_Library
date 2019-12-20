@@ -25,6 +25,7 @@ public class SMSKademliaBucket implements KademliaBucket {
     /* A set of last seen contacts that can replace any current contact that is unresponsive */
     private ArrayList<Contact> replacementCache = new ArrayList<>();
 
+    /*Configuration of this kademlia implementation*/
     private KadConfiguration config;
 
     /**
@@ -50,6 +51,7 @@ public class SMSKademliaBucket implements KademliaBucket {
             /*
              * If the contact is already in the bucket, lets update that we've seen it
              * We need to remove and re-add the contact to get the Sorted Set to update sort order
+             * (see SMSKademliaRoutingTable
              */
             this.removeContact(contact);
             contact.setSeenNow();
