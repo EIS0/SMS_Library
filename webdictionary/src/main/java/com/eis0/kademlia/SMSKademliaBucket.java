@@ -1,11 +1,13 @@
 package com.eis0.kademlia;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.TreeSet;
 
 /**
  * A bucket inside the routing table
- * For each 0 < i < 160, every node keeps a list of ID for nodes of distance
+ * For each 0 < i < 64, every node keeps a list of ID for nodes of distance
  * between 2i and 2i+1 from itself.
  * These List are called bucket.
  *
@@ -20,13 +22,19 @@ public class SMSKademliaBucket implements KademliaBucket {
     private int depth;
 
     /* Contacts stored in this routing table */
-    private ArrayList<Contact> contacts = new ArrayList<>();
+    private TreeSet<Contact> contacts;
 
     /* A set of last seen contacts that can replace any current contact that is unresponsive */
-    private ArrayList<Contact> replacementCache = new ArrayList<>();
+    private TreeSet<Contact> replacementCache;
 
     /*Configuration of this kademlia implementation*/
     private KadConfiguration config;
+
+    {
+        //I use tree set so I'll have an ordered list of contact based on their lastSeen param
+        contacts = new TreeSet<>();
+        replacementCache = new TreeSet<>();
+    }
 
     /**
      * Constructor for the bucket
@@ -51,7 +59,7 @@ public class SMSKademliaBucket implements KademliaBucket {
             /*
              * If the contact is already in the bucket, lets update that we've seen it
              * We need to remove and re-add the contact to get the Sorted Set to update sort order
-             * (see SMSKademliaRoutingTable
+             * (see SMSKademliaRoutingTable)
              */
             this.removeContact(contact);
             contact.setSeenNow();
@@ -135,7 +143,7 @@ public class SMSKademliaBucket implements KademliaBucket {
         //If we have a replacement...
         if (!this.replacementCache.isEmpty()) {
             /* Replace the contact with one from the replacement cache */
-            Contact replacement = this.replacementCache.get(0);
+            Contact replacement = this.replacementCache.first();
             this.contacts.add(replacement);
             this.replacementCache.remove(replacement);
         }
@@ -185,13 +193,30 @@ public class SMSKademliaBucket implements KademliaBucket {
      * @return A list of all the contacts in the bucket
      */
     @Override
-    public ArrayList<Contact> getContacts() {
-        return contacts;
+    public List<Contact> getContacts()
+    {
+        final ArrayList<Contact> ret = new ArrayList<>();
+
+        /* If we have no contacts, return the blank arraylist */
+        if (this.contacts.isEmpty())
+        {
+            return ret;
+        }
+
+        /* We have contacts, lets copy put them into the arraylist and return */
+        for (Contact c : this.contacts)
+        {
+            ret.add(c);
+        }
+
+        return ret;
     }
 
     /**
      * When the bucket is filled, we keep extra contacts in the replacement cache.
      * Private because user has not to use it
+     *
+     * @param contact to insert
      */
     private void insertIntoReplacementCache(Contact contact) {
         /* Just return if this contact is already in our replacement cache */
@@ -205,7 +230,7 @@ public class SMSKademliaBucket implements KademliaBucket {
             this.replacementCache.add(tmp);
         } else if (this.replacementCache.size() > this.config.k()) {
             /* if our cache is filled, we remove the least recently seen contact */
-            this.replacementCache.remove(this.replacementCache.get(replacementCache.size()-1));
+            this.replacementCache.remove(this.replacementCache.last());
             this.replacementCache.add(contact);
         } else {
             this.replacementCache.add(contact);
