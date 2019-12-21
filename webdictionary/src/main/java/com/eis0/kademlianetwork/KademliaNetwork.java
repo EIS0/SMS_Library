@@ -8,7 +8,6 @@ import com.eis0.kademlia.Contact;
 import com.eis0.kademlia.DefaultConfiguration;
 import com.eis0.kademlia.KademliaId;
 import com.eis0.kademlia.SMSKademliaNode;
-import com.eis0.kademlia.SMSKademliaRoutingTable;
 import com.eis0.webdictionary.SMSNetVocabulary;
 import com.eis0.webdictionary.SMSSerialization;
 import com.eis0.webdictionary.SerializableObject;

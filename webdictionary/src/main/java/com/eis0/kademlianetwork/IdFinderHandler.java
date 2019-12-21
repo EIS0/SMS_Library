@@ -5,7 +5,6 @@ import com.eis.smslibrary.SMSMessage;
 import com.eis.smslibrary.SMSPeer;
 import com.eis0.kademlia.KademliaId;
 import com.eis0.kademlia.SMSKademliaNode;
-import com.eis0.kademlia.SMSKademliaRoutingTable;
 
 import java.math.BigInteger;
 
