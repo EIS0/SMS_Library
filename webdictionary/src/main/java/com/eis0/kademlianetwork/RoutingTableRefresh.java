@@ -69,11 +69,11 @@ public class RoutingTableRefresh extends TimerTask {
             if (KademliaNetwork.getInstance().getPongKnown()) {
                 //is alive, set the pong state to false in order to do it again
                 KademliaNetwork.getInstance().setPong(false);
-            } else { //the node is not alive. I remove it.
-                KademliaNetwork.getInstance().getLocalRoutingTable().getBuckets()[0].removeNode(currentNode);
+            } else {
+                //the node is not alive. I remove it.
+                KademliaNetwork.getInstance().getLocalRoutingTable().getBuckets()[i].removeNode(currentNode);
                 //now I search for another one
-
-
+                //TODO : search for another one (new class?)
             }
         }
     }

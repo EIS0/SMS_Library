@@ -22,12 +22,11 @@ public class SMSKademliaListener extends SMSReceivedServiceListener {
     private final static String LOG_TAG = "MSG_LSTNR";
     KademliaNetwork kadNet;
     ResourceExchangeHandler resourceExchangeHandler;
-    private boolean hasPong;
+    
 
     SMSKademliaListener(KademliaNetwork kadNet) {
         this.kadNet = kadNet;
         resourceExchangeHandler = new ResourceExchangeHandler();
-        hasPong = false;
     }
 
     /**
@@ -91,7 +90,7 @@ public class SMSKademliaListener extends SMSReceivedServiceListener {
                 sendPong(peer);
                 break;
             case Pong:
-                //I know that someone is alive
+                //I know the ping receiver is alive
                 kadNet.setPong(true);
                 break;
 
