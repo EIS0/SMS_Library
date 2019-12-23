@@ -52,33 +52,7 @@ public class KademliaId implements Serializable {
         }
     }
 
-    /**
-     * Construct the NodeId from a string
-     *
-     * @param data The user generated key string
-     * @throws IllegalArgumentException if data has not the right fit
-     * @author Marco Cognolato
-     */
-    public KademliaId(String data) {
-        this.keyBytes = data.getBytes();
-        // if it's in hex form, convert to byte array
-        if(data.matches("[0-9A-F]{" + ID_LENGTH_BYTES*2+"}")){
-            this.keyBytes = new byte[ID_LENGTH_BYTES];
-            for (int i = 0; i < keyBytes.length; i++) {
-                int index = i * 2;
-                int j = Integer.parseInt(data.substring(index, index + 2), 16);
-                keyBytes[i] = (byte) j;
-            }
-        }
-        if (this.keyBytes.length > ID_LENGTH_BYTES) {
-            throw new IllegalArgumentException("Specified Data need to be " + ID_LENGTH_BYTES + " characters long.");
-        }
 
-        //if the string it's too short, add some leading null bytes
-        if(this.keyBytes.length < ID_LENGTH_BYTES){
-            this.keyBytes = addTrailingZeros(this.keyBytes);
-        }
-    }
 
     /**
      * Use a given byte array as the NodeId.
@@ -172,48 +146,7 @@ public class KademliaId implements Serializable {
         return new KademliaId(result);
     }
 
-    /**
-     * Generates a NodeId that is some distance away from this NodeId
-     *
-     * @param distance The index of the first bit that should be different,
-     *                 From 0 to 159, where 0 changes the most significant bit
-     * @return The newly generated NodeId with a given distance from this.
-     * @throws IllegalArgumentException if the distance is < 0 or >= 160
-     * @author Edordo Raimondi, improved by Marco Cognolato
-     */
-    public KademliaId generateNodeIdByDistance(int distance) {
-        if(distance < 0 || distance >= ID_LENGTH) throw new IllegalArgumentException();
 
-        byte[] result = keyBytes.clone();
-
-        // calculate the index of the byte and bit to update
-        int byteToUpdateIndex = (distance) / 8;
-        int bitToUpdateIndex = 7 - (distance % 8);
-
-        //change only the bit at the distance requested
-        result[byteToUpdateIndex] = (byte)(result[byteToUpdateIndex] ^ 0x01<<bitToUpdateIndex);
-        return new KademliaId(result);
-    }
-
-    /**
-     * Counts the number of leading 0's in this NodeId
-     *
-     * @return Integer representing the number of leading 0's,
-     * also returns -1 if there's only leading 0's
-     * @author EdoardoRaimondi, Marco Cognolato
-     */
-    public int getFirstSetBitIndex() {
-        for(int byteIndex = 0; byteIndex < keyBytes.length; byteIndex++) {
-            byte currentByte = keyBytes[byteIndex];
-            //8 bits in a byte, from 0 to 7
-            for(int bitIndex = 7; bitIndex >= 0; bitIndex--) {
-                if(((0x01 << bitIndex) & currentByte) == (0x01 << bitIndex)){
-                    return (7-bitIndex) + byteIndex * 8;
-                }
-            }
-        }
-        return -1;
-    }
 
     /**
      * Gets the bit distance from this NodeId to another NodeId
