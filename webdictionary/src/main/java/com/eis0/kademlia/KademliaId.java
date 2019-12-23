@@ -56,11 +56,16 @@ public class KademliaId implements Serializable {
      * Construct the NodeId from a string
      *
      * @param data The user generated key string
-     * @throws IllegalArgumentException if data has not the right fit
+     * @throws IllegalArgumentException If an id cannot be constructed from this string.
+     *                                  A NodeId is constructable from this string if the length
+     *                                  of the string is shorter than {@link #ID_LENGTH_BYTES}
+     *                                  or if the string is an hex representation of ad Id
+     *                                  (meaning it is long {@link #ID_LENGTH_BYTES} * 2 and the
+     *                                  only characters used are the numbers between 0 and 9
+     *                                  and the characters A through F)
      * @author Marco Cognolato
      */
     public KademliaId(String data) {
-        this.keyBytes = data.getBytes();
         // if it's in hex form, convert to byte array
         if(data.matches("[0-9A-F]{" + ID_LENGTH_BYTES*2+"}")){
             this.keyBytes = new byte[ID_LENGTH_BYTES];
@@ -70,14 +75,7 @@ public class KademliaId implements Serializable {
                 keyBytes[i] = (byte) j;
             }
         }
-        if (this.keyBytes.length > ID_LENGTH_BYTES) {
-            throw new IllegalArgumentException("Specified Data need to be " + ID_LENGTH_BYTES + " characters long.");
-        }
-
-        //if the string it's too short, add some leading null bytes
-        if(this.keyBytes.length < ID_LENGTH_BYTES){
-            this.keyBytes = addTrailingZeros(this.keyBytes);
-        }
+        else constructId(data.getBytes());
     }
 
     /**
@@ -87,15 +85,26 @@ public class KademliaId implements Serializable {
      * @throws IllegalArgumentException if data has not the right fit
      */
     public KademliaId(byte[] bytes) {
+        constructId(bytes);
+    }
+
+    /**
+     * Constructs an id given a byte array.
+     * If the byte array is shorter than {@link #ID_LENGTH_BYTES} some leading zeros are added
+     *
+     * @param bytes The byte array to construct the id from
+     * @throws IllegalArgumentException If the byte array is longer than {@link #ID_LENGTH_BYTES}
+     */
+    private void constructId(byte[] bytes){
         if (bytes.length > ID_LENGTH_BYTES) {
             throw new IllegalArgumentException(
                     "Specified Data need to be " + ID_LENGTH_BYTES
-                    + " characters long. Data Given: '" + new String(bytes) + "'");
+                            + " characters long. Data Given: '" + new String(bytes) + "'");
         }
         this.keyBytes = bytes;
         //if the byte array it's too short, add some leading null bytes
         if(bytes.length < ID_LENGTH_BYTES){
-            this.keyBytes = addTrailingZeros(this.keyBytes);
+            this.keyBytes = addLeadingZeros(this.keyBytes);
         }
     }
 
@@ -106,7 +115,7 @@ public class KademliaId implements Serializable {
      * @return A byte array with the number trailed with zeros
      * @author Marco Cognolato
      */
-    private byte[] addTrailingZeros(byte[] number){
+    private byte[] addLeadingZeros(byte[] number){
         //by default each element is set to 0x00
         byte[] toReturn = new byte[ID_LENGTH_BYTES];
         //add to the end (ax expected) each element
@@ -196,10 +205,10 @@ public class KademliaId implements Serializable {
     }
 
     /**
-     * Counts the number of leading 0's in this NodeId
+     * Returns the index of the first bit set to 1, starting from the
+     * most significant digit
      *
-     * @return Integer representing the number of leading 0's,
-     * also returns -1 if there's only leading 0's
+     * @return Index of the first bit set to 1, returns -1 if there's no bit set to 1
      * @author EdoardoRaimondi, Marco Cognolato
      */
     public int getFirstSetBitIndex() {
