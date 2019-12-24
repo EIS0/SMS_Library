@@ -1,3 +1,4 @@
+
 package com.eis0.kademlia;
 
 
@@ -99,7 +100,7 @@ public class SMSKademliaRoutingTable implements KademliaRoutingTable {
     public final List<SMSKademliaNode> findClosest(KademliaId target, int numNodesRequired) {
         TreeSet<SMSKademliaNode> sortedSet = new TreeSet<>(new KeyComparator(target));
         /*Now every element added will be in a coherent position to the target Id
-        * (first element will be the closer one, second will be the second one...)*/
+         * (first element will be the closer one, second will be the second one...)*/
         sortedSet.addAll(this.getAllNodes());
 
         List<SMSKademliaNode> closest = new ArrayList<>(numNodesRequired);
