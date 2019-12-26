@@ -26,9 +26,9 @@ public class ConnectionHandler {
     }
 
     /**
-     * Asks a given valid peer if I can join HIS Kademlia Network
+     * Sends to a target peer a request to join his Kademlia Network
      *
-     * @param peer The peer to ask to
+     * @param peer The peer to send the request to
      */
     public void askToJoin(SMSPeer peer) {
         //asking to join has the same functionality as inviting someone to join
