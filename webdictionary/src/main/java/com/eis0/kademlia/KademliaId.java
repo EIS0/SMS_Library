@@ -265,14 +265,7 @@ public class KademliaId implements Serializable {
     @Override
     @NonNull
     public String toString() {
-        final char[] HEX_ARRAY = "0123456789ABCDEF".toCharArray();
-        char[] hexChars = new char[keyBytes.length * 2];
-        for (int j = 0; j < keyBytes.length; j++) {
-            int v = keyBytes[j] & 0xFF;
-            hexChars[j * 2] = HEX_ARRAY[v >>> 4];
-            hexChars[j * 2 + 1] = HEX_ARRAY[v & 0x0F];
-        }
-        return new String(hexChars);
+        return hexRepresentation();
     }
 
 }
