@@ -23,11 +23,15 @@ import java.util.Random;
  */
 public class KademliaId implements Serializable {
 
-    private static final String HASHING_ALG = "SHA-256";
-    private static final String LOG_KEY = "KADEMLIA_ID";
     public final static int ID_LENGTH = 64;
-    final static int ID_LENGTH_BYTES = ID_LENGTH / 8;
+
+    //A Byte is 8 bits, so this shouldn't be changed
+    public final static int BYTE_SIZE = 8;
+
+    private static final String HASHING_ALG = "SHA-256";
+    final static int ID_LENGTH_BYTES = ID_LENGTH / BYTE_SIZE;
     private byte[] keyBytes;
+    private final static int INVALID_VALUE = -1;
 
     /**
      * Generates a KademliaId using a random key
@@ -187,7 +191,7 @@ public class KademliaId implements Serializable {
      * @param distance The index of the first bit that should be different,
      *                 From 0 to 159, where 0 changes the most significant bit
      * @return The newly generated NodeId with a given distance from this.
-     * @throws IllegalArgumentException if the distance is < 0 or >= 160
+     * @throws IllegalArgumentException if the distance is < 0 or >= {@link #ID_LENGTH}
      * @author Edoardo Raimondi, improvements by Marco Cognolato
      */
     public KademliaId generateNodeIdByDistance(int distance) {
@@ -196,8 +200,8 @@ public class KademliaId implements Serializable {
         byte[] result = keyBytes.clone();
 
         // calculate the index of the byte and bit to update
-        int byteToUpdateIndex = (distance) / 8;
-        int bitToUpdateIndex = 7 - (distance % 8);
+        int byteToUpdateIndex = (distance) / BYTE_SIZE;
+        int bitToUpdateIndex = (BYTE_SIZE-1) - (distance % BYTE_SIZE);
 
         //change only the bit at the distance requested
         result[byteToUpdateIndex] = (byte)(result[byteToUpdateIndex] ^ 0x01<<bitToUpdateIndex);
@@ -215,13 +219,13 @@ public class KademliaId implements Serializable {
         for(int byteIndex = 0; byteIndex < keyBytes.length; byteIndex++) {
             byte currentByte = keyBytes[byteIndex];
             //8 bits in a byte, from 0 to 7
-            for(int bitIndex = 7; bitIndex >= 0; bitIndex--) {
+            for(int bitIndex = BYTE_SIZE-1; bitIndex >= 0; bitIndex--) {
                 if(((0x01 << bitIndex) & currentByte) == (0x01 << bitIndex)){
-                    return (7-bitIndex) + byteIndex * 8;
+                    return ((BYTE_SIZE-1)-bitIndex) + byteIndex * BYTE_SIZE;
                 }
             }
         }
-        return -1;
+        return INVALID_VALUE;
     }
 
     /**
@@ -235,7 +239,7 @@ public class KademliaId implements Serializable {
      */
     public int getDistance(KademliaId to) {
         int diffIndex = this.xor(to).getFirstSetBitIndex();
-        if(diffIndex == -1) return 0;
+        if(diffIndex == INVALID_VALUE) return 0;
         return ID_LENGTH - diffIndex;
     }
 
