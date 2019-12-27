@@ -59,7 +59,7 @@ public class IncomingPollAdapter extends BaseAdapter implements Observer {
      */
     @Override
     public long getItemId(int position) {
-        return DataProvider.getIncomingPolls().get(position).getPollId();
+        return DataProvider.getIncomingPolls().get(position).getId();
     }
 
     /**
@@ -91,8 +91,8 @@ public class IncomingPollAdapter extends BaseAdapter implements Observer {
      * - Poll Name TextView         ->  Poll Name
      * - Poll Id TextView           ->  Poll Id
      * - Poll Question TextView     ->  Poll Question
-     * - Yes Button                 ->  Send answer 'Yes' action
-     * - No Button                  ->  Send answer 'No' action
+     * - Yes Button                 ->  Send setAnswer 'Yes' action
+     * - No Button                  ->  Send setAnswer 'No' action
      *
      * @param position    The position in the List.
      * @param convertView The ListItem view on which the UI elements are placed.
@@ -115,9 +115,9 @@ public class IncomingPollAdapter extends BaseAdapter implements Observer {
         final BinaryPoll poll = DataProvider.getIncomingPolls().get(position);
 
         // Assigning poll display values and actions to UI objects
-        pollNameTxt.setText(poll.getPollName());
+        pollNameTxt.setText(poll.getName());
         pollIdTxt.setText(String.valueOf(getItemId(position)));
-        pollQuestionTxt.setText(poll.getPollQuestion());
+        pollQuestionTxt.setText(poll.getQuestion());
         yesBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 pollManager.answerPoll(poll, true);

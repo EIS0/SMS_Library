@@ -5,6 +5,7 @@ import com.eis0.smslibrary.SMSMessage;
 import com.eis0.smslibrary.SMSPeer;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Class that represent a network object. A network is basically a list of peer on which is possible
@@ -14,28 +15,36 @@ import java.util.ArrayList;
  */
 public class Network {
 
-    private ArrayList<SMSPeer> peers;
+    private List<SMSPeer> peers;
     private SMSManager smsManager = SMSManager.getInstance();
 
-    Network(ArrayList<SMSPeer> peers) {
+    Network(List<SMSPeer> peers) {
         this.peers = peers;
     }
 
-    public ArrayList<SMSPeer> getPeers() {
+    public List<SMSPeer> getPeers() {
         return peers;
     }
 
-    public void create() {
-        String[] addresses = new String[peers.size()];
-        for(int i = 0; i < peers.size(); i++)
-            addresses[i] = peers.get(i).getAddress();
-        NetworkCommandLine commandLine = new NetworkCommandLine(NetworkCommandLine.CREATE_NETWORK_CMD, addresses);
-        linearBroadcast(commandLine);
+    public List<String> getAddresses() {
+        List<String> addresses = new ArrayList<>();
+        for(SMSPeer peer : getPeers()) addresses.add(peer.getAddress());
+        return addresses;
     }
 
-    public void linearBroadcast(NetworkCommandLine commandLine) {
+    public Network getSubNetForPeer(SMSPeer peer) {
+        Network subNet = new Network(getPeers());
+        subNet.getPeers().remove(peer);
+        return subNet;
+    }
+
+    public void unicastMessage(SMSPeer peer, String message) {
+        smsManager.sendMessage(new SMSMessage(peer, message));
+    }
+
+    public void broadcastMessage(String message) {
         for(SMSPeer peer : peers)
-            smsManager.sendMessage(new SMSMessage(peer, commandLine.toMessageData()));
+            smsManager.sendMessage(new SMSMessage(peer, message));
     }
 
     public boolean equals(Object obj) {

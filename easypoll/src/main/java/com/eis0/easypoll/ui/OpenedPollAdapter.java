@@ -57,7 +57,7 @@ class OpenedPollAdapter extends BaseAdapter implements Observer {
      */
     @Override
     public long getItemId(int position) {
-        return DataProvider.getOpenedPolls().get(position).getPollId();
+        return DataProvider.getOpenedPolls().get(position).getId();
     }
 
     /**
@@ -117,9 +117,9 @@ class OpenedPollAdapter extends BaseAdapter implements Observer {
         BinaryPoll poll = DataProvider.getOpenedPolls().get(position);
 
         // Assigning poll display values to UI objects
-        pollNameTxt.setText(poll.getPollName());
+        pollNameTxt.setText(poll.getName());
         pollIdTxt.setText(String.valueOf(getItemId(position)));
-        pollQuestionTxt.setText(poll.getPollQuestion());
+        pollQuestionTxt.setText(poll.getQuestion());
         int closedPercentage = poll.getClosedPercentage();
         percentageTxt.setText(String.valueOf(closedPercentage));
         pollProgressBar.setProgress(closedPercentage);

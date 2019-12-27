@@ -49,8 +49,8 @@ public class BinaryPollTest {
         assertTrue(testPoll.hasUser(VALID_PEER_1));
         assertTrue(testPoll.hasUser(VALID_PEER_2));
         assertTrue(testPoll.hasUser(VALID_PEER_3));
-        assertEquals(VALID_POLL_NAME, testPoll.getPollName());
-        assertEquals(VALID_POLL_QUESTION, testPoll.getPollQuestion());
+        assertEquals(VALID_POLL_NAME, testPoll.getName());
+        assertEquals(VALID_POLL_QUESTION, testPoll.getQuestion());
     }
 
     /**
@@ -100,7 +100,7 @@ public class BinaryPollTest {
     }
 
     /**
-     * Tries to answer in different ways to a poll and get the different results.
+     * Tries to setAnswer in different ways to a poll and get the different results.
      *
      * @author Matteo Carnelos
      */

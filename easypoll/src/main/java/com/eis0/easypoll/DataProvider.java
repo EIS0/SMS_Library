@@ -4,8 +4,6 @@ import android.content.Context;
 import android.util.Log;
 
 import com.eis0.easypoll.poll.BinaryPoll;
-import com.eis0.easypoll.poll.PollListener;
-import com.eis0.easypoll.poll.PollManager;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -29,7 +27,7 @@ import java.util.Observable;
  *
  * @author Matteo Carnelos
  */
-public class DataProvider extends Observable implements PollListener {
+public class DataProvider extends Observable {
 
     private static final String LOG_KEY = "DATA_PROVIDER";
     private static final String INCOMING_POLLS_FILE_NAME = "incomingPolls.json";
@@ -51,7 +49,7 @@ public class DataProvider extends Observable implements PollListener {
      * @author Matteo Carnelos
      */
     private DataProvider() {
-        PollManager.getInstance().setPollListener(this);
+
     }
 
     /**
@@ -102,7 +100,6 @@ public class DataProvider extends Observable implements PollListener {
         incomingPolls = loadPollsList(INCOMING_POLLS_FILE_NAME, context);
         openedPolls = loadPollsList(OPENED_POLLS_FILE_NAME, context);
         closedPolls = loadPollsList(CLOSED_POLLS_FILE_NAME, context);
-        PollManager.updateSentPolls();
     }
 
     /**
@@ -208,51 +205,19 @@ public class DataProvider extends Observable implements PollListener {
 
     // ---------------------------- LISTENING EVENTS ---------------------------- //
 
-    /**
-     * Called whenever a new poll is received by other users, adds it to the incomingPoll list and
-     * notifies all the observers.
-     *
-     * @param poll The poll received.
-     * @author Matteo Carnelos
-     */
-    public void onPollReceived(BinaryPoll poll) {
-        incomingPolls.add(poll);
+    public void addPoll(BinaryPoll poll) {
+        openedPolls.add(poll);
+        if(poll.isIncoming())
+            incomingPolls.add(poll);
         setChanged();
         notifyObservers(poll);
     }
 
-    /**
-     * Called whenever a sent poll is created or receives an update (after an answer). When a poll
-     * receives all the answers it is considered closed, so it will be moved to the closedPolls list.
-     *
-     * @param poll The poll created or updated.
-     * @author Matteo Carnelos
-     */
-    public void onSentPollUpdate(BinaryPoll poll) {
-        // Two scenarios:
-        // Poll Closed, move it from the openedPolls to the closedPolls list
-        // Poll Opened, it can be either a new poll or an update to an existing one
-        if (poll.isClosed()) {
+    public void updatePoll(BinaryPoll poll) {
+        if(poll.isClosed()) {
             openedPolls.remove(poll);
             closedPolls.add(poll);
-        } else {
-            int pollIndex = openedPolls.indexOf(poll);
-            if (pollIndex == -1) openedPolls.add(poll);
-            else openedPolls.set(pollIndex, poll);
-        }
-        setChanged();
-        notifyObservers(poll);
-    }
-
-    /**
-     * Called whenever a poll is answered. Remove it from the incomingPolls list and
-     * notify the observers.
-     *
-     * @param poll The poll answered.
-     * @author Matteo Carnelos
-     */
-    public void onPollAnswered(BinaryPoll poll) {
-        incomingPolls.remove(poll);
+        } else openedPolls.set(openedPolls.indexOf(poll), poll);
         setChanged();
         notifyObservers(poll);
     }

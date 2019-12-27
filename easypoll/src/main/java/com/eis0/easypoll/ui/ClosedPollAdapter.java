@@ -56,7 +56,7 @@ public class ClosedPollAdapter extends BaseAdapter implements Observer {
      */
     @Override
     public long getItemId(int position) {
-        return DataProvider.getClosedPolls().get(position).getPollId();
+        return DataProvider.getClosedPolls().get(position).getId();
     }
 
     /**
@@ -112,9 +112,9 @@ public class ClosedPollAdapter extends BaseAdapter implements Observer {
         BinaryPoll poll = DataProvider.getClosedPolls().get(position);
 
         // Assigning poll display values to UI objects
-        pollName.setText(poll.getPollName());
+        pollName.setText(poll.getName());
         pollId.setText(String.valueOf(getItemId(position)));
-        pollQuestion.setText(poll.getPollQuestion());
+        pollQuestion.setText(poll.getQuestion());
         yesNum.setText(String.valueOf(poll.countYes()));
         noNum.setText(String.valueOf(poll.countNo()));
 

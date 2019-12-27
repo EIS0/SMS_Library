@@ -1,7 +1,6 @@
 package com.eis0.easypoll;
 
 import com.eis0.easypoll.poll.BinaryPoll;
-import com.eis0.easypoll.poll.PollListener;
 import com.eis0.easypoll.poll.PollManager;
 import com.eis0.smslibrary.SMSMessage;
 import com.eis0.smslibrary.SMSPeer;
