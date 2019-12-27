@@ -42,9 +42,9 @@ public class ConnectionHandler {
      */
     public static void sendAcceptRequest(SMSPeer peer) {
         /*
-         * When I receive a request to join his network, or
-         * a request to invite me to his network I have to send
-         * an acceptJoin event, to notify him and let him do his work.
+         * Both if I get invited to another one's network,
+         * or someone asked to enter my network,
+         * I have to send back an accept message
          * */
 
         String messageRequest = RequestTypes.AcceptJoin.ordinal() + "";
