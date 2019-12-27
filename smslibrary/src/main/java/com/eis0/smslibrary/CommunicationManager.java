@@ -17,17 +17,18 @@ public abstract class CommunicationManager<T extends Message> {
     public abstract void sendMessage(T message);
 
     /**
-     * Set a listener that gets called when a message for the library is received.
+     * Add a listener that gets called when a message for the library is received.
      *
      * @param listener The listener to wake up when a message is received.
      * @author Marco Cognolato
      */
-    public abstract void setReceiveListener(ReceivedMessageListener<T> listener);
+    public abstract void addReceiveListener(ReceivedMessageListener<T> listener);
 
     /**
      * Removes the listener waiting for incoming messages.
      *
+     * @param listener The listener to remove.
      * @author Marco Cognolato
      */
-    public abstract void removeReceiveListener();
+    public abstract void removeReceiveListener(ReceivedMessageListener<T> listener);
 }

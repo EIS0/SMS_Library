@@ -39,24 +39,26 @@ public class SMSManager extends CommunicationManager<SMSMessage> {
     }
 
     /**
-     * Set the listener watching for incoming SMSMessages.
+     * Add a listener watching for incoming SMSMessages.
      *
      * @param listener The listener to wake up when a message is received.
      * @author Marco Cognolato
      */
     @Override
-    public void setReceiveListener(ReceivedMessageListener<SMSMessage> listener) {
-        SMSHandler.setReceiveListener(listener);
+    public void addReceiveListener(ReceivedMessageListener<SMSMessage> listener) {
+        SMSHandler.addReceiveListener(listener);
     }
 
     /**
      * Removes the listener of incoming messages.
      *
+     * @param listener The listener to remove.
      * @author Marco Cognolato
+     * @author Matteo Carnelos
      */
     @Override
-    public void removeReceiveListener() {
-        SMSHandler.removeReceiveListener();
+    public void removeReceiveListener(ReceivedMessageListener<SMSMessage> listener) {
+        SMSHandler.removeReceiveListener(listener);
     }
 
     /**

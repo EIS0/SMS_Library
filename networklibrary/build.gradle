@@ -22,24 +22,14 @@ android {
         }
     }
 
-    testOptions {
-        unitTests.returnDefaultValues = true
-    }
-
-}
-
-repositories {
-    mavenCentral()
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'com.googlecode.libphonenumber:libphonenumber:8.11.1'
+
     implementation 'androidx.appcompat:appcompat:1.1.0'
-
     testImplementation 'junit:junit:4.12'
-    testImplementation 'org.mockito:mockito-core:3.2.4'
-
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    implementation project(path: ':smslibrary')
 }

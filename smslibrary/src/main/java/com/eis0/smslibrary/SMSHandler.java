@@ -19,7 +19,7 @@ public class SMSHandler extends NotificationListenerService {
     private static final char APP_ID = '\r';
     private static ArrayList<SMSMessage> pendingMessages = new ArrayList<>();
 
-    private static ReceivedMessageListener receivedListener;
+    private static ArrayList<ReceivedMessageListener> receivedListeners = new ArrayList<>();
 
     /**
      * Sends a valid SMSMessage, with sent and delivery confirmation.
@@ -37,24 +37,28 @@ public class SMSHandler extends NotificationListenerService {
     }
 
     /**
-     * Sets the listener, that is the object to be called when an SMS with the APP_ID is received.
+     * Adds a listener, that is the object to be called when an SMS with the APP_ID is received.
      *
-     * @param listener Must be an object that implements the ReceivedMessageListener<SMSMessage> interface.
+     * @param listener Must be an object that implements the {@link ReceivedMessageListener} interface.
      * @author Matteo Carnelos
      */
-    static void setReceiveListener(ReceivedMessageListener<SMSMessage> listener) {
-        receivedListener = listener;
-        for (SMSMessage pendingMessage : pendingMessages) receivedListener.onMessageReceived(pendingMessage);
+    static void addReceiveListener(ReceivedMessageListener<SMSMessage> listener) {
+        receivedListeners.add(listener);
+        for(ReceivedMessageListener receivedListener : receivedListeners)
+            for(SMSMessage pendingMessage : pendingMessages)
+                receivedListener.onMessageReceived(pendingMessage);
         pendingMessages.clear();
     }
 
     /**
      * Removes a listener from listening to incoming messages.
      *
+     * @param listener The listener to remove.
      * @author Marco Cognolato
+     * @author Matteo Carnelos
      */
-    static void removeReceiveListener() {
-        receivedListener = null;
+    static void removeReceiveListener(ReceivedMessageListener<SMSMessage> listener) {
+        receivedListeners.remove(listener);
     }
 
     /**
@@ -70,8 +74,9 @@ public class SMSHandler extends NotificationListenerService {
         SMSMessage message = new SMSMessage(
                 new SMSPeer(sms.getDisplayOriginatingAddress()),
                 content.substring(1));
-        if(receivedListener == null) pendingMessages.add(message);
-        else receivedListener.onMessageReceived(message);
+        if(receivedListeners.isEmpty()) pendingMessages.add(message);
+        else for(ReceivedMessageListener receivedListener : receivedListeners)
+            receivedListener.onMessageReceived(message);
     }
 
     /**

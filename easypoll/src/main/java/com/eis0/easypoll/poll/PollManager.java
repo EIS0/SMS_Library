@@ -25,10 +25,6 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
     // NOTE: FIELD_SEPARATOR is a regex, there are some illegal values (e.g. "*")
     // must not be private for tests to work, not a big deal since it's final
     public static final String FIELD_SEPARATOR = "\r";
-    public static final String NEW_POLL_MSG_CODE = "EasyPoll";
-    private static final String ANSWER_MSG_CODE = "Answer";
-    private static final String YES_MSG_CODE = "Yes";
-    private static final String NO_MSG_CODE = "No";
 
     // Must always be static for getInstance to work
     private static PollManager instance = null;
@@ -47,7 +43,7 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
      * @author Matteo Carnelos
      */
     private PollManager() {
-        smsManager.setReceiveListener(this);
+        smsManager.addReceiveListener(this);
     }
 
     /**
@@ -129,7 +125,7 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
      * @author Matteo Carnelos
      */
     private static String newPollToMessage(BinaryPoll poll) {
-        return NEW_POLL_MSG_CODE + FIELD_SEPARATOR
+        return PollCommands.NEW_POLL + FIELD_SEPARATOR
                 + poll.getPollId() + FIELD_SEPARATOR
                 + poll.getPollName() + FIELD_SEPARATOR
                 + poll.getPollQuestion();
@@ -160,7 +156,7 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
             // Structure of the message (each filed is separated by the FIELD_SEPARATOR):
             // NEW_POLL_MSG_CODE + pollId + pollName + pollQuestion
             //        [0]           [1]       [2]          [3]
-            case NEW_POLL_MSG_CODE:
+            case PollCommands.NEW_POLL:
                 String pollName = fields[2];
                 String pollQuestion = fields[3];
                 SMSPeer pollAuthor = message.getPeer();
@@ -172,8 +168,8 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
             // Structure of the message (each filed is separated by the FIELD_SEPARATOR):
             // ANSWER_MSG_CODE + pollId + answerCode
             //        [0]          [1]       [2]
-            case ANSWER_MSG_CODE:
-                boolean isYes = fields[2].equals(YES_MSG_CODE);
+            case PollCommands.ANSWER_POLL:
+                boolean isYes = fields[2].equals(PollCommands.YES_ANSWER);
                 SMSPeer voter = message.getPeer();
                 BinaryPoll answeredPoll = sentPolls.get(pollId);
                 if(isYes) answeredPoll.setYes(voter);
@@ -224,8 +220,8 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
      * @author Matteo Carnelos
      */
     private static String answerToMessage(int id, boolean answer) {
-        String message = ANSWER_MSG_CODE + FIELD_SEPARATOR + id + FIELD_SEPARATOR;
-        if (answer) return message + YES_MSG_CODE;
-        else return message + NO_MSG_CODE;
+        String message = PollCommands.ANSWER_POLL + FIELD_SEPARATOR + id + FIELD_SEPARATOR;
+        if (answer) return message + PollCommands.YES_ANSWER;
+        else return message + PollCommands.NO_ANSWER;
     }
 }
