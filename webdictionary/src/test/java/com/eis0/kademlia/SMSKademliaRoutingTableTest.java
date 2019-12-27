@@ -7,13 +7,11 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
-import java.util.EmptyStackException;
 import java.util.List;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 public class SMSKademliaRoutingTableTest {
 
@@ -43,8 +41,8 @@ public class SMSKademliaRoutingTableTest {
         partialList.add(MAIN_NODE);
         partialList.add(NODE1);
         fullList.add(MAIN_NODE);
-        fullList.add(NODE1);
         fullList.add(NODE2);
+        fullList.add(NODE1);
         routingTable = new SMSKademliaRoutingTable(MAIN_NODE, CONFIG);
     }
 
@@ -103,8 +101,8 @@ public class SMSKademliaRoutingTableTest {
         routingTable.insert(NODE2);
         List<SMSKademliaNode> result = new ArrayList<>();
         result.add(MAIN_NODE);
-        result.add(NODE1);
         result.add(NODE2);
+        result.add(NODE1);
         assertEquals(routingTable.getAllNodes(), result);
     }
 

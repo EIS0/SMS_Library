@@ -139,17 +139,17 @@ public class SMSKademliaBucketTest {
     public void getContactList(){
         ArrayList<Contact> contList = new ArrayList<>();
         contList.add(CONTACT1);
-        contList.add(CONTACT2);
+        //contList.add(CONTACT2);
         bucket.insert(CONTACT1);
-        bucket.insert(CONTACT2);
+        //bucket.insert(CONTACT2);
         assertArrayEquals(contList.toArray(), bucket.getContacts().toArray());
     }
 
     @Test
     public void getContactList_withCache(){
         ArrayList<Contact> contList = new ArrayList<>();
-        contList.add(CONTACT1);
         contList.add(CONTACT2);
+        contList.add(CONTACT1);
         bucket.insert(CONTACT1);
         bucket.insert(CONTACT2);
         bucket.insert(CONTACT3);

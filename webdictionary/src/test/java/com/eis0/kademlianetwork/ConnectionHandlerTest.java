@@ -1,6 +1,5 @@
 package com.eis0.kademlianetwork;
 
-
 import com.eis.smslibrary.SMSPeer;
 import com.eis0.UtilityMocks;
 import com.eis0.kademlia.Contact;
@@ -17,7 +16,6 @@ import static org.mockito.Mockito.mock;
  * Test by Marco Cognolato
  * Mock by Edoardo Raimondi
  */
-
 public class ConnectionHandlerTest {
     private static final SMSPeer VALID_PEER1 = new SMSPeer("+395554");
     private static final SMSPeer VALID_PEER2 = new SMSPeer("+395556");
@@ -31,7 +29,6 @@ public class ConnectionHandlerTest {
     @Before
     public void setup(){
         instance = KademliaNetwork.getInstance();
-
         instance.init(VALID_NODE, mockListener, UtilityMocks.setupMocks());
     }
 
@@ -45,5 +42,10 @@ public class ConnectionHandlerTest {
         catch(RuntimeException e){
             assertTrue(instance.isNodeInNetwork(VALID_NODE));
         }
+    }
+
+    @Test()
+    public void trystuff(){
+        ConnectionHandler.acceptRequest(VALID_PEER2);
     }
 }
