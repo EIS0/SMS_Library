@@ -40,8 +40,10 @@ public class ResourceExchangeHandler {
      *
      * @param key      The String value of the key of the resource to add to the Dictionary
      * @param resource The String value of the resource itself to be added to the Dictionary
+     * @throws IllegalArgumentException If key or resource are null
      */
     public void createAddRequest(String key, String resource) {
+        if(key == null || resource == null) throw new IllegalArgumentException();
         //Create the Request object, insert it inside the pendingAddRequests list
         Request currentRequest = new Request(key, resource);
         KademliaId idToFind = currentRequest.getKeyId();

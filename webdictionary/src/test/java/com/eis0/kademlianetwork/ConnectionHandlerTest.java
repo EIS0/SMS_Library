@@ -43,9 +43,4 @@ public class ConnectionHandlerTest {
             assertTrue(instance.isNodeInNetwork(VALID_NODE));
         }
     }
-
-    @Test()
-    public void trystuff(){
-        ConnectionHandler.acceptRequest(VALID_PEER2);
-    }
 }

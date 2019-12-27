@@ -1,7 +1,5 @@
 package com.eis0.kademlianetwork;
 
-import android.util.Log;
-
 import java.util.TimerTask;
 
 /**
@@ -19,9 +17,9 @@ public class RespondTimer extends TimerTask {
 
     @Override
     public void run() {
-        Log.i(LOG_KEY, ": started");
+        //Log.i(LOG_KEY, ": started");
         completeTask();
-        Log.i(LOG_KEY, ": stopped");
+        //Log.i(LOG_KEY, ": stopped");
     }
 
     /**

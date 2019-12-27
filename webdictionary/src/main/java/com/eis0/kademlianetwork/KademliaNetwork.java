@@ -40,7 +40,7 @@ public class KademliaNetwork {
     private boolean hasPong;
     //Create a 10 secs responds timer. If a node doesn't respond with an acknowledge message
     //in that time, it is considered broken
-    RespondTimer timer = new RespondTimer();
+    //RespondTimer timer = new RespondTimer();
 
     // Singleton instance
     private static KademliaNetwork instance;
@@ -113,7 +113,7 @@ public class KademliaNetwork {
      */
     public boolean isAlive(SMSPeer targetPeer){
         //I wait 10 secs
-        timer.run();
+        //timer.run();
         //check if I had an acknowledge respond to my request
         if(hasRespond()){
             //I know my request has ben received successfully. I set false in order to do it again
