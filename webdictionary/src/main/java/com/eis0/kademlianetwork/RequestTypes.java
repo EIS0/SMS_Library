@@ -36,5 +36,7 @@ public enum RequestTypes {
 
     //Refreshing operation
     Ping,
-    Pong
+    Pong,
+    FindIdRefresh,
+    SearchResultReplacement
 }

@@ -75,6 +75,7 @@ public class SMSKademliaListener extends SMSReceivedServiceListener {
         KademliaId idToFind;
         SMSPeer searcher;
         KademliaId idFound;
+
         String key;
         String resource;
 
@@ -94,6 +95,20 @@ public class SMSKademliaListener extends SMSReceivedServiceListener {
                 //I know that someone is alive
                 kadNet.setPong(true);
                 break;
+            case FindIdRefresh:
+                //Processes the information brought by the message received
+                Log.i("CONN_LOG", "IdFound: " + splitted[1]);
+                idToFind = new KademliaId(splitted[1]);
+                searcher = new SMSPeer(splitted[2]);
+                IdFinderHandler.searchId(idToFind, searcher, ResearchMode.Refresh);
+                break;
+            case SearchResultReplacement:
+                //I found the node, let's insert it in my routing table
+                idFound = new KademliaId(splitted[1]);
+                SMSKademliaNode nodeToAdd = new SMSKademliaNode(idFound);
+                kadNet.getLocalRoutingTable().insert(nodeToAdd);
+                break;
+
 
             /**Joining a network */
             case JoinPermission:

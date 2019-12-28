@@ -13,13 +13,10 @@ import java.util.TimerTask;
 public class RespondTimer extends TimerTask {
 
     private static final long time  = 10000;
-    private static final String LOG_KEY = "TIMER";
 
     @Override
     public void run() {
-        //Log.i(LOG_KEY, ": started");
         completeTask();
-        //Log.i(LOG_KEY, ": stopped");
     }
 
     /**

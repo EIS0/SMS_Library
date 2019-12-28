@@ -4,5 +4,6 @@ public enum ResearchMode {
     JoinNetwork,
     AddToDictionary,
     RemoveFromDictionary,
-    FindInDictionary
+    FindInDictionary,
+    Refresh
 }
