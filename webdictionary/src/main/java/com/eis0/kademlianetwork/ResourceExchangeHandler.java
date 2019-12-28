@@ -42,7 +42,7 @@ public class ResourceExchangeHandler {
      * @param resource The String value of the resource itself to be added to the Dictionary
      * @throws IllegalArgumentException If key or resource are null
      */
-    public void createAddRequest(String key, String resource) throws IllegalArgumentException {
+    public void createAddRequest(String key, String resource) {
         if(key == null || resource == null) throw new IllegalArgumentException();
         //Create the Request object, insert it inside the pendingAddRequests list
         Request currentRequest = new Request(key, resource);
@@ -61,6 +61,7 @@ public class ResourceExchangeHandler {
      * @param key The String value of the key of the resource to get from the Dictionary
      */
     public void createGetRequest(String key) {
+        if(key == null) throw new IllegalArgumentException();
         //Create the Request object, insert it inside the pendingGetRequests list
         Request currentRequest = new Request(key, null);
         KademliaId idToFind = currentRequest.getKeyId();
@@ -78,6 +79,7 @@ public class ResourceExchangeHandler {
      * @param key The String value of the key of the resource to delete from the Dictionary
      */
     public void createDeleteRequest(String key) {
+        if(key == null) throw new IllegalArgumentException();
         //Create the Request object, insert it inside the pendingGetRequests list
         Request currentRequest = new Request(key, null);
         KademliaId idToFind = currentRequest.getKeyId();
