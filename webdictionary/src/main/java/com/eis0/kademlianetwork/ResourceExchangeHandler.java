@@ -286,3 +286,25 @@ public class ResourceExchangeHandler {
         }
     }
 }
+
+/*
+When a resource needs to be added to the network dictionary:
+1. A Request is created, it contains the <key, resource> pair
+2. The Request is added to the pendingAddRequests list, and is processed
+3. Processing the Request means that:
+    - The node which will contain the resource must be found, a message identified by the code
+    FindIdForAddRequest is sent 'inside the network'
+    (createAddRequest >> processRequest >> idFinderHandler >> 'Network / TargetNode')
+    - The node which will contain the resource respond directly to the local node, with a message
+    identified by the code ResultAddRequest and the ID of the Resource which needs to be added to
+    the Dictionary
+    ('Network / TargetNode' >> SMSKademliaListener >> completeAddRequest)
+4. When the local node receives the result of the research, it searches inside the list of pending
+    AddRequests, find the corresponding one, and complete the Request sending to
+    the node which will store it the resource, inside a message identified by the code AddToDict
+5. The final node will receive the message, recognize it (with the SMSKademliaListener) as a request
+    to store a resource, and do so
+
+
+=> This process is repeated almost identically to delete or get a resource from the network dictionary
+ */
