@@ -26,13 +26,13 @@ public enum RequestTypes {
     //Requests to handle the research for the closest ID in the resource exchange process:
     //Adding an element to the Dictionary
     FindIdForAddRequest,
-    AddRequestResult,
+    ResultAddRequest,
     //Asking for an element in the Dictionary
     FindIdForGetRequest,
-    GetRequestResult,
+    ResultGetRequest,
     //Deleting an element from the Dictionary
     FindIdForDeleteRequest,
-    DeleteRequestResult,
+    ResultDeleteRequest,
 
     //Refreshing operation
     Ping,

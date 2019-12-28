@@ -46,15 +46,15 @@ public class IdFinderHandler {
                 taskResult = RequestTypes.SearchResult;
             case AddToDictionary:
                 findId = RequestTypes.FindIdForAddRequest;
-                taskResult = RequestTypes.AddRequestResult;
+                taskResult = RequestTypes.ResultAddRequest;
                 break;
             case FindInDictionary:
                 findId = RequestTypes.FindIdForGetRequest;
-                taskResult = RequestTypes.GetRequestResult;
+                taskResult = RequestTypes.ResultGetRequest;
                 break;
             case RemoveFromDictionary:
                 findId = RequestTypes.FindIdForDeleteRequest;
-                taskResult = RequestTypes.DeleteRequestResult;
+                taskResult = RequestTypes.ResultDeleteRequest;
             case Refresh:
                 findId = RequestTypes.FindId;
                 taskResult = RequestTypes.SearchResultReplacement;
@@ -62,37 +62,30 @@ public class IdFinderHandler {
 
         //Obtain the KademliaId belonging to the local node (myself)
         KademliaId netId = KademliaNetwork.getInstance().getLocalNode().getId();
-        //Checking if I'm the searched id
-        //N.B. this state should be impossible, so it's a fail safe
-        if (netId == idToFind) {
-            sendResult(taskResult, idToFind, searcher);
-            retryIfDead(idToFind, searcher, researchMode, searcher);
-            return;
-        }
-
-        //Checking if inside my RoutingTable there is a node with the ID to find
-        SMSKademliaNode nodeToFind = new SMSKademliaNode(idToFind);
-        if (KademliaNetwork.getInstance().isNodeInNetwork(nodeToFind)) {
-            sendResult(taskResult, idToFind, searcher);
-            retryIfDead(idToFind, searcher, researchMode, searcher);
-            return;
-        }
-
+        //Obtain the local RoutingTable
         SMSKademliaRoutingTable table = KademliaNetwork.getInstance().getLocalRoutingTable();
+        //Get the node with the node ID closest to the idToFind
         SMSKademliaNode closestNode = table.findClosest(idToFind, 1).get(0);
+        SMSKademliaNode nodeToFind = new SMSKademliaNode(idToFind);
+
         BigInteger idToFindDistanceFromNetId = idToFind.getXorDistance(netId);
         BigInteger idToFindDistanceFromClosest = idToFind.getXorDistance(closestNode.getId());
-        if (idToFindDistanceFromClosest.compareTo(idToFindDistanceFromNetId) > 0) {
-            //I got further away from what I'm looking for, so I'm the closest one: I return this ID
+
+        //1. Checking if I'm the searched id (This state should be impossible, it's a fail safe)
+        //2. Checking if inside my RoutingTable there is a node with the ID to find
+        //3. I got further away from what I'm looking for, so I'm the closest one: I return this ID
+        if (    netId == idToFind   ||
+                KademliaNetwork.getInstance().isNodeInNetwork(nodeToFind) ||
+                idToFindDistanceFromClosest.compareTo(idToFindDistanceFromNetId) > 0) {
             sendResult(taskResult, idToFind, searcher);
             retryIfDead(idToFind, searcher, researchMode, searcher);
-
-        } else {
-            //I got closer to what I'm looking for: I ask that ID to search deeper.
+            return;
+        }
+        //else
+        //I ask to the closest node inside my Routing Table to continue the research
             SMSPeer closer = closestNode.getPeer();
             keepLooking(findId, idToFind, searcher, closer);
             retryIfDead(idToFind, searcher, researchMode, closer);
-        }
     }
 
 

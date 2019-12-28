@@ -21,7 +21,8 @@ import java.util.Map;
  * @author Edoardo Raimondi
  */
 public class ResourceExchangeHandler {
-    //Maps containing the pending Requests waiting to be completed
+    //Maps containing the pending Requests waiting to be completed; each pending request is identified
+    //inside the Map by the request ID that the request must process
     private Map<KademliaId, IRequest> pendingAddRequests;
     private Map<KademliaId, IRequest> pendingGetRequests;
     private Map<KademliaId, IRequest> pendingDeleteRequests;
@@ -32,7 +33,6 @@ public class ResourceExchangeHandler {
         pendingDeleteRequests = new HashMap<>();
     }
 
-
     /**
      * This method adds to the pendingAddRequests list of {@link Request} the new request, and send
      * a message in the network asking for a receiver, that is the node with the closest ID to the
@@ -42,7 +42,7 @@ public class ResourceExchangeHandler {
      * @param resource The String value of the resource itself to be added to the Dictionary
      * @throws IllegalArgumentException If key or resource are null
      */
-    public void createAddRequest(String key, String resource) {
+    public void createAddRequest(String key, String resource) throws IllegalArgumentException {
         if(key == null || resource == null) throw new IllegalArgumentException();
         //Create the Request object, insert it inside the pendingAddRequests list
         Request currentRequest = new Request(key, resource);
@@ -52,7 +52,6 @@ public class ResourceExchangeHandler {
         SMSPeer searcher = KademliaNetwork.getInstance().getLocalNode().getPeer();
         processRequest(idToFind, searcher, ResearchMode.AddToDictionary);
     }
-
 
     /**
      * This method adds to the pendingGetRequests list of {@link Request} the new request, and send
@@ -228,7 +227,7 @@ public class ResourceExchangeHandler {
         private String resource;
 
         /**
-         * This is the only constructor of the class, it automatically creates the ID of the
+         * This is the constructor of the class, it automatically creates the ID of the
          * resource key
          *
          * @param key      The String value of the key of the <key, resource> pair

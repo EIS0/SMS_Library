@@ -10,7 +10,7 @@ import com.eis0.kademlia.KademliaId;
 import com.eis0.kademlia.SMSKademliaNode;
 
 /**
- * Listener class that send the appropriate command to the relative appropriate handler
+ * Listener class that sends the appropriate command to the relative appropriate handler
  *
  * @author Marco Cognolato
  * @author Matteo Carnelos
@@ -31,7 +31,7 @@ public class SMSKademliaListener extends SMSReceivedServiceListener {
     }
 
     /**
-     * Send an acknowledge message
+     * Sends an acknowledge message
      *
      * @param  peer The {@link SMSPeer} of the node that contacted me
      * @author Edoardo Raimondi
@@ -43,7 +43,7 @@ public class SMSKademliaListener extends SMSReceivedServiceListener {
     }
 
     /**
-     * Send a Pong message
+     * Sends a Pong message
      *
      * @param  peer The {@link SMSPeer} of the node that contacted me
      * @author Edoardo Raimondi
@@ -148,7 +148,7 @@ public class SMSKademliaListener extends SMSReceivedServiceListener {
                         idToFind);
                 resourceExchangeHandler.processRequest(idToFind, searcher, ResearchMode.AddToDictionary);
                 break;
-            case AddRequestResult:
+            case ResultAddRequest:
                 //1. Creates the response addressed to the sender, to inform him of my activity
                 //status, that is that I'm alive and still active inside the network
                 sendAcknowledge(peer);
@@ -183,7 +183,7 @@ public class SMSKademliaListener extends SMSReceivedServiceListener {
                         idToFind);
                 resourceExchangeHandler.processRequest(idToFind, searcher, ResearchMode.FindInDictionary);
                 break;
-            case GetRequestResult:
+            case ResultGetRequest:
                 //1. Creates the response addressed to the sender, to inform him of my activity
                 //status, that is that I'm alive and still active inside the network
                 sendAcknowledge(peer);
@@ -220,7 +220,7 @@ public class SMSKademliaListener extends SMSReceivedServiceListener {
                         idToFind);
                 resourceExchangeHandler.processRequest(idToFind, searcher, ResearchMode.RemoveFromDictionary);
                 break;
-            case DeleteRequestResult:
+            case ResultDeleteRequest:
                 //1. Creates the response addressed to the sender, to inform him of my activity
                 //status, that is that I'm alive and still active inside the network
                 sendAcknowledge(peer);
