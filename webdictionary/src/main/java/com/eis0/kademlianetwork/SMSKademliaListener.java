@@ -31,7 +31,7 @@ public class SMSKademliaListener extends SMSReceivedServiceListener {
     }
 
     /**
-     * Sends an acknowledge message
+     * This method sends an acknowledge message
      *
      * @param  peer The {@link SMSPeer} of the node that contacted me
      * @author Edoardo Raimondi
@@ -43,7 +43,7 @@ public class SMSKademliaListener extends SMSReceivedServiceListener {
     }
 
     /**
-     * Sends a Pong message
+     * This method sends a Pong message
      *
      * @param  peer The {@link SMSPeer} of the node that contacted me
      * @author Edoardo Raimondi
