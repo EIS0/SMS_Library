@@ -10,7 +10,8 @@ import java.util.TreeSet;
  * Implementation of a Kademlia routing table.
  * Every Node has his own table. It contains his well known contacts.
  * A routing table is composed by different Buckets {@link SMSKademliaBucket}
- * Every routing table has a configuration that, at the creation, will be a {@link DefaultConfiguration}
+ * Every routing table has a configuration that, at the creation, will be a {@link DefaultConfiguration}.
+ * It will be changed at any time.
  *
  * @see <a href="https://pdos.csail.mit.edu/~petar/papers/maymounkov-kademlia-lncs.pdf">Kademlia's
  * paper</a> for more details.
@@ -45,7 +46,7 @@ public class SMSKademliaRoutingTable implements KademliaRoutingTable {
     }
 
     /**
-     * Set configuration as default.
+     * Set configuration to any other configuration
      *
      * @param config The configuration to set as default.
      */
@@ -60,7 +61,7 @@ public class SMSKademliaRoutingTable implements KademliaRoutingTable {
      */
     @Override
     public final void insert(Contact contact) {
-        this.buckets[this.getBucketId(contact.getNode().getId())].insert(contact);
+        this.insert(contact.getNode());
     }
 
     /**
@@ -78,7 +79,7 @@ public class SMSKademliaRoutingTable implements KademliaRoutingTable {
      * The bucketId is computed based on how far the node is away from the Local Node.
      *
      * @param nodeId The NodeId for which we want to find which bucket it belong to
-     * @return Integer The bucket ID in which the given node should be placed.
+     * @return The bucket ID in which the given node should be placed.
      */
     @Override
     public final int getBucketId(KademliaId nodeId) {
@@ -94,7 +95,7 @@ public class SMSKademliaRoutingTable implements KademliaRoutingTable {
      *
      * @param target           The NodeId to find contacts close to
      * @param numNodesRequired The number of contacts to find
-     * @return List A List of contacts closest to target
+     * @return A List of contacts closest to target
      */
     @Override
     public final List<SMSKademliaNode> findClosest(KademliaId target, int numNodesRequired) {
@@ -103,17 +104,17 @@ public class SMSKademliaRoutingTable implements KademliaRoutingTable {
          * (first element will be the closer one, second will be the second one...)*/
         sortedSet.addAll(this.getAllNodes());
 
-        List<SMSKademliaNode> closest = new ArrayList<>(numNodesRequired);
+        List<SMSKademliaNode> closestList = new ArrayList<>(numNodesRequired);
 
         /* Now we have the sorted set, lets get the top numRequired */
         int count = 0;
         for (SMSKademliaNode n : sortedSet) {
-            closest.add(n);
+            closestList.add(n);
             if (++count == numNodesRequired) {
                 break;
             }
         }
-        return closest;
+        return closestList;
     }
 
     /**
@@ -133,8 +134,8 @@ public class SMSKademliaRoutingTable implements KademliaRoutingTable {
     }
 
     /**
-     * @return List A List of all Contacts in this RoutingTable.
-     * If there are not contacts, it returns an empty list.
+     * @return A List of all Contacts in this RoutingTable.
+     * If there are no contacts, it returns an empty list.
      */
     @Override
     public final List<Contact> getAllContacts() {
@@ -148,7 +149,7 @@ public class SMSKademliaRoutingTable implements KademliaRoutingTable {
     }
 
     /**
-     * @return Bucket[] The buckets in this Kad Instance
+     * @return The buckets in this Kad Instance
      */
     @Override
     public final SMSKademliaBucket[] getBuckets() {
@@ -156,7 +157,7 @@ public class SMSKademliaRoutingTable implements KademliaRoutingTable {
     }
 
     /**
-     * Print routing table
+     * Prints  routing table
      *
      * @return String representing the routing table
      */
@@ -176,11 +177,8 @@ public class SMSKademliaRoutingTable implements KademliaRoutingTable {
                 sb.append("\n");
             }
         }
-
         sb.append("\nTotal Contacts: ");
         sb.append(totalContacts);
-        sb.append("\n");
-
         return sb.toString();
     }
 }

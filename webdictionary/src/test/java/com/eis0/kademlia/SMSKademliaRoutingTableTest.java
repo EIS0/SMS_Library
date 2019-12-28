@@ -179,4 +179,5 @@ public class SMSKademliaRoutingTableTest {
         routingTable.getBuckets()[0].removeNode(MAIN_NODE);
         assertFalse(routingTable.getBuckets()[0].containsNode(MAIN_NODE));
     }
+
 }
