@@ -33,16 +33,6 @@ public class RoutingTableRefresh extends TimerTask {
         completeTask();
     }
 
-    /**
-     * Send a ping message to verify if a node is alive
-     *
-     * @param receiver The {@link SMSKademliaNode} represented by peer that I'm looking for
-     */
-    private void sendPing(SMSKademliaNode receiver){
-        String pingMessage = RequestTypes.Ping.ordinal() + " ";
-        SMSMessage ping = new SMSMessage(receiver.getPeer(), pingMessage);
-        SMSManager.getInstance().sendMessage(ping);
-    }
 
     /**
      * Refresh my routing table every 10 minutes
@@ -61,12 +51,11 @@ public class RoutingTableRefresh extends TimerTask {
     }
 
     private void refresh() {
-
-        //create the list of my routing table nodes
+        //create the list of my routing table nodes. I need to check all that nodes.
         List<SMSKademliaNode> allRoutingTableNodes = KademliaNetwork.getInstance().getLocalRoutingTable().getAllNodes();
         for (int i = 0; i < allRoutingTableNodes.size(); i++) {
             SMSKademliaNode currentNode = allRoutingTableNodes.get(i);
-            sendPing(currentNode);
+            SystemMessages.sendPing(currentNode);
 
             //wait 10 secs to get a pong answer
             timer.run();

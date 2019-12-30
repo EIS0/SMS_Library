@@ -122,9 +122,10 @@ public class KademliaNetwork {
         }
         else { //My target node is broken. I remove it from my routing table
             //create the node by the peer
-            SMSKademliaNode toRemove = new SMSKademliaNode(new KademliaId(targetPeer));
+            KademliaId id = new KademliaId(targetPeer);
+            SMSKademliaNode toRemove = new SMSKademliaNode(id);
             //remove it
-            this.localRoutingTable.getBuckets()[0].removeNode(toRemove);
+            this.localRoutingTable.getBuckets()[this.localRoutingTable.getBucketId(id)].removeNode(toRemove);
             //the node is not alive
             return false;
         }
