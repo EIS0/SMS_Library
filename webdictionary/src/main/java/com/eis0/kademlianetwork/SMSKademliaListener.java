@@ -61,17 +61,17 @@ public class SMSKademliaListener extends SMSReceivedServiceListener {
             /**Acknowledge messages*/
             case AcknowledgeMessage:
                 //that means the sent request has been taken by the node
-                kadNet.setRespond(true);
+                kadNet.connectionInfo.setRespond(true);
                 break;
 
             /**Refreshing operations*/
             case Ping:
-                //let others know I'm alive and I'm happy to be
+                //Lets others know I'm alive and I'm happy to be
                 SystemMessages.sendPong(peer);
                 break;
             case Pong:
                 //I know that someone is alive
-                kadNet.setPong(true);
+                kadNet.connectionInfo.setPong(true);
                 break;
             case FindIdRefresh:
                 //Processes the information brought by the message received

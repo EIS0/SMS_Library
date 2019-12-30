@@ -10,15 +10,12 @@ import java.util.List;
 import java.util.TimerTask;
 
 /**
- * Class that define a 10 refresh timer.
- * After that time, there is a local routing table refresh.
+ * Perform a local routing table refresh.
  *
  * @author Edoardo Raimondi
  */
 
-public class RoutingTableRefresh extends TimerTask {
-
-    private static final long time  = 600000;
+public class RoutingTableRefresh{
     //create a timer to verify if I had a pong in at least 10 secs
     private RespondTimer timer = new RespondTimer();
     //node doing this refresh
@@ -28,29 +25,11 @@ public class RoutingTableRefresh extends TimerTask {
         localNode = node;
     }
 
-    @Override
-    public void run() {
-        completeTask();
-    }
-
 
     /**
-     * Refresh my routing table every 10 minutes
-     *
-     * @throws InterruptedException when the thread is interrupted during the execution
+     * Method that performs a refresh
      */
-    private void completeTask() {
-        refresh();
-        /*
-        try {
-            //assuming there is a 10 minutes interval every refreshing task
-            Thread.sleep(time);
-        } catch (InterruptedException e) {
-        }
-        * */
-    }
-
-    private void refresh() {
+    private void start() {
         //create the list of my routing table nodes. I need to check all that nodes.
         List<SMSKademliaNode> allRoutingTableNodes = KademliaNetwork.getInstance().getLocalRoutingTable().getAllNodes();
         for (int i = 0; i < allRoutingTableNodes.size(); i++) {

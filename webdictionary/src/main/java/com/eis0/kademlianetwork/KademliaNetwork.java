@@ -30,22 +30,19 @@ public class KademliaNetwork {
     //Routing table for this user of the network
     private SMSKademliaRoutingTable localRoutingTable;
     private ConnectionHandler connectionHandler = new ConnectionHandler();
+    private RoutingTableRefresh refresh = new RoutingTableRefresh(this.localNode);
+    public NodeConnectionInfo connectionInfo = new NodeConnectionInfo();
     private KademliaListener listener;
     private SMSKademliaListener smsKademliaListener = new SMSKademliaListener(this);
     //Dictionary containing the resources stored by the local node
     private SMSNetVocabulary localKademliaDictionary;
-    //To know if I had a positive acknowledge respond to a sent command
-    private boolean hasRespond;
-    //To know if I had a pong for the refreshing task
-    private boolean hasPong;
-    //Create a 10 secs responds timer. If a node doesn't respond with an acknowledge message
-    //in that time, it is considered broken
-    //RespondTimer timer = new RespondTimer();
+
+
 
     // Singleton instance
     private static KademliaNetwork instance;
     // Constructor following the Singleton Design Pattern
-    private KademliaNetwork() {
+    public  KademliaNetwork(){
 
     }
     
@@ -61,6 +58,7 @@ public class KademliaNetwork {
         return instance;
     }
 
+
     /**
      * Initialize the network by setting the current node.
      *
@@ -71,36 +69,8 @@ public class KademliaNetwork {
         SMSManager.getInstance().setReceivedListener(smsKademliaListener.getClass(), context);
         this.localNode = localNode;
         this.listener = listener;
-        localRoutingTable = new SMSKademliaRoutingTable(localNode, new DefaultConfiguration());
-        hasRespond = false;
-        hasPong = false;
+        localRoutingTable = new SMSKademliaRoutingTable(localNode, new DefaultConfiguration());;
     }
-
-    /**
-     * @return true if I had an acknowledge respond to a sent command, false otherwise
-     * @author Edoardo Raimondi
-     */
-    public boolean hasRespond() { return hasRespond; }
-
-    /**
-     * Set the respond state
-     *
-     * @param  value of the respond state
-     * @author Edoardo Raimondi
-     */
-    public void setRespond(boolean value){ hasRespond = value; }
-
-    /**
-     * @return true if I had a pong respond
-     * @author Edoardo Raimondi
-     */
-    public boolean getPongKnown(){ return hasPong; }
-
-    /**
-     * Set the pong state
-     * @author Edoardo Raimondi
-     */
-    public void setPong(boolean value) { hasPong = value; }
 
     /**
      * Check if I received an acknowledge respond to my request.
@@ -115,9 +85,9 @@ public class KademliaNetwork {
         //I wait 10 secs
         //timer.run();
         //check if I had an acknowledge respond to my request
-        if(hasRespond()){
+        if(connectionInfo.hasRespond()){
             //I know my request has ben received successfully. I set false in order to do it again
-            setRespond(false);
+            connectionInfo.setRespond(false);
             return true;
         }
         else { //My target node is broken. I remove it from my routing table
