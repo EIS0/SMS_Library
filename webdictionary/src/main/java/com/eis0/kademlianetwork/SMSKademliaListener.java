@@ -1,6 +1,6 @@
 package com.eis0.kademlianetwork;
 
-import android.provider.Settings;
+
 import android.util.Log;
 
 import com.eis.smslibrary.SMSManager;
@@ -23,12 +23,11 @@ public class SMSKademliaListener extends SMSReceivedServiceListener {
     private final static String LOG_TAG = "MSG_LSTNR";
     KademliaNetwork kadNet;
     ResourceExchangeHandler resourceExchangeHandler;
-    private boolean hasPong;
+
 
     SMSKademliaListener(KademliaNetwork kadNet) {
         this.kadNet = kadNet;
         resourceExchangeHandler = new ResourceExchangeHandler();
-        hasPong = false;
     }
 
 
