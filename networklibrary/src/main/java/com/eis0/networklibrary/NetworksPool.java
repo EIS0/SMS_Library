@@ -16,6 +16,7 @@ public class NetworksPool {
     private static List<Network> networks = new ArrayList<>();
 
     public static Network obtainNetwork(List<SMSPeer> peers) {
+        if(peers.isEmpty()) return Network.LOCALNET;
         Network network = new Network(peers);
         int index = networks.indexOf(network);
         if(index == -1) {

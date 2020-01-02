@@ -10,6 +10,8 @@
     <string name="poll_li_dash">-</string>
     <string name="poll_li_no">NO</string>
     <string name="poll_li_percentage">%</string>
+    <string name="poll_li_num_1">(nº</string>
+    <string name="poll_li_num_2">)</string>
 
     <!-- Create Poll strings-->
     <string name="poll_name">Poll Name</string>

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
@@ -18,7 +19,8 @@
             android:textAppearance="?attr/textAppearanceListItem"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Pizza Poll" />
 
         <TextView
             android:id="@+id/colonTxt"
@@ -30,12 +32,38 @@
             app:layout_constraintStart_toEndOf="@+id/pollNameTxt" />
 
         <TextView
-            android:id="@+id/pollIdTxt"
+            android:id="@+id/pollAuthorTxt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
             app:layout_constraintBaseline_toBaselineOf="@+id/pollNameTxt"
-            app:layout_constraintStart_toEndOf="@+id/colonTxt" />
+            app:layout_constraintStart_toEndOf="@+id/colonTxt"
+            tools:text="3401234567" />
+
+        <TextView
+            android:id="@+id/numTxt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:text="@string/poll_li_num_1"
+            app:layout_constraintBaseline_toBaselineOf="@+id/pollNameTxt"
+            app:layout_constraintStart_toEndOf="@+id/pollAuthorTxt" />
+
+        <TextView
+            android:id="@+id/pollIdTxt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBaseline_toBaselineOf="@+id/pollNameTxt"
+            app:layout_constraintStart_toEndOf="@+id/numTxt"
+            tools:text="3" />
+
+        <TextView
+            android:id="@+id/numTxt2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/poll_li_num_2"
+            app:layout_constraintBaseline_toBaselineOf="@+id/pollNameTxt"
+            app:layout_constraintStart_toEndOf="@+id/pollIdTxt" />
 
         <TextView
             android:id="@+id/yesNumTxt"
@@ -44,8 +72,9 @@
             android:layout_marginEnd="4dp"
             android:textAppearance="?attr/textAppearanceListItem"
             android:textColor="@color/colorPrimary"
-            app:layout_constraintBaseline_toBaselineOf="@+id/yesTxt"
-            app:layout_constraintEnd_toStartOf="@+id/yesTxt" />
+            app:layout_constraintBaseline_toBaselineOf="@+id/pollNameTxt"
+            app:layout_constraintEnd_toStartOf="@+id/yesTxt"
+            tools:text="5" />
 
         <TextView
             android:id="@+id/yesTxt"
@@ -55,7 +84,7 @@
             android:text="@string/poll_li_yes"
             android:textAppearance="?attr/textAppearanceListItem"
             android:textColor="@color/colorPrimary"
-            app:layout_constraintBaseline_toBaselineOf="@+id/dashTxt"
+            app:layout_constraintBaseline_toBaselineOf="@+id/pollNameTxt"
             app:layout_constraintEnd_toStartOf="@+id/dashTxt" />
 
         <TextView
@@ -65,7 +94,7 @@
             android:layout_marginEnd="8dp"
             android:text="@string/poll_li_dash"
             android:textAppearance="?attr/textAppearanceListItem"
-            app:layout_constraintBaseline_toBaselineOf="@+id/noNumTxt"
+            app:layout_constraintBaseline_toBaselineOf="@+id/pollNameTxt"
             app:layout_constraintEnd_toStartOf="@+id/noNumTxt" />
 
         <TextView
@@ -75,8 +104,9 @@
             android:layout_marginEnd="4dp"
             android:textAppearance="?attr/textAppearanceListItem"
             android:textColor="@color/colorAccent"
-            app:layout_constraintBaseline_toBaselineOf="@+id/noTxt"
-            app:layout_constraintEnd_toStartOf="@+id/noTxt" />
+            app:layout_constraintBaseline_toBaselineOf="@+id/pollNameTxt"
+            app:layout_constraintEnd_toStartOf="@+id/noTxt"
+            tools:text="1" />
 
         <TextView
             android:id="@+id/noTxt"
@@ -85,7 +115,7 @@
             android:text="@string/poll_li_no"
             android:textAppearance="?attr/textAppearanceListItem"
             android:textColor="@color/colorAccent"
-            app:layout_constraintBaseline_toBaselineOf="@+id/pollIdTxt"
+            app:layout_constraintBaseline_toBaselineOf="@+id/pollNameTxt"
             app:layout_constraintEnd_toEndOf="@+id/pollQuestionTxt" />
 
         <TextView
@@ -96,7 +126,8 @@
             android:textAppearance="?attr/textAppearanceListItem"
             app:layout_constraintEnd_toEndOf="@+id/pollProgressBar"
             app:layout_constraintStart_toStartOf="@+id/pollNameTxt"
-            app:layout_constraintTop_toBottomOf="@+id/pollNameTxt" />
+            app:layout_constraintTop_toBottomOf="@+id/pollNameTxt"
+            tools:text="Do you like pizza?" />
 
         <TextView
             android:id="@+id/percentageTxt"
@@ -104,7 +135,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             app:layout_constraintStart_toStartOf="@+id/pollQuestionTxt"
-            app:layout_constraintTop_toBottomOf="@+id/pollQuestionTxt" />
+            app:layout_constraintTop_toBottomOf="@+id/pollQuestionTxt"
+            tools:text="76" />
 
         <TextView
             android:id="@+id/percentageSymTxt"
@@ -123,6 +155,7 @@
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="16dp"
             android:indeterminate="false"
+            android:progress="76"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/pollNameTxt"

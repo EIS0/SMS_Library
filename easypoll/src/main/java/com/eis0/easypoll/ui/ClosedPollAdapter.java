@@ -103,20 +103,22 @@ public class ClosedPollAdapter extends BaseAdapter implements Observer {
             convertView = inflater.inflate(R.layout.listitem_closed_poll, null);
 
         // Linking UI elements to objects
-        TextView pollName = convertView.findViewById(R.id.pollNameTxt);
-        TextView pollId = convertView.findViewById(R.id.pollIdTxt);
-        TextView pollQuestion = convertView.findViewById(R.id.pollQuestionTxt);
-        TextView yesNum = convertView.findViewById(R.id.yesNumTxt);
-        TextView noNum = convertView.findViewById(R.id.noNumTxt);
+        TextView pollNameTxt = convertView.findViewById(R.id.pollNameTxt);
+        TextView pollAuthorTxt = convertView.findViewById(R.id.pollAuthorTxt);
+        TextView pollIdTxt = convertView.findViewById(R.id.pollIdTxt);
+        TextView pollQuestionTxt = convertView.findViewById(R.id.pollQuestionTxt);
+        TextView yesNumTxt = convertView.findViewById(R.id.yesNumTxt);
+        TextView noNumTxt = convertView.findViewById(R.id.noNumTxt);
 
         BinaryPoll poll = DataProvider.getClosedPolls().get(position);
 
         // Assigning poll display values to UI objects
-        pollName.setText(poll.getName());
-        pollId.setText(String.valueOf(getItemId(position)));
-        pollQuestion.setText(poll.getQuestion());
-        yesNum.setText(String.valueOf(poll.countYes()));
-        noNum.setText(String.valueOf(poll.countNo()));
+        pollNameTxt.setText(poll.getName());
+        pollAuthorTxt.setText(poll.getAuthorName());
+        pollIdTxt.setText(String.valueOf(poll.getLocalId()));
+        pollQuestionTxt.setText(poll.getQuestion());
+        yesNumTxt.setText(String.valueOf(poll.getYesCount()));
+        noNumTxt.setText(String.valueOf(poll.getNoCount()));
 
         return convertView;
     }

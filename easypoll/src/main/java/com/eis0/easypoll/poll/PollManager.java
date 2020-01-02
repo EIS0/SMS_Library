@@ -10,6 +10,7 @@ import com.eis0.smslibrary.SMSMessage;
 import com.eis0.smslibrary.SMSPeer;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -39,7 +40,7 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
      * @author Matteo Carnelos
      */
     private PollManager() {
-        smsManager.addReceiveListener(this);
+        smsManager.setReceiveListener(this);
     }
 
     /**
@@ -70,7 +71,7 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
         BinaryPoll poll = new BinaryPoll(name, question, usersNetwork);
         for(SMSPeer peer : usersNetwork.getPeers()) {
             NetworkMessageBuilder builder = new NetworkMessageBuilder(PollCommands.NEW_POLL)
-                    .addArgument(poll.getId())
+                    .addArgument(String.valueOf(poll.getLocalId()))
                     .addArgument(poll.getName())
                     .addArgument(poll.getQuestion())
                     .addArguments(usersNetwork.getSubNetForPeer(peer).getAddresses());
@@ -101,7 +102,8 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
         NetworkMessageBuilder networkMessage = NetworkMessageBuilder.parseNetworkMessage(data);
         String cmd = networkMessage.getCommand();
         List<String> args = networkMessage.getArguments();
-        String id = peer.getAddress() + args.get(0);
+        long id = Long.parseLong(args.get(0));
+        Network authorNetwork;
         switch (cmd) {
             // New poll received
             // Structure of the message (each filed is separated by the FIELD_SEPARATOR):
@@ -112,20 +114,23 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
                 String question = args.get(2);
                 List<String> addresses = args.subList(3, args.size());
                 List<SMSPeer> users = new ArrayList<>();
-                users.add(peer);
                 for(String address : addresses) users.add(new SMSPeer(address));
                 Network usersNetwork = NetworksPool.obtainNetwork(users);
-                BinaryPoll poll = new BinaryPoll(id, name, question, usersNetwork);
+                authorNetwork = NetworksPool.obtainNetwork(Collections.singletonList(peer));
+                BinaryPoll poll = new BinaryPoll(id, name, question, authorNetwork, usersNetwork);
                 dataProvider.addPoll(poll);
                 break;
             // You have received an setAnswer for your poll
             // Structure of the message (each filed is separated by the FIELD_SEPARATOR):
-            // ANSWER_MSG_CODE + pollId + answerCode
-            //        [0]          [1]       [2]
+            // ANSWER_MSG_CODE + pollId + author + answerCode
+            //        [0]          [1]      [2]       [3]
             case PollCommands.ANSWER_POLL:
-                boolean answer = args.get(1).equals(PollCommands.YES_ANSWER);
+                String authorAddress = args.get(1);
+                if(authorAddress.equals(Network.LOCALNET_ADDR)) authorNetwork = Network.LOCALNET;
+                else authorNetwork = NetworksPool.obtainNetwork(Collections.singletonList(new SMSPeer((authorAddress))));
+                boolean answer = args.get(2).equals(PollCommands.YES_ANSWER);
                 for(BinaryPoll openedPoll : DataProvider.getOpenedPolls()) {
-                    if (openedPoll.getId().equals(id)) {
+                    if(openedPoll.getLocalId() == id && openedPoll.getAuthor().equals(authorNetwork)) {
                         openedPoll.setAnswer(answer);
                         dataProvider.updatePoll(openedPoll);
                     }
@@ -147,10 +152,23 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
      */
     public void answerPoll(BinaryPoll poll, boolean answer) {
         poll.setAnswer(answer);
+
+        String localId = String.valueOf(poll.getLocalId());
+        String answerCommand = answer ? PollCommands.YES_ANSWER : PollCommands.NO_ANSWER;
+
         NetworkMessageBuilder builder = new NetworkMessageBuilder(PollCommands.ANSWER_POLL)
-                .addArgument(poll.getId())
-                .addArgument(answer ? PollCommands.YES_ANSWER : PollCommands.NO_ANSWER);
-        poll.getUsersNetwork().broadcastMessage(builder.buildMessage());
+                .addArgument(localId)
+                .addArguments(poll.getAuthor().getAddresses())
+                .addArgument(answerCommand);
+        poll.getUsers().broadcastMessage(builder.buildMessage());
+
+        builder = new NetworkMessageBuilder(PollCommands.ANSWER_POLL)
+                .addArgument(localId)
+                .addArgument(Network.LOCALNET_ADDR)
+                .addArgument(answerCommand);
+        poll.getAuthor().broadcastMessage(builder.buildMessage());
+
+        DataProvider.getIncomingPolls().remove(poll);
         dataProvider.updatePoll(poll);
     }
 }

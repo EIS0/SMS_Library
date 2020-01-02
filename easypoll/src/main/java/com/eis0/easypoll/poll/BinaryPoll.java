@@ -16,13 +16,14 @@ public class BinaryPoll {
 
     private static final String POLLS_COUNT_KEY = "com.eis0.easypoll.polls_count_key";
 
-    private static int pollsCount = 0;
+    private static long pollsCount = 0;
     private static SharedPreferences mSharedPreferences;
 
-    private String id;
+    private long id;
     private String name;
     private String question;
-    private Network usersNetwork;
+    private Network author;
+    private Network users;
     private int yesCount = 0;
     private int noCount = 0;
     private boolean closed = false;
@@ -40,15 +41,15 @@ public class BinaryPoll {
      * @author Giovanni Velludo
      * @author Matteo Carnelos
      */
-    public BinaryPoll(String id, String name, String question, Network users) {
-        if(id.isEmpty()) throw new IllegalArgumentException("Can't create poll with no id.");
+    public BinaryPoll(long id, String name, String question, Network author, Network users) {
         if(name.isEmpty()) throw new IllegalArgumentException("Can't create poll with empty name.");
         if(question.isEmpty()) throw new IllegalArgumentException("Can't create poll with empty question.");
-        //if(users.isEmpty()) throw new IllegalArgumentException("Can't create poll with no users.");
+        if(author.size() > 1) throw new IllegalArgumentException("For the current implementation is supported only one author.");
         this.id = id;
         this.name = name;
         this.question = question;
-        this.usersNetwork = users;
+        this.author = author;
+        this.users = users;
         incoming = true;
     }
 
@@ -62,7 +63,7 @@ public class BinaryPoll {
      * @author Matteo Carnelos
      */
     public BinaryPoll(String name, String question, Network users) {
-        this(String.valueOf(pollsCount+1), name, question, users);
+        this(pollsCount+1, name, question, Network.LOCALNET, users);
         incoming = false;
         pollsCount++;
         savePollsCountToInternal();
@@ -87,7 +88,7 @@ public class BinaryPoll {
     public static void savePollsCountToInternal() {
         if(mSharedPreferences == null) return;
         SharedPreferences.Editor editor = mSharedPreferences.edit();
-        editor.putInt(POLLS_COUNT_KEY, pollsCount);
+        editor.putLong(POLLS_COUNT_KEY, pollsCount);
         editor.apply();
     }
 
@@ -97,10 +98,15 @@ public class BinaryPoll {
      * @author Matteo Carnelos
      */
     public static void loadPollsCountFromInternal() {
-        pollsCount = mSharedPreferences.getInt(POLLS_COUNT_KEY, 0);
+        pollsCount = mSharedPreferences.getLong(POLLS_COUNT_KEY, 0);
     }
 
     // ---------------------------- GETTERS ---------------------------- //
+
+    public long getId() {
+        if(author == Network.LOCALNET) return getLocalId();
+        return Long.parseLong(author.getAddresses().get(0) + getLocalId());
+    }
 
     /**
      * Get the poll unique id.
@@ -108,7 +114,7 @@ public class BinaryPoll {
      * @return An integer representing the poll id.
      * @author Matteo Carnelos
      */
-    public String getId() {
+    public long getLocalId() {
         return id;
     }
 
@@ -132,8 +138,17 @@ public class BinaryPoll {
         return question;
     }
 
-    public Network getUsersNetwork() {
-        return usersNetwork;
+    public Network getUsers() {
+        return users;
+    }
+
+    public Network getAuthor() {
+        return author;
+    }
+
+    public String getAuthorName() {
+        if(author == Network.LOCALNET) return "You";
+        return author.getAddresses().get(0);
     }
 
     public int getYesCount() {
@@ -172,8 +187,7 @@ public class BinaryPoll {
     public void setAnswer(boolean answer) {
         if(answer) yesCount++;
         else noCount++;
-        incoming = false;
-        closed = (yesCount + noCount == usersCount());
+        closed = (yesCount + noCount == getUsersCount());
     }
 
     // ---------------------------- INSPECTIONS ---------------------------- //
@@ -187,12 +201,12 @@ public class BinaryPoll {
      */
     public int getClosedPercentage() {
         float answerCount = getYesCount() + getNoCount();
-        float ratio = answerCount / (float) usersCount();
+        float ratio = answerCount / (float) getUsersCount();
         return Math.round(ratio * 100);
     }
 
-    public int usersCount() {
-        return usersNetwork.getPeers().size();
+    public int getUsersCount() {
+        return author == Network.LOCALNET ? users.size() : users.size()+1;
     }
 
     // ---------------------------- OVERRIDDEN METHODS ---------------------------- //
@@ -209,6 +223,6 @@ public class BinaryPoll {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         BinaryPoll that = (BinaryPoll) o;
-        return this.getId().equals(that.getId());
+        return this.getLocalId() == that.getLocalId() && this.getAuthor().equals(that.getAuthor());
     }
 }

@@ -51,7 +51,7 @@ public class IncomingPollAdapter extends BaseAdapter implements Observer {
     }
 
     /**
-     * Get the incmoing poll unique id associated with the given position. Required by BaseAdapter.
+     * Get the incoming poll unique id associated with the given position. Required by BaseAdapter.
      *
      * @param position The position of the item in the data set.
      * @return The unique id as a long value.
@@ -107,6 +107,7 @@ public class IncomingPollAdapter extends BaseAdapter implements Observer {
 
         // Linking UI elements to objects
         TextView pollNameTxt = convertView.findViewById(R.id.pollNameTxt);
+        TextView pollAuthorTxt = convertView.findViewById(R.id.pollAuthorTxt);
         TextView pollIdTxt = convertView.findViewById(R.id.pollIdTxt);
         TextView pollQuestionTxt = convertView.findViewById(R.id.pollQuestionTxt);
         Button yesBtn = convertView.findViewById(R.id.yesBtn);
@@ -116,7 +117,8 @@ public class IncomingPollAdapter extends BaseAdapter implements Observer {
 
         // Assigning poll display values and actions to UI objects
         pollNameTxt.setText(poll.getName());
-        pollIdTxt.setText(String.valueOf(getItemId(position)));
+        pollAuthorTxt.setText(poll.getAuthorName());
+        pollIdTxt.setText(String.valueOf(poll.getLocalId()));
         pollQuestionTxt.setText(poll.getQuestion());
         yesBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {

@@ -2,6 +2,7 @@ package com.eis0.networklibrary;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class NetworkMessageBuilder {
@@ -29,7 +30,7 @@ public class NetworkMessageBuilder {
     }
 
     public NetworkMessageBuilder addArgument(String argument) {
-        arguments.add(argument);
+        addArguments(Collections.singletonList(argument));
         return this;
     }
 

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
@@ -18,7 +19,8 @@
             android:textAppearance="?attr/textAppearanceListItem"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Pizza Poll" />
 
         <TextView
             android:id="@+id/colonTxt"
@@ -30,12 +32,38 @@
             app:layout_constraintStart_toEndOf="@+id/pollNameTxt" />
 
         <TextView
-            android:id="@+id/pollIdTxt"
+            android:id="@+id/pollAuthorTxt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
             app:layout_constraintBaseline_toBaselineOf="@+id/pollNameTxt"
-            app:layout_constraintStart_toEndOf="@+id/colonTxt" />
+            app:layout_constraintStart_toEndOf="@+id/colonTxt"
+            tools:text="3401234567" />
+
+        <TextView
+            android:id="@+id/numTxt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:text="@string/poll_li_num_1"
+            app:layout_constraintBaseline_toBaselineOf="@+id/pollNameTxt"
+            app:layout_constraintStart_toEndOf="@+id/pollAuthorTxt" />
+
+        <TextView
+            android:id="@+id/pollIdTxt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBaseline_toBaselineOf="@+id/pollNameTxt"
+            app:layout_constraintStart_toEndOf="@+id/numTxt"
+            tools:text="3" />
+
+        <TextView
+            android:id="@+id/numTxt2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/poll_li_num_2"
+            app:layout_constraintBaseline_toBaselineOf="@+id/pollNameTxt"
+            app:layout_constraintStart_toEndOf="@+id/pollIdTxt" />
 
         <TextView
             android:id="@+id/pollQuestionTxt"
@@ -46,7 +74,8 @@
             android:textAppearance="?attr/textAppearanceListItem"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/pollNameTxt"
-            app:layout_constraintTop_toBottomOf="@+id/pollNameTxt" />
+            app:layout_constraintTop_toBottomOf="@+id/pollNameTxt"
+            tools:text="Do you like pizza?" />
 
         <Button
             android:id="@+id/yesBtn"

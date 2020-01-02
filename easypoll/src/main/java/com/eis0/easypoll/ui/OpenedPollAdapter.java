@@ -107,6 +107,7 @@ class OpenedPollAdapter extends BaseAdapter implements Observer {
 
         // Linking UI elements to objects
         TextView pollNameTxt = convertView.findViewById(R.id.pollNameTxt);
+        TextView pollAuthorTxt = convertView.findViewById(R.id.pollAuthorTxt);
         TextView pollIdTxt = convertView.findViewById(R.id.pollIdTxt);
         TextView pollQuestionTxt = convertView.findViewById(R.id.pollQuestionTxt);
         TextView percentageTxt = convertView.findViewById(R.id.percentageTxt);
@@ -118,13 +119,14 @@ class OpenedPollAdapter extends BaseAdapter implements Observer {
 
         // Assigning poll display values to UI objects
         pollNameTxt.setText(poll.getName());
-        pollIdTxt.setText(String.valueOf(getItemId(position)));
+        pollAuthorTxt.setText(poll.getAuthorName());
+        pollIdTxt.setText(String.valueOf(poll.getLocalId()));
         pollQuestionTxt.setText(poll.getQuestion());
         int closedPercentage = poll.getClosedPercentage();
         percentageTxt.setText(String.valueOf(closedPercentage));
         pollProgressBar.setProgress(closedPercentage);
-        yesNumTxt.setText(String.valueOf(poll.countYes()));
-        noNumTxt.setText(String.valueOf(poll.countNo()));
+        yesNumTxt.setText(String.valueOf(poll.getYesCount()));
+        noNumTxt.setText(String.valueOf(poll.getNoCount()));
 
         return convertView;
     }
