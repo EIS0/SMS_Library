@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * This class handle the resource {@link Request}, it allows the user to:
+ * This class handle the resource {@link Request}s, it allows the user to:
  * 1. Create a request to process a resource inside the dictionary
  * 2. Rack up multiple pending requests, waiting to be triggered
  * 3. Handle the response to the request, which contains the node ID closest to the resource ID that
@@ -21,12 +21,24 @@ import java.util.Map;
  * @author Edoardo Raimondi
  */
 public class ResourceExchangeHandler {
+
+    private static final String ID_TO_FIND_NULL = "The idToFind parameter is null";
+    private static final String SEARCHER_NULL = "The searcher parameter is null";
+    private static final String RESEARCH_MODE_NULL = "The researchMode parameter is null";
+    private static final String KEY_NULL = "The key parameter is null";
+    private static final String INVALID_KEY_LENGTH = "The key must contain at least 1 character";
+    private static final String TARGET_PEER_NULL = "The targetPeer parameter is null";
+
+
     //Maps containing the pending Requests waiting to be completed; each pending request is identified
     //inside the Map by the request ID that the request must process
     private Map<KademliaId, Request> pendingAddRequests;
     private Map<KademliaId, Request> pendingGetRequests;
     private Map<KademliaId, Request> pendingDeleteRequests;
 
+    /**
+     * This constructor initializes the three pending requests lists
+     */
     public ResourceExchangeHandler() {
         pendingAddRequests = new HashMap<>();
         pendingGetRequests = new HashMap<>();
@@ -44,7 +56,7 @@ public class ResourceExchangeHandler {
      * @throws IllegalArgumentException If the key is null
      */
     public void createRequest(String key, String resource, ResearchMode researchMode) {
-        if (key == null) throw new IllegalArgumentException();
+        if (key == null) throw new IllegalArgumentException(KEY_NULL);
         Request currentRequest;
         KademliaId idToFind = null;
         switch (researchMode) {
@@ -82,8 +94,10 @@ public class ResourceExchangeHandler {
      * @throws IllegalArgumentException If the idToFind or the searcher are null
      */
     public void processRequest(KademliaId idToFind, SMSPeer searcher, ResearchMode researchMode) {
-        if (searcher == null || idToFind == null || researchMode == null)
-            throw new IllegalArgumentException();
+        if (idToFind == null) throw new IllegalArgumentException(ID_TO_FIND_NULL);
+        if (searcher == null) throw new IllegalArgumentException(SEARCHER_NULL);
+        if (researchMode == null) throw new IllegalArgumentException(RESEARCH_MODE_NULL);
+
         //If it's found, the Node with the closest id will send message containing:
         // 1. The code of the message
         // 2. the ID of the resource
@@ -107,7 +121,9 @@ public class ResourceExchangeHandler {
      * @throws IllegalArgumentException If the idToFind or the targetPeer are null
      */
     public void completeRequest(KademliaId idToFind, SMSPeer targetPeer, ResearchMode researchMode) {
-        if (idToFind == null || targetPeer == null) throw new IllegalArgumentException();
+        if (idToFind == null) throw new IllegalArgumentException(ID_TO_FIND_NULL);
+        if (targetPeer == null) throw new IllegalArgumentException(TARGET_PEER_NULL);
+
         Map<KademliaId, Request> pendingRequests = null;
         Request aboutToClose = null;
         RequestTypes requestType = null;
@@ -190,8 +206,8 @@ public class ResourceExchangeHandler {
          * @throws IllegalArgumentException If the the key or the resource are null or invalid
          */
         public Request(String key, String resource) {
-            if (key == null) throw new IllegalArgumentException();
-            if (key.length() == 0) throw new IllegalArgumentException();
+            if (key == null) throw new IllegalArgumentException(KEY_NULL);
+            if (key.length() == 0) throw new IllegalArgumentException(INVALID_KEY_LENGTH);
             this.key = key;
             this.resource = resource;
             resourceKeyId = new KademliaId(key);

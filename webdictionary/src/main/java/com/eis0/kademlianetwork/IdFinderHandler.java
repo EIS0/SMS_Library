@@ -17,6 +17,10 @@ import java.math.BigInteger;
  * @author Edoardo Raimondi (added the check cicle to verify if the target node is 'alive')
  */
 public class IdFinderHandler {
+    private static final String ID_TO_FIND_NULL = "The idToFind parameter is null";
+    private static final String SEARCHER_NULL = "The searcher parameter is null";
+    private static final String RESEARCH_MODE_NULL = "The researchMode parameter is null";
+
     /**
      * Searches for a specific Id, which needs to be closer to a given resource Id.
      * If it's found it's sent to a given SMSPeer who's searching, else sends a request to find it
@@ -29,8 +33,9 @@ public class IdFinderHandler {
      * @throws IllegalArgumentException If the idToFind, the searcher or the researchMode are null
      */
     public static void searchId(KademliaId idToFind, SMSPeer searcher, ResearchMode researchMode) {
-        if (searcher == null || idToFind == null || researchMode == null)
-            throw new IllegalArgumentException();
+        if (idToFind == null) throw new IllegalArgumentException(ID_TO_FIND_NULL);
+        if (searcher == null) throw new IllegalArgumentException(SEARCHER_NULL);
+        if (researchMode == null) throw new IllegalArgumentException(RESEARCH_MODE_NULL);
         /*Declaration of the two messages used to:
         1. entrust the research to a closer node
         2. communicate the result of the research to the originating node

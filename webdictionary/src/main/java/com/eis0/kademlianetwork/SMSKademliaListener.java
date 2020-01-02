@@ -70,8 +70,8 @@ public class SMSKademliaListener extends SMSReceivedServiceListener {
         SMSPeer searcher = kadMessage.searcher;
         String key = kadMessage.key;
         String resource = kadMessage.resource;
-        //The two values idToFind and idFound share the same field, depending upon the type of request
-        //the SMSKademliaListener knows which one of the two is occupying it
+        //The two values, idToFind and idFound, share the same field, depending upon the type of request
+        //the SMSKademliaListener knows which one of the two is occupying it, and process it consequently
         KademliaId idFound = idToFind;
 
         //Starts a specific action depending upon the request or the command sent by other users

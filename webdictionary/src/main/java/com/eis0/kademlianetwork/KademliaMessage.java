@@ -9,6 +9,8 @@ import com.eis0.kademlia.KademliaId;
  * fields are in common for all the type of requests
  */
 public class KademliaMessage {
+    private static final String REQUEST_TYPE_NULL = "The requestType parameter is null";
+
     public SMSPeer peer;
     public String text;
     public RequestTypes requestType;
@@ -79,7 +81,7 @@ public class KademliaMessage {
      * @return The String value of the message itself
      */
     public String toString() {
-        if (requestType == null) throw new IllegalArgumentException();
+        if (requestType == null) throw new IllegalArgumentException(REQUEST_TYPE_NULL);
         //The RequestType is the only field which needs to be not Null
         String stringIdToFind;
         if (idToFind == null) stringIdToFind = "/";
