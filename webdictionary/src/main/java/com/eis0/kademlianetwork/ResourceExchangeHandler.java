@@ -34,13 +34,14 @@ public class ResourceExchangeHandler {
     }
 
     /**
-     * This method adds to the pendingAddRequests list of {@link Request} the new request, and send
-     * a message in the network asking for a receiver, that is the node with the closest ID to the
-     * resource ID
+     * This method adds to the most suitable pending Requests list the new {@link Request}, and sends
+     * a message in the network asking for a receiver, that is the node with the node ID closest to
+     * the resource ID
      *
-     * @param key      The String value of the key of the resource to add to the Dictionary
-     * @param resource The String value of the resource itself to be added to the Dictionary
-     * @throws IllegalArgumentException If key or resource are null
+     * @param key          The String value of the key of the resource to add to the Dictionary
+     * @param resource     The String value of the resource itself to be added to the Dictionary
+     * @param researchMode The research mode, represents the final purpose of the research
+     * @throws IllegalArgumentException If the key is null
      */
     public void createRequest(String key, String resource, ResearchMode researchMode) {
         if (key == null) throw new IllegalArgumentException();
@@ -63,8 +64,7 @@ public class ResourceExchangeHandler {
                 pendingDeleteRequests.put(idToFind, currentRequest);
                 break;
         }
-
-        //Start to search for the closest ID
+        //Starts to search for the closest ID
         SMSPeer searcher = KademliaNetwork.getInstance().getLocalNode().getPeer();
         processRequest(idToFind, searcher, ResearchMode.AddToDictionary);
     }
@@ -72,13 +72,13 @@ public class ResourceExchangeHandler {
 
     /**
      * This method starts the ID research inside the network, according to the type of research the
-     * request is asking for; the same method is called by both the createAddRequest and
-     * createGetRequest methods, which specify the {@link ResearchMode} that will be used
+     * request is asking for
      *
-     * @param idToFind The {@link KademliaId} of the resource key, sent in the network asking for
-     *                 the node with the closest node ID
-     * @param searcher The {@link SMSPeer} of the node which started the research, it's sent in the
-     *                 network to allow the final receiver to send the answer right to the initial node
+     * @param idToFind     The {@link KademliaId} of the resource key, sent in the network asking for
+     *                     the node with the closest node ID
+     * @param searcher     The {@link SMSPeer} of the node which started the research, it's sent in the
+     *                     network to allow the final receiver to send the answer right to the initial node
+     * @param researchMode The research mode, represents the final purpose of the research
      * @throws IllegalArgumentException If the idToFind or the searcher are null
      */
     public void processRequest(KademliaId idToFind, SMSPeer searcher, ResearchMode researchMode) {
@@ -93,15 +93,17 @@ public class ResourceExchangeHandler {
 
 
     /**
-     * This method is called whenever the network returns the node ID closest to the resource ID
+     * This method is called whenever the network returns the node ID closest to the resource ID.
      * It searches for the corresponding {@link Request} which sent the ID research in the network,
      * extracts it from the list of pending requests, and sends the <key, resource> pair contained in
-     * the request to the targetPeer, that is the node which answered to the research
+     * the request to the targetPeer, that is the node which answered to the research.
+     * The {@link KademliaId} must correspond to an existing opened Request for the method to work.
      *
-     * @param idToFind   The {@link KademliaId} of the resource key; it's used to trace back the
-     *                   Request in the pending requests list
-     * @param targetPeer The {@link SMSPeer} of the node which answered the research and receive the
-     *                   <key, resurce> pair
+     * @param idToFind     The {@link KademliaId} of the resource key; it's used to trace back the
+     *                     Request in the pending requests list
+     * @param targetPeer   The {@link SMSPeer} of the node which answered the research and receive the
+     *                     <key, resurce> pair
+     * @param researchMode The research mode, represents the final purpose of the research
      * @throws IllegalArgumentException If the idToFind or the targetPeer are null
      */
     public void completeRequest(KademliaId idToFind, SMSPeer targetPeer, ResearchMode researchMode) {
@@ -166,6 +168,7 @@ public class ResourceExchangeHandler {
     public Map<KademliaId, Request> getPendingDeleteRequests() {
         return pendingDeleteRequests;
     }
+
 
     /**
      * This class allows to create Request objects, which will be stored in the pending requests

@@ -25,7 +25,7 @@ public class IdFinderHandler {
      *
      * @param idToFind     The ID to find in the network
      * @param searcher     The Peer which is searching the ID
-     * @param researchMode The Resource mode, represents the final purpose of the research
+     * @param researchMode The research mode, represents the final purpose of the research
      * @throws IllegalArgumentException If the idToFind, the searcher or the researchMode are null
      */
     public static void searchId(KademliaId idToFind, SMSPeer searcher, ResearchMode researchMode) {
@@ -134,7 +134,7 @@ public class IdFinderHandler {
      *
      * @param idToFind     The ID to find inside the network
      * @param searcherNode The Peer which is searching the ID
-     * @param researchMode The resource mode, represents the final purpose of the research
+     * @param researchMode The research mode, represents the final purpose of the research
      * @param nodeToCheck  The Peer whose validity must be checked; if it's not active
      *                     anymore, it is removed from the RoutingTable, and the research is started
      *                     again

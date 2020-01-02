@@ -33,7 +33,7 @@ public class SMSKademliaListener extends SMSReceivedServiceListener {
     /**
      * This method sends an acknowledge message
      *
-     * @param  peer The {@link SMSPeer} of the node that contacted me
+     * @param peer The {@link SMSPeer} of the node that contacted me
      * @author Edoardo Raimondi
      */
     public void sendAcknowledge(SMSPeer peer) {
@@ -45,10 +45,10 @@ public class SMSKademliaListener extends SMSReceivedServiceListener {
     /**
      * This method sends a Pong message
      *
-     * @param  peer The {@link SMSPeer} of the node that contacted me
+     * @param peer The {@link SMSPeer} of the node that contacted me
      * @author Edoardo Raimondi
      */
-    public void sendPong(SMSPeer peer){
+    public void sendPong(SMSPeer peer) {
         String pong = RequestTypes.Pong.ordinal() + " ";
         SMSMessage pongMessage = new SMSMessage(peer, pong);
         SMSManager.getInstance().sendMessage(pongMessage);
@@ -111,13 +111,13 @@ public class SMSKademliaListener extends SMSReceivedServiceListener {
                 break;
             case FindId:
                 sendAcknowledge(peer);
-                //2. Processes the information brought by the message received
+                //1. Processes the information brought by the message received
                 Log.i(LOG_TAG, "IdFound: " + idFound);
                 IdFinderHandler.searchId(idToFind, searcher, ResearchMode.JoinNetwork);
                 break;
             case SearchResult:
                 sendAcknowledge(peer);
-                //2. Processes the information brought by the message received
+                //1. Processes the information brought by the message received
                 TableUpdateHandler.stepTableUpdate(idFound);
                 break;
 
@@ -140,7 +140,7 @@ public class SMSKademliaListener extends SMSReceivedServiceListener {
                 break;
             case AddToDict:
                 sendAcknowledge(peer);
-                //2. Processes the information brought by the message received
+                //1. Processes the information brought by the message received
                 Log.i(LOG_TAG, "Received AddToDictionary request.\nKey: " + key + ",\nResource:" +
                         resource);
                 KademliaNetwork.getInstance().addToLocalDictionary(key, resource);
@@ -178,7 +178,7 @@ public class SMSKademliaListener extends SMSReceivedServiceListener {
             /**Remove a resource from the Dictionary */
             case FindIdForDeleteRequest:
                 sendAcknowledge(peer);
-                //2. Processes the information brought by the message received
+                //1. Processes the information brought by the message received
                 Log.i(LOG_TAG, "Received ID research request from: " + searcher + ".\nTarget: " +
                         idToFind);
                 resourceExchangeHandler.processRequest(idToFind, searcher, ResearchMode.RemoveFromDictionary);
