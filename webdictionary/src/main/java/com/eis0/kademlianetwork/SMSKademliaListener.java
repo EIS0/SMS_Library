@@ -169,8 +169,8 @@ public class SMSKademliaListener extends SMSReceivedServiceListener {
                 Log.i(LOG_TAG, "Received GetFromDictionary request.\nKey: " + key);
                 resource = KademliaNetwork.getInstance().getFromLocalDictionary(key).toString();
                 //2. Send the <key, resource> pair
-                String resourceToAdd = RequestTypes.AddToDict.ordinal() + " " + key + " " + resource;
-                message = new SMSMessage(peer, resourceToAdd);
+                KademliaMessage kademliaMessage = new KademliaMessage(RequestTypes.AddToDict, null, null, key, resource);
+                message = new SMSMessage(peer, kademliaMessage.toString());
                 SMSManager.getInstance().sendMessage(message);
                 break;
 

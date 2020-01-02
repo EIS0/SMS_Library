@@ -95,7 +95,7 @@ public class KademliaMessage {
         if (resource == null) resource = "/";
 
         String messageToCreate =
-                RequestTypes.AddToDict.ordinal() + " " +
+                requestType.ordinal() + " " +
                         stringIdToFind + " " +
                         stringSearcher + " " +
                         key + " " +
