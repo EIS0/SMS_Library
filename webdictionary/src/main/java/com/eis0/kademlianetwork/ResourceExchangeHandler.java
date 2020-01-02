@@ -23,9 +23,9 @@ import java.util.Map;
 public class ResourceExchangeHandler {
     //Maps containing the pending Requests waiting to be completed; each pending request is identified
     //inside the Map by the request ID that the request must process
-    private Map<KademliaId, IRequest> pendingAddRequests;
-    private Map<KademliaId, IRequest> pendingGetRequests;
-    private Map<KademliaId, IRequest> pendingDeleteRequests;
+    private Map<KademliaId, Request> pendingAddRequests;
+    private Map<KademliaId, Request> pendingGetRequests;
+    private Map<KademliaId, Request> pendingDeleteRequests;
 
     public ResourceExchangeHandler() {
         pendingAddRequests = new HashMap<>();
@@ -42,52 +42,33 @@ public class ResourceExchangeHandler {
      * @param resource The String value of the resource itself to be added to the Dictionary
      * @throws IllegalArgumentException If key or resource are null
      */
-    public void createAddRequest(String key, String resource) {
-        if(key == null || resource == null) throw new IllegalArgumentException();
-        //Create the Request object, insert it inside the pendingAddRequests list
-        Request currentRequest = new Request(key, resource);
-        KademliaId idToFind = currentRequest.getKeyId();
-        pendingAddRequests.put(idToFind, currentRequest);
+    public void createRequest(String key, String resource, ResearchMode researchMode) {
+        if (key == null) throw new IllegalArgumentException();
+        Request currentRequest;
+        KademliaId idToFind = null;
+        switch (researchMode) {
+            case AddToDictionary:
+                currentRequest = new Request(key, resource);
+                idToFind = currentRequest.getKeyId();
+                pendingAddRequests.put(idToFind, currentRequest);
+                break;
+            case FindInDictionary:
+                currentRequest = new Request(key, null);
+                idToFind = currentRequest.getKeyId();
+                pendingGetRequests.put(idToFind, currentRequest);
+                break;
+            case RemoveFromDictionary:
+                currentRequest = new Request(key, null);
+                idToFind = currentRequest.getKeyId();
+                pendingDeleteRequests.put(idToFind, currentRequest);
+                break;
+        }
+
         //Start to search for the closest ID
         SMSPeer searcher = KademliaNetwork.getInstance().getLocalNode().getPeer();
         processRequest(idToFind, searcher, ResearchMode.AddToDictionary);
     }
 
-    /**
-     * This method adds to the pendingGetRequests list of {@link Request} the new request, and send
-     * a message in the network asking for a receiver, that is the node with the closest ID to the
-     * resource ID
-     *
-     * @param key The String value of the key of the resource to get from the Dictionary
-     */
-    public void createGetRequest(String key) {
-        if(key == null) throw new IllegalArgumentException();
-        //Create the Request object, insert it inside the pendingGetRequests list
-        Request currentRequest = new Request(key, null);
-        KademliaId idToFind = currentRequest.getKeyId();
-        pendingGetRequests.put(idToFind, currentRequest);
-        //Start to search for the closest ID
-        SMSPeer searcher = KademliaNetwork.getInstance().getLocalNode().getPeer();
-        processRequest(idToFind, searcher, ResearchMode.FindInDictionary);
-    }
-
-    /**
-     * This method adds to the pendingDeleteRequests list of {@link Request} the new request, and send
-     * a message in the network asking for a receiver, that is the node with the closest ID to the
-     * resource ID
-     *
-     * @param key The String value of the key of the resource to delete from the Dictionary
-     */
-    public void createDeleteRequest(String key) {
-        if(key == null) throw new IllegalArgumentException();
-        //Create the Request object, insert it inside the pendingGetRequests list
-        Request currentRequest = new Request(key, null);
-        KademliaId idToFind = currentRequest.getKeyId();
-        pendingDeleteRequests.put(idToFind, currentRequest);
-        //Start to search for the closest ID
-        SMSPeer searcher = KademliaNetwork.getInstance().getLocalNode().getPeer();
-        processRequest(idToFind, searcher, ResearchMode.RemoveFromDictionary);
-    }
 
     /**
      * This method starts the ID research inside the network, according to the type of research the
@@ -110,58 +91,6 @@ public class ResourceExchangeHandler {
         IdFinderHandler.searchId(idToFind, searcher, researchMode);
     }
 
-    /**
-     * This method is called whenever the network returns the node ID closest to the resource ID
-     * It searches for the corresponding {@link Request} which sent the ID research in the network,
-     * extracts it from the list of pending requests, and sends the <key, resource> pair contained in
-     * the request to the targetPeer, that is the node which answered to the research
-     *
-     * @param idToFind   The {@link KademliaId} of the resource key; it's used to trace back the
-     *                   Request in the pending requests list
-     * @param targetPeer The {@link SMSPeer} of the node which answered the research and receive the
-     *                   <key, resurce> pair
-     * @throws IllegalArgumentException If the idToFind or the targetPeer are null
-     */
-    public void completeAddRequest(KademliaId idToFind, SMSPeer targetPeer) {
-        if (idToFind == null || targetPeer == null) throw new IllegalArgumentException();
-        //1. Find in the pendingAddRequests the Request to complete, remove it from the list
-        IRequest aboutToClose = pendingAddRequests.get(idToFind);
-        pendingAddRequests.remove(idToFind);
-        //Initialization of the values to send
-        String key = aboutToClose.getKey();
-        String resource = aboutToClose.getResource();
-        //2. Send the <key, resource> pair
-        String resourceToAdd = RequestTypes.AddToDict.ordinal() + " " + key + " " + resource;
-        SMSMessage message = new SMSMessage(targetPeer, resourceToAdd);
-        SMSManager.getInstance().sendMessage(message);
-    }
-
-    /**
-     * This method is called whenever the network returns the node ID closest to the resource ID
-     * It searches for the corresponding {@link Request} which sent the ID research in the network,
-     * extracts it from the list of pending requests, and sends the key contained in
-     * the request to the targetPeer, that is the node which answered to the research; the targetPeer
-     * now identified and added to the RoutingTable will respond with the <key, resource> pair
-     *
-     * @param idToFind   The {@link KademliaId} of the resource key; it's used to trace back the
-     *                   Request in the pending requests list
-     * @param targetPeer The {@link SMSPeer} of the node which answered the research and receive the
-     *                   <key, resurce> pair
-     * @throws IllegalArgumentException If the idToFind or the targetPeer are null
-     */
-    public void completeGetRequest(KademliaId idToFind, SMSPeer targetPeer) {
-        if (idToFind == null || targetPeer == null) throw new IllegalArgumentException();
-        //1. Find in the pendingAddRequests the Request to complete, remove it from the list
-        IRequest aboutToClose = pendingGetRequests.get(idToFind);
-        pendingAddRequests.remove(idToFind);
-        //Initialization of the values to send
-        String key = aboutToClose.getKey();
-        String resource = aboutToClose.getResource();
-        //2. Send the <key, resource> pair
-        String resourceToGet = RequestTypes.GetFromDict.ordinal() + " " + key;
-        SMSMessage message = new SMSMessage(targetPeer, resourceToGet);
-        SMSManager.getInstance().sendMessage(message);
-    }
 
     /**
      * This method is called whenever the network returns the node ID closest to the resource ID
@@ -175,17 +104,38 @@ public class ResourceExchangeHandler {
      *                   <key, resurce> pair
      * @throws IllegalArgumentException If the idToFind or the targetPeer are null
      */
-    public void completeDeleteRequest(KademliaId idToFind, SMSPeer targetPeer) {
+    public void completeRequest(KademliaId idToFind, SMSPeer targetPeer, ResearchMode researchMode) {
         if (idToFind == null || targetPeer == null) throw new IllegalArgumentException();
-        //1. Find in the pendingAddRequests the Request to complete, remove it from the list
-        IRequest aboutToClose = pendingAddRequests.get(idToFind);
-        pendingAddRequests.remove(idToFind);
-        //Initialization of the values to send
+        Map<KademliaId, Request> pendingRequests = null;
+        Request aboutToClose = null;
+        RequestTypes requestType = null;
+
+        //1. Verify what kind of request must be completed
+        switch (researchMode) {
+            case AddToDictionary:
+                pendingRequests = pendingAddRequests;
+                requestType = RequestTypes.AddToDict;
+                aboutToClose = pendingRequests.get(idToFind);
+                break;
+            case FindInDictionary:
+                pendingRequests = pendingGetRequests;
+                requestType = RequestTypes.GetFromDict;
+                aboutToClose = pendingRequests.get(idToFind);
+                break;
+            case RemoveFromDictionary:
+                pendingRequests = pendingDeleteRequests;
+                requestType = RequestTypes.RemoveFromDict;
+                aboutToClose = pendingRequests.get(idToFind);
+                break;
+        }
+        //Remove the request from the corresponding list
+        pendingRequests.remove(idToFind);
+        //Extract the <key, resource> pair contained by the Request; the resource value can be null
         String key = aboutToClose.getKey();
         String resource = aboutToClose.getResource();
-        //2. Send the <key, resource> pair
-        String resourceToAdd = RequestTypes.RemoveFromDict.ordinal() + " " + key + " " + resource;
-        SMSMessage message = new SMSMessage(targetPeer, resourceToAdd);
+        //2. Send the message
+        KademliaMessage kadMessage = new KademliaMessage(requestType, null, null, key, resource);
+        SMSMessage message = new SMSMessage(targetPeer, kadMessage.toString());
         SMSManager.getInstance().sendMessage(message);
     }
 
@@ -195,7 +145,7 @@ public class ResourceExchangeHandler {
      *
      * @return The pendingAddRequests map of the ResourceExchangeHandler class
      */
-    public Map<KademliaId, IRequest> getPendingAddRequests() {
+    public Map<KademliaId, Request> getPendingAddRequests() {
         return pendingAddRequests;
     }
 
@@ -204,7 +154,7 @@ public class ResourceExchangeHandler {
      *
      * @return The pendingGetRequests map of the ResourceExchangeHandler class
      */
-    public Map<KademliaId, IRequest> getPendingGetRequests() {
+    public Map<KademliaId, Request> getPendingGetRequests() {
         return pendingGetRequests;
     }
 
@@ -213,7 +163,7 @@ public class ResourceExchangeHandler {
      *
      * @return The pendingGetRequests map of the ResourceExchangeHandler class
      */
-    public Map<KademliaId, IRequest> getPendingDeleteRequests() {
+    public Map<KademliaId, Request> getPendingDeleteRequests() {
         return pendingDeleteRequests;
     }
 

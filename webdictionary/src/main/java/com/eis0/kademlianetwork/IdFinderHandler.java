@@ -74,7 +74,7 @@ public class IdFinderHandler {
         //1. Checking if I'm the searched id (This state should be impossible, it's a fail safe)
         //2. Checking if inside my RoutingTable there is a node with the ID to find
         //3. I got further away from what I'm looking for, so I'm the closest one: I return this ID
-        if (    netId == idToFind   ||
+        if (netId == idToFind ||
                 KademliaNetwork.getInstance().isNodeInNetwork(nodeToFind) ||
                 idToFindDistanceFromClosest.compareTo(idToFindDistanceFromNetId) > 0) {
             sendResult(taskResult, idToFind, searcher);
@@ -83,9 +83,9 @@ public class IdFinderHandler {
         }
         //else
         //I ask to the closest node inside my Routing Table to continue the research
-            SMSPeer closer = closestNode.getPeer();
-            keepLooking(findId, idToFind, searcher, closer);
-            retryIfDead(idToFind, searcher, researchMode, closer);
+        SMSPeer closer = closestNode.getPeer();
+        keepLooking(findId, idToFind, searcher, closer);
+        retryIfDead(idToFind, searcher, researchMode, closer);
     }
 
 
@@ -93,16 +93,16 @@ public class IdFinderHandler {
      * This method sends to the specified target {@link SMSPeer} the result of the previously
      * carried out research
      *
-     * @param taskResult The type of the result, sent to allow the receiver of the
-     *                   result to define which request the result itself belongs to
-     *                   (There may be multiple pending requests, each of a different nature)
-     * @param idToFind   The ID whose research originated the request
-     *                   It's sent back as response to the research
-     * @param targetPeer The Peer representing the target that will receive the result
+     * @param requestType The type of the result, sent to allow the receiver of the
+     *                    result to define which request the result itself belongs to
+     *                    (There may be multiple pending requests, each of a different nature)
+     * @param idToFind    The ID whose research originated the request
+     *                    It's sent back as response to the research
+     * @param targetPeer  The Peer representing the target that will receive the result
      */
-    private static void sendResult(RequestTypes taskResult, KademliaId idToFind, SMSPeer targetPeer) {
-        String message = taskResult.ordinal() + " " + idToFind;
-        SMSMessage searchResult = new SMSMessage(targetPeer, message);
+    private static void sendResult(RequestTypes requestType, KademliaId idToFind, SMSPeer targetPeer) {
+        KademliaMessage kadMessage = new KademliaMessage(requestType, idToFind, null, null, null);
+        SMSMessage searchResult = new SMSMessage(targetPeer, kadMessage.toString());
         SMSManager.getInstance().sendMessage(searchResult);
     }
 
@@ -113,7 +113,7 @@ public class IdFinderHandler {
      * node which originated the research, without retracing back all the node that took part to the
      * research
      *
-     * @param findId       The type of research, there are multiple processes
+     * @param requestType  The type of research, there are multiple processes
      *                     that need to search for a specific ID, this value allows the receiver of
      *                     the message to define which process asked for the ID, and to answer
      *                     appropriately
@@ -122,9 +122,9 @@ public class IdFinderHandler {
      * @param searcherNode The Peer which started the research
      * @param closerNode   The node with the {@link KademliaId} closer to the idToFind
      */
-    private static void keepLooking(RequestTypes findId, KademliaId idToFind, SMSPeer searcherNode, SMSPeer closerNode) {
-        String message = findId.ordinal() + " " + idToFind + " " + searcherNode;
-        SMSMessage requestMessage = new SMSMessage(closerNode, message);
+    private static void keepLooking(RequestTypes requestType, KademliaId idToFind, SMSPeer searcherNode, SMSPeer closerNode) {
+        KademliaMessage kadMessage = new KademliaMessage(requestType, idToFind, searcherNode, null, null);
+        SMSMessage requestMessage = new SMSMessage(closerNode, kadMessage.toString());
         SMSManager.getInstance().sendMessage(requestMessage);
     }
 
