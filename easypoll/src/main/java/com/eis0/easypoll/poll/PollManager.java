@@ -10,7 +10,6 @@ import com.eis0.smslibrary.SMSMessage;
 import com.eis0.smslibrary.SMSPeer;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -103,7 +102,7 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
         String cmd = networkMessage.getCommand();
         List<String> args = networkMessage.getArguments();
         long id = Long.parseLong(args.get(0));
-        Network authorNetwork;
+        Network ownerNetwork;
         switch (cmd) {
             // New poll received
             // Structure of the message (each filed is separated by the FIELD_SEPARATOR):
@@ -116,8 +115,8 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
                 List<SMSPeer> users = new ArrayList<>();
                 for(String address : addresses) users.add(new SMSPeer(address));
                 Network usersNetwork = NetworksPool.obtainNetwork(users);
-                authorNetwork = NetworksPool.obtainNetwork(Collections.singletonList(peer));
-                BinaryPoll poll = new BinaryPoll(id, name, question, authorNetwork, usersNetwork);
+                ownerNetwork = NetworksPool.obtainNetwork(peer);
+                BinaryPoll poll = new BinaryPoll(id, name, question, ownerNetwork, usersNetwork);
                 dataProvider.addPoll(poll);
                 break;
             // You have received an setAnswer for your poll
@@ -126,11 +125,11 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
             //        [0]          [1]      [2]       [3]
             case PollCommands.ANSWER_POLL:
                 String authorAddress = args.get(1);
-                if(authorAddress.equals(Network.LOCALNET_ADDR)) authorNetwork = Network.LOCALNET;
-                else authorNetwork = NetworksPool.obtainNetwork(Collections.singletonList(new SMSPeer((authorAddress))));
+                if(authorAddress.equals(NetworksPool.LOCALNET_ADDR)) ownerNetwork = NetworksPool.obtainLocalNetwork();
+                else ownerNetwork = NetworksPool.obtainNetwork(new SMSPeer((authorAddress)));
                 boolean answer = args.get(2).equals(PollCommands.YES_ANSWER);
                 for(BinaryPoll openedPoll : DataProvider.getOpenedPolls()) {
-                    if(openedPoll.getLocalId() == id && openedPoll.getAuthor().equals(authorNetwork)) {
+                    if(openedPoll.getLocalId() == id && openedPoll.getAuthors().equals(ownerNetwork)) {
                         openedPoll.setAnswer(answer);
                         dataProvider.updatePoll(openedPoll);
                     }
@@ -158,15 +157,15 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
 
         NetworkMessageBuilder builder = new NetworkMessageBuilder(PollCommands.ANSWER_POLL)
                 .addArgument(localId)
-                .addArguments(poll.getAuthor().getAddresses())
+                .addArguments(poll.getAuthors().getAddresses())
                 .addArgument(answerCommand);
         poll.getUsers().broadcastMessage(builder.buildMessage());
 
         builder = new NetworkMessageBuilder(PollCommands.ANSWER_POLL)
                 .addArgument(localId)
-                .addArgument(Network.LOCALNET_ADDR)
+                .addArgument(NetworksPool.LOCALNET_ADDR)
                 .addArgument(answerCommand);
-        poll.getAuthor().broadcastMessage(builder.buildMessage());
+        poll.getAuthors().broadcastMessage(builder.buildMessage());
 
         DataProvider.getIncomingPolls().remove(poll);
         dataProvider.updatePoll(poll);

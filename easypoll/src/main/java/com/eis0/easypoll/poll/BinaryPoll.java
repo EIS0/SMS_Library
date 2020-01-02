@@ -3,6 +3,7 @@ package com.eis0.easypoll.poll;
 import android.content.SharedPreferences;
 
 import com.eis0.networklibrary.Network;
+import com.eis0.networklibrary.NetworksPool;
 
 /**
  * This class provides the creation of polls with two simple answers. Users involved in a
@@ -15,6 +16,7 @@ import com.eis0.networklibrary.Network;
 public class BinaryPoll {
 
     private static final String POLLS_COUNT_KEY = "com.eis0.easypoll.polls_count_key";
+    public static final String SELF_OWNER_NAME = "You";
 
     private static long pollsCount = 0;
     private static SharedPreferences mSharedPreferences;
@@ -22,7 +24,7 @@ public class BinaryPoll {
     private long id;
     private String name;
     private String question;
-    private Network author;
+    private Network authors;
     private Network users;
     private int yesCount = 0;
     private int noCount = 0;
@@ -41,14 +43,14 @@ public class BinaryPoll {
      * @author Giovanni Velludo
      * @author Matteo Carnelos
      */
-    public BinaryPoll(long id, String name, String question, Network author, Network users) {
+    public BinaryPoll(long id, String name, String question, Network authors, Network users) {
         if(name.isEmpty()) throw new IllegalArgumentException("Can't create poll with empty name.");
         if(question.isEmpty()) throw new IllegalArgumentException("Can't create poll with empty question.");
-        if(author.size() > 1) throw new IllegalArgumentException("For the current implementation is supported only one author.");
+        if(users.isLocalNetwork()) throw new IllegalArgumentException("A poll must contain at least one user.");
         this.id = id;
         this.name = name;
         this.question = question;
-        this.author = author;
+        this.authors = authors;
         this.users = users;
         incoming = true;
     }
@@ -63,7 +65,7 @@ public class BinaryPoll {
      * @author Matteo Carnelos
      */
     public BinaryPoll(String name, String question, Network users) {
-        this(pollsCount+1, name, question, Network.LOCALNET, users);
+        this(pollsCount+1, name, question, NetworksPool.obtainLocalNetwork(), users);
         incoming = false;
         pollsCount++;
         savePollsCountToInternal();
@@ -85,7 +87,7 @@ public class BinaryPoll {
      *
      * @author Matteo Carnelos
      */
-    public static void savePollsCountToInternal() {
+    private static void savePollsCountToInternal() {
         if(mSharedPreferences == null) return;
         SharedPreferences.Editor editor = mSharedPreferences.edit();
         editor.putLong(POLLS_COUNT_KEY, pollsCount);
@@ -104,8 +106,8 @@ public class BinaryPoll {
     // ---------------------------- GETTERS ---------------------------- //
 
     public long getId() {
-        if(author == Network.LOCALNET) return getLocalId();
-        return Long.parseLong(author.getAddresses().get(0) + getLocalId());
+        if(authors.isLocalNetwork()) return getLocalId();
+        return Long.parseLong(authors.getAddresses().get(0) + getLocalId());
     }
 
     /**
@@ -142,13 +144,13 @@ public class BinaryPoll {
         return users;
     }
 
-    public Network getAuthor() {
-        return author;
+    public Network getAuthors() {
+        return authors;
     }
 
-    public String getAuthorName() {
-        if(author == Network.LOCALNET) return "You";
-        return author.getAddresses().get(0);
+    public String getOwnerName() {
+        if(authors.isLocalNetwork()) return SELF_OWNER_NAME;
+        return authors.getAddresses().get(0);
     }
 
     public int getYesCount() {
@@ -206,7 +208,7 @@ public class BinaryPoll {
     }
 
     public int getUsersCount() {
-        return author == Network.LOCALNET ? users.size() : users.size()+1;
+        return authors.isLocalNetwork() ? users.size() : users.size()+1;
     }
 
     // ---------------------------- OVERRIDDEN METHODS ---------------------------- //
@@ -223,6 +225,6 @@ public class BinaryPoll {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         BinaryPoll that = (BinaryPoll) o;
-        return this.getLocalId() == that.getLocalId() && this.getAuthor().equals(that.getAuthor());
+        return this.getLocalId() == that.getLocalId() && this.getAuthors().equals(that.getAuthors());
     }
 }

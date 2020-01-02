@@ -117,7 +117,7 @@ public class IncomingPollAdapter extends BaseAdapter implements Observer {
 
         // Assigning poll display values and actions to UI objects
         pollNameTxt.setText(poll.getName());
-        pollAuthorTxt.setText(poll.getAuthorName());
+        pollAuthorTxt.setText(poll.getOwnerName());
         pollIdTxt.setText(String.valueOf(poll.getLocalId()));
         pollQuestionTxt.setText(poll.getQuestion());
         yesBtn.setOnClickListener(new View.OnClickListener() {

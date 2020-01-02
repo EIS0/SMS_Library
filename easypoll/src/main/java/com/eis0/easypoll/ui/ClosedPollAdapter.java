@@ -114,7 +114,7 @@ public class ClosedPollAdapter extends BaseAdapter implements Observer {
 
         // Assigning poll display values to UI objects
         pollNameTxt.setText(poll.getName());
-        pollAuthorTxt.setText(poll.getAuthorName());
+        pollAuthorTxt.setText(poll.getOwnerName());
         pollIdTxt.setText(String.valueOf(poll.getLocalId()));
         pollQuestionTxt.setText(poll.getQuestion());
         yesNumTxt.setText(String.valueOf(poll.getYesCount()));

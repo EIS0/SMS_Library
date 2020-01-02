@@ -18,7 +18,6 @@ android {
         }
     }
     testOptions {
-        // needed temporarily for PollManagerTest, shouldn't be used in general
         unitTests.returnDefaultValues = true
     }
 }

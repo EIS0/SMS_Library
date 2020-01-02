@@ -18,17 +18,9 @@ import java.util.List;
  */
 public class Network {
 
-    public final static Network LOCALNET = new Network();
-    public final static String LOCALNET_ADDR = "localnet";
-
     private List<SMSPeer> peers;
 
-    private Network() {
-        this.peers = new ArrayList<>();
-    }
-
     Network(@NonNull List<SMSPeer> peers) {
-        if(peers.isEmpty()) throw new IllegalArgumentException("A network must contain at least one peer");
         this.peers = peers;
     }
 
@@ -53,25 +45,28 @@ public class Network {
     }
 
     public void multicastMessage(List<SMSPeer> peers, String message) {
-        for(SMSPeer peer : peers) {
-            if(!this.peers.contains(peer))
-                throw new IllegalArgumentException("One or more of the given peers are not part of the network");
+        if(!getPeers().containsAll(peers))
+            throw new IllegalArgumentException("One or more of the given peers are not part of the network");
+        for(SMSPeer peer : peers)
             SMSManager.getInstance().sendMessage(new SMSMessage(peer, message));
-        }
-    }
-
-    public int size() {
-        return peers.size();
     }
 
     public void broadcastMessage(String message) {
         multicastMessage(peers, message);
     }
 
+    public int size() {
+        return peers.size();
+    }
+
+    public boolean isLocalNetwork() {
+        return size() == 0;
+    }
+
     public boolean equals(Object obj) {
         if(this == obj) return true;
         if(obj == null || getClass() != obj.getClass()) return false;
         Network that = (Network)obj;
-        return this.peers.equals(that.getPeers());
+        return this.size() == that.size() && this.peers.containsAll(that.getPeers());
     }
 }

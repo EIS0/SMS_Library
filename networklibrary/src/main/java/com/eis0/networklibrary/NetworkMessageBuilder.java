@@ -7,7 +7,7 @@ import java.util.List;
 
 public class NetworkMessageBuilder {
 
-    private final static String FIELD_SEPARATOR = ":";
+    public final static String FIELD_SEPARATOR = ":";
 
     private String command;
     private List<String> arguments = new ArrayList<>();
