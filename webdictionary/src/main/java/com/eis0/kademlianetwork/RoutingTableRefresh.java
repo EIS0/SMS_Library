@@ -20,9 +20,12 @@ public class RoutingTableRefresh{
     private RespondTimer timer = new RespondTimer();
     //node doing this refresh
     private SMSKademliaNode localNode;
+    //kademlia network of the local node
+    private KademliaNetwork net;
 
-    public RoutingTableRefresh(SMSKademliaNode node){
+    public RoutingTableRefresh(SMSKademliaNode node, KademliaNetwork net){
         localNode = node;
+        this.net = net;
     }
 
 
@@ -31,7 +34,7 @@ public class RoutingTableRefresh{
      */
     public void start() {
         //create the list of my routing table nodes. I need to check all that nodes.
-        List<SMSKademliaNode> allRoutingTableNodes = KademliaNetwork.getInstance().getLocalRoutingTable().getAllNodes();
+        List<SMSKademliaNode> allRoutingTableNodes = net.getLocalRoutingTable().getAllNodes();
         for (int i = 0; i < allRoutingTableNodes.size(); i++) {
             SMSKademliaNode currentNode = allRoutingTableNodes.get(i);
             SystemMessages.sendPing(currentNode);
@@ -40,15 +43,15 @@ public class RoutingTableRefresh{
             timer.run();
 
             //check if I received a pong (so if the node is alive)
-            if (KademliaNetwork.getInstance().connectionInfo.getPongKnown()) {
+            if (net.connectionInfo.getPongKnown()) {
                 //is alive, set the pong state to false in order to do it again
-                KademliaNetwork.getInstance().connectionInfo.setPong(false);
+                net.connectionInfo.setPong(false);
             } else { //the node is not alive. I must remove it.
                 KademliaId currentId = currentNode.getId();
                 //I check the bucket Id that contains that node
-                int b = KademliaNetwork.getInstance().getLocalRoutingTable().getBucketId(currentId);
+                int b = net.getLocalRoutingTable().getBucketId(currentId);
                 //I remove it. If there is a replacement in the cache, it will automatically replace my node.
-                KademliaNetwork.getInstance().getLocalRoutingTable().getBuckets()[b].removeNode(currentNode);
+                net.getLocalRoutingTable().getBuckets()[b].removeNode(currentNode);
                 //now I search for another one
                 askForId(currentId);
             }
