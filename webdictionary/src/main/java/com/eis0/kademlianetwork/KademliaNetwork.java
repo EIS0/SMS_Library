@@ -34,7 +34,7 @@ public class KademliaNetwork {
     //Routing table for this user of the network
     private SMSKademliaRoutingTable localRoutingTable;
     private ConnectionHandler connectionHandler = new ConnectionHandler();
-    private RoutingTableRefresh refresh = new RoutingTableRefresh(this.localNode);
+    public RoutingTableRefresh refresh = new RoutingTableRefresh(this.localNode, this);
     public NodeConnectionInfo connectionInfo = new NodeConnectionInfo();
     private KademliaListener listener;
     private SMSKademliaListener smsKademliaListener = new SMSKademliaListener(this);
