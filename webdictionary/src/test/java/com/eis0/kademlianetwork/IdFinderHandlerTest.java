@@ -7,6 +7,9 @@ import com.eis0.kademlia.DefaultConfiguration;
 import com.eis0.kademlia.KademliaId;
 import com.eis0.kademlia.SMSKademliaNode;
 import com.eis0.kademlia.SMSKademliaRoutingTable;
+import com.eis0.kademlianetwork.InformationDeliveryManager.IdFinderHandler;
+import com.eis0.kademlianetwork.InformationDeliveryManager.RequestTypes;
+import com.eis0.kademlianetwork.InformationDeliveryManager.ResearchMode;
 
 import org.junit.Before;
 import org.junit.Test;
