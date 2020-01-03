@@ -26,9 +26,9 @@ public class ConnectionHandler {
     }
 
     /**
-     * Asks a given valid peer if I can join HIS Kademlia Network
+     * Sends to a target peer a request to join his Kademlia Network
      *
-     * @param peer The peer to ask to
+     * @param peer The peer to send the request to
      */
     public void askToJoin(SMSPeer peer) {
         //asking to join has the same functionality as inviting someone to join
@@ -42,18 +42,18 @@ public class ConnectionHandler {
      */
     public static void sendAcceptRequest(SMSPeer peer) {
         /*
-         * If both the other peer sent me a request to join his network, or
-         * a request to invite me to his network, I have to update my routing table
-         * from scratch adding him to the table as a contact, then I have to send
-         * an acceptJoin event, so he can do the same thing.
-         * This serves to more strongly fuse both networks by
-         * creating contacts from the other network
+         * Both if I get invited to another one's network,
+         * or someone asked to enter my network,
+         * I have to send back an accept message
          * */
 
         String messageRequest = RequestTypes.AcceptJoin.ordinal() + "";
         SMSMessage message = new SMSMessage(peer, messageRequest);
         SMSManager.getInstance().sendMessage(message);
 
+        /*
+        * Then I have to create/update my routing table, so I call the proper function
+        * */
         acceptRequest(peer);
     }
 
