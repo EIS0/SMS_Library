@@ -10,6 +10,8 @@ import com.eis0.kademlia.KademliaId;
  */
 public class KademliaMessage {
     private static final String REQUEST_TYPE_NULL = "The requestType parameter is null";
+    private static final String DEFAULT = "/";
+    private static final String BLANK = " ";
 
     public SMSPeer peer;
     public String text;
@@ -41,14 +43,13 @@ public class KademliaMessage {
         text = message.getData();
         peer = message.getPeer();
         //Array of strings containing the message fields
-        String[] splitted = text.split(" ");
-
+        String[] splitted = text.split(BLANK);
         //Extracts the value contained inside the message
         requestType = RequestTypes.values()[Integer.parseInt(splitted[0])];
         idToFind = new KademliaId(splitted[1]);
         searcher = new SMSPeer(splitted[2]);
         key = splitted[3];
-        for (int i = 4; i < splitted.length; i++) resource += splitted[i];
+        for (int i = 4; i < splitted.length; i++) resource += splitted[i] + BLANK;
     }
 
     /**
@@ -81,25 +82,21 @@ public class KademliaMessage {
      * @return The String value of the message itself
      */
     public String toString() {
-        if (requestType == null) throw new IllegalArgumentException(REQUEST_TYPE_NULL);
         //The RequestType is the only field which needs to be not Null
-        String stringIdToFind;
-        if (idToFind == null) stringIdToFind = "/";
-        else stringIdToFind = idToFind.toString();
-
-        String stringSearcher;
-        if (idToFind == null) stringSearcher = "/";
-        else stringSearcher = searcher.toString();
-
-        if (key == null) key = "/";
-        if (resource == null) resource = "/";
+        if (requestType == null) throw new IllegalArgumentException(REQUEST_TYPE_NULL);
+        String stringIdToFind = DEFAULT;
+        String stringSearcher = DEFAULT;
+        if (idToFind != null) stringIdToFind = idToFind.toString();
+        if (idToFind != null) stringSearcher = searcher.toString();
+        if (key == null) key = DEFAULT;
+        if (resource == null) resource = DEFAULT;
 
         String messageToCreate =
-                requestType.ordinal() + " " +
-                        stringIdToFind + " " +
-                        stringSearcher + " " +
-                        key + " " +
-                        resource + " ";
+                requestType.ordinal() + BLANK +
+                        stringIdToFind + BLANK +
+                        stringSearcher + BLANK +
+                        key + BLANK +
+                        resource;
         return messageToCreate;
     }
 }
