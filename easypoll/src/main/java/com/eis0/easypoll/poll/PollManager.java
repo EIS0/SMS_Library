@@ -1,5 +1,7 @@
 package com.eis0.easypoll.poll;
 
+import androidx.annotation.NonNull;
+
 import com.eis0.easypoll.DataProvider;
 import com.eis0.networklibrary.Network;
 import com.eis0.networklibrary.NetworkMessageBuilder;
@@ -13,41 +15,36 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Creates and modifies BinaryPoll objects based on inputs from Activities and SMS Messages.
- * To be notified of changes to polls, your class must implement PollListener, and you must pass it
- * to an instance of PollManager with setPollListener(PollListener listener).
- * Right now it communicates directly with SMSManager, but in the future it will send messages to a
- * class handling messages longer than a single SMS.
+ * Creates and modifies {@link BinaryPoll} objects based on inputs from Activities and SMS messages.<br>
+ * Every update to the polls is sent to the {@link DataProvider} class, an {@link java.util.Observable}
+ * object that contains all the polls data. It follows the Singleton Design Pattern.
  *
- * @author Giovanni Velludo
  * @author Matteo Carnelos
  */
 public class PollManager implements ReceivedMessageListener<SMSMessage> {
 
     private static PollManager instance = null;
 
-    private SMSManager smsManager = SMSManager.getInstance();
     private DataProvider dataProvider = DataProvider.getInstance();
 
     // ---------------------------- SINGLETON CONSTRUCTORS ---------------------------- //
 
     /**
-     * PollManager constructor, sets this as the SMSManager listener.
+     * PollManager constructor, sets this as the {@link SMSManager} listener.<br>
      * It cannot be accessed from outside the class because this follows the Singleton Design Pattern.
      *
-     * @author Giovanni Velludo
      * @author Matteo Carnelos
      */
     private PollManager() {
-        smsManager.setReceiveListener(this);
+        SMSManager.getInstance().setReceiveListener(this);
     }
 
     /**
-     * Returns a new instance of PollManager if none exist, otherwise the one already created as per
+     * Returns a new instance of {@link PollManager} if none exist, otherwise the one already created as per
      * the Singleton Design Patter.
      *
      * @return The only instance of this class.
-     * @author Giovanni Velludo
+     * @author Matteo Carnelos
      */
     public static PollManager getInstance() {
         if (instance == null) instance = new PollManager();
@@ -57,57 +54,92 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
     // ---------------------------- POLL CREATION ---------------------------- //
 
     /**
-     * Creates a new poll and sends it to all the included users, it eventually wakes the listener.
+     * Create a new poll and broadcast it to all the included users, then update polls data of the
+     * {@link DataProvider}.<br>
      *
-     * @param name     The name given to the poll.
-     * @param question The question to ask users.
-     * @param users    Users to which the question should be asked.
-     * @author Giovanni Velludo
+     * @param name The name given to the poll.
+     * @param question The question to ask to users.
+     * @param users Users to which the question should be asked.
      * @author Matteo Carnelos
      */
-    public void createPoll(String name, String question, List<SMSPeer> users) {
+    public void createPoll(@NonNull String name, @NonNull String question, @NonNull List<SMSPeer> users) {
         Network usersNetwork = NetworksPool.obtainNetwork(users);
         BinaryPoll poll = new BinaryPoll(name, question, usersNetwork);
-        for(SMSPeer peer : usersNetwork.getPeers()) {
-            NetworkMessageBuilder builder = new NetworkMessageBuilder(PollCommands.NEW_POLL)
-                    .addArgument(String.valueOf(poll.getLocalId()))
-                    .addArgument(poll.getName())
-                    .addArgument(poll.getQuestion())
-                    .addArguments(usersNetwork.getSubNetForPeer(peer).getAddresses());
-            usersNetwork.unicastMessage(peer, builder.buildMessage());
-        }
+        // A NEW_POLL message follows this pattern:
+        // NEW_POLL_CMD + pollNumber + pollName + pollQuestion + [pollUsersAddresses]
+        NetworkMessageBuilder builder = new NetworkMessageBuilder(PollCommands.NEW_POLL)
+                .addArgument(String.valueOf(poll.getNumber()))
+                .addArgument(poll.getName())
+                .addArgument(poll.getQuestion())
+                .addArguments(usersNetwork.getAddresses());
+        usersNetwork.broadcastMessage(builder.buildMessage());
         dataProvider.addPoll(poll);
+    }
+
+    // ---------------------------- POLL ANSWERING ---------------------------- //
+
+    /**
+     * Send the answer to the author and all the users subscribed to the poll. Finally, remove
+     * the answered poll from the incoming polls list.
+     *
+     * @param poll The poll to answer.
+     * @param answer The user's answer, true equals "Yes" and false equals "No".
+     * @throws IllegalArgumentException If the author is trying to answer an owning poll.
+     * @author Matteo Carnelos
+     */
+    public void answerPoll(@NonNull BinaryPoll poll, boolean answer) {
+        if(poll.getAuthor().isLocalNetwork())
+            throw new IllegalArgumentException("Authors are not allowed to answer their polls.");
+        String number = String.valueOf(poll.getNumber());
+        String answerCode = answer ? PollCommands.YES_ANSWER : PollCommands.NO_ANSWER;
+        // The ANSWER_POLL message for users follows this pattern:
+        // ANSWER_POLL_CMD + number + authorAddress + answerCode
+        NetworkMessageBuilder builder = new NetworkMessageBuilder(PollCommands.ANSWER_POLL)
+                .addArgument(number)
+                .addArguments(poll.getAuthor().getAddresses())
+                .addArgument(answerCode);
+        poll.getUsers().broadcastMessage(builder.buildMessage());
+        // The ANSWER_POLL message for author follows this pattern:
+        // ANSWER_POLL_CMD + number + LOCALNET_ADDR + answerCode
+        // The LOCALNET_ADDR tells the author that the answer is for a poll that he created
+        builder = new NetworkMessageBuilder(PollCommands.ANSWER_POLL)
+                .addArgument(number)
+                .addArgument(Network.LOCALNET_ADDR)
+                .addArgument(answerCode);
+        poll.getAuthor().broadcastMessage(builder.buildMessage());
+        DataProvider.getIncomingPolls().remove(poll);
     }
 
     // ---------------------------- POLL RECEIVING ---------------------------- //
 
     /**
-     * Receives an SMSMessage and updates poll data accordingly.
+     * Receives an {@link SMSMessage} and updates polls data accordingly.<br>
+     * Every message contains a command line, composed by a command and a variable number of arguments.
+     * The command is always one of the following values:<br>
+     * NEW_POLL_CMD - When the message contains a new poll;<br>
+     * ANSWER_POLL_CMD -  When the message contains an answer.<br>
+     * The number and meaning of the arguments depends on the type of command.
      *
-     * messageCode is the first header, and it's always one of the following values:
-     * [NEW_POLL_MSG_CODE] when the message contains a new poll;
-     * [ANSWER_MSG_CODE] when the message is sent from a user to the author and contains an setAnswer;
-     *
-     * @param message The SMS message passed by SMSHandler. SMSHandler already checks if the
-     *                message is meant for our app and strips it of its identification section, so
-     *                we don't perform any checks on the validity of the message here. We could
-     *                implement them in the future for added security.
-     * @author Giovanni Velludo
+     * @param message The SMS message passed by {@link SMSManager}. The message is formatted following
+     *                the rules of the {@link NetworkMessageBuilder}.
      * @author Matteo Carnelos
      */
     public void onMessageReceived(SMSMessage message) {
         String data = message.getData();
         SMSPeer peer = message.getPeer();
+        // Parse the formatted text into a NetworkMessageBuilder object
+        // Example: "CMD:ARG1:ARG2:ARG3" => Command:   CMD
+        //                                  Arguments: [ARG1, ARG2, ARG3]
         NetworkMessageBuilder networkMessage = NetworkMessageBuilder.parseNetworkMessage(data);
         String cmd = networkMessage.getCommand();
         List<String> args = networkMessage.getArguments();
-        long id = Long.parseLong(args.get(0));
-        Network ownerNetwork;
+        long number = Long.parseLong(args.get(0));
+        Network authorNetwork;
         switch (cmd) {
-            // New poll received
-            // Structure of the message (each filed is separated by the FIELD_SEPARATOR):
-            // NEW_POLL_MSG_CODE + pollId + pollName + pollQuestion
-            //        [0]           [1]       [2]          [3]
+            // NEW_POLL message, it follows the structure below:
+            // NEW_POLL_CMD + pollNumber + pollName + pollQuestion + [pollUsersAddresses]
+            //                   [0]         [1]           [2]             [3...]
+            // ---- cmd ----|-------------------------- [args] --------------------------
             case PollCommands.NEW_POLL:
                 String name = args.get(1);
                 String question = args.get(2);
@@ -115,59 +147,28 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
                 List<SMSPeer> users = new ArrayList<>();
                 for(String address : addresses) users.add(new SMSPeer(address));
                 Network usersNetwork = NetworksPool.obtainNetwork(users);
-                ownerNetwork = NetworksPool.obtainNetwork(peer);
-                BinaryPoll poll = new BinaryPoll(id, name, question, ownerNetwork, usersNetwork);
+                authorNetwork = NetworksPool.obtainNetwork(peer);
+                BinaryPoll poll = new BinaryPoll(number, name, question, authorNetwork, usersNetwork);
                 dataProvider.addPoll(poll);
                 break;
-            // You have received an setAnswer for your poll
-            // Structure of the message (each filed is separated by the FIELD_SEPARATOR):
-            // ANSWER_MSG_CODE + pollId + author + answerCode
-            //        [0]          [1]      [2]       [3]
+            // ANSWER_POLL message, it follows the structure below:
+            // ANSWER_POLL_CMD + pollNumber + authorAddress + answerCode
+            //                      [0]           [1]            [2]
+            // ------ cmd -----|---------------- [args] ----------------
             case PollCommands.ANSWER_POLL:
                 String authorAddress = args.get(1);
-                if(authorAddress.equals(NetworksPool.LOCALNET_ADDR)) ownerNetwork = NetworksPool.obtainLocalNetwork();
-                else ownerNetwork = NetworksPool.obtainNetwork(new SMSPeer((authorAddress)));
+                // Check if the authorAddress is the LOCALNET_ADDR, it means that the answer is for
+                // polls that I have created
+                if(authorAddress.equals(Network.LOCALNET_ADDR)) authorNetwork = NetworksPool.obtainLocalNetwork();
+                else authorNetwork = NetworksPool.obtainNetwork(new SMSPeer((authorAddress)));
                 boolean answer = args.get(2).equals(PollCommands.YES_ANSWER);
                 for(BinaryPoll openedPoll : DataProvider.getOpenedPolls()) {
-                    if(openedPoll.getLocalId() == id && openedPoll.getAuthors().equals(ownerNetwork)) {
+                    if(openedPoll.getNumber() == number && openedPoll.getAuthor().equals(authorNetwork)) {
                         openedPoll.setAnswer(answer);
                         dataProvider.updatePoll(openedPoll);
                     }
                 }
                 break;
         }
-    }
-
-    // ---------------------------- POLL ANSWERING ---------------------------- //
-
-    /**
-     * Sends the setAnswer to the author and remove the poll from the receivedPolls map.
-     *
-     * @param poll   The poll to setAnswer.
-     * @param answer The user's setAnswer, true equals "Yes" and false equals "No".
-     * @throws IllegalArgumentException When `poll` was created by the user answering it.
-     * @author Giovanni Velludo
-     * @author Matteo Carnelos
-     */
-    public void answerPoll(BinaryPoll poll, boolean answer) {
-        poll.setAnswer(answer);
-
-        String localId = String.valueOf(poll.getLocalId());
-        String answerCommand = answer ? PollCommands.YES_ANSWER : PollCommands.NO_ANSWER;
-
-        NetworkMessageBuilder builder = new NetworkMessageBuilder(PollCommands.ANSWER_POLL)
-                .addArgument(localId)
-                .addArguments(poll.getAuthors().getAddresses())
-                .addArgument(answerCommand);
-        poll.getUsers().broadcastMessage(builder.buildMessage());
-
-        builder = new NetworkMessageBuilder(PollCommands.ANSWER_POLL)
-                .addArgument(localId)
-                .addArgument(NetworksPool.LOCALNET_ADDR)
-                .addArgument(answerCommand);
-        poll.getAuthors().broadcastMessage(builder.buildMessage());
-
-        DataProvider.getIncomingPolls().remove(poll);
-        dataProvider.updatePoll(poll);
     }
 }

@@ -7,7 +7,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.view.View;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationManagerCompat;
@@ -41,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
     private PollManager pollManager = PollManager.getInstance();
 
     /**
-     * Called on the creation of the activity.
+     * Called on the creation of the activity.<br>
      * Asks for permissions and initialize UI elements.
      *
      * @param savedInstanceState Instance saved from a previous activity destruction.
@@ -74,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Called when the fab button in the main activity is pressed.
+     * Called when the fab button in the main activity is pressed.<br>
      * Opens the new poll activity as ActivityForResult.
      *
      * @param view The view on which the onClick event is coming from.
@@ -86,13 +88,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Called when an ActivityForResult calls the finish() method.
+     * Called when an ActivityForResult calls the finish() method.<br>
      * Checks the requestCode and the resultCode, and in case creates a new poll.
      *
      * @param requestCode The request code linked with the startActivityForResult(...) method.
-     * @param resultCode  An integer representing the result of the operations.
-     * @param data        An intent with all the data sent from the ActivityForResult back to the starting
-     *                    activity (i.e. MainActivity).
+     * @param resultCode An integer representing the result of the operations.
+     * @param data An intent with all the data sent from the ActivityForResult back to the starting
+     *             activity (i.e. MainActivity).
      * @author Matteo Carnelos
      */
     @Override
@@ -104,6 +106,10 @@ public class MainActivity extends AppCompatActivity {
                 String question = data.getStringExtra(CreatePollActivity.ARG_POLL_QUESTION);
                 // There's no need for a checked cast, see CreatePollActivity
                 ArrayList<SMSPeer> peers = (ArrayList<SMSPeer>) data.getSerializableExtra(CreatePollActivity.ARG_POLL_PEERS);
+                if(name == null || question == null || peers == null) {
+                    Toast.makeText(this, getString(R.string.generic_error_message), Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 pollManager.createPoll(name, question, peers);
             }
         }
@@ -116,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
      * @return Returns if the notification listener is enabled.
      * @author Marco Cognolato
      */
-    private boolean isNotificationListenerEnabled(Context context) {
+    private boolean isNotificationListenerEnabled(@NonNull Context context) {
         Set<String> packageNames = NotificationManagerCompat.getEnabledListenerPackages(this);
         return packageNames.contains(context.getPackageName());
     }

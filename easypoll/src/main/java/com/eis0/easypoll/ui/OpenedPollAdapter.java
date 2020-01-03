@@ -8,6 +8,8 @@ import android.widget.BaseAdapter;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+
 import com.eis0.easypoll.DataProvider;
 import com.eis0.easypoll.R;
 import com.eis0.easypoll.poll.BinaryPoll;
@@ -31,7 +33,7 @@ class OpenedPollAdapter extends BaseAdapter implements Observer {
      * @param context The context of the ListFragment.
      * @author Matteo Carnelos
      */
-    OpenedPollAdapter(Context context) {
+    OpenedPollAdapter(@NonNull Context context) {
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
@@ -84,19 +86,20 @@ class OpenedPollAdapter extends BaseAdapter implements Observer {
     }
 
     /**
-     * Get a View that displays the poll data accordingly to their position in the ListItem view.
-     * An opened poll ListItem View has these assignments:
-     * - Poll Name TextView         ->  Poll Name
-     * - Poll Id TextView           ->  Poll Id
-     * - Poll Question TextView     ->  Poll Question
-     * - Poll Percentage TextView   ->  Poll completed percentage
-     * - Poll ProgressBar           ->  Poll completed percentage
-     * - Number of Yes TextView     ->  Number of Yes answers
-     * - Number of No TextView      ->  Number of No answers
+     * Get a View that displays the poll data accordingly to their position in the ListItem view.<br>
+     * An opened poll ListItem View has these assignments:<br>
+     * - Poll Name TextView         ->  Poll Name<br>
+     * - Poll Author TextView       ->  Poll Author Name<br>
+     * - Poll Number TextView       ->  Poll Number<br>
+     * - Poll Question TextView     ->  Poll Question<br>
+     * - Poll Percentage TextView   ->  Poll completed percentage<br>
+     * - Poll ProgressBar           ->  Poll completed percentage<br>
+     * - Number of Yes TextView     ->  Number of Yes answers<br>
+     * - Number of No TextView      ->  Number of No answers<br>
      *
-     * @param position    The position in the List.
+     * @param position The position in the List.
      * @param convertView The ListItem view on which the UI elements are placed.
-     * @param container   The ViewGroup containing all the List views.
+     * @param container The ViewGroup containing all the List views.
      * @return A View with all the poll data placed correctly.
      * @author Matteo Carnelos
      */
@@ -108,7 +111,7 @@ class OpenedPollAdapter extends BaseAdapter implements Observer {
         // Linking UI elements to objects
         TextView pollNameTxt = convertView.findViewById(R.id.pollNameTxt);
         TextView pollAuthorTxt = convertView.findViewById(R.id.pollAuthorTxt);
-        TextView pollIdTxt = convertView.findViewById(R.id.pollIdTxt);
+        TextView pollNumTxt = convertView.findViewById(R.id.pollNumTxt);
         TextView pollQuestionTxt = convertView.findViewById(R.id.pollQuestionTxt);
         TextView percentageTxt = convertView.findViewById(R.id.percentageTxt);
         ProgressBar pollProgressBar = convertView.findViewById(R.id.pollProgressBar);
@@ -119,8 +122,8 @@ class OpenedPollAdapter extends BaseAdapter implements Observer {
 
         // Assigning poll display values to UI objects
         pollNameTxt.setText(poll.getName());
-        pollAuthorTxt.setText(poll.getOwnerName());
-        pollIdTxt.setText(String.valueOf(poll.getLocalId()));
+        pollAuthorTxt.setText(poll.getAuthorName());
+        pollNumTxt.setText(String.valueOf(poll.getNumber()));
         pollQuestionTxt.setText(poll.getQuestion());
         int closedPercentage = poll.getClosedPercentage();
         percentageTxt.setText(String.valueOf(closedPercentage));

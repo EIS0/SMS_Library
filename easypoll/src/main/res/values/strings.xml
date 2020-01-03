@@ -16,21 +16,18 @@
     <!-- Create Poll strings-->
     <string name="poll_name">Poll Name</string>
     <string name="name_hint">Choose the name</string>
-
     <string name="poll_question">Poll Question</string>
     <string name="question_hint">Type the question&#8230;</string>
-
     <string name="users">Users</string>
     <string name="users_hint">Add some friends!</string>
     <string name="add_peer_btn_cont_desc">Add</string>
     <string name="remove_btn_text">Remove</string>
-
     <string name="button_send">Send</string>
-
     <string name="empty_question_message">Please insert a question first</string>
     <string name="empty_name_message">Please insert a poll name</string>
     <string name="invalid_peer_message">Please insert a valid phone number</string>
     <string name="empty_peers_message">Please insert at least one user</string>
     <string name="limit_reached_message">You have reached the limit of users</string>
     <string name="duplicated_user_message">User already added</string>
+    <string name="generic_error_message">Something went wrong during the poll creation, please retry</string>
 </resources>

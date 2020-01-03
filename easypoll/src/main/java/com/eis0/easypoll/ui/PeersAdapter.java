@@ -35,7 +35,7 @@ public class PeersAdapter extends RecyclerView.Adapter<PeersAdapter.PeerListView
 
         TextView userTxtView;
         Button removeBtn;
-        PeerListViewHolder(View v) {
+        PeerListViewHolder(@NonNull View v) {
             super(v);
             userTxtView = v.findViewById(R.id.userTxtView);
             removeBtn = v.findViewById(R.id.removeBtn);
@@ -49,7 +49,7 @@ public class PeersAdapter extends RecyclerView.Adapter<PeersAdapter.PeerListView
      * @return True if the item is not already present and it has been added, false otherwise.
      * @author Matteo Carnelos
      */
-    public boolean addPeer(SMSPeer peer) {
+    public boolean addPeer(@NonNull SMSPeer peer) {
         if(peersDataset.contains(peer)) return false;
         peersDataset.add(peer);
         notifyItemInserted(peersDataset.size()-1);
@@ -62,7 +62,7 @@ public class PeersAdapter extends RecyclerView.Adapter<PeersAdapter.PeerListView
      * @param index The index of the SMSPeer to remove.
      * @author Matteo Carnelos
      */
-    public void removePeer(int index) {
+    private void removePeer(int index) {
         peersDataset.remove(index);
         notifyItemRemoved(index);
         for(int i = index; i < getItemCount(); i++)

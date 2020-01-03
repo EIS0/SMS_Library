@@ -15,8 +15,8 @@ import com.eis0.easypoll.ui.PeersAdapter;
 import com.eis0.smslibrary.SMSPeer;
 
 /**
- * Create Poll Activity view controller, it checks and sends back data insered from the user.
- * In the Create Poll Activity the user can insert all the informations for the creation of a
+ * Create Poll Activity view controller, it checks and sends back data inserted from the user.
+ * In the Create Poll Activity the user can insert all the information for the creation of a
  * new poll (e.g. name, question, user1, ...).
  *
  * @author Marco Cognolato
@@ -86,7 +86,7 @@ public class CreatePollActivity extends AppCompatActivity {
     }
 
     /**
-     * Function called when the "Send" button is clicked. It gets and checks data insered from the
+     * Function called when the "Send" button is clicked. It gets and checks data inserted from the
      * user and sends them back to the starting activity (i.e. Main Activity).
      *
      * @param view The view on which the onClick event is coming from.
@@ -94,7 +94,7 @@ public class CreatePollActivity extends AppCompatActivity {
      * @author Matteo Carnelos
      */
     public void sendPollOnClick(View view) {
-        // Check if the name and/or the question is empty, in case show a Toast.
+        // Check if the name and/or the question is empty, in case show a Toast
         String name = pollNameTxt.getText().toString();
         String question = pollQuestionTxt.getText().toString();
         if(name.isEmpty()) {

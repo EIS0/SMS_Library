@@ -50,7 +50,7 @@
             app:layout_constraintStart_toEndOf="@+id/pollAuthorTxt" />
 
         <TextView
-            android:id="@+id/pollIdTxt"
+            android:id="@+id/pollNumTxt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintBaseline_toBaselineOf="@+id/pollNameTxt"
@@ -63,7 +63,7 @@
             android:layout_height="wrap_content"
             android:text="@string/poll_li_num_2"
             app:layout_constraintBaseline_toBaselineOf="@+id/pollNameTxt"
-            app:layout_constraintStart_toEndOf="@+id/pollIdTxt" />
+            app:layout_constraintStart_toEndOf="@+id/pollNumTxt" />
 
         <TextView
             android:id="@+id/yesNumTxt"

@@ -44,9 +44,6 @@ public class NetworkTest {
         assertEquals(testPeers, testNetwork.getPeers());
         assertEquals(testAddresses, testNetwork.getAddresses());
         assertEquals(3, testNetwork.size());
-        testPeers.remove(VALID_PEER_1);
-        Network testSubNet = NetworksPool.obtainNetwork(testPeers);
-        assertEquals(testSubNet, testNetwork.getSubNetForPeer(VALID_PEER_1));
         assertFalse(testNetwork.isLocalNetwork());
     }
 
@@ -55,7 +52,7 @@ public class NetworkTest {
         Network testNetwork = NetworksPool.obtainLocalNetwork();
         assertTrue(testNetwork.isLocalNetwork());
         assertTrue(testNetwork.getPeers().isEmpty());
-        assertTrue(testNetwork.getAddresses().isEmpty());
+        assertTrue(testNetwork.getAddresses().get(0).isEmpty());
     }
 
     @Test(expected = IllegalArgumentException.class)

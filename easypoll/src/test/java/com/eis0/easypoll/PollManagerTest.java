@@ -12,7 +12,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.eis0.easypoll.BinaryPollTest.VALID_ID;
+import static com.eis0.easypoll.BinaryPollTest.VALID_NUMBER;
 import static com.eis0.easypoll.BinaryPollTest.VALID_PEER_1;
 import static com.eis0.easypoll.BinaryPollTest.VALID_PEER_2;
 import static com.eis0.easypoll.BinaryPollTest.VALID_PEER_3;
@@ -29,13 +29,13 @@ public class PollManagerTest {
 
     private static List<SMSPeer> testUsers = new ArrayList<>();
     private static Network testUsersNetwork;
-    private static Network testAuthorsNetwork;
+    private static Network testAuthorNetwork;
     private static PollManager pollManager;
 
     @BeforeClass
     public static void setup() {
         pollManager = PollManager.getInstance();
-        testAuthorsNetwork = NetworksPool.obtainNetwork(VALID_PEER_1);
+        testAuthorNetwork = NetworksPool.obtainNetwork(VALID_PEER_1);
         testUsers.add(VALID_PEER_1);
         testUsers.add(VALID_PEER_2);
         testUsers.add(VALID_PEER_3);
@@ -50,7 +50,7 @@ public class PollManagerTest {
 
     @Test(expected = NullPointerException.class)
     public void validPoll_isAnswered() {
-        BinaryPoll testPoll = new BinaryPoll(VALID_ID, VALID_POLL_NAME, VALID_POLL_QUESTION, testAuthorsNetwork, testUsersNetwork);
+        BinaryPoll testPoll = new BinaryPoll(VALID_NUMBER, VALID_POLL_NAME, VALID_POLL_QUESTION, testAuthorNetwork, testUsersNetwork);
         pollManager.answerPoll(testPoll, true);
     }
 }

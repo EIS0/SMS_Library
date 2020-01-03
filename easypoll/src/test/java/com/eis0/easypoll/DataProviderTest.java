@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Observer;
 
-import static com.eis0.easypoll.BinaryPollTest.VALID_ID;
+import static com.eis0.easypoll.BinaryPollTest.VALID_NUMBER;
 import static com.eis0.easypoll.BinaryPollTest.VALID_PEER_1;
 import static com.eis0.easypoll.BinaryPollTest.VALID_PEER_2;
 import static com.eis0.easypoll.BinaryPollTest.VALID_PEER_3;
@@ -45,7 +45,7 @@ public class DataProviderTest {
         testUsers.add(VALID_PEER_3);
         Network testUsersNetwork = NetworksPool.obtainNetwork(testUsers);
         dataProvider.addObserver(mockObserver);
-        incomingPoll = new BinaryPoll(VALID_ID, VALID_POLL_NAME, VALID_POLL_QUESTION, testAuthorsNetwork, testUsersNetwork);
+        incomingPoll = new BinaryPoll(VALID_NUMBER, VALID_POLL_NAME, VALID_POLL_QUESTION, testAuthorsNetwork, testUsersNetwork);
         openedPoll = new BinaryPoll(VALID_POLL_NAME, VALID_POLL_QUESTION, testUsersNetwork);
         closedPoll = new BinaryPoll(VALID_POLL_NAME, VALID_POLL_QUESTION, testUsersNetwork);
         closedPoll.setAnswer(false);

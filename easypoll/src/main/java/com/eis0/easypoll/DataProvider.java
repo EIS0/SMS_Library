@@ -3,6 +3,8 @@ package com.eis0.easypoll;
 import android.content.Context;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import com.eis0.easypoll.poll.BinaryPoll;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -33,8 +35,9 @@ public class DataProvider extends Observable {
     private static final String INCOMING_POLLS_FILE_NAME = "incomingPolls.json";
     private static final String OPENED_POLLS_FILE_NAME = "openedPolls.json";
     private static final String CLOSED_POLLS_FILE_NAME = "closedPolls.json";
-    // Must always be static for getInstance to work
+
     private static DataProvider instance = null;
+
     private static List<BinaryPoll> incomingPolls = new ArrayList<>();
     private static List<BinaryPoll> openedPolls = new ArrayList<>();
     private static List<BinaryPoll> closedPolls = new ArrayList<>();
@@ -43,7 +46,7 @@ public class DataProvider extends Observable {
     // ---------------------------- SINGLETON CONSTRUCTORS ---------------------------- //
 
     /**
-     * DataProvider constructor, sets this as the PollManager listener.
+     * DataProvider constructor, sets this as the PollManager listener.<br>
      * It cannot be accessed from outside the class because this follows the Singleton Design Pattern.
      *
      * @author Matteo Carnelos
@@ -67,7 +70,7 @@ public class DataProvider extends Observable {
     // ---------------------------- DATA STORING ---------------------------- //
 
     /**
-     * Set the output directory for file saving.
+     * Set the output directory for file saving.<br>
      * If you want to use the memorization feature you should set the outputFilesDir as soon as the
      * app starts.
      *
@@ -82,7 +85,7 @@ public class DataProvider extends Observable {
      *
      * @author Matteo Carnelos
      */
-    static void saveDataToInternal() {
+    private static void saveDataToInternal() {
         if(filesDir == null) return;
         savePollsList(incomingPolls, INCOMING_POLLS_FILE_NAME, filesDir);
         savePollsList(openedPolls, OPENED_POLLS_FILE_NAME, filesDir);
@@ -137,7 +140,7 @@ public class DataProvider extends Observable {
         try {
             fileInputStream = context.openFileInput(fileName);
         } catch (FileNotFoundException e) {
-            Log.e(LOG_KEY, "List \"" + fileName + "\" not found in internal memory.");
+            Log.i(LOG_KEY, "List \"" + fileName + "\" not found in internal memory.");
             return new ArrayList();
         }
         String listJson = "";
@@ -192,7 +195,7 @@ public class DataProvider extends Observable {
     // ---------------------------- SETTERS ---------------------------- //
 
     /**
-     * This method overrides the Observable.setChanged() method.
+     * This method overrides the Observable.setChanged() method.<br>
      * Save the dataset anytime is changed.
      *
      * @author Matteo Carnelos
@@ -205,7 +208,15 @@ public class DataProvider extends Observable {
 
     // ---------------------------- LISTENING EVENTS ---------------------------- //
 
-    public void addPoll(BinaryPoll poll) {
+    /**
+     * Add a poll to the opened polls list. If the poll is received from another device add it also
+     * to the incoming polls list. Finally notify observers.<br>
+     * It is a synchronized method in order to avoid concurrent modifications of the lists.
+     *
+     * @param poll The poll to add.
+     * @author Matteo Carnelos
+     */
+    public synchronized void addPoll(@NonNull BinaryPoll poll) {
         openedPolls.add(poll);
         if(poll.isIncoming())
             incomingPolls.add(poll);
@@ -213,7 +224,15 @@ public class DataProvider extends Observable {
         notifyObservers(poll);
     }
 
-    public void updatePoll(BinaryPoll poll) {
+    /**
+     * Updated the poll data. If the poll is closed move it to the closed polls list. Finally
+     * notify observers.<br>
+     * It is a synchronized method in order to avoid concurrent modifications of the lists.
+     *
+     * @param poll The poll to update.
+     * @author Matteo Carnelos
+     */
+    public synchronized void updatePoll(@NonNull BinaryPoll poll) {
         if(poll.isClosed()) {
             openedPolls.remove(poll);
             closedPolls.add(poll);
