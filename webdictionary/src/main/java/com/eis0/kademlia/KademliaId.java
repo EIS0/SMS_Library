@@ -23,11 +23,15 @@ import java.util.Random;
  */
 public class KademliaId implements Serializable {
 
-    private static final String HASHING_ALG = "SHA-256";
-    private static final String LOG_KEY = "KADEMLIA_ID";
     public final static int ID_LENGTH = 64;
-    final static int ID_LENGTH_BYTES = ID_LENGTH / 8;
+
+    //A Byte is 8 bits, so this shouldn't be changed
+    public final static int BYTE_SIZE = 8;
+
+    private static final String HASHING_ALG = "SHA-256";
+    final static int ID_LENGTH_BYTES = ID_LENGTH / BYTE_SIZE;
     private byte[] keyBytes;
+    private final static int INVALID_VALUE = -1;
 
     /**
      * Generates a KademliaId using a random key
@@ -56,11 +60,16 @@ public class KademliaId implements Serializable {
      * Construct the NodeId from a string
      *
      * @param data The user generated key string
-     * @throws IllegalArgumentException if data has not the right fit
+     * @throws IllegalArgumentException If an id cannot be constructed from this string.
+     *                                  A NodeId is constructable from this string if the length
+     *                                  of the string is shorter than {@link #ID_LENGTH_BYTES}
+     *                                  or if the string is an hex representation of ad Id
+     *                                  (meaning it is long {@link #ID_LENGTH_BYTES} * 2 and the
+     *                                  only characters used are the numbers between 0 and 9
+     *                                  and the characters A through F)
      * @author Marco Cognolato
      */
     public KademliaId(String data) {
-        this.keyBytes = data.getBytes();
         // if it's in hex form, convert to byte array
         if(data.matches("[0-9A-F]{" + ID_LENGTH_BYTES*2+"}")){
             this.keyBytes = new byte[ID_LENGTH_BYTES];
@@ -70,14 +79,7 @@ public class KademliaId implements Serializable {
                 keyBytes[i] = (byte) j;
             }
         }
-        if (this.keyBytes.length > ID_LENGTH_BYTES) {
-            throw new IllegalArgumentException("Specified Data need to be " + ID_LENGTH_BYTES + " characters long.");
-        }
-
-        //if the string it's too short, add some leading null bytes
-        if(this.keyBytes.length < ID_LENGTH_BYTES){
-            this.keyBytes = addTrailingZeros(this.keyBytes);
-        }
+        else constructId(data.getBytes());
     }
 
     /**
@@ -87,15 +89,26 @@ public class KademliaId implements Serializable {
      * @throws IllegalArgumentException if data has not the right fit
      */
     public KademliaId(byte[] bytes) {
+        constructId(bytes);
+    }
+
+    /**
+     * Constructs an id given a byte array.
+     * If the byte array is shorter than {@link #ID_LENGTH_BYTES} some leading zeros are added
+     *
+     * @param bytes The byte array to construct the id from
+     * @throws IllegalArgumentException If the byte array is longer than {@link #ID_LENGTH_BYTES}
+     */
+    private void constructId(byte[] bytes){
         if (bytes.length > ID_LENGTH_BYTES) {
             throw new IllegalArgumentException(
                     "Specified Data need to be " + ID_LENGTH_BYTES
-                    + " characters long. Data Given: '" + new String(bytes) + "'");
+                            + " characters long. Data Given: '" + new String(bytes) + "'");
         }
         this.keyBytes = bytes;
         //if the byte array it's too short, add some leading null bytes
         if(bytes.length < ID_LENGTH_BYTES){
-            this.keyBytes = addTrailingZeros(this.keyBytes);
+            this.keyBytes = addLeadingZeros(this.keyBytes);
         }
     }
 
@@ -106,7 +119,7 @@ public class KademliaId implements Serializable {
      * @return A byte array with the number trailed with zeros
      * @author Marco Cognolato
      */
-    private byte[] addTrailingZeros(byte[] number){
+    private byte[] addLeadingZeros(byte[] number){
         //by default each element is set to 0x00
         byte[] toReturn = new byte[ID_LENGTH_BYTES];
         //add to the end (ax expected) each element
@@ -178,8 +191,8 @@ public class KademliaId implements Serializable {
      * @param distance The index of the first bit that should be different,
      *                 From 0 to 159, where 0 changes the most significant bit
      * @return The newly generated NodeId with a given distance from this.
-     * @throws IllegalArgumentException if the distance is < 0 or >= 160
-     * @author Edordo Raimondi, improved by Marco Cognolato
+     * @throws IllegalArgumentException if the distance is < 0 or >= {@link #ID_LENGTH}
+     * @author Edoardo Raimondi, improvements by Marco Cognolato
      */
     public KademliaId generateNodeIdByDistance(int distance) {
         if(distance < 0 || distance >= ID_LENGTH) throw new IllegalArgumentException();
@@ -187,8 +200,8 @@ public class KademliaId implements Serializable {
         byte[] result = keyBytes.clone();
 
         // calculate the index of the byte and bit to update
-        int byteToUpdateIndex = (distance) / 8;
-        int bitToUpdateIndex = 7 - (distance % 8);
+        int byteToUpdateIndex = (distance) / BYTE_SIZE;
+        int bitToUpdateIndex = (BYTE_SIZE-1) - (distance % BYTE_SIZE);
 
         //change only the bit at the distance requested
         result[byteToUpdateIndex] = (byte)(result[byteToUpdateIndex] ^ 0x01<<bitToUpdateIndex);
@@ -196,23 +209,23 @@ public class KademliaId implements Serializable {
     }
 
     /**
-     * Counts the number of leading 0's in this NodeId
+     * Returns the index of the first bit set to 1, starting from the
+     * most significant digit
      *
-     * @return Integer representing the number of leading 0's,
-     * also returns -1 if there's only leading 0's
-     * @author EdoardoRaimondi, Marco Cognolato
+     * @return Index of the first bit set to 1, returns -1 if there's no bit set to 1
+     * @author Edoardo Raimondi, improvements by Marco Cognolato
      */
     public int getFirstSetBitIndex() {
         for(int byteIndex = 0; byteIndex < keyBytes.length; byteIndex++) {
             byte currentByte = keyBytes[byteIndex];
             //8 bits in a byte, from 0 to 7
-            for(int bitIndex = 7; bitIndex >= 0; bitIndex--) {
+            for(int bitIndex = BYTE_SIZE-1; bitIndex >= 0; bitIndex--) {
                 if(((0x01 << bitIndex) & currentByte) == (0x01 << bitIndex)){
-                    return (7-bitIndex) + byteIndex * 8;
+                    return ((BYTE_SIZE-1)-bitIndex) + byteIndex * BYTE_SIZE;
                 }
             }
         }
-        return -1;
+        return INVALID_VALUE;
     }
 
     /**
@@ -226,7 +239,7 @@ public class KademliaId implements Serializable {
      */
     public int getDistance(KademliaId to) {
         int diffIndex = this.xor(to).getFirstSetBitIndex();
-        if(diffIndex == -1) return 0;
+        if(diffIndex == INVALID_VALUE) return 0;
         return ID_LENGTH - diffIndex;
     }
 
@@ -256,14 +269,7 @@ public class KademliaId implements Serializable {
     @Override
     @NonNull
     public String toString() {
-        final char[] HEX_ARRAY = "0123456789ABCDEF".toCharArray();
-        char[] hexChars = new char[keyBytes.length * 2];
-        for (int j = 0; j < keyBytes.length; j++) {
-            int v = keyBytes[j] & 0xFF;
-            hexChars[j * 2] = HEX_ARRAY[v >>> 4];
-            hexChars[j * 2 + 1] = HEX_ARRAY[v & 0x0F];
-        }
-        return new String(hexChars);
+        return hexRepresentation();
     }
 
 }

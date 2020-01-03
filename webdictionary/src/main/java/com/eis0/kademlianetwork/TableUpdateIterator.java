@@ -1,5 +1,7 @@
 package com.eis0.kademlianetwork;
 
+import androidx.annotation.NonNull;
+
 import com.eis.smslibrary.SMSPeer;
 import com.eis0.kademlia.KademliaId;
 import com.eis0.kademlia.SMSKademliaNode;
@@ -20,7 +22,22 @@ public class TableUpdateIterator {
     private SMSKademliaRoutingTable table;
     private SMSPeer netPeer;
 
-    public TableUpdateIterator(int maxCount, KademliaId netId, SMSKademliaRoutingTable table, SMSPeer netPeer) {
+    /**
+     * Constructs an Iterator object which is used to update a given table.
+     *
+     * @param maxCount How many elements should the table update
+     * @param netId Id of the owner of the table
+     * @param table The RoutingTable to update
+     * @param netPeer The SMSPeer which is asking to update the table (used as part of the algorithm)
+     * @throws IllegalArgumentException if maxCount is <= 0 or if any of the input parameters is null
+     */
+    public TableUpdateIterator(int maxCount,
+                               @NonNull KademliaId netId,
+                               @NonNull SMSKademliaRoutingTable table,
+                               @NonNull SMSPeer netPeer) {
+        if(maxCount <= 0) throw new IllegalArgumentException("maxCount has to be at least 1!");
+        if(netId == null || table == null || netPeer == null)
+            throw new IllegalArgumentException("input parameters cannot be null!");
         this.maxCount = maxCount;
         this.currentCount = 0;
         this.netId = netId;
