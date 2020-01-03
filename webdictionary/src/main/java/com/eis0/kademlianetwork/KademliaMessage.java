@@ -9,8 +9,8 @@ import com.eis0.kademlia.KademliaId;
  * fields are in common for all the type of requests; the message is not automatically sent, is just
  * written, this class must be seen as a code/decode handler, not as the main messages manager of
  * the network.
- * <p>
  * The syntax is defined in the constructor
+ * @author Enrico Cestaro
  */
 public class KademliaMessage {
     private static final String REQUEST_TYPE_NULL = "The requestType parameter is null";
@@ -100,7 +100,7 @@ public class KademliaMessage {
         String stringIdToFind = DEFAULT;
         String stringSearcher = DEFAULT;
         if (idToFind != null) stringIdToFind = idToFind.toString();
-        if (idToFind != null) stringSearcher = searcher.toString();
+        if (searcher != null) stringSearcher = searcher.toString();
         if (key == null) key = DEFAULT;
         if (resource == null) resource = DEFAULT;
 
