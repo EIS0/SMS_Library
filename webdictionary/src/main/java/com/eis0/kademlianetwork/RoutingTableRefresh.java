@@ -40,9 +40,9 @@ public class RoutingTableRefresh{
             timer.run();
 
             //check if I received a pong (so if the node is alive)
-            if (KademliaNetwork.getInstance().getPongKnown()) {
+            if (KademliaNetwork.getInstance().connectionInfo.getPongKnown()) {
                 //is alive, set the pong state to false in order to do it again
-                KademliaNetwork.getInstance().setPong(false);
+                KademliaNetwork.getInstance().connectionInfo.setPong(false);
             } else { //the node is not alive. I must remove it.
                 KademliaId currentId = currentNode.getId();
                 //I check the bucket Id that contains that node
