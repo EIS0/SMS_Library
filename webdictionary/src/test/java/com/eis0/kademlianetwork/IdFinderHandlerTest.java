@@ -30,6 +30,11 @@ public class IdFinderHandlerTest {
     private final KademliaId VALID_ID1 = new KademliaId("0000000000000001");
     private final KademliaId VALID_ID2 = new KademliaId("0000000000000002");
     private final KademliaId VALID_ID3 = new KademliaId("0000000000000003");
+
+    private final SMSKademliaNode NODE_ID1 = new SMSKademliaNode(VALID_ID1);
+    private final SMSKademliaNode NODE_ID2 = new SMSKademliaNode(VALID_ID2);
+    private final SMSKademliaNode NODE_ID3 = new SMSKademliaNode(VALID_ID3);
+
     private KademliaNetwork networkMock;
     private SMSManager smsManagerMock;
 
@@ -48,6 +53,8 @@ public class IdFinderHandlerTest {
 
         when(networkMock.getLocalNode()).thenReturn(NODE);
         when(networkMock.getLocalRoutingTable()).thenReturn(routingTable);
+
+        when(networkMock.isAlive(SEARCHER)).thenReturn(true);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -67,9 +74,18 @@ public class IdFinderHandlerTest {
 
     @Test
     public void findMyId(){
-        when(networkMock.isAlive(SEARCHER)).thenReturn(true);
         IdFinderHandler.searchId(SEARCHER_ID, SEARCHER, ResearchMode.AddToDictionary);
         String expectedTextMessage = RequestTypes.ResultAddRequest.ordinal() + " " + SEARCHER_ID;
+        SMSMessage expectedMessage = new SMSMessage(SEARCHER, expectedTextMessage);
+        verify(smsManagerMock, times(1)).sendMessage(expectedMessage);
+    }
+
+    @Test
+    public void findIdInTable(){
+        routingTable.insert(NODE_ID1);
+        when(networkMock.isNodeInNetwork(NODE_ID1)).thenReturn(true);
+        IdFinderHandler.searchId(VALID_ID1, SEARCHER, ResearchMode.AddToDictionary);
+        String expectedTextMessage = RequestTypes.ResultAddRequest.ordinal() + " " + VALID_ID1 + " / / /";
         SMSMessage expectedMessage = new SMSMessage(SEARCHER, expectedTextMessage);
         verify(smsManagerMock, times(1)).sendMessage(expectedMessage);
     }

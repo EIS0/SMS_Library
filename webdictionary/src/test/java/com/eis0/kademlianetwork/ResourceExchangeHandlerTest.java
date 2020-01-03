@@ -66,21 +66,16 @@ public class ResourceExchangeHandlerTest {
     @Test
     public void createAddRequest_equals() {
         //resourceExchangeHandler.createAddRequest(KEY1, RESOURCE1);
-        Map<KademliaId, IRequest> addRequests = resourceExchangeHandler.getPendingAddRequests();
+        Map<KademliaId, ResourceExchangeHandler.Request> addRequests = resourceExchangeHandler.getPendingAddRequests();
         IRequest request1 = addRequests.get(KAD_ID1);
         assertEquals(request1.getKeyId(), KAD_ID1);
     }
 
     public void createAddRequest_notEquals() {
-        Map<KademliaId, IRequest> addRequests = resourceExchangeHandler.getPendingAddRequests();
+        Map<KademliaId, ResourceExchangeHandler.Request> addRequests = resourceExchangeHandler.getPendingAddRequests();
         IRequest request1 = addRequests.get(KAD_ID1);
         IRequest request2 = addRequests.get(KAD_ID2);
         assertNotEquals(request1.getKeyId(), request2.getKeyId());
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void createAddRequest_nullParameters() {
-        resourceExchangeHandler.createAddRequest(null, null);
     }
 
     @Test(expected = IllegalArgumentException.class)
