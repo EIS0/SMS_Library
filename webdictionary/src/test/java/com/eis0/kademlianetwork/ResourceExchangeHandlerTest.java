@@ -6,6 +6,9 @@ import com.eis.smslibrary.SMSPeer;
 import com.eis0.UtilityMocks;
 import com.eis0.kademlia.KademliaId;
 import com.eis0.kademlia.SMSKademliaNode;
+import com.eis0.kademlianetwork.InformationDeliveryManager.IRequest;
+import com.eis0.kademlianetwork.InformationDeliveryManager.IdFinderHandler;
+import com.eis0.kademlianetwork.InformationDeliveryManager.ResourceExchangeHandler;
 
 import org.junit.Before;
 import org.junit.Test;

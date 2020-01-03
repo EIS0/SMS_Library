@@ -1,9 +1,11 @@
-package com.eis0.kademlianetwork;
+package com.eis0.kademlianetwork.ActivityStatus;
 
 import com.eis.smslibrary.SMSManager;
 import com.eis.smslibrary.SMSMessage;
 import com.eis.smslibrary.SMSPeer;
 import com.eis0.kademlia.SMSKademliaNode;
+import com.eis0.kademlianetwork.InformationDeliveryManager.KademliaMessage;
+import com.eis0.kademlianetwork.InformationDeliveryManager.RequestTypes;
 
 /**
  * This class contains all the methods that send system messages

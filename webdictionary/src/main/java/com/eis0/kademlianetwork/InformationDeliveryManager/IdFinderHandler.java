@@ -1,4 +1,4 @@
-package com.eis0.kademlianetwork;
+package com.eis0.kademlianetwork.InformationDeliveryManager;
 
 import com.eis.smslibrary.SMSManager;
 import com.eis.smslibrary.SMSMessage;
@@ -6,6 +6,7 @@ import com.eis.smslibrary.SMSPeer;
 import com.eis0.kademlia.KademliaId;
 import com.eis0.kademlia.SMSKademliaNode;
 import com.eis0.kademlia.SMSKademliaRoutingTable;
+import com.eis0.kademlianetwork.KademliaNetwork;
 
 import java.math.BigInteger;
 

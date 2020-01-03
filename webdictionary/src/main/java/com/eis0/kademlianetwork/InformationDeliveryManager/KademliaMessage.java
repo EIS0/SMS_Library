@@ -1,4 +1,4 @@
-package com.eis0.kademlianetwork;
+package com.eis0.kademlianetwork.InformationDeliveryManager;
 
 import com.eis.smslibrary.SMSMessage;
 import com.eis.smslibrary.SMSPeer;

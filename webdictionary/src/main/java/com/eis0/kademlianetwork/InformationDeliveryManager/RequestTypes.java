@@ -1,4 +1,6 @@
-package com.eis0.kademlianetwork;
+package com.eis0.kademlianetwork.InformationDeliveryManager;
+
+import com.eis0.kademlianetwork.SMSKademliaListener;
 
 /**
  * This enum contains the Request Types, which are the CODE placed at the beginning of every message
