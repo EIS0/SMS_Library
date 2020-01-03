@@ -17,6 +17,10 @@ import java.math.BigInteger;
  * @author Edoardo Raimondi (added the check cicle to verify if the target node is 'alive')
  */
 public class IdFinderHandler {
+    private static final String ID_TO_FIND_NULL = "The idToFind parameter is null";
+    private static final String SEARCHER_NULL = "The searcher parameter is null";
+    private static final String RESEARCH_MODE_NULL = "The researchMode parameter is null";
+
     /**
      * Searches for a specific Id, which needs to be closer to a given resource Id.
      * If it's found it's sent to a given SMSPeer who's searching, else sends a request to find it
@@ -25,12 +29,13 @@ public class IdFinderHandler {
      *
      * @param idToFind     The ID to find in the network
      * @param searcher     The Peer which is searching the ID
-     * @param researchMode The Resource mode, represents the final purpose of the research
+     * @param researchMode The research mode, represents the final purpose of the research
      * @throws IllegalArgumentException If the idToFind, the searcher or the researchMode are null
      */
     public static void searchId(KademliaId idToFind, SMSPeer searcher, ResearchMode researchMode) {
-        if (searcher == null || idToFind == null || researchMode == null)
-            throw new IllegalArgumentException();
+        if (idToFind == null) throw new IllegalArgumentException(ID_TO_FIND_NULL);
+        if (searcher == null) throw new IllegalArgumentException(SEARCHER_NULL);
+        if (researchMode == null) throw new IllegalArgumentException(RESEARCH_MODE_NULL);
         /*Declaration of the two messages used to:
         1. entrust the research to a closer node
         2. communicate the result of the research to the originating node
@@ -74,7 +79,7 @@ public class IdFinderHandler {
         //1. Checking if I'm the searched id (This state should be impossible, it's a fail safe)
         //2. Checking if inside my RoutingTable there is a node with the ID to find
         //3. I got further away from what I'm looking for, so I'm the closest one: I return this ID
-        if (    netId == idToFind   ||
+        if (netId == idToFind ||
                 KademliaNetwork.getInstance().isNodeInNetwork(nodeToFind) ||
                 idToFindDistanceFromClosest.compareTo(idToFindDistanceFromNetId) > 0) {
             sendResult(taskResult, idToFind, searcher);
@@ -92,16 +97,16 @@ public class IdFinderHandler {
      * This method sends to the specified target {@link SMSPeer} the result of the previously
      * carried out research
      *
-     * @param taskResult The type of the result, sent to allow the receiver of the
-     *                   result to define which request the result itself belongs to
-     *                   (There may be multiple pending requests, each of a different nature)
-     * @param idToFind   The ID whose research originated the request
-     *                   It's sent back as response to the research
-     * @param targetPeer The Peer representing the target that will receive the result
+     * @param requestType The type of the result, sent to allow the receiver of the
+     *                    result to define which request the result itself belongs to
+     *                    (There may be multiple pending requests, each of a different nature)
+     * @param idToFind    The ID whose research originated the request
+     *                    It's sent back as response to the research
+     * @param targetPeer  The Peer representing the target that will receive the result
      */
-    private static void sendResult(RequestTypes taskResult, KademliaId idToFind, SMSPeer targetPeer) {
-        String message = taskResult.ordinal() + " " + idToFind;
-        SMSMessage searchResult = new SMSMessage(targetPeer, message);
+    private static void sendResult(RequestTypes requestType, KademliaId idToFind, SMSPeer targetPeer) {
+        KademliaMessage kadMessage = new KademliaMessage(requestType, idToFind, null, null, null);
+        SMSMessage searchResult = new SMSMessage(targetPeer, kadMessage.toString());
         SMSManager.getInstance().sendMessage(searchResult);
     }
 
@@ -112,7 +117,7 @@ public class IdFinderHandler {
      * node which originated the research, without retracing back all the node that took part to the
      * research
      *
-     * @param findId       The type of research, there are multiple processes
+     * @param requestType  The type of research, there are multiple processes
      *                     that need to search for a specific ID, this value allows the receiver of
      *                     the message to define which process asked for the ID, and to answer
      *                     appropriately
@@ -121,9 +126,9 @@ public class IdFinderHandler {
      * @param searcherNode The Peer which started the research
      * @param closerNode   The node with the {@link KademliaId} closer to the idToFind
      */
-    private static void keepLooking(RequestTypes findId, KademliaId idToFind, SMSPeer searcherNode, SMSPeer closerNode) {
-        String message = findId.ordinal() + " " + idToFind + " " + searcherNode;
-        SMSMessage requestMessage = new SMSMessage(closerNode, message);
+    private static void keepLooking(RequestTypes requestType, KademliaId idToFind, SMSPeer searcherNode, SMSPeer closerNode) {
+        KademliaMessage kadMessage = new KademliaMessage(requestType, idToFind, searcherNode, null, null);
+        SMSMessage requestMessage = new SMSMessage(closerNode, kadMessage.toString());
         SMSManager.getInstance().sendMessage(requestMessage);
     }
 
@@ -133,7 +138,7 @@ public class IdFinderHandler {
      *
      * @param idToFind     The ID to find inside the network
      * @param searcherNode The Peer which is searching the ID
-     * @param researchMode The resource mode, represents the final purpose of the research
+     * @param researchMode The research mode, represents the final purpose of the research
      * @param nodeToCheck  The Peer whose validity must be checked; if it's not active
      *                     anymore, it is removed from the RoutingTable, and the research is started
      *                     again
