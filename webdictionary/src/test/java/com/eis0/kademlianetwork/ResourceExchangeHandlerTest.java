@@ -6,12 +6,9 @@ import com.eis.smslibrary.SMSPeer;
 import com.eis0.UtilityMocks;
 import com.eis0.kademlia.KademliaId;
 import com.eis0.kademlia.SMSKademliaNode;
-import com.eis0.kademlianetwork.IRequest;
-import com.eis0.kademlianetwork.IdFinderHandler;
-import com.eis0.kademlianetwork.KademliaListener;
-import com.eis0.kademlianetwork.KademliaNetwork;
-import com.eis0.kademlianetwork.ResourceExchangeHandler;
-import com.eis0.kademlianetwork.SMSKademliaListener;
+import com.eis0.kademlianetwork.InformationDeliveryManager.IRequest;
+import com.eis0.kademlianetwork.InformationDeliveryManager.IdFinderHandler;
+import com.eis0.kademlianetwork.InformationDeliveryManager.ResourceExchangeHandler;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -72,21 +69,16 @@ public class ResourceExchangeHandlerTest {
     @Test
     public void createAddRequest_equals() {
         //resourceExchangeHandler.createAddRequest(KEY1, RESOURCE1);
-        Map<KademliaId, IRequest> addRequests = resourceExchangeHandler.getPendingAddRequests();
+        Map<KademliaId, ResourceExchangeHandler.Request> addRequests = resourceExchangeHandler.getPendingAddRequests();
         IRequest request1 = addRequests.get(KAD_ID1);
         assertEquals(request1.getKeyId(), KAD_ID1);
     }
 
     public void createAddRequest_notEquals() {
-        Map<KademliaId, IRequest> addRequests = resourceExchangeHandler.getPendingAddRequests();
+        Map<KademliaId, ResourceExchangeHandler.Request> addRequests = resourceExchangeHandler.getPendingAddRequests();
         IRequest request1 = addRequests.get(KAD_ID1);
         IRequest request2 = addRequests.get(KAD_ID2);
         assertNotEquals(request1.getKeyId(), request2.getKeyId());
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void createAddRequest_nullParameters() {
-        resourceExchangeHandler.createAddRequest(null, null);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -98,4 +90,4 @@ public class ResourceExchangeHandlerTest {
     public void completeAddRequest_nullParameters() {
         resourceExchangeHandler.processRequest(null, null, null);
     }
-}*/
+}

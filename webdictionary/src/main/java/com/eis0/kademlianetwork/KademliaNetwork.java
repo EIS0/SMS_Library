@@ -9,6 +9,10 @@ import com.eis0.kademlia.DefaultConfiguration;
 import com.eis0.kademlia.KademliaId;
 import com.eis0.kademlia.SMSKademliaNode;
 import com.eis0.kademlia.SMSKademliaRoutingTable;
+import com.eis0.kademlianetwork.ActivityStatus.NodeConnectionInfo;
+import com.eis0.kademlianetwork.ActivityStatus.RespondTimer;
+import com.eis0.kademlianetwork.RoutingTableManager.RoutingTableRefresh;
+import com.eis0.kademlianetwork.RoutingTableManager.TableUpdateHandler;
 import com.eis0.webdictionary.SMSNetVocabulary;
 import com.eis0.webdictionary.SMSSerialization;
 import com.eis0.webdictionary.SerializableObject;
@@ -36,7 +40,7 @@ public class KademliaNetwork {
     private SMSKademliaListener smsKademliaListener = new SMSKademliaListener(this);
     //Dictionary containing the resources stored by the local node
     private SMSNetVocabulary localKademliaDictionary;
-
+    private RespondTimer timer = new RespondTimer();
 
 
     // Singleton instance
@@ -83,7 +87,7 @@ public class KademliaNetwork {
      */
     public boolean isAlive(SMSPeer targetPeer){
         //I wait 10 secs
-        //timer.run();
+        timer.run();
         //check if I had an acknowledge respond to my request
         if(connectionInfo.hasRespond()){
             //I know my request has ben received successfully. I set false in order to do it again

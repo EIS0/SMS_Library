@@ -1,4 +1,4 @@
-package com.eis0.kademlianetwork;
+package com.eis0.kademlianetwork.InformationDeliveryManager;
 
 import com.eis.smslibrary.SMSMessage;
 import com.eis.smslibrary.SMSPeer;
@@ -11,6 +11,8 @@ import com.eis0.kademlia.KademliaId;
  * the network.
  * <p>
  * The syntax is defined in the constructor
+ *
+ * @author Enrico Cestaro
  */
 public class KademliaMessage {
     private static final String REQUEST_TYPE_NULL = "The requestType parameter is null";
@@ -100,7 +102,7 @@ public class KademliaMessage {
         String stringIdToFind = DEFAULT;
         String stringSearcher = DEFAULT;
         if (idToFind != null) stringIdToFind = idToFind.toString();
-        if (idToFind != null) stringSearcher = searcher.toString();
+        if (searcher != null) stringSearcher = searcher.toString();
         if (key == null) key = DEFAULT;
         if (resource == null) resource = DEFAULT;
 

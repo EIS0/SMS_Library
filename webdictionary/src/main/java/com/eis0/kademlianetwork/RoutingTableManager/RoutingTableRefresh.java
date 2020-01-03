@@ -1,13 +1,15 @@
-package com.eis0.kademlianetwork;
+package com.eis0.kademlianetwork.RoutingTableManager;
 
-import com.eis.smslibrary.SMSManager;
-import com.eis.smslibrary.SMSMessage;
 import com.eis.smslibrary.SMSPeer;
 import com.eis0.kademlia.KademliaId;
 import com.eis0.kademlia.SMSKademliaNode;
+import com.eis0.kademlianetwork.ActivityStatus.RespondTimer;
+import com.eis0.kademlianetwork.ActivityStatus.SystemMessages;
+import com.eis0.kademlianetwork.InformationDeliveryManager.IdFinderHandler;
+import com.eis0.kademlianetwork.KademliaNetwork;
+import com.eis0.kademlianetwork.InformationDeliveryManager.ResearchMode;
 
 import java.util.List;
-import java.util.TimerTask;
 
 /**
  * Perform a local routing table refresh.
