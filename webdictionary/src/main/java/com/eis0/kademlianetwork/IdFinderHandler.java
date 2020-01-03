@@ -81,11 +81,10 @@ public class IdFinderHandler {
             retryIfDead(idToFind, searcher, researchMode, searcher);
             return;
         }
-        //else
-        //I ask to the closest node inside my Routing Table to continue the research
-            SMSPeer closer = closestNode.getPeer();
-            keepLooking(findId, idToFind, searcher, closer);
-            retryIfDead(idToFind, searcher, researchMode, closer);
+        //else, I ask to the closest node inside my Routing Table to continue the research
+        SMSPeer closer = closestNode.getPeer();
+        keepLooking(findId, idToFind, searcher, closer);
+        retryIfDead(idToFind, searcher, researchMode, closer);
     }
 
 

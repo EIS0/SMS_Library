@@ -36,7 +36,7 @@ public class KademliaNetwork {
     private SMSKademliaListener smsKademliaListener = new SMSKademliaListener(this);
     //Dictionary containing the resources stored by the local node
     private SMSNetVocabulary localKademliaDictionary;
-
+    private RespondTimer timer = new RespondTimer();
 
 
     // Singleton instance
@@ -83,7 +83,7 @@ public class KademliaNetwork {
      */
     public boolean isAlive(SMSPeer targetPeer){
         //I wait 10 secs
-        //timer.run();
+        timer.run();
         //check if I had an acknowledge respond to my request
         if(connectionInfo.hasRespond()){
             //I know my request has ben received successfully. I set false in order to do it again
