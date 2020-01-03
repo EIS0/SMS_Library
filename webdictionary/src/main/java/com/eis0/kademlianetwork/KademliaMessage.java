@@ -6,15 +6,17 @@ import com.eis0.kademlia.KademliaId;
 
 /**
  * This class is used to create custom messages to send or receive inside the Kademlia Network, the
- * fields are in common for all the type of requests
+ * fields are in common for all the type of requests; the message is not automatically sent, is just
+ * written, this class must be seen as a code/decode handler, not as the main messages manager of
+ * the network.
+ * <p>
+ * The syntax is defined in the constructor
  */
 public class KademliaMessage {
     private static final String REQUEST_TYPE_NULL = "The requestType parameter is null";
     private static final String DEFAULT = "/";
     private static final String BLANK = " ";
 
-    public SMSPeer peer;
-    public String text;
     public RequestTypes requestType;
     public KademliaId idToFind;
     public SMSPeer searcher;
@@ -26,12 +28,16 @@ public class KademliaMessage {
      * with the content of the received {@link SMSMessage}; it automatically extracts the values in
      * the fields of the message.
      * The message must satisfy the division into fields, every single word inside of it has a
-     * specific task, except for the 'resource' field, which has an arbitrary length
+     * specific task, except for the 'resource' field, which has an arbitrary length; fields are
+     * separated by the BLANK value (which is a blank space); this constructor is used to create a
+     * KademliaMessage using a text which, theoretically, already contains the values in the right
+     * positions, which are:
      * [0] => The {@link RequestTypes} of the message
      * [1] => The {@link KademliaId}, can be the target ID to find inside the network, or the ID found
      * [2] => The {@link SMSPeer} which originated the request
      * [3] => The key of the interested resource
      * [4 --> end of the message] => The resource brought by the message
+     * To create a new message starting from the single parameters the second constructor is needed
      *
      * @param message The message received from the network
      * @throws IndexOutOfBoundsException                                     If the message doesn't have the minimum number of fields
@@ -39,11 +45,9 @@ public class KademliaMessage {
      * @throws com.eis.smslibrary.exceptions.InvalidTelephoneNumberException If If telephoneNumber
      *                                                                       check is not {@link SMSPeer.TelephoneNumberState#TELEPHONE_NUMBER_VALID}.
      */
-    public KademliaMessage(SMSMessage message) {
-        text = message.getData();
-        peer = message.getPeer();
+    public KademliaMessage(String message) {
         //Array of strings containing the message fields
-        String[] splitted = text.split(BLANK);
+        String[] splitted = message.split(BLANK);
         //Extracts the value contained inside the message
         requestType = RequestTypes.values()[Integer.parseInt(splitted[0])];
         idToFind = new KademliaId(splitted[1]);
@@ -53,7 +57,7 @@ public class KademliaMessage {
     }
 
     /**
-     * This constructor allows to create a KademliaMessage with the desired values
+     * This constructor allows to create a KademliaMessage that contains the desired values
      *
      * @param requestType The request type of the message
      * @param idToFind    Can be the target ID to find inside the network, or the ID found
@@ -75,9 +79,18 @@ public class KademliaMessage {
     }
 
     /**
-     * This method returns the String value of the Kademlia Message, with a format readable by the
-     * receiver of the message; every information owns his position inside of it, so that is easier
-     * to decode it
+     * This method returns the String value of the KademliaMessage, with a format readable by the
+     * receiver of the message; every information owns a specific position inside of the output
+     * message, so that is easier to decode.
+     * The values occupy the positions:
+     * [0] => The {@link RequestTypes} of the message
+     * [1] => The {@link KademliaId}, can be the target ID to find inside the network, or the ID found
+     * [2] => The {@link SMSPeer} which originated the request
+     * [3] => The key of the interested resource
+     * [4 --> end of the message] => The resource brought by the message
+     * Each field is separated from the others by the BLANK value (which is the blank space " ");
+     * except for the {@link RequestTypes} of the message, each field can be inserted as null, it
+     * will be transcribed as the DEFAULT value (which is the '/' character)
      *
      * @return The String value of the message itself
      */

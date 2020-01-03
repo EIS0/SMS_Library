@@ -63,8 +63,8 @@ public class SMSKademliaListener extends SMSReceivedServiceListener {
      */
     @Override
     public void onMessageReceived(SMSMessage message) {
-        KademliaMessage kadMessage = new KademliaMessage(message);
-        SMSPeer peer = kadMessage.peer;
+        SMSPeer peer = message.getPeer();
+        KademliaMessage kadMessage = new KademliaMessage(message.getData());
         RequestTypes incomingRequest = kadMessage.requestType;
         KademliaId idToFind = kadMessage.idToFind;
         SMSPeer searcher = kadMessage.searcher;
