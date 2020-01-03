@@ -29,7 +29,7 @@ public class RoutingTableRefresh{
     /**
      * Method that performs a refresh
      */
-    private void start() {
+    public void start() {
         //create the list of my routing table nodes. I need to check all that nodes.
         List<SMSKademliaNode> allRoutingTableNodes = KademliaNetwork.getInstance().getLocalRoutingTable().getAllNodes();
         for (int i = 0; i < allRoutingTableNodes.size(); i++) {
@@ -63,7 +63,7 @@ public class RoutingTableRefresh{
     private void askForId(KademliaId id) {
         //take the node peer
         SMSPeer peer = localNode.getPeer();
-        //create the fake id
+        //create the fake id. I want a node in the same bucket so I search for a same distance one
         KademliaId fakeId = id.generateNodeIdByDistance(0);
 
         //search in the net for the fakeId and wait
