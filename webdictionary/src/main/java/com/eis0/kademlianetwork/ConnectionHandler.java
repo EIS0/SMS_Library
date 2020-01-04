@@ -4,6 +4,7 @@ import com.eis.smslibrary.SMSManager;
 import com.eis.smslibrary.SMSMessage;
 import com.eis.smslibrary.SMSPeer;
 import com.eis0.kademlia.SMSKademliaNode;
+import com.eis0.kademlianetwork.InformationDeliveryManager.KademliaMessage;
 import com.eis0.kademlianetwork.InformationDeliveryManager.RequestTypes;
 
 /**
@@ -21,8 +22,8 @@ public class ConnectionHandler {
      * @param peer The peer to invite to my network
      */
     public void inviteToJoin(SMSPeer peer) {
-        String messageRequest = RequestTypes.JoinPermission.ordinal() + "";
-        SMSMessage message = new SMSMessage(peer, messageRequest);
+        KademliaMessage messageRequest = new KademliaMessage(RequestTypes.JoinPermission, null, null, null, null);
+        SMSMessage message = new SMSMessage(peer, messageRequest.toString());
         SMSManager.getInstance().sendMessage(message);
     }
 
@@ -48,8 +49,8 @@ public class ConnectionHandler {
          * I have to send back an accept message
          * */
 
-        String messageRequest = RequestTypes.AcceptJoin.ordinal() + "";
-        SMSMessage message = new SMSMessage(peer, messageRequest);
+        KademliaMessage messageRequest = new KademliaMessage(RequestTypes.AcceptJoin, null, null, null, null);
+        SMSMessage message = new SMSMessage(peer, messageRequest.toString());
         SMSManager.getInstance().sendMessage(message);
 
         /*
