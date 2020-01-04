@@ -80,7 +80,7 @@ public class IdFinderHandler {
         //1. Checking if I'm the searched id (This state should be impossible, it's a fail safe)
         //2. Checking if inside my RoutingTable there is a node with the ID to find
         //3. I got further away from what I'm looking for, so I'm the closest one: I return this ID
-        //@TODO terzo check all'interno dell'if, possibile dover cambiare > in >=
+        /*@TODO terzo check all'interno dell'if, possibile dover cambiare > in >=*/
         if (netId == idToFind ||
                 KademliaNetwork.getInstance().isNodeInNetwork(nodeToFind) ||
                 idToFindDistanceFromClosest.compareTo(idToFindDistanceFromNetId) > 0) {
@@ -94,8 +94,6 @@ public class IdFinderHandler {
         retryIfDead(idToFind, searcher, researchMode, closer);
     }
 
-
-    //@TODO La classe utilizza nodi, dovrebbe elaborare contatti?
     /**
      * This method sends to the specified target {@link SMSPeer} the result of the previously
      * carried out research
@@ -152,6 +150,24 @@ public class IdFinderHandler {
             //I try with another one, starting another ID research, with the same values, but now
             //that I executed the .isAlive(nodeToCheck) method, the invalid node it's been removed
             //from my routing table
+            /*@TODO il metodo isAlive elimina il nodo se questo non risponde: proporrei di modificare il metodo, in modo che
+                generi piuttosto una listaCandidati di possibili nodi da tentare di contattare (inizialmente tutti),
+                e poi, nel caso di mancata risposta da parte di un nodo:
+                1. elimini tale nodo dalla listaCandidati
+                2. aumenti lo staleCount di tale nodo
+                3. sposti il contatto di tale nodo più in basso nel suo Bucket, mantenendo il Bucket ordinato
+                4. rieffettui searchId sulla listaCandidati aggiornata
+                PRO/CONTRO
+                => Evita l'eliminazione diretta del nodo dalla RoutingTable
+                => Non peggiora le prestazioni del searchId
+                => Richiede di ordinare ogni volta la RoutingTable, ma migliora drasticamente le prestazioni
+                dell'aggiornamento della RoutingTable quando si tenta di inserirvi un nuovo nodo: basta eliminare
+                il nodo più in basso, che avrà stalecount massimo, e inserire il nuovo nodo in cima al Bucket
+                Generalmente in Kademlia si attua una verifica prima di eliminare il nodo più in basso nel Bucket,
+                tuttavia possiamo evitare di farlo in quanto:
+                    a. Vogliamo evitare di inviare troppi messaggi, e questo richiederebbe svariati Acknowledge
+                    b. Il Refresh attua già questa funzione una volta ogni due ore
+             */
             searchId(idToFind, searcherNode, researchMode);
         }
     }

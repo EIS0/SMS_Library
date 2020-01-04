@@ -12,9 +12,9 @@ import java.util.TreeSet;
  * Every routing table has a configuration that, at the creation, will be a {@link DefaultConfiguration}.
  * It can be changed at any time.
  *
+ * @author Edoardo Raimondi
  * @see <a href="https://pdos.csail.mit.edu/~petar/papers/maymounkov-kademlia-lncs.pdf">Kademlia's
  * paper</a> for more details.
- * @author Edoardo Raimondi
  */
 public class SMSKademliaRoutingTable implements KademliaRoutingTable {
 
@@ -82,10 +82,10 @@ public class SMSKademliaRoutingTable implements KademliaRoutingTable {
      */
     @Override
     public final int getBucketId(KademliaId nodeId) {
-        int bId = this.localNode.getId().getDistance(nodeId);
+        int bucketId = this.localNode.getId().getDistance(nodeId);
 
         /* If we are trying to insert a node into it's own routing table, then the bucket ID will be -1, so let's just keep it in bucket 0 */
-        return bId-1 < 0 ? 0 : bId-1;
+        return bucketId - 1 < 0 ? 0 : bucketId - 1;
     }
 
     /**
@@ -100,7 +100,7 @@ public class SMSKademliaRoutingTable implements KademliaRoutingTable {
     public final List<SMSKademliaNode> findClosest(KademliaId target, int numNodesRequired) {
         TreeSet<SMSKademliaNode> sortedSet = new TreeSet<>(new KeyComparator(target));
         /*Now every element added will be in a coherent position to the target Id
-        * (first element will be the closer one, second will be the second one...)*/
+         * (first element will be the closer one, second will be the second one...)*/
         sortedSet.addAll(this.getAllNodes());
 
         List<SMSKademliaNode> closestList = new ArrayList<>(numNodesRequired);
