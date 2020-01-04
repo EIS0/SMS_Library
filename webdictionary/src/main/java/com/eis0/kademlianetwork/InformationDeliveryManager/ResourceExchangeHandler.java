@@ -249,11 +249,6 @@ public class ResourceExchangeHandler {
             Request toCompare = (Request) obj;
             return toCompare.getKeyId().toString().equals(this.getKeyId().toString());
         }
-
-        @Override
-        public String toString() {
-            return "Request_ID: " + this.getKeyId().toString();
-        }
     }
 }
 

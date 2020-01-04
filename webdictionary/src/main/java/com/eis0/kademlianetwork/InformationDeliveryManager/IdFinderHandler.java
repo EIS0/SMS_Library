@@ -80,6 +80,7 @@ public class IdFinderHandler {
         //1. Checking if I'm the searched id (This state should be impossible, it's a fail safe)
         //2. Checking if inside my RoutingTable there is a node with the ID to find
         //3. I got further away from what I'm looking for, so I'm the closest one: I return this ID
+        //@TODO terzo check all'interno dell'if, possibile dover cambiare > in >=
         if (netId == idToFind ||
                 KademliaNetwork.getInstance().isNodeInNetwork(nodeToFind) ||
                 idToFindDistanceFromClosest.compareTo(idToFindDistanceFromNetId) > 0) {
@@ -94,6 +95,7 @@ public class IdFinderHandler {
     }
 
 
+    //@TODO La classe utilizza nodi, dovrebbe elaborare contatti?
     /**
      * This method sends to the specified target {@link SMSPeer} the result of the previously
      * carried out research

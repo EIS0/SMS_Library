@@ -99,6 +99,7 @@ public class KademliaNetwork {
             KademliaId id = new KademliaId(targetPeer);
             SMSKademliaNode toRemove = new SMSKademliaNode(id);
             //remove it
+            //@TODO according to the Network Logic, should it be removed, or should its staleCount be updated?
             this.localRoutingTable.getBuckets()[this.localRoutingTable.getBucketId(id)].removeNode(toRemove);
             //the node is not alive
             return false;
