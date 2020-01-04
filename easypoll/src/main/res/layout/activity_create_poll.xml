@@ -45,7 +45,7 @@
         android:ems="10"
         android:hint="@string/name_hint"
         android:inputType="textPersonName"
-        android:maxLength="10"
+        android:maxLength="20"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/pollNameTxtView" />
@@ -69,6 +69,7 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:hint="@string/users_hint"
+        android:imeOptions="actionNone"
         android:inputType="phone"
         app:layout_constraintEnd_toStartOf="@+id/addPeerBtn"
         app:layout_constraintStart_toStartOf="@+id/pollQuestionTxt"
@@ -89,18 +90,32 @@
     <ImageButton
         android:id="@+id/addPeerBtn"
         style="@style/Widget.AppCompat.ImageButton"
-        android:layout_width="wrap_content"
+        android:layout_width="65dp"
         android:layout_height="0dp"
         android:background="#0000"
         android:contentDescription="@string/add_peer_btn_cont_desc"
-        android:onClick="addPeerOnClick"
-        android:paddingStart="10dp"
-        android:paddingEnd="10dp"
+        android:onClick="addPeerBtnOnClick"
+        android:paddingTop="2dp"
+        android:paddingBottom="2dp"
         android:scaleType="fitCenter"
         app:layout_constraintBottom_toBottomOf="@+id/peerTxt"
         app:layout_constraintEnd_toEndOf="@+id/peersRclView"
         app:layout_constraintTop_toTopOf="@+id/peerTxt"
-        app:srcCompat="@drawable/ic_add_box_black" />
+        app:srcCompat="@drawable/ic_contact_phone_black_24dp" />
+
+    <TextView
+        android:id="@+id/infoTxt"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:gravity="center"
+        android:text="@string/contacts_info_text"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toBottomOf="@+id/peersRclView"
+        app:layout_constraintEnd_toEndOf="@+id/peersRclView"
+        app:layout_constraintStart_toStartOf="@+id/peersRclView"
+        app:layout_constraintTop_toTopOf="@+id/peersRclView" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/peersRclView"
@@ -111,6 +126,9 @@
         android:scrollbars="vertical"
         app:layout_constraintBottom_toTopOf="@+id/sendBtn"
         app:layout_constraintEnd_toEndOf="@+id/pollQuestionTxt"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="@+id/peerTxt"
-        app:layout_constraintTop_toBottomOf="@+id/peerTxt" />
+        app:layout_constraintTop_toBottomOf="@+id/peerTxt"
+        app:layout_constraintVertical_bias="0.0"
+        tools:itemCount="0" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -30,4 +30,5 @@
     <string name="limit_reached_message">You have reached the limit of users</string>
     <string name="duplicated_user_message">User already added</string>
     <string name="generic_error_message">Something went wrong during the poll creation, please retry</string>
+    <string name="contacts_info_text">Tap the contact icon to add users from your address book or type phone numbers manually in the text box.</string>
 </resources>

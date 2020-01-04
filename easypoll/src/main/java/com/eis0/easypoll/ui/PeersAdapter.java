@@ -105,8 +105,6 @@ public class PeersAdapter extends RecyclerView.Adapter<PeersAdapter.PeerListView
      */
     @Override
     public void onBindViewHolder(PeerListViewHolder holder, final int position) {
-        // - Get element from your dataset at this position
-        // - Replace the contents of the view with that element
         holder.userTxtView.setText(peersDataset.get(position).getAddress());
         holder.removeBtn.setOnClickListener(new View.OnClickListener() {
             @Override

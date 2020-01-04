@@ -1,7 +1,6 @@
 package com.eis0.easypoll;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -100,18 +99,16 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == NEW_POLL_REQUEST_CODE) {
-            if (resultCode == Activity.RESULT_OK) {
-                String name = data.getStringExtra(CreatePollActivity.ARG_POLL_NAME);
-                String question = data.getStringExtra(CreatePollActivity.ARG_POLL_QUESTION);
-                // There's no need for a checked cast, see CreatePollActivity
-                ArrayList<SMSPeer> peers = (ArrayList<SMSPeer>) data.getSerializableExtra(CreatePollActivity.ARG_POLL_PEERS);
-                if(name == null || question == null || peers == null) {
-                    Toast.makeText(this, getString(R.string.generic_error_message), Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                pollManager.createPoll(name, question, peers);
+        if (requestCode == NEW_POLL_REQUEST_CODE && resultCode == RESULT_OK) {
+            String name = data.getStringExtra(CreatePollActivity.ARG_POLL_NAME);
+            String question = data.getStringExtra(CreatePollActivity.ARG_POLL_QUESTION);
+            // There's no need for a checked cast, see CreatePollActivity
+            ArrayList<SMSPeer> peers = (ArrayList<SMSPeer>) data.getSerializableExtra(CreatePollActivity.ARG_POLL_PEERS);
+            if(name == null || question == null || peers == null) {
+                Toast.makeText(this, getString(R.string.generic_error_message), Toast.LENGTH_SHORT).show();
+                return;
             }
+            pollManager.createPoll(name, question, peers);
         }
     }
 
