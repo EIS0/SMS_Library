@@ -33,7 +33,7 @@ public class SMSKademliaListener extends SMSReceivedServiceListener {
     /**
      * This method sends an acknowledge message
      *
-     * @param  peer The {@link SMSPeer} of the node that contacted me
+     * @param peer The {@link SMSPeer} of the node that contacted me
      * @author Edoardo Raimondi
      */
     public void sendAcknowledge(SMSPeer peer) {
@@ -45,10 +45,10 @@ public class SMSKademliaListener extends SMSReceivedServiceListener {
     /**
      * This method sends a Pong message
      *
-     * @param  peer The {@link SMSPeer} of the node that contacted me
+     * @param peer The {@link SMSPeer} of the node that contacted me
      * @author Edoardo Raimondi
      */
-    public void sendPong(SMSPeer peer){
+    public void sendPong(SMSPeer peer) {
         String pong = RequestTypes.Pong.ordinal() + " ";
         SMSMessage pongMessage = new SMSMessage(peer, pong);
         SMSManager.getInstance().sendMessage(pongMessage);
@@ -63,26 +63,21 @@ public class SMSKademliaListener extends SMSReceivedServiceListener {
      */
     @Override
     public void onMessageReceived(SMSMessage message) {
-        String text = message.getData();
         SMSPeer peer = message.getPeer();
-        //Converts the code number in the message to the related enum
-        RequestTypes incomingRequest = RequestTypes
-                .values()[Integer.parseInt(text.split(" ")[0])];
-        //Array of strings containing the message fields
-        String[] splitted = text.split(" ");
+        KademliaMessage kadMessage = new KademliaMessage(message.getData());
+        RequestTypes incomingRequest = kadMessage.requestType;
+        KademliaId idToFind = kadMessage.idToFind;
+        SMSPeer searcher = kadMessage.searcher;
+        String key = kadMessage.key;
+        String resource = kadMessage.resource;
+        //The two values, idToFind and idFound, share the same field, depending upon the type of request
+        //the SMSKademliaListener knows which one of the two is occupying it, and process it consequently
+        KademliaId idFound = idToFind;
 
         //Starts a specific action depending upon the request or the command sent by other users
-        KademliaId idToFind;
-        SMSPeer searcher;
-        KademliaId idFound;
-
-        String key;
-        String resource;
-
         switch (incomingRequest) {
             /**Acknowledge messages*/
             case AcknowledgeMessage:
-                //that means the sent request has been taken by the node
                 kadNet.setRespond(true);
                 break;
 
@@ -97,18 +92,111 @@ public class SMSKademliaListener extends SMSReceivedServiceListener {
                 break;
             case FindIdRefresh:
                 //Processes the information brought by the message received
-                Log.i("CONN_LOG", "IdFound: " + splitted[1]);
-                idToFind = new KademliaId(splitted[1]);
-                searcher = new SMSPeer(splitted[2]);
+                Log.i(LOG_TAG, "IdFound: " + idFound);
                 IdFinderHandler.searchId(idToFind, searcher, ResearchMode.Refresh);
                 break;
             case SearchResultReplacement:
                 //I found the node, let's insert it in my routing table
-                idFound = new KademliaId(splitted[1]);
                 SMSKademliaNode nodeToAdd = new SMSKademliaNode(idFound);
                 kadNet.getLocalRoutingTable().insert(nodeToAdd);
                 break;
-                
+
+
+            /**Joining a network */
+            case JoinPermission:
+                ConnectionHandler.sendAcceptRequest(peer);
+                break;
+            case AcceptJoin:
+                ConnectionHandler.acceptRequest(peer);
+                break;
+            case FindId:
+                sendAcknowledge(peer);
+                //1. Processes the information brought by the message received
+                Log.i(LOG_TAG, "IdFound: " + idFound);
+                IdFinderHandler.searchId(idToFind, searcher, ResearchMode.JoinNetwork);
+                break;
+            case SearchResult:
+                sendAcknowledge(peer);
+                //1. Processes the information brought by the message received
+                TableUpdateHandler.stepTableUpdate(idFound);
+                break;
+
+
+            /**Adding a resource to the Dictionary */
+            case FindIdForAddRequest:
+                sendAcknowledge(peer);
+                //1. Processes the information brought by the message received
+                Log.i(LOG_TAG, "Received ID research request from: " + searcher + ".\nTarget: " +
+                        idToFind);
+                resourceExchangeHandler.processRequest(idToFind, searcher, ResearchMode.AddToDictionary);
+                break;
+            case ResultAddRequest:
+                sendAcknowledge(peer);
+                //1. Add the node that answered the research to the local RoutingTable
+                KademliaNetwork.getInstance().addNodeToTable(new SMSKademliaNode(peer));
+                //2. Processes the information brought by the message received
+                Log.i(LOG_TAG, "Received ID research request RESULT: " + idToFind);
+                resourceExchangeHandler.completeRequest(idToFind, peer, ResearchMode.AddToDictionary);
+                break;
+            case AddToDict:
+                sendAcknowledge(peer);
+                //1. Processes the information brought by the message received
+                Log.i(LOG_TAG, "Received AddToDictionary request.\nKey: " + key + ",\nResource:" +
+                        resource);
+                KademliaNetwork.getInstance().addToLocalDictionary(key, resource);
+                break;
+
+
+            /**Asking for a resource to the Dictionary*/
+            case FindIdForGetRequest:
+                sendAcknowledge(peer);
+                //1. Processes the information brought by the message received
+                Log.i(LOG_TAG, "Received ID research request from: " + searcher + ".\nTarget: " +
+                        idToFind);
+                resourceExchangeHandler.processRequest(idToFind, searcher, ResearchMode.FindInDictionary);
+                break;
+            case ResultGetRequest:
+                sendAcknowledge(peer);
+                //1. Add the node that answered the research to the local RoutingTable
+                KademliaNetwork.getInstance().addNodeToTable(new SMSKademliaNode(peer));
+                //2. Processes the information brought by the message received
+                Log.i(LOG_TAG, "Received ID research request RESULT: " + idToFind);
+                resourceExchangeHandler.completeRequest(idToFind, peer, ResearchMode.FindInDictionary);
+                break;
+            case GetFromDict:
+                sendAcknowledge(peer);
+                //1. Processes the information brought by the message received
+                Log.i(LOG_TAG, "Received GetFromDictionary request.\nKey: " + key);
+                resource = KademliaNetwork.getInstance().getFromLocalDictionary(key).toString();
+                //2. Send the <key, resource> pair
+                KademliaMessage kademliaMessage = new KademliaMessage(RequestTypes.AddToDict, null, null, key, resource);
+                message = new SMSMessage(peer, kademliaMessage.toString());
+                SMSManager.getInstance().sendMessage(message);
+                break;
+
+
+            /**Remove a resource from the Dictionary */
+            case FindIdForDeleteRequest:
+                sendAcknowledge(peer);
+                //1. Processes the information brought by the message received
+                Log.i(LOG_TAG, "Received ID research request from: " + searcher + ".\nTarget: " +
+                        idToFind);
+                resourceExchangeHandler.processRequest(idToFind, searcher, ResearchMode.RemoveFromDictionary);
+                break;
+            case ResultDeleteRequest:
+                sendAcknowledge(peer);
+                //1. Add the node that answered the research to the local RoutingTable
+                KademliaNetwork.getInstance().addNodeToTable(new SMSKademliaNode(peer));
+                //2. Processes the information brought by the message received
+                Log.i(LOG_TAG, "Received ID research request RESULT: " + idToFind);
+                resourceExchangeHandler.completeRequest(idToFind, peer, ResearchMode.RemoveFromDictionary);
+                break;
+            case RemoveFromDict:
+                sendAcknowledge(peer);
+                //1. Processes the information brought by the message received
+                Log.i(LOG_TAG, "Received AddToDictionary request.\nKey: " + key);
+                KademliaNetwork.getInstance().removeFromLocalDictionary(key);
+                break;
         }
     }
 }
