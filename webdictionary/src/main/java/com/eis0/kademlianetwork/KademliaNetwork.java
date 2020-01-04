@@ -73,7 +73,7 @@ public class KademliaNetwork {
         SMSManager.getInstance().setReceivedListener(smsKademliaListener.getClass(), context);
         this.localNode = localNode;
         this.listener = listener;
-        localRoutingTable = new SMSKademliaRoutingTable(localNode, new DefaultConfiguration());;
+        localRoutingTable = new SMSKademliaRoutingTable(localNode, new DefaultConfiguration());
     }
 
     /**
