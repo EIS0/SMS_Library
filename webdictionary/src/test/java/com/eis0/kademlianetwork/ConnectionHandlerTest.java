@@ -23,7 +23,7 @@ public class ConnectionHandlerTest {
     private static final Contact VALID_CONTACT = new Contact(VALID_NODE);
 
     private KademliaNetwork instance;
-    private KademliaListener mockListener = mock(KademliaListener.class);
+    private SMSKademliaListener mockListener = mock(SMSKademliaListener.class);
 
 
     @Before

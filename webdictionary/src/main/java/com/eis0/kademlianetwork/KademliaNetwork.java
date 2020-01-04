@@ -36,7 +36,7 @@ public class KademliaNetwork {
     private ConnectionHandler connectionHandler = new ConnectionHandler();
     public RoutingTableRefresh refresh = new RoutingTableRefresh(this.localNode, this);
     public NodeConnectionInfo connectionInfo = new NodeConnectionInfo();
-    private KademliaListener listener;
+    private SMSKademliaListener listener;
     private SMSKademliaListener smsKademliaListener = new SMSKademliaListener(this);
     //Dictionary containing the resources stored by the local node
     private SMSNetVocabulary localKademliaDictionary;
@@ -69,7 +69,7 @@ public class KademliaNetwork {
      * @param localNode The SMSKademliaNode to set.
      * @author Matteo Carnelos
      */
-    public void init(SMSKademliaNode localNode, KademliaListener listener, Context context) {
+    public void init(SMSKademliaNode localNode, SMSKademliaListener listener, Context context) {
         SMSManager.getInstance().setReceivedListener(smsKademliaListener.getClass(), context);
         this.localNode = localNode;
         this.listener = listener;
@@ -156,7 +156,6 @@ public class KademliaNetwork {
     public void addNodeToTable(SMSKademliaNode node){
         Contact nodeContact = new Contact(node);
         localRoutingTable.insert(nodeContact);
-        listener.onNewContact(nodeContact);
     }
 
     /**

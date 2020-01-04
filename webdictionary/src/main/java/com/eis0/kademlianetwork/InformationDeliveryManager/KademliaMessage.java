@@ -1,5 +1,7 @@
 package com.eis0.kademlianetwork.InformationDeliveryManager;
 
+import android.view.textclassifier.ConversationActions;
+
 import com.eis.smslibrary.SMSMessage;
 import com.eis.smslibrary.SMSPeer;
 import com.eis0.kademlia.KademliaId;

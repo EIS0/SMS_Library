@@ -33,7 +33,7 @@ public class KademliaNetworkTest {
     private final KademliaNetwork net3 = new KademliaNetwork();
     private final KademliaNetwork net4 = new KademliaNetwork();
 
-    private final KademliaListener mockListener1 = mock(KademliaListener.class);
+    private final SMSKademliaListener mockListener1 = mock(SMSKademliaListener.class);
 
     @Before
     public void setUp(){

@@ -37,7 +37,7 @@ public class ResourceExchangeHandlerTest {
     private final SMSPeer VALID_PEER = new SMSPeer("+393423541601");
     private final SMSKademliaNode MAIN_NODE = new SMSKademliaNode(VALID_PEER);
     private final IdFinderHandler idFinderHandler = new IdFinderHandler();
-    private final KademliaListener mockListener = mock(KademliaListener.class);
+    private final SMSKademliaListener mockListener = mock(SMSKademliaListener.class);
 
     @Before
     public void setUp() {

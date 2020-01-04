@@ -10,7 +10,8 @@ import com.eis0.kademlia.SMSKademliaBucket;
 import com.eis0.kademlia.SMSKademliaNode;
 import com.eis0.kademlianetwork.KademliaListener;
 import com.eis0.kademlianetwork.KademliaNetwork;
-import com.eis0.kademlianetwork.RoutingTableRefresh;
+import com.eis0.kademlianetwork.RoutingTableManager.RoutingTableRefresh;
+
 
 import org.junit.Before;
 import org.junit.Test;
@@ -41,10 +42,10 @@ public class RoutingTableRefreshTest {
 
     private RoutingTableRefresh refresh = new RoutingTableRefresh(NODE1, net1);
 
-    private final KademliaListener mockListener1 = mock(KademliaListener.class);
+    private final SMSKademliaListener mockListener1 = mock(SMSKademliaListener.class);
     //private final KademliaListener mockListener2 = mock(KademliaListener.class);
-    private final KademliaListener mockListener3 = mock(KademliaListener.class);
-    private final KademliaListener mockListener4 = mock(KademliaListener.class);
+    private final SMSKademliaListener mockListener3 = mock(SMSKademliaListener.class);
+    private final SMSKademliaListener mockListener4 = mock(SMSKademliaListener.class);
 
     @Before
     public void setUp(){
