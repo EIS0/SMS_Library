@@ -80,7 +80,11 @@ public class IdFinderHandler {
         //1. Checking if I'm the searched id (This state should be impossible, it's a fail safe)
         //2. Checking if inside my RoutingTable there is a node with the ID to find
         //3. I got further away from what I'm looking for, so I'm the closest one: I return this ID
-        /*@TODO terzo check all'interno dell'if, possibile dover cambiare > in >=*/
+        /*@TODO terzo check all'interno dell'if, possibile dover cambiare > in >=
+        *   Edit: non è necessario, in quanto se la distanza è uguale il closestNode e il netId sono uguali,
+        *   ma si tratta di un'evenienza già verificata dal primo check: si può quindi collassare primo e terzo check
+        *   un uno solo.
+        */
         if (netId == idToFind ||
                 KademliaNetwork.getInstance().isNodeInNetwork(nodeToFind) ||
                 idToFindDistanceFromClosest.compareTo(idToFindDistanceFromNetId) > 0) {
