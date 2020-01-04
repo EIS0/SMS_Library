@@ -45,7 +45,7 @@ public class RoutingTableRefresh{
             timer.run();
 
             //check if I received a pong (so if the node is alive)
-            if (net.connectionInfo.getPongKnown()) {
+            if (net.connectionInfo.hasPong()) {
                 //is alive, set the pong state to false in order to do it again
                 net.connectionInfo.setPong(false);
             } else { //the node is not alive. I must remove it.

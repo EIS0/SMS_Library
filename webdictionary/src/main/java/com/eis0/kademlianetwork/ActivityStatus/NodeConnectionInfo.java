@@ -38,8 +38,9 @@ public class NodeConnectionInfo {
     /**
      * @return true if I had a pong respond
      * @author Edoardo Raimondi
+     *
      */
-    public boolean getPongKnown(){ return hasPong; }
+    public boolean hasPong(){ return hasPong; }
 
     /**
      * Set the pong state
