@@ -6,7 +6,9 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.transition.Slide;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -40,7 +42,6 @@ public class CreatePollActivity extends AppCompatActivity {
     private EditText pollNameTxt;
     private EditText pollQuestionTxt;
     private EditText peerTxt;
-    private TextView infoTxt;
     private ImageButton addPeerBtn;
     private PeersAdapter peersAdapter;
 
@@ -54,7 +55,8 @@ public class CreatePollActivity extends AppCompatActivity {
     TextView.OnEditorActionListener editorActionListener = new TextView.OnEditorActionListener() {
         @Override
         public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-            addPeerBtn.callOnClick();
+            if(actionId == 0 && event.getAction() == KeyEvent.ACTION_UP)
+                addPeerBtn.callOnClick();
             return true;
         }
     };
@@ -71,11 +73,17 @@ public class CreatePollActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_poll);
+        Slide slide = new Slide();
+        slide.setPropagation(null);
+        getWindow().setEnterTransition(slide);
+        if(getSupportActionBar() != null) {
+            getSupportActionBar().setTitle("Create new poll");
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
         pollNameTxt = findViewById(R.id.pollNameTxt);
         pollQuestionTxt = findViewById(R.id.pollQuestionTxt);
         peerTxt = findViewById(R.id.peerTxt);
-        infoTxt = findViewById(R.id.infoTxt);
         addPeerBtn = findViewById(R.id.addPeerBtn);
 
         peerTxt.setOnFocusChangeListener(focusChangeListener);
@@ -85,8 +93,21 @@ public class CreatePollActivity extends AppCompatActivity {
         peerList.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         peerList.setLayoutManager(layoutManager);
-        peersAdapter = new PeersAdapter();
+        peersAdapter = new PeersAdapter((TextView)findViewById(R.id.infoTxt));
         peerList.setAdapter(peersAdapter);
+    }
+
+    /**
+     * Called when the back button is pressed.
+     *
+     * @param item The {@link MenuItem} pressed.
+     * @return True if the action as been handled, false otherwise.
+     * @author Matteo Carnelos
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == android.R.id.home) finishAfterTransition();
+        return super.onOptionsItemSelected(item);
     }
 
     /**
@@ -114,7 +135,6 @@ public class CreatePollActivity extends AppCompatActivity {
             if(!peersAdapter.addPeer(peer))
                 Toast.makeText(this, getString(R.string.duplicated_user_message), Toast.LENGTH_SHORT).show();
             peerTxt.setText("");
-            infoTxt.setVisibility(View.INVISIBLE);
         }
         catch (IllegalArgumentException e) {
             Toast.makeText(this, getString(R.string.invalid_peer_message), Toast.LENGTH_SHORT).show();
@@ -184,6 +204,6 @@ public class CreatePollActivity extends AppCompatActivity {
                 .putExtra(ARG_POLL_QUESTION, question)
                 .putExtra(ARG_POLL_PEERS, peersAdapter.getPeersDataset());
         setResult(Activity.RESULT_OK, returnIntent);
-        finish();
+        finishAfterTransition();
     }
 }

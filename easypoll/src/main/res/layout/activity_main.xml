@@ -32,16 +32,28 @@
         android:id="@+id/view_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" >
+
+    </androidx.viewpager.widget.ViewPager>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/newPoll"
+        android:id="@+id/newPollBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        android:onClick="newPollOnClick"
+        android:onClick="newPollBtnOnClick"
         android:scaleType="center"
         app:srcCompat="@drawable/ic_add_white_24dp" />
+
+    <TextView
+        android:id="@+id/infoTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|center_vertical"
+        android:drawableTop="@drawable/ic_playlist_add_black_48dp"
+        android:text="@string/polls_info_text"
+        android:textSize="18sp"
+        android:visibility="visible" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

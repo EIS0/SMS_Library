@@ -13,7 +13,10 @@
     <string name="poll_li_num_1">(nº</string>
     <string name="poll_li_num_2">)</string>
 
-    <!-- Create Poll strings-->
+    <!-- Main activity strings -->
+    <string name="polls_info_text">Create new polls with the + button</string>
+
+    <!-- Create Poll strings -->
     <string name="poll_name">Poll Name</string>
     <string name="name_hint">Choose the name</string>
     <string name="poll_question">Poll Question</string>
@@ -30,5 +33,5 @@
     <string name="limit_reached_message">You have reached the limit of users</string>
     <string name="duplicated_user_message">User already added</string>
     <string name="generic_error_message">Something went wrong during the poll creation, please retry</string>
-    <string name="contacts_info_text">Tap the contact icon to add users from your address book or type phone numbers manually in the text box.</string>
+    <string name="peers_info_text">Add users from your contacts or type phone numbers in the box</string>
 </resources>

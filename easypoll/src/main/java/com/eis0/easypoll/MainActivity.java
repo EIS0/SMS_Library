@@ -1,11 +1,13 @@
 package com.eis0.easypoll;
 
 import android.Manifest;
+import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -21,6 +23,8 @@ import com.eis0.smslibrary.SMSPeer;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.Set;
 
 /**
@@ -41,6 +45,8 @@ public class MainActivity extends AppCompatActivity {
 
     private PollManager pollManager = PollManager.getInstance();
 
+    TextView infoTxt;
+
     /**
      * Called on the creation of the activity.<br>
      * Asks for permissions and initialize UI elements.
@@ -52,6 +58,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        infoTxt = findViewById(R.id.infoTxt);
 
         // Initializes the tabbed view.
         SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
@@ -72,6 +80,13 @@ public class MainActivity extends AppCompatActivity {
         BinaryPoll.setSharedPreferences(getPreferences(Context.MODE_PRIVATE));
         DataProvider.loadDataFromInternal(this);
         BinaryPoll.loadPollsCountFromInternal();
+
+        DataProvider.getInstance().addObserver(new Observer() {
+            @Override
+            public void update(Observable o, Object arg) {
+                infoTxt.setVisibility(View.GONE);
+            }
+        });
     }
 
     /**
@@ -81,9 +96,12 @@ public class MainActivity extends AppCompatActivity {
      * @param view The view on which the onClick event is coming from.
      * @author Matteo Carnelos
      */
-    public void newPollOnClick(View view) {
+    public void newPollBtnOnClick(View view) {
         Intent newPollIntent = new Intent(this, CreatePollActivity.class);
-        startActivityForResult(newPollIntent, NEW_POLL_REQUEST_CODE);
+        startActivityForResult(
+                newPollIntent,
+                NEW_POLL_REQUEST_CODE,
+                ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
     }
 
     /**

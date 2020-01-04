@@ -23,6 +23,11 @@ import java.util.ArrayList;
 public class PeersAdapter extends RecyclerView.Adapter<PeersAdapter.PeerListViewHolder> {
 
     private ArrayList<SMSPeer> peersDataset = new ArrayList<>();
+    private TextView infoTxt;
+
+    public PeersAdapter(TextView infoTxt) {
+        this.infoTxt = infoTxt;
+    }
 
     /**
      * Provide a reference to the views for each data item.
@@ -31,10 +36,17 @@ public class PeersAdapter extends RecyclerView.Adapter<PeersAdapter.PeerListView
      *
      * @author Matteo Carnelos
      */
-    static class PeerListViewHolder extends RecyclerView.ViewHolder {
+    class PeerListViewHolder extends RecyclerView.ViewHolder {
 
         TextView userTxtView;
         Button removeBtn;
+
+        /**
+         * Constructor of the view holder. It gets teh reference to UI objects.
+         *
+         * @param v The {@link View} containing the UI elements.
+         * @author Matteo Carnelos
+         */
         PeerListViewHolder(@NonNull View v) {
             super(v);
             userTxtView = v.findViewById(R.id.userTxtView);
@@ -52,6 +64,7 @@ public class PeersAdapter extends RecyclerView.Adapter<PeersAdapter.PeerListView
     public boolean addPeer(@NonNull SMSPeer peer) {
         if(peersDataset.contains(peer)) return false;
         peersDataset.add(peer);
+        if(!peersDataset.isEmpty()) infoTxt.setVisibility(View.INVISIBLE);
         notifyItemInserted(peersDataset.size()-1);
         return true;
     }
@@ -64,6 +77,7 @@ public class PeersAdapter extends RecyclerView.Adapter<PeersAdapter.PeerListView
      */
     private void removePeer(int index) {
         peersDataset.remove(index);
+        if(peersDataset.isEmpty()) infoTxt.setVisibility(View.VISIBLE);
         notifyItemRemoved(index);
         for(int i = index; i < getItemCount(); i++)
             notifyItemChanged(i);
