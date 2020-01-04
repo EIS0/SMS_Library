@@ -18,6 +18,7 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -37,6 +38,13 @@ public class IdFinderHandlerTest {
     private final SMSKademliaNode NODE_ID1 = new SMSKademliaNode(VALID_ID1);
     private final SMSKademliaNode NODE_ID2 = new SMSKademliaNode(VALID_ID2);
     private final SMSKademliaNode NODE_ID3 = new SMSKademliaNode(VALID_ID3);
+
+    private final SMSPeer VALID_PEER1 = new SMSPeer("+393423541600");
+    private final SMSPeer VALID_PEER2 = new SMSPeer("+393423541602");
+    private final KademliaId VALID_FROM_PEER1 = new KademliaId(VALID_PEER1);
+    private final KademliaId VALID_FROM_PEER2 = new KademliaId(VALID_PEER2);
+    private final SMSKademliaNode VALID_NODE1 = new SMSKademliaNode(VALID_PEER1);
+    private final SMSKademliaNode VALID_NODE2 = new SMSKademliaNode(VALID_PEER2);
 
     private KademliaNetwork networkMock;
     private SMSManager smsManagerMock;
@@ -78,7 +86,7 @@ public class IdFinderHandlerTest {
     @Test
     public void findMyId(){
         IdFinderHandler.searchId(SEARCHER_ID, SEARCHER, ResearchMode.AddToDictionary);
-        String expectedTextMessage = RequestTypes.ResultAddRequest.ordinal() + " " + SEARCHER_ID;
+        String expectedTextMessage = RequestTypes.ResultAddRequest.ordinal() + " " + SEARCHER_ID + " / / /";
         SMSMessage expectedMessage = new SMSMessage(SEARCHER, expectedTextMessage);
         verify(smsManagerMock, times(1)).sendMessage(expectedMessage);
     }
@@ -90,6 +98,19 @@ public class IdFinderHandlerTest {
         IdFinderHandler.searchId(VALID_ID1, SEARCHER, ResearchMode.AddToDictionary);
         String expectedTextMessage = RequestTypes.ResultAddRequest.ordinal() + " " + VALID_ID1 + " / / /";
         SMSMessage expectedMessage = new SMSMessage(SEARCHER, expectedTextMessage);
+        verify(smsManagerMock, times(1)).sendMessage(expectedMessage);
+    }
+
+    @Test
+    public void forwardRequest(){
+        //routingTable.insert(VALID_NODE1);
+        routingTable.insert(VALID_NODE2);
+        when(networkMock.isAlive(any(SMSPeer.class))).thenReturn(true);
+        IdFinderHandler.searchId(VALID_FROM_PEER2, SEARCHER, ResearchMode.AddToDictionary);
+        String expectedTextMessage =
+                RequestTypes.FindIdForAddRequest.ordinal() + " " +
+                        VALID_FROM_PEER2 + " " +  SEARCHER + " / /";
+        SMSMessage expectedMessage = new SMSMessage(VALID_PEER2, expectedTextMessage);
         verify(smsManagerMock, times(1)).sendMessage(expectedMessage);
     }
 }
