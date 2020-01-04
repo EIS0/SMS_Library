@@ -31,8 +31,7 @@ public class SystemMessagesTest {
 
     private SMSKademliaNode node1 = new SMSKademliaNode(peer1);
     private SMSKademliaNode node2 = new SMSKademliaNode(peer2);
-
-    private KademliaNetwork networkMock;
+    
     private SMSManager smsManagerMock;
 
     private final SystemMessages systemMessages = new SystemMessages();
@@ -40,10 +39,6 @@ public class SystemMessagesTest {
 
     @Before
     public void setUp(){
-
-        networkMock = mock(KademliaNetwork.class);
-        PowerMockito.mockStatic(KademliaNetwork.class);
-        PowerMockito.when(KademliaNetwork.getInstance()).thenReturn(networkMock);
 
         smsManagerMock = mock(SMSManager.class);
         PowerMockito.mockStatic(SMSManager.class);
