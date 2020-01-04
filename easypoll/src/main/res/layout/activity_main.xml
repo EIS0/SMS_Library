@@ -54,6 +54,7 @@
         android:drawableTop="@drawable/ic_playlist_add_black_48dp"
         android:text="@string/polls_info_text"
         android:textSize="18sp"
-        android:visibility="visible" />
+        android:visibility="gone"
+        tools:visibility="visible" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

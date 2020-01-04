@@ -16,7 +16,7 @@ import java.util.ArrayList;
  */
 public class SMSHandler extends NotificationListenerService {
 
-    private static final char APP_ID = '\r';
+    private static final char APP_ID = '$';
     private static ArrayList<SMSMessage> pendingMessages = new ArrayList<>();
 
     private static ReceivedMessageListener receivedListener = null;

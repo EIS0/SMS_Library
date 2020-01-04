@@ -192,6 +192,16 @@ public class DataProvider extends Observable {
         return closedPolls;
     }
 
+    /**
+     * Tell if {@link DataProvider} has no polls.
+     *
+     * @return True is there are no polls, false otherwise.
+     * @author Matteo Carnelos
+     */
+    public static boolean isEmpty() {
+        return incomingPolls.isEmpty() && openedPolls.isEmpty() && closedPolls.isEmpty();
+    }
+
     // ---------------------------- SETTERS ---------------------------- //
 
     /**

@@ -80,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
         BinaryPoll.setSharedPreferences(getPreferences(Context.MODE_PRIVATE));
         DataProvider.loadDataFromInternal(this);
         BinaryPoll.loadPollsCountFromInternal();
+        if(DataProvider.isEmpty()) infoTxt.setVisibility(View.VISIBLE);
 
         DataProvider.getInstance().addObserver(new Observer() {
             @Override

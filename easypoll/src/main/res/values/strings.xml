@@ -12,6 +12,7 @@
     <string name="poll_li_percentage">%</string>
     <string name="poll_li_num_1">(nº</string>
     <string name="poll_li_num_2">)</string>
+    <string name="poll_li_slash">/</string>
 
     <!-- Main activity strings -->
     <string name="polls_info_text">Create new polls with the + button</string>

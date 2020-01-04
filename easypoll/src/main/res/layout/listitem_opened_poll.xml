@@ -161,6 +161,30 @@
             app:layout_constraintStart_toStartOf="@+id/pollNameTxt"
             app:layout_constraintTop_toBottomOf="@+id/percentageTxt" />
 
+        <TextView
+            android:id="@+id/usersCountTxt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toTopOf="@+id/pollProgressBar"
+            app:layout_constraintEnd_toEndOf="@+id/pollProgressBar"
+            tools:text="8" />
+
+        <TextView
+            android:id="@+id/slashTxt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/poll_li_slash"
+            app:layout_constraintBottom_toBottomOf="@+id/usersCountTxt"
+            app:layout_constraintEnd_toStartOf="@+id/usersCountTxt" />
+
+        <TextView
+            android:id="@+id/answersCountTxt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@+id/slashTxt"
+            app:layout_constraintEnd_toStartOf="@+id/slashTxt"
+            tools:text="6" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </LinearLayout>

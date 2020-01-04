@@ -78,6 +78,7 @@ public class CreatePollActivity extends AppCompatActivity {
         getWindow().setEnterTransition(slide);
         if(getSupportActionBar() != null) {
             getSupportActionBar().setTitle("Create new poll");
+            getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close_white_24dp);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 

@@ -88,14 +88,16 @@ class OpenedPollAdapter extends BaseAdapter implements Observer {
     /**
      * Get a View that displays the poll data accordingly to their position in the ListItem view.<br>
      * An opened poll ListItem View has these assignments:<br>
-     * - Poll Name TextView         ->  Poll Name<br>
-     * - Poll Author TextView       ->  Poll Author Name<br>
-     * - Poll Number TextView       ->  Poll Number<br>
-     * - Poll Question TextView     ->  Poll Question<br>
-     * - Poll Percentage TextView   ->  Poll completed percentage<br>
-     * - Poll ProgressBar           ->  Poll completed percentage<br>
-     * - Number of Yes TextView     ->  Number of Yes answers<br>
-     * - Number of No TextView      ->  Number of No answers<br>
+     * - Poll Name TextView          ->  Poll Name<br>
+     * - Poll Author TextView        ->  Poll Author Name<br>
+     * - Poll Number TextView        ->  Poll Number<br>
+     * - Poll Question TextView      ->  Poll Question<br>
+     * - Poll Percentage TextView    ->  Poll completed percentage<br>
+     * - Poll Answers Count TextView ->  Poll Answers Count<br>
+     * - Poll Users Count TextView   ->  Poll Users Count<br>
+     * - Poll ProgressBar            ->  Poll completed percentage<br>
+     * - Number of Yes TextView      ->  Number of Yes answers<br>
+     * - Number of No TextView       ->  Number of No answers<br>
      *
      * @param position The position in the List.
      * @param convertView The ListItem view on which the UI elements are placed.
@@ -114,6 +116,8 @@ class OpenedPollAdapter extends BaseAdapter implements Observer {
         TextView pollNumTxt = convertView.findViewById(R.id.pollNumTxt);
         TextView pollQuestionTxt = convertView.findViewById(R.id.pollQuestionTxt);
         TextView percentageTxt = convertView.findViewById(R.id.percentageTxt);
+        TextView answersCountTxt = convertView.findViewById(R.id.answersCountTxt);
+        TextView usersCountTxt = convertView.findViewById(R.id.usersCountTxt);
         ProgressBar pollProgressBar = convertView.findViewById(R.id.pollProgressBar);
         TextView yesNumTxt = convertView.findViewById(R.id.yesNumTxt);
         TextView noNumTxt = convertView.findViewById(R.id.noNumTxt);
@@ -127,6 +131,8 @@ class OpenedPollAdapter extends BaseAdapter implements Observer {
         pollQuestionTxt.setText(poll.getQuestion());
         int closedPercentage = poll.getClosedPercentage();
         percentageTxt.setText(String.valueOf(closedPercentage));
+        answersCountTxt.setText(String.valueOf(poll.getNoCount() + poll.getYesCount()));
+        usersCountTxt.setText(String.valueOf(poll.getUsersCount()));
         pollProgressBar.setProgress(closedPercentage);
         yesNumTxt.setText(String.valueOf(poll.getYesCount()));
         noNumTxt.setText(String.valueOf(poll.getNoCount()));
