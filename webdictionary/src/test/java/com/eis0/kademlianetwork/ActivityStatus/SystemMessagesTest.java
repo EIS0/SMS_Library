@@ -31,7 +31,7 @@ public class SystemMessagesTest {
 
     private SMSKademliaNode node1 = new SMSKademliaNode(peer1);
     private SMSKademliaNode node2 = new SMSKademliaNode(peer2);
-    
+
     private SMSManager smsManagerMock;
 
     private final SystemMessages systemMessages = new SystemMessages();
