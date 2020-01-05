@@ -6,6 +6,7 @@ import android.content.Context;
 import com.eis.smslibrary.SMSPeer;
 import com.eis0.UtilityMocks;
 import com.eis0.kademlia.SMSKademliaNode;
+import com.eis0.kademlianetwork.Listener.SMSKademliaListener;
 
 import org.junit.Before;
 import org.junit.Test;

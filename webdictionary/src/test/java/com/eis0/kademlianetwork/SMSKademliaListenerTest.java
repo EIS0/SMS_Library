@@ -6,9 +6,9 @@ import com.eis.smslibrary.SMSPeer;
 import com.eis0.UtilityMocks;
 import com.eis0.kademlia.SMSKademliaNode;
 import com.eis0.kademlianetwork.ActivityStatus.RespondTimer;
-import com.eis0.kademlianetwork.ActivityStatus.SystemMessages;
 import com.eis0.kademlianetwork.InformationDeliveryManager.KademliaMessage;
 import com.eis0.kademlianetwork.InformationDeliveryManager.RequestTypes;
+import com.eis0.kademlianetwork.Listener.SMSKademliaListener;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -20,12 +20,8 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.doCallRealMethod;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
-import static org.mockito.Mockito.when;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({KademliaNetwork.class, SMSManager.class})

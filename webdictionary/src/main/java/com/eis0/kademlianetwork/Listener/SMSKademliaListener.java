@@ -1,9 +1,10 @@
-package com.eis0.kademlianetwork;
+package com.eis0.kademlianetwork.Listener;
 
 
 import com.eis.smslibrary.SMSMessage;
 import com.eis.smslibrary.listeners.SMSReceivedServiceListener;
 import com.eis0.kademlianetwork.InformationDeliveryManager.RequestTypes;
+import com.eis0.kademlianetwork.KademliaNetwork;
 
 /**
  * Listener class that sends the appropriate command to the relative appropriate handler
@@ -29,6 +30,6 @@ public class SMSKademliaListener extends SMSReceivedServiceListener {
      */
     @Override
     public void onMessageReceived(SMSMessage message) {
-        msgListener.onMessageReceived(message);
+        msgListener.processMessage(message);
     }
 }

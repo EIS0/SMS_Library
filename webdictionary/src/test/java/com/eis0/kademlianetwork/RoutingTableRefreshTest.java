@@ -2,14 +2,10 @@ package com.eis0.kademlianetwork;
 
 import android.telephony.SmsManager;
 
-import com.eis.smslibrary.SMSManager;
 import com.eis.smslibrary.SMSPeer;
 import com.eis0.UtilityMocks;
-import com.eis0.kademlia.KademliaId;
-import com.eis0.kademlia.SMSKademliaBucket;
 import com.eis0.kademlia.SMSKademliaNode;
-import com.eis0.kademlianetwork.KademliaListener;
-import com.eis0.kademlianetwork.KademliaNetwork;
+import com.eis0.kademlianetwork.Listener.SMSKademliaListener;
 import com.eis0.kademlianetwork.RoutingTableManager.RoutingTableRefresh;
 
 
@@ -21,7 +17,6 @@ import static org.junit.Assert.assertTrue;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 public class RoutingTableRefreshTest {
 

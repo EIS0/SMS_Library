@@ -1,4 +1,4 @@
-package com.eis0.kademlianetwork;
+package com.eis0.kademlianetwork.Listener;
 
 import android.util.Log;
 
@@ -8,11 +8,13 @@ import com.eis.smslibrary.SMSPeer;
 import com.eis0.kademlia.KademliaId;
 import com.eis0.kademlia.SMSKademliaNode;
 import com.eis0.kademlianetwork.ActivityStatus.SystemMessages;
+import com.eis0.kademlianetwork.ConnectionHandler;
 import com.eis0.kademlianetwork.InformationDeliveryManager.IdFinderHandler;
 import com.eis0.kademlianetwork.InformationDeliveryManager.KademliaMessage;
 import com.eis0.kademlianetwork.InformationDeliveryManager.RequestTypes;
 import com.eis0.kademlianetwork.InformationDeliveryManager.ResearchMode;
 import com.eis0.kademlianetwork.InformationDeliveryManager.ResourceExchangeHandler;
+import com.eis0.kademlianetwork.KademliaNetwork;
 import com.eis0.kademlianetwork.RoutingTableManager.TableUpdateHandler;
 
 /**
@@ -45,7 +47,7 @@ public class IntMsgKademliaListener {
      *
      * @param message The message received.
      */
-    public void onMessageReceived(SMSMessage message) {
+    public void processMessage(SMSMessage message) {
         SMSPeer peer = message.getPeer();
         KademliaMessage kadMessage = new KademliaMessage(message.getData());
         RequestTypes incomingRequest = kadMessage.requestType;
