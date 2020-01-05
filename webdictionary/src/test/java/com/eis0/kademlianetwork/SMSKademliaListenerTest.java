@@ -5,8 +5,9 @@ import com.eis.smslibrary.SMSMessage;
 import com.eis.smslibrary.SMSPeer;
 import com.eis0.UtilityMocks;
 import com.eis0.kademlia.SMSKademliaNode;
-import com.eis0.kademlianetwork.informationdeliverymanager.KademliaMessage;
+import com.eis0.kademlianetwork.listener.SMSKademliaListener;
 import com.eis0.kademlianetwork.informationdeliverymanager.RequestTypes;
+import com.eis0.kademlianetwork.informationdeliverymanager.KademliaOldMessage;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -38,11 +39,11 @@ public class SMSKademliaListenerTest {
     private SMSKademliaListener spyListener = new SMSKademliaListener(spyNetwork);
 
     /*Default messages*/
-    private final KademliaMessage acknowledge = new KademliaMessage(RequestTypes.AcknowledgeMessage, null, null, null, null);
+    private final KademliaOldMessage acknowledge = new KademliaOldMessage(RequestTypes.AcknowledgeMessage, null, null, null, null);
     private final SMSMessage acknowledgeMessage = new SMSMessage(peer1, acknowledge.toString());
-    private final KademliaMessage ping = new KademliaMessage(RequestTypes.Ping, null, null, null, null);
+    private final KademliaOldMessage ping = new KademliaOldMessage(RequestTypes.Ping, null, null, null, null);
     private final SMSMessage pingMessage = new SMSMessage(peer1, ping.toString());
-    private final KademliaMessage pong = new KademliaMessage(RequestTypes.Pong, null, null, null, null);
+    private final KademliaOldMessage pong = new KademliaOldMessage(RequestTypes.Pong, null, null, null, null);
     private final SMSMessage pongMessage = new SMSMessage(peer1, pong.toString());
 
     @Before

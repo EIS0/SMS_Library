@@ -4,10 +4,9 @@ import com.eis.smslibrary.SMSManager;
 import com.eis.smslibrary.SMSMessage;
 import com.eis.smslibrary.SMSPeer;
 import com.eis0.kademlia.SMSKademliaNode;
-import com.eis0.kademlianetwork.informationdeliverymanager.KademliaMessage;
+import com.eis0.kademlianetwork.informationdeliverymanager.KademliaOldMessage;
 import com.eis0.kademlianetwork.informationdeliverymanager.RequestTypes;
 import com.eis0.kademlianetwork.KademliaNetwork;
-
 
 import org.junit.Before;
 import org.junit.Test;
@@ -15,7 +14,6 @@ import org.junit.runner.RunWith;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -44,7 +42,7 @@ public class SystemMessagesTest {
     @Test
     public void sendAcknowledge(){
         SystemMessages.sendAcknowledge(peer1);
-        KademliaMessage acknowledge = new KademliaMessage(RequestTypes.AcknowledgeMessage, null, null, null, null);
+        KademliaOldMessage acknowledge = new KademliaOldMessage(RequestTypes.AcknowledgeMessage, null, null, null, null);
         SMSMessage acknowledgeMessage = new SMSMessage(peer1, acknowledge.toString());
         verify(smsManagerMock, times(1)).sendMessage(acknowledgeMessage);
     }
@@ -52,7 +50,7 @@ public class SystemMessagesTest {
     @Test
     public void sendPing(){
         SystemMessages.sendPing(node1);
-        KademliaMessage ping = new KademliaMessage(RequestTypes.Ping, null, null, null, null);
+        KademliaOldMessage ping = new KademliaOldMessage(RequestTypes.Ping, null, null, null, null);
         SMSMessage pingMessage = new SMSMessage(peer1, ping.toString());
         verify(smsManagerMock, times(1)).sendMessage(pingMessage);
     }
@@ -60,7 +58,7 @@ public class SystemMessagesTest {
     @Test
     public void sendPong(){
         SystemMessages.sendPong(peer1);
-        KademliaMessage pong = new KademliaMessage(RequestTypes.Pong, null, null, null, null);
+        KademliaOldMessage pong = new KademliaOldMessage(RequestTypes.Pong, null, null, null, null);
         SMSMessage pongMessage = new SMSMessage(peer1, pong.toString());
         verify(smsManagerMock, times(1)).sendMessage(pongMessage);
     }
