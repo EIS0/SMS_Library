@@ -4,7 +4,7 @@ import com.eis.smslibrary.SMSManager;
 import com.eis.smslibrary.SMSMessage;
 import com.eis.smslibrary.SMSPeer;
 import com.eis0.kademlia.SMSKademliaNode;
-import com.eis0.kademlianetwork.InformationDeliveryManager.KademliaMessage;
+import com.eis0.kademlianetwork.InformationDeliveryManager.KademliaOldMessage;
 import com.eis0.kademlianetwork.InformationDeliveryManager.RequestTypes;
 import com.eis0.kademlianetwork.KademliaNetwork;
 
@@ -49,7 +49,7 @@ public class SystemMessagesTest {
     @Test
     public void sendAcknowledge(){
         systemMessages.sendAcknowledge(peer1);
-        KademliaMessage acknowledge = new KademliaMessage(RequestTypes.AcknowledgeMessage, null, null, null, null);
+        KademliaOldMessage acknowledge = new KademliaOldMessage(RequestTypes.AcknowledgeMessage, null, null, null, null);
         SMSMessage acknowledgeMessage = new SMSMessage(peer1, acknowledge.toString());
         verify(smsManagerMock, times(1)).sendMessage(acknowledgeMessage);
     }
@@ -57,7 +57,7 @@ public class SystemMessagesTest {
     @Test
     public void sendPing(){
         systemMessages.sendPing(node1);
-        KademliaMessage ping = new KademliaMessage(RequestTypes.Ping, null, null, null, null);
+        KademliaOldMessage ping = new KademliaOldMessage(RequestTypes.Ping, null, null, null, null);
         SMSMessage pingMessage = new SMSMessage(peer1, ping.toString());
         verify(smsManagerMock, times(1)).sendMessage(pingMessage);
     }
@@ -65,7 +65,7 @@ public class SystemMessagesTest {
     @Test
     public void sendPong(){
         systemMessages.sendPong(peer1);
-        KademliaMessage pong = new KademliaMessage(RequestTypes.Pong, null, null, null, null);
+        KademliaOldMessage pong = new KademliaOldMessage(RequestTypes.Pong, null, null, null, null);
         SMSMessage pongMessage = new SMSMessage(peer1, pong.toString());
         verify(smsManagerMock, times(1)).sendMessage(pongMessage);
     }
