@@ -168,9 +168,8 @@ public class KademliaNetwork {
         TableUpdateHandler.updateTable(localRoutingTable, localNode.getId(), netPeer);
     }
 
-
     /**
-     * Method used to add a pair <key, resource> to the local Dictionary
+     * Method used to add a <key, resource> pair to the local Dictionary
      *
      * @param key      The key of the pair <key, resource> the user is trying to add to the dictionary
      * @param resource The resource of the pair <key, resource> the user is trying to add to the dictionary

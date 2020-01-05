@@ -6,6 +6,7 @@ import com.eis.smslibrary.SMSPeer;
 import com.eis0.kademlia.KademliaId;
 import com.eis0.kademlia.SMSKademliaNode;
 import com.eis0.kademlia.SMSKademliaRoutingTable;
+import com.eis0.kademlianetwork.IntMsgKademliaListener;
 import com.eis0.kademlianetwork.KademliaNetwork;
 
 import java.math.BigInteger;
@@ -109,6 +110,11 @@ public class IdFinderHandler {
     private static void sendResult(RequestTypes requestType, KademliaId idToFind, SMSPeer targetPeer) {
         KademliaMessage kadMessage = new KademliaMessage(requestType, idToFind, null, null, null);
         SMSMessage searchResult = new SMSMessage(targetPeer, kadMessage.toString());
+        if(targetPeer.equals(KademliaNetwork.getInstance().getLocalNode().getPeer())) {
+            IntMsgKademliaListener.getInstance(KademliaNetwork.getInstance()).onMessageReceived(searchResult);
+            return;
+        }
+        //else
         SMSManager.getInstance().sendMessage(searchResult);
     }
 
