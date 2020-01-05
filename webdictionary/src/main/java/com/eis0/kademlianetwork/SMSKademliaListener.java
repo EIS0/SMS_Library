@@ -32,7 +32,7 @@ public class SMSKademliaListener extends SMSReceivedServiceListener {
     ResourceExchangeHandler resourceExchangeHandler;
 
 
-    SMSKademliaListener(KademliaNetwork kadNet) {
+    public SMSKademliaListener(KademliaNetwork kadNet) {
         this.kadNet = kadNet;
         resourceExchangeHandler = new ResourceExchangeHandler();
     }
