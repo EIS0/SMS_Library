@@ -17,7 +17,7 @@ import java.io.Serializable;
  */
 public class SMSKademliaNode implements Serializable {
 
-    private KademliaId id;
+    private final KademliaId id;
     private SMSPeer peer;
 
     /**

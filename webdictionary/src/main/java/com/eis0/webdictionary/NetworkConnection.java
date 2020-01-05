@@ -32,10 +32,11 @@ public class NetworkConnection {
         return net;
     }
 
-    private ArrayList<SMSPeer> subscribers = new ArrayList<>();
-    private ArrayList<PingTracker> tracking = new ArrayList<>();
-    private final int TRACKING_TIME = 1000 * 60 * 10; //1000 ms (1s) * 60s (1min) * 10 (10mins)
-    private SMSNetVocabulary vocabulary = new SMSNetVocabulary();
+    private final ArrayList<SMSPeer> subscribers = new ArrayList<>();
+    private final ArrayList<PingTracker> tracking = new ArrayList<>();
+    private final int TRACKING_TIME = 1000 * 60 * 10; //1000 ms (1s) * 60s (1min) * 10 (10min)
+    private final SMSNetVocabulary vocabulary = new SMSNetVocabulary();
+
 
     //region JoinMethods
 
@@ -46,7 +47,7 @@ public class NetworkConnection {
      * @param peer The peer to send the message to.
      * @throws IllegalArgumentException If the peer is invalid or null
      */
-    public void askToJoin(SMSPeer peer) {
+    private void askToJoin(SMSPeer peer) {
         if (peer == null) throw new IllegalArgumentException();
         String textRequest = RequestType.JoinPermission.ordinal() + " " + peersInNetwork();
         SMSMessage message = new SMSMessage(peer, textRequest);
@@ -76,10 +77,9 @@ public class NetworkConnection {
     /**
      * Accepts a request to Join this network, then sends the peer an update on the net
      *
-     * @param linkPeer The Peer asking to join this network, working as a link between 2 nets now joined
      * @param text     The message received with the sender's network state
      */
-    void acceptJoin(SMSPeer linkPeer, String text) {
+    void acceptJoin(String text) {
         String[] newPeersOnNet_asString = text.split(" ");
         SMSPeer[] newPeersOnNet = new SMSPeer[newPeersOnNet_asString.length];
         for (int i = 0; i < newPeersOnNet_asString.length; i++)
@@ -104,7 +104,7 @@ public class NetworkConnection {
      *
      * @param message The message to broadcast
      */
-    public void broadcast(String message) {
+    private void broadcast(String message) {
         partCast(subscribers.toArray(new SMSPeer[0]), message);
     }
 
@@ -114,7 +114,7 @@ public class NetworkConnection {
      * @param peers   The list of peers to send the message to
      * @param message The message to send
      */
-    public void partCast(SMSPeer[] peers, String message) {
+    private void partCast(SMSPeer[] peers, String message) {
         for (SMSPeer peer : peers) {
             SMSMessage wholeMessage = new SMSMessage(peer, message);
             SMSManager.getInstance().sendMessage(wholeMessage);
@@ -236,7 +236,7 @@ public class NetworkConnection {
      * @throws IllegalArgumentException If at least one peer is null or invalid,
      *                                  or if the array is null
      */
-    public void addToNet(SMSPeer[] peers) {
+    private void addToNet(SMSPeer[] peers) {
         if (peers == null) throw new IllegalArgumentException();
         for (SMSPeer peer : peers) addToNet(peer);
     }
@@ -299,7 +299,7 @@ public class NetworkConnection {
     /**
      * Adds a key-value couple to the vocabulary without broadcasting to the whole net
      */
-    void addToDictionaryNoCast(SerializableObject key, SerializableObject value) {
+    private void addToDictionaryNoCast(SerializableObject key, SerializableObject value) {
         vocabulary.add(key, value);
     }
 
@@ -329,7 +329,7 @@ public class NetworkConnection {
     /**
      * Removes a key from the vocabulary without broadcasting to the whole net
      */
-    void removeFromDictionaryNoCast(SerializableObject key) {
+    private void removeFromDictionaryNoCast(SerializableObject key) {
         vocabulary.remove(key);
     }
 
@@ -358,7 +358,7 @@ public class NetworkConnection {
     /**
      * Removes a key from the vocabulary without broadcasting to the whole net
      */
-    void updateDictionaryNoCast(SerializableObject key, SerializableObject value) {
+    private void updateDictionaryNoCast(SerializableObject key, SerializableObject value) {
         vocabulary.update(key, value);
     }
 

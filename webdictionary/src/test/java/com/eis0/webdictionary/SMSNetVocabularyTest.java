@@ -105,16 +105,16 @@ public class SMSNetVocabularyTest {
 
 
     private class TestObject extends SerializableObject{
-        private String name;
+        private final String name;
 
-        public TestObject(String name){
+        TestObject(String name){
             this.name = name;
         }
 
         @Override
         public String serialize(){ return name; }
 
-        public String getData(){
+        String getData(){
             return name;
         }
 

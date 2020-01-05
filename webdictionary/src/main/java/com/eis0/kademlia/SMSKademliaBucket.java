@@ -15,6 +15,7 @@ import java.util.TreeSet;
  * *      paper</a> for more details.
  * @author Edoardo Raimondi
  * @author edits by Marco Cognolato
+ * @author edits by Giovanni Velludo
  */
 public class SMSKademliaBucket implements KademliaBucket {
 
@@ -22,10 +23,10 @@ public class SMSKademliaBucket implements KademliaBucket {
     private int depth;
 
     /* Contacts stored in this routing table */
-    private TreeSet<Contact> contacts;
+    private final TreeSet<Contact> contacts;
 
     /* A set of last seen contacts that can replace any current contact that is unresponsive */
-    private TreeSet<Contact> replacementCache;
+    private final TreeSet<Contact> replacementCache;
 
     /*Configuration of this kademlia implementation*/
     private KadConfiguration config;
@@ -197,17 +198,14 @@ public class SMSKademliaBucket implements KademliaBucket {
     {
         final ArrayList<Contact> ret = new ArrayList<>();
 
-        /* If we have no contacts, return the blank arraylist */
+        /* If we have no contacts, return the blank ArrayList */
         if (this.contacts.isEmpty())
         {
             return ret;
         }
 
-        /* We have contacts, lets copy put them into the arraylist and return */
-        for (Contact c : this.contacts)
-        {
-            ret.add(c);
-        }
+        /* We have contacts, lets copy put them into the ArrayList and return */
+        ret.addAll(this.contacts);
 
         return ret;
     }
@@ -258,7 +256,7 @@ public class SMSKademliaBucket implements KademliaBucket {
     }
 
     /**
-     * @return replacementChace size
+     * @return replacement Cache size
      */
     public int getReplacementCacheSize() {
         return this.replacementCache.size();

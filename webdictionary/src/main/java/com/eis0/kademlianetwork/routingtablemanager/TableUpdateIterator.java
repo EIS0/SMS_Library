@@ -1,4 +1,4 @@
-package com.eis0.kademlianetwork.RoutingTableManager;
+package com.eis0.kademlianetwork.routingtablemanager;
 
 import androidx.annotation.NonNull;
 
@@ -6,8 +6,8 @@ import com.eis.smslibrary.SMSPeer;
 import com.eis0.kademlia.KademliaId;
 import com.eis0.kademlia.SMSKademliaNode;
 import com.eis0.kademlia.SMSKademliaRoutingTable;
-import com.eis0.kademlianetwork.InformationDeliveryManager.IdFinderHandler;
-import com.eis0.kademlianetwork.InformationDeliveryManager.ResearchMode;
+import com.eis0.kademlianetwork.informationdeliverymanager.IdFinderHandler;
+import com.eis0.kademlianetwork.informationdeliverymanager.ResearchMode;
 
 /**
  * Iterator for the execution of the update-table algorithm.
@@ -17,7 +17,7 @@ import com.eis0.kademlianetwork.InformationDeliveryManager.ResearchMode;
  *
  * @author Marco Cognolato
  */
-public class TableUpdateIterator {
+class TableUpdateIterator {
     private int currentCount;
     private int maxCount;
     private KademliaId netId;
@@ -82,7 +82,7 @@ public class TableUpdateIterator {
     /**
      * @return Returns true if the algorithm has finished execution, false otherwise
      */
-    public boolean hasFinished() {
+    private boolean hasFinished() {
         return currentCount >= maxCount;
     }
 

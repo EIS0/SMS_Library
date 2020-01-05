@@ -1,4 +1,4 @@
-package com.eis0.kademlianetwork.ActivityStatus;
+package com.eis0.kademlianetwork.activitystatus;
 
 import java.util.TimerTask;
 
@@ -8,6 +8,7 @@ import java.util.TimerTask;
  * in that time, then the receiver is considered broken.
  *
  * @author Edoardo Raimondi
+ * @author edits by Giovanni Velludo
  */
 
 public class RespondTimer extends TimerTask {
@@ -21,8 +22,6 @@ public class RespondTimer extends TimerTask {
 
     /**
      * Define the 10 seconds interval
-     *
-     * @throws InterruptedException when the thread is interrupted during the execution
      */
     private void completeTask() {
         try {

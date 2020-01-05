@@ -4,7 +4,7 @@ import androidx.annotation.NonNull;
 
 public class SMSSerialization extends SerializableObject<String> {
 
-    private String data;
+    private final String data;
 
     /**
      * Creates a Serializable object from the String to serialize

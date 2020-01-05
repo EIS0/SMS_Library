@@ -1,4 +1,4 @@
-package com.eis0.kademlianetwork.ActivityStatus;
+package com.eis0.kademlianetwork.activitystatus;
 
 import java.util.TimerTask;
 
@@ -7,8 +7,9 @@ import java.util.TimerTask;
  * Define a 2 hours timer
  *
  * @author Edoardo Raimondi
+ * @author edits by Giovanni Velludo
  */
-public class RefreshTimer extends TimerTask {
+class RefreshTimer extends TimerTask {
 
      private static final long time = 72000000;
 
@@ -20,8 +21,6 @@ public class RefreshTimer extends TimerTask {
 
     /**
      * Define the 2 hours interval
-     *
-     * @throws InterruptedException when the thread is interrupted during the execution
      */
     private void completeTask() {
         try {

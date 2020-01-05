@@ -1,6 +1,4 @@
-package com.eis0.kademlianetwork.InformationDeliveryManager;
-
-import android.view.textclassifier.ConversationActions;
+package com.eis0.kademlianetwork.informationdeliverymanager;
 
 import com.eis.smslibrary.SMSMessage;
 import com.eis.smslibrary.SMSPeer;
@@ -15,15 +13,16 @@ import com.eis0.kademlia.KademliaId;
  * The syntax is defined in the constructor
  *
  * @author Enrico Cestaro
+ * @author edits by Giovanni Velludo
  */
 public class KademliaMessage {
     private static final String REQUEST_TYPE_NULL = "The requestType parameter is null";
     private static final String DEFAULT = "/";
     private static final String BLANK = " ";
 
-    public RequestTypes requestType;
-    public KademliaId idToFind;
-    public SMSPeer searcher;
+    public final RequestTypes requestType;
+    public final KademliaId idToFind;
+    public final SMSPeer searcher;
     public String key;
     public String resource;
 
@@ -57,7 +56,11 @@ public class KademliaMessage {
         idToFind = new KademliaId(splitted[1]);
         searcher = new SMSPeer(splitted[2]);
         key = splitted[3];
-        for (int i = 4; i < splitted.length; i++) resource += splitted[i] + BLANK;
+        StringBuilder resourceBuilder = new StringBuilder();
+        for (int i = 4; i < splitted.length; i++) {
+            resourceBuilder.append(splitted[i]).append(BLANK);
+        }
+        resource = resourceBuilder.toString();
     }
 
     /**
@@ -108,12 +111,10 @@ public class KademliaMessage {
         if (key == null) key = DEFAULT;
         if (resource == null) resource = DEFAULT;
 
-        String messageToCreate =
-                requestType.ordinal() + BLANK +
-                        stringIdToFind + BLANK +
-                        stringSearcher + BLANK +
-                        key + BLANK +
-                        resource;
-        return messageToCreate;
+        return requestType.ordinal() + BLANK +
+                stringIdToFind + BLANK +
+                stringSearcher + BLANK +
+                key + BLANK +
+                resource;
     }
 }

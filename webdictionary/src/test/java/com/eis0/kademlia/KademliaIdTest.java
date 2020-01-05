@@ -9,8 +9,8 @@ import static org.junit.Assert.assertNotEquals;
 
 public class KademliaIdTest {
 
-    private int ID_LENGTH = KademliaId.ID_LENGTH;
-    private int ID_LENGTH_BYTES = KademliaId.ID_LENGTH_BYTES;
+    private final int ID_LENGTH = KademliaId.ID_LENGTH;
+    private final int ID_LENGTH_BYTES = KademliaId.ID_LENGTH_BYTES;
 
     private final SMSPeer VALID_PEER = new SMSPeer("+393408140326");
     private final KademliaId RANDOM_ID = new KademliaId();
@@ -20,9 +20,6 @@ public class KademliaIdTest {
     private final KademliaId SIMPLE_ID2 = new KademliaId("\02"); //0x02
     //by construction SIMPLE_ID1 xor SIMPLE_ID2 = SIMPLE_ID3
     private final KademliaId SIMPLE_ID3 = new KademliaId("\01"); //0x01
-    /* SHA-256 hash of test SMSPeer, calculated with an external
-     program, and truncated to the first 160 bits */
-    private final String NUMBER_HASH = "8202021e5ef98f7a";
 
     private final String TEXT_TOO_LONG =
             new String(new char[ID_LENGTH+3]).replace('\0', 'a');
@@ -32,6 +29,9 @@ public class KademliaIdTest {
     public void creationId_BySMSPeer() {
         KademliaId test = new KademliaId(VALID_PEER);
         String id = test.getInt().toString(16);
+        /* SHA-256 hash of test SMSPeer, calculated with an external
+        program, and truncated to the first 160 bits */
+        String NUMBER_HASH = "8202021e5ef98f7a";
         assertEquals(NUMBER_HASH, id);
     }
 
@@ -50,11 +50,15 @@ public class KademliaIdTest {
         assertEquals(id1,id2);
     }
 
+    /**
+     * @author Giovanni Velludo
+     */
     @Test
     public void nullString_sameAsEmptyByteArray(){
         KademliaId id1 = new KademliaId("");
         byte[] empty = new byte[1];
         KademliaId id2 = new KademliaId(empty);
+        assertEquals(id1, id2);
     }
 
     @Test
@@ -165,18 +169,18 @@ public class KademliaIdTest {
     }
 
     @Test
-    public void distanceToSame_distanzeZero(){
+    public void distanceToSame_isZero(){
         assertEquals(STRING_ID.getDistance(STRING_ID), 0);
     }
 
     @Test
-    public void hexRapresentation_ByPhoneNumber(){
+    public void hexRepresentation_ByPhoneNumber(){
         String shouldBe = "8202021E5EF98F7A"; //calculated outside
         assertEquals(NUMBER_ID.hexRepresentation(), shouldBe);
     }
 
     @Test
-    public void hexRapresentation_ByString(){
+    public void hexRepresentation_ByString(){
         String shouldBe = "3131313131313131"; //calculated outside
         assertEquals(STRING_ID.hexRepresentation(), shouldBe);
     }

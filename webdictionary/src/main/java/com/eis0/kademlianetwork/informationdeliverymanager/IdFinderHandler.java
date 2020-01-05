@@ -1,4 +1,4 @@
-package com.eis0.kademlianetwork.InformationDeliveryManager;
+package com.eis0.kademlianetwork.informationdeliverymanager;
 
 import com.eis.smslibrary.SMSManager;
 import com.eis.smslibrary.SMSMessage;
@@ -16,6 +16,7 @@ import java.math.BigInteger;
  * @author Marco Cognolato (wrote the class)
  * @author Enrico Cestaro (edited and restored the code, to implement multiple research modes)
  * @author Edoardo Raimondi (added the check cicle to verify if the target node is 'alive')
+ * @author Giovanni Velludo (removed an useless variable)
  */
 public class IdFinderHandler {
     private static final String ID_TO_FIND_NULL = "The idToFind parameter is null";
@@ -72,7 +73,6 @@ public class IdFinderHandler {
         SMSKademliaRoutingTable table = KademliaNetwork.getInstance().getLocalRoutingTable();
         //Get the node with the node ID closest to the idToFind
         SMSKademliaNode closestNode = table.findClosest(idToFind, 1).get(0);
-        SMSKademliaNode nodeToFind = new SMSKademliaNode(idToFind);
 
         BigInteger idToFindDistanceFromNetId = idToFind.getXorDistance(netId);
         BigInteger idToFindDistanceFromClosest = idToFind.getXorDistance(closestNode.getId());

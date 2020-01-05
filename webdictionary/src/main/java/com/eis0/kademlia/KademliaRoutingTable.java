@@ -7,7 +7,7 @@ import java.util.List;
  *
  * @author Edoardo Raimondi
  */
-public interface KademliaRoutingTable {
+interface KademliaRoutingTable {
 
     /**
      * Initialize the RoutingTable to it's default state

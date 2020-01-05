@@ -4,8 +4,8 @@ import com.eis.smslibrary.SMSManager;
 import com.eis.smslibrary.SMSMessage;
 import com.eis.smslibrary.SMSPeer;
 import com.eis0.kademlia.SMSKademliaNode;
-import com.eis0.kademlianetwork.InformationDeliveryManager.KademliaMessage;
-import com.eis0.kademlianetwork.InformationDeliveryManager.RequestTypes;
+import com.eis0.kademlianetwork.informationdeliverymanager.KademliaMessage;
+import com.eis0.kademlianetwork.informationdeliverymanager.RequestTypes;
 
 /**
  * Class handling the first time connection to a kademlia network.
@@ -14,7 +14,7 @@ import com.eis0.kademlianetwork.InformationDeliveryManager.RequestTypes;
  *
  * @author Marco Cognolato
  */
-public class ConnectionHandler {
+class ConnectionHandler {
 
     /**
      * Invites a given valid SMSPeer to join my kademlia network

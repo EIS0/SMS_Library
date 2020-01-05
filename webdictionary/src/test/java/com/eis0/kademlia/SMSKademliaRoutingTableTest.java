@@ -33,8 +33,8 @@ public class SMSKademliaRoutingTableTest {
     /* Testing initialization */
     private SMSKademliaRoutingTable routingTable;
 
-    private ArrayList<SMSKademliaNode> partialList = new ArrayList<>();
-    private ArrayList<SMSKademliaNode> fullList = new ArrayList<>();
+    private final ArrayList<SMSKademliaNode> partialList = new ArrayList<>();
+    private final ArrayList<SMSKademliaNode> fullList = new ArrayList<>();
 
     @Before
     public void setup(){

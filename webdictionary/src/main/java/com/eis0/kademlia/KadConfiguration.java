@@ -5,7 +5,7 @@ package com.eis0.kademlia;
  *
  * @author Edoardo Raimondi
  */
-public interface KadConfiguration {
+interface KadConfiguration {
 
     /**
      * @return K-Value used throughout Kademlia

@@ -1,8 +1,6 @@
 package com.eis0.kademlianetwork;
 
 
-import android.content.Context;
-
 import com.eis.smslibrary.SMSPeer;
 import com.eis0.UtilityMocks;
 import com.eis0.kademlia.SMSKademliaNode;
@@ -17,21 +15,16 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
 
 public class KademliaNetworkTest {
 
-    Context mockContext = spy(Context.class);
+    private final SMSPeer peer1 = new SMSPeer("+5554");
+    private final SMSPeer peer2 = new SMSPeer("+5555");
+    private final SMSPeer peer3 = new SMSPeer("+5556");
 
-    private SMSPeer peer1 = new SMSPeer("+5554");
-    private SMSPeer peer2 = new SMSPeer("+5555");
-    private SMSPeer peer3 = new SMSPeer("+5556");
-    private SMSPeer peer4 = new SMSPeer("+5554");
-
-    private SMSKademliaNode NODE1 = new SMSKademliaNode(peer1); //local node
-    private SMSKademliaNode NODE2 = new SMSKademliaNode(peer2);
-    private SMSKademliaNode NODE3 = new SMSKademliaNode(peer3);
-    private SMSKademliaNode NODE4 = new SMSKademliaNode(peer4);
+    private final SMSKademliaNode NODE1 = new SMSKademliaNode(peer1); //local node
+    private final SMSKademliaNode NODE2 = new SMSKademliaNode(peer2);
+    private final SMSKademliaNode NODE3 = new SMSKademliaNode(peer3);
 
     private final KademliaNetwork NET1 = new KademliaNetwork();
 
@@ -39,7 +32,7 @@ public class KademliaNetworkTest {
 
     @Before
     public void setUp(){
-        NET1.init(NODE1, mockListener1, UtilityMocks.setupMocks());
+        NET1.init(NODE1, UtilityMocks.setupMocks());
     }
 
     @Test
@@ -87,7 +80,7 @@ public class KademliaNetworkTest {
 
     @Test
     public void isAlive_itIs_calledDuring(){
-        //an immaginary user responds after 5s
+        //an imaginary user responds after 5s
         Timer timer = new Timer();
         timer.schedule(new TimerTest(NET1), 5000);
         //this will last 10s
@@ -95,9 +88,9 @@ public class KademliaNetworkTest {
     }
 
     private class TimerTest extends TimerTask{
-        private KademliaNetwork net;
+        private final KademliaNetwork net;
 
-        public TimerTest(KademliaNetwork net){
+        TimerTest(KademliaNetwork net){
             this.net = net;
         }
 

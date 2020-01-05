@@ -5,21 +5,20 @@ import com.eis.smslibrary.SMSPeer;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public class ContactTest {
-    private SMSPeer peer = new SMSPeer("+393497364511");
-    private SMSKademliaNode toTest = new SMSKademliaNode(peer);
-    private Contact test = new Contact(toTest);
+    private final SMSPeer peer = new SMSPeer("+393497364511");
+    private final SMSKademliaNode toTest = new SMSKademliaNode(peer);
+    private final Contact test = new Contact(toTest);
 
     @Test
     public void getNodeTest(){
-      assertTrue(test.getNode().equals(toTest));
+      assertEquals(test.getNode(), toTest);
     }
 
     @Test
     public void equalsTest(){
-        assertTrue(test.equals(test));
+        assertEquals(test, test);
     }
 
     @Test

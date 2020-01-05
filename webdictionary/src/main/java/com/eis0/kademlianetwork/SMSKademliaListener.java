@@ -9,13 +9,13 @@ import com.eis.smslibrary.SMSPeer;
 import com.eis.smslibrary.listeners.SMSReceivedServiceListener;
 import com.eis0.kademlia.KademliaId;
 import com.eis0.kademlia.SMSKademliaNode;
-import com.eis0.kademlianetwork.ActivityStatus.SystemMessages;
-import com.eis0.kademlianetwork.InformationDeliveryManager.IdFinderHandler;
-import com.eis0.kademlianetwork.InformationDeliveryManager.KademliaMessage;
-import com.eis0.kademlianetwork.InformationDeliveryManager.RequestTypes;
-import com.eis0.kademlianetwork.InformationDeliveryManager.ResearchMode;
-import com.eis0.kademlianetwork.InformationDeliveryManager.ResourceExchangeHandler;
-import com.eis0.kademlianetwork.RoutingTableManager.TableUpdateHandler;
+import com.eis0.kademlianetwork.activitystatus.SystemMessages;
+import com.eis0.kademlianetwork.informationdeliverymanager.IdFinderHandler;
+import com.eis0.kademlianetwork.informationdeliverymanager.KademliaMessage;
+import com.eis0.kademlianetwork.informationdeliverymanager.RequestTypes;
+import com.eis0.kademlianetwork.informationdeliverymanager.ResearchMode;
+import com.eis0.kademlianetwork.informationdeliverymanager.ResourceExchangeHandler;
+import com.eis0.kademlianetwork.routingtablemanager.TableUpdateHandler;
 
 /**
  * Listener class that sends the appropriate command to the relative appropriate handler
@@ -28,8 +28,8 @@ import com.eis0.kademlianetwork.RoutingTableManager.TableUpdateHandler;
 
 public class SMSKademliaListener extends SMSReceivedServiceListener {
     private final static String LOG_TAG = "MSG_LSTNR";
-    KademliaNetwork kadNet;
-    ResourceExchangeHandler resourceExchangeHandler;
+    private final KademliaNetwork kadNet;
+    private final ResourceExchangeHandler resourceExchangeHandler;
 
 
     public SMSKademliaListener(KademliaNetwork kadNet) {
@@ -60,12 +60,12 @@ public class SMSKademliaListener extends SMSReceivedServiceListener {
 
         //Starts a specific action depending upon the request or the command sent by other users
         switch (incomingRequest) {
-            /**Acknowledge messages*/
+            /*Acknowledge messages*/
             case AcknowledgeMessage:
                 kadNet.connectionInfo.setRespond(true);
                 break;
 
-            /**Refreshing operations*/
+            /*Refreshing operations*/
             case Ping:
                 //Lets others know I'm alive and I'm happy to be
                 SystemMessages.sendPong(peer);
@@ -86,7 +86,7 @@ public class SMSKademliaListener extends SMSReceivedServiceListener {
                 break;
 
 
-            /**Joining a network */
+            /*Joining a network */
             case JoinPermission:
                 ConnectionHandler.sendAcceptRequest(peer);
                 break;
@@ -108,7 +108,7 @@ public class SMSKademliaListener extends SMSReceivedServiceListener {
                 break;
 
 
-            /**Adding a resource to the Dictionary */
+            /*Adding a resource to the Dictionary */
             case FindIdForAddRequest:
                 //1. I inform that I'm alive and happy to be
                 SystemMessages.sendAcknowledge(peer);
@@ -135,7 +135,7 @@ public class SMSKademliaListener extends SMSReceivedServiceListener {
                 break;
 
 
-            /**Asking for a resource to the Dictionary*/
+            /*Asking for a resource to the Dictionary*/
             case FindIdForGetRequest:
                 //1. I inform that I'm alive and happy to be
                 SystemMessages.sendAcknowledge(peer);
@@ -165,7 +165,7 @@ public class SMSKademliaListener extends SMSReceivedServiceListener {
                 break;
 
 
-            /**Remove a resource from the Dictionary */
+            /*Remove a resource from the Dictionary */
             case FindIdForDeleteRequest:
                 //1. I inform that I'm alive and happy to be
                 SystemMessages.sendAcknowledge(peer);

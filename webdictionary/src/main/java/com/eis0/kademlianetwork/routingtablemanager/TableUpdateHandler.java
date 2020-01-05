@@ -1,4 +1,4 @@
-package com.eis0.kademlianetwork.RoutingTableManager;
+package com.eis0.kademlianetwork.routingtablemanager;
 
 import com.eis.smslibrary.SMSPeer;
 import com.eis0.kademlia.KademliaId;
