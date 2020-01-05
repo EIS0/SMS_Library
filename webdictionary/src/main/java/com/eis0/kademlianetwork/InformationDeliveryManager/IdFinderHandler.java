@@ -110,8 +110,11 @@ public class IdFinderHandler {
      * @param targetPeer  The Peer representing the target that will receive the result
      */
     private static void sendResult(RequestTypes requestType, KademliaId idToFind, SMSPeer targetPeer) {
-        KademliaOldMessage kadMessage = new KademliaOldMessage(requestType, idToFind, null, null, null);
-        SMSMessage searchResult = new SMSMessage(targetPeer, kadMessage.toString());
+        SMSMessage searchResult = new KademliaMessageBuilder()
+                .setPeer(targetPeer)
+                .setCommand(requestType)
+                .addArguments(idToFind.toString(), null, null, null)
+                .buildMessage();
         SMSManager.getInstance().sendMessage(searchResult);
     }
 
@@ -132,8 +135,11 @@ public class IdFinderHandler {
      * @param closerNode   The node with the {@link KademliaId} closer to the idToFind
      */
     private static void keepLooking(RequestTypes requestType, KademliaId idToFind, SMSPeer searcherNode, SMSPeer closerNode) {
-        KademliaOldMessage kadMessage = new KademliaOldMessage(requestType, idToFind, searcherNode, null, null);
-        SMSMessage requestMessage = new SMSMessage(closerNode, kadMessage.toString());
+        SMSMessage requestMessage = new KademliaMessageBuilder()
+                .setPeer(closerNode)
+                .setCommand(requestType)
+                .addArguments(idToFind.toString(), searcherNode.toString(), null, null)
+                .buildMessage();
         SMSManager.getInstance().sendMessage(requestMessage);
     }
 

@@ -15,7 +15,7 @@ public class KademliaMessageBuilder {
     private String messageText = null;
 
     /**
-     * Constructor for a Kademlia Message totally built
+     * Constructor for a Kademlia Message to build
      */
     public KademliaMessageBuilder(){ }
 

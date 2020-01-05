@@ -99,6 +99,7 @@ public class KademliaOldMessage {
     public String toString() {
         //The RequestType is the only field which needs to be not Null
         if (requestType == null) throw new IllegalArgumentException(REQUEST_TYPE_NULL);
+
         String stringIdToFind = DEFAULT;
         String stringSearcher = DEFAULT;
         if (idToFind != null) stringIdToFind = idToFind.toString();
