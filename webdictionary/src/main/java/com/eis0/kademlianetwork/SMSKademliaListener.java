@@ -17,7 +17,7 @@ import com.eis0.kademlianetwork.InformationDeliveryManager.RequestTypes;
 public class SMSKademliaListener extends SMSReceivedServiceListener {
     IntMsgKademliaListener msgListener;
 
-    SMSKademliaListener(KademliaNetwork kadNet) {
+    public SMSKademliaListener(KademliaNetwork kadNet) {
         msgListener = IntMsgKademliaListener.getInstance(kadNet);
     }
 
