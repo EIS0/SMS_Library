@@ -10,7 +10,8 @@ import com.eis0.kademlia.SMSKademliaNode;
 import com.eis0.kademlianetwork.ActivityStatus.SystemMessages;
 import com.eis0.kademlianetwork.ConnectionHandler;
 import com.eis0.kademlianetwork.InformationDeliveryManager.IdFinderHandler;
-import com.eis0.kademlianetwork.InformationDeliveryManager.KademliaOldMessage;
+import com.eis0.kademlianetwork.InformationDeliveryManager.KademliaMessageAnalyzer;
+import com.eis0.kademlianetwork.InformationDeliveryManager.KademliaMessageBuilder;
 import com.eis0.kademlianetwork.InformationDeliveryManager.RequestTypes;
 import com.eis0.kademlianetwork.InformationDeliveryManager.ResearchMode;
 import com.eis0.kademlianetwork.InformationDeliveryManager.ResourceExchangeHandler;
@@ -48,13 +49,13 @@ public class IntMsgKademliaListener {
      * @param message The message received.
      */
     public void processMessage(SMSMessage message) {
-        SMSPeer peer = message.getPeer();
-        KademliaOldMessage kadMessage = new KademliaOldMessage(message.getData());
-        RequestTypes incomingRequest = kadMessage.requestType;
-        KademliaId idToFind = kadMessage.idToFind;
-        SMSPeer searcher = kadMessage.searcher;
-        String key = kadMessage.key;
-        String resource = kadMessage.resource;
+        KademliaMessageAnalyzer kadMessage = new KademliaMessageAnalyzer(message);
+        SMSPeer peer = kadMessage.getPeer();
+        RequestTypes incomingRequest = kadMessage.getCommand();
+        SMSPeer searcher = kadMessage.getSearcher();
+        KademliaId idToFind = kadMessage.getIdToFind();
+        String key = kadMessage.getKey();
+        String resource = kadMessage.getResource();
         //The two values, idToFind and idFound, share the same field, depending upon the type of request
         //the SMSKademliaListener knows which one of the two is occupying it, and process it consequently
         KademliaId idFound = idToFind;
@@ -159,8 +160,11 @@ public class IntMsgKademliaListener {
                 Log.i(LOG_TAG, "Received GetFromDictionary request.\nKey: " + key);
                 resource = KademliaNetwork.getInstance().getFromLocalDictionary(key).toString();
                 //2. Send the <key, resource> pair
-                KademliaOldMessage kademliaMessage = new KademliaOldMessage(RequestTypes.AddToDict, null, null, key, resource);
-                message = new SMSMessage(peer, kademliaMessage.toString());
+                message = new KademliaMessageBuilder()
+                        .setPeer(peer)
+                        .setCommand(RequestTypes.AddToDict)
+                        .addArguments(null, null, key, resource)
+                        .buildMessage();
                 SMSManager.getInstance().sendMessage(message);
                 break;
 
