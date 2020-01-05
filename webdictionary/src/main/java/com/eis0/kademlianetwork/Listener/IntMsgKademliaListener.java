@@ -1,43 +1,46 @@
-package com.eis0.kademlianetwork;
-
+package com.eis0.kademlianetwork.Listener;
 
 import android.util.Log;
 
 import com.eis.smslibrary.SMSManager;
 import com.eis.smslibrary.SMSMessage;
 import com.eis.smslibrary.SMSPeer;
-import com.eis.smslibrary.listeners.SMSReceivedServiceListener;
 import com.eis0.kademlia.KademliaId;
 import com.eis0.kademlia.SMSKademliaNode;
 import com.eis0.kademlianetwork.ActivityStatus.SystemMessages;
+import com.eis0.kademlianetwork.ConnectionHandler;
 import com.eis0.kademlianetwork.InformationDeliveryManager.IdFinderHandler;
-import com.eis0.kademlianetwork.InformationDeliveryManager.KademliaMessage;
+import com.eis0.kademlianetwork.InformationDeliveryManager.KademliaMessageAnalyzer;
+import com.eis0.kademlianetwork.InformationDeliveryManager.KademliaMessageBuilder;
 import com.eis0.kademlianetwork.InformationDeliveryManager.RequestTypes;
 import com.eis0.kademlianetwork.InformationDeliveryManager.ResearchMode;
 import com.eis0.kademlianetwork.InformationDeliveryManager.ResourceExchangeHandler;
+import com.eis0.kademlianetwork.KademliaNetwork;
 import com.eis0.kademlianetwork.RoutingTableManager.TableUpdateHandler;
 
 /**
- * Listener class that sends the appropriate command to the relative appropriate handler
+ * Listener class which sends the appropriate command to the relative appropriate handler
  *
  * @author Marco Cognolato
  * @author Matteo Carnelos
  * @author Edoardo Raimondi
  * @author Enrico Cestaro
  */
-
-public class SMSKademliaListener extends SMSReceivedServiceListener {
+public class IntMsgKademliaListener {
     private final static String LOG_TAG = "MSG_LSTNR";
-    KademliaNetwork kadNet;
-    ResourceExchangeHandler resourceExchangeHandler;
+    private KademliaNetwork kadNet;
+    private ResourceExchangeHandler resourceExchangeHandler;
+    private static IntMsgKademliaListener instance;
 
-
-    public SMSKademliaListener(KademliaNetwork kadNet) {
+    private IntMsgKademliaListener(KademliaNetwork kadNet) {
         this.kadNet = kadNet;
         resourceExchangeHandler = new ResourceExchangeHandler();
     }
-
-
+    //@TODO change it in an ObjectPoll
+    public static IntMsgKademliaListener getInstance(KademliaNetwork kadNet) {
+            if(instance == null) instance = new IntMsgKademliaListener(kadNet);
+            return instance;
+        }
 
     /**
      * This method analyzes the incoming messages, extracts the content, and processes it depending
@@ -45,19 +48,17 @@ public class SMSKademliaListener extends SMSReceivedServiceListener {
      *
      * @param message The message received.
      */
-    @Override
-    public void onMessageReceived(SMSMessage message) {
-        SMSPeer peer = message.getPeer();
-        KademliaMessage kadMessage = new KademliaMessage(message.getData());
-        RequestTypes incomingRequest = kadMessage.requestType;
-        KademliaId idToFind = kadMessage.idToFind;
-        SMSPeer searcher = kadMessage.searcher;
-        String key = kadMessage.key;
-        String resource = kadMessage.resource;
+    public void processMessage(SMSMessage message) {
+        KademliaMessageAnalyzer kadMessage = new KademliaMessageAnalyzer(message);
+        SMSPeer peer = kadMessage.getPeer();
+        RequestTypes incomingRequest = kadMessage.getCommand();
+        SMSPeer searcher = kadMessage.getSearcher();
+        KademliaId idToFind = kadMessage.getIdToFind();
+        String key = kadMessage.getKey();
+        String resource = kadMessage.getResource();
         //The two values, idToFind and idFound, share the same field, depending upon the type of request
         //the SMSKademliaListener knows which one of the two is occupying it, and process it consequently
         KademliaId idFound = idToFind;
-
         //Starts a specific action depending upon the request or the command sent by other users
         switch (incomingRequest) {
             /**Acknowledge messages*/
@@ -159,8 +160,11 @@ public class SMSKademliaListener extends SMSReceivedServiceListener {
                 Log.i(LOG_TAG, "Received GetFromDictionary request.\nKey: " + key);
                 resource = KademliaNetwork.getInstance().getFromLocalDictionary(key).toString();
                 //2. Send the <key, resource> pair
-                KademliaMessage kademliaMessage = new KademliaMessage(RequestTypes.AddToDict, null, null, key, resource);
-                message = new SMSMessage(peer, kademliaMessage.toString());
+                message = new KademliaMessageBuilder()
+                        .setPeer(peer)
+                        .setCommand(RequestTypes.AddToDict)
+                        .addArguments(null, null, key, resource)
+                        .buildMessage();
                 SMSManager.getInstance().sendMessage(message);
                 break;
 

@@ -24,7 +24,7 @@ import com.eis0.kademlia.Contact;
 import com.eis0.kademlia.SMSKademliaNode;
 import com.eis0.kademlianetwork.KademliaListener;
 import com.eis0.kademlianetwork.KademliaNetwork;
-import com.eis0.kademlianetwork.SMSKademliaListener;
+import com.eis0.kademlianetwork.Listener.SMSKademliaListener;
 
 import java.util.Set;
 

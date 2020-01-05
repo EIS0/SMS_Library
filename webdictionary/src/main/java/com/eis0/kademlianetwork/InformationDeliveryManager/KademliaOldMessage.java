@@ -1,7 +1,5 @@
 package com.eis0.kademlianetwork.InformationDeliveryManager;
 
-import android.view.textclassifier.ConversationActions;
-
 import com.eis.smslibrary.SMSMessage;
 import com.eis.smslibrary.SMSPeer;
 import com.eis0.kademlia.KademliaId;
@@ -16,7 +14,7 @@ import com.eis0.kademlia.KademliaId;
  *
  * @author Enrico Cestaro
  */
-public class KademliaMessage {
+public class KademliaOldMessage {
     private static final String REQUEST_TYPE_NULL = "The requestType parameter is null";
     private static final String DEFAULT = "/";
     private static final String BLANK = " ";
@@ -28,13 +26,13 @@ public class KademliaMessage {
     public String resource;
 
     /**
-     * This is the constructor of the class, it allows to create an instance of the KademliaMessage
+     * This is the constructor of the class, it allows to create an instance of the KademliaOldMessage
      * with the content of the received {@link SMSMessage}; it automatically extracts the values in
      * the fields of the message.
      * The message must satisfy the division into fields, every single word inside of it has a
      * specific task, except for the 'resource' field, which has an arbitrary length; fields are
      * separated by the BLANK value (which is a blank space); this constructor is used to create a
-     * KademliaMessage using a text which, theoretically, already contains the values in the right
+     * KademliaOldMessage using a text which, theoretically, already contains the values in the right
      * positions, which are:
      * [0] => The {@link RequestTypes} of the message
      * [1] => The {@link KademliaId}, can be the target ID to find inside the network, or the ID found
@@ -49,7 +47,7 @@ public class KademliaMessage {
      * @throws com.eis.smslibrary.exceptions.InvalidTelephoneNumberException If If telephoneNumber
      *                                                                       check is not {@link SMSPeer.TelephoneNumberState#TELEPHONE_NUMBER_VALID}.
      */
-    public KademliaMessage(String message) {
+    public KademliaOldMessage(String message) {
         //Array of strings containing the message fields
         String[] splitted = message.split(BLANK);
         //Extracts the value contained inside the message
@@ -61,7 +59,7 @@ public class KademliaMessage {
     }
 
     /**
-     * This constructor allows to create a KademliaMessage that contains the desired values
+     * This constructor allows to create a KademliaOldMessage that contains the desired values
      *
      * @param requestType The request type of the message
      * @param idToFind    Can be the target ID to find inside the network, or the ID found
@@ -69,7 +67,7 @@ public class KademliaMessage {
      * @param key         The key of the interested resource
      * @param resource    The resource that the message will contain
      */
-    public KademliaMessage(
+    public KademliaOldMessage(
             RequestTypes requestType,
             KademliaId idToFind,
             SMSPeer searcher,
@@ -83,7 +81,7 @@ public class KademliaMessage {
     }
 
     /**
-     * This method returns the String value of the KademliaMessage, with a format readable by the
+     * This method returns the String value of the KademliaOldMessage, with a format readable by the
      * receiver of the message; every information owns a specific position inside of the output
      * message, so that is easier to decode.
      * The values occupy the positions:
@@ -101,6 +99,7 @@ public class KademliaMessage {
     public String toString() {
         //The RequestType is the only field which needs to be not Null
         if (requestType == null) throw new IllegalArgumentException(REQUEST_TYPE_NULL);
+
         String stringIdToFind = DEFAULT;
         String stringSearcher = DEFAULT;
         if (idToFind != null) stringIdToFind = idToFind.toString();

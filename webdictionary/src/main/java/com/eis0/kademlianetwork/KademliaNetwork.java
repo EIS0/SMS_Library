@@ -11,6 +11,7 @@ import com.eis0.kademlia.SMSKademliaNode;
 import com.eis0.kademlia.SMSKademliaRoutingTable;
 import com.eis0.kademlianetwork.ActivityStatus.NodeConnectionInfo;
 import com.eis0.kademlianetwork.ActivityStatus.RespondTimer;
+import com.eis0.kademlianetwork.Listener.SMSKademliaListener;
 import com.eis0.kademlianetwork.RoutingTableManager.RoutingTableRefresh;
 import com.eis0.kademlianetwork.RoutingTableManager.TableUpdateHandler;
 import com.eis0.webdictionary.SMSNetVocabulary;
@@ -168,9 +169,8 @@ public class KademliaNetwork {
         TableUpdateHandler.updateTable(localRoutingTable, localNode.getId(), netPeer);
     }
 
-
     /**
-     * Method used to add a pair <key, resource> to the local Dictionary
+     * Method used to add a <key, resource> pair to the local Dictionary
      *
      * @param key      The key of the pair <key, resource> the user is trying to add to the dictionary
      * @param resource The resource of the pair <key, resource> the user is trying to add to the dictionary
