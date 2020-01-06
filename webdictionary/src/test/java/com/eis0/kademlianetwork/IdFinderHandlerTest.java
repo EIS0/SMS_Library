@@ -37,7 +37,6 @@ public class IdFinderHandlerTest {
     private final SMSKademliaNode NODE_ID1 = new SMSKademliaNode(VALID_PEER1);
 
     private final SMSPeer VALID_PEER2 = new SMSPeer("+393423541602");
-    private final KademliaId VALID_FROM_PEER2 = new KademliaId(VALID_PEER2);
     private final SMSKademliaNode VALID_NODE2 = new SMSKademliaNode(VALID_PEER2);
 
     private KademliaNetwork networkMock;
@@ -100,10 +99,10 @@ public class IdFinderHandlerTest {
         //routingTable.insert(VALID_NODE1);
         routingTable.insert(VALID_NODE2);
         when(networkMock.isAlive(any(SMSPeer.class))).thenReturn(true);
-        IdFinderHandler.searchId(VALID_FROM_PEER2, SEARCHER, ResearchMode.AddToDictionary);
+        IdFinderHandler.searchId(VALID_NODE2.getId(), SEARCHER, ResearchMode.AddToDictionary);
         String expectedTextMessage =
                 RequestTypes.FindIdForAddRequest.ordinal() + " " +
-                        VALID_FROM_PEER2 + " " +  SEARCHER + " / /";
+                        VALID_NODE2.getId() + " " +  SEARCHER + " / /";
         SMSMessage expectedMessage = new SMSMessage(VALID_PEER2, expectedTextMessage);
         verify(smsManagerMock, times(1)).sendMessage(expectedMessage);
     }
