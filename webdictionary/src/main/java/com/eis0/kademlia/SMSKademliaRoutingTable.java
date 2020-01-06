@@ -24,7 +24,8 @@ public class SMSKademliaRoutingTable implements KademliaRoutingTable {
 
     public SMSKademliaRoutingTable(SMSKademliaNode localNode, KadConfiguration config) {
         if (localNode == null) throw new IllegalArgumentException("The localNode must not be NULL");
-        if (config == null)  throw new IllegalArgumentException("The configuration must not be NULL");
+        if (config == null)
+            throw new IllegalArgumentException("The configuration must not be NULL");
 
         this.localNode = localNode;
         this.config = config;
@@ -34,6 +35,18 @@ public class SMSKademliaRoutingTable implements KademliaRoutingTable {
 
         /* Insert the local node */
         insert(localNode);
+
+        //fail safe
+        if (this.size() == 0)
+            throw new IllegalArgumentException("The localNode has not been inserted inside the Routing Table");
+    }
+
+    /**
+     * @return The size of the RoutingTable, considering all the nodes inside the buckets
+     */
+    public int size() {
+        List<SMSKademliaNode> allNodes = this.getAllNodes();
+        return allNodes.size();
     }
 
     /**
