@@ -17,8 +17,8 @@ import static org.mockito.Mockito.mock;
  * Mock by Edoardo Raimondi
  */
 public class ConnectionHandlerTest {
-    private static final SMSPeer VALID_PEER2 = new SMSPeer("+395556");
-    private static final SMSKademliaNode VALID_NODE = new SMSKademliaNode(VALID_PEER2);
+    private static final SMSPeer VALID_PEER = new SMSPeer("+395556");
+    private static final SMSKademliaNode VALID_NODE = new SMSKademliaNode(VALID_PEER);
 
     private KademliaNetwork instance;
     private final SMSKademliaListener mockListener = mock(SMSKademliaListener.class);
@@ -34,7 +34,7 @@ public class ConnectionHandlerTest {
     public void correctRequest(){
         try{
             //this throws an error because of the send message mock missing.
-            ConnectionHandler.acceptRequest(VALID_PEER2);
+            ConnectionHandler.acceptRequest(VALID_PEER);
             fail();
         }
         catch(RuntimeException e){
