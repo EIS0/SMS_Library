@@ -33,9 +33,9 @@ public class ResourceExchangeHandler {
 
     //Maps containing the pending Requests waiting to be completed; each pending request is identified
     //inside the Map by the request ID that the request must process
-    private final Map<KademliaId, Request> pendingAddRequests;
-    private final Map<KademliaId, Request> pendingGetRequests;
-    private final Map<KademliaId, Request> pendingDeleteRequests;
+    private static Map<KademliaId, Request> pendingAddRequests;
+    private static Map<KademliaId, Request> pendingGetRequests;
+    private static Map<KademliaId, Request> pendingDeleteRequests;
 
     /**
      * This constructor initializes the three pending requests lists
@@ -214,7 +214,7 @@ public class ResourceExchangeHandler {
             if (key.length() == 0) throw new IllegalArgumentException(INVALID_KEY_LENGTH);
             this.key = key;
             this.resource = resource;
-            resourceKeyId = new KademliaId(key);
+            this.resourceKeyId = new KademliaId(key);
         }
 
         /**

@@ -81,7 +81,7 @@ public class IdFinderHandler {
         //1. Checking if I'm the searched id (fail safe), or the closest one
         //2. Checking if inside my RoutingTable there is a node with the ID to find
 
-        if (idToFindDistanceFromClosest.compareTo(idToFindDistanceFromNetId) >= 0) {
+        if (closestNode.equals(KademliaNetwork.getInstance().getLocalNode())) {
             sendResult(taskResult, idToFind, searcher);
             retryIfDead(idToFind, searcher, researchMode, searcher);
             return;
