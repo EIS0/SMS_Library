@@ -49,6 +49,14 @@ public class SMSKademliaBucket implements KademliaBucket {
     }
 
     /**
+     *
+     * @return the size of the bucket
+     */
+    public int size() {
+    return contacts.size();
+    }
+
+    /**
      * Insert a given valid contact in the bucket.
      * If the bucket is filled, it puts the contact in the replacement cache
      *

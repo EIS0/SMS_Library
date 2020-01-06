@@ -15,11 +15,11 @@ import java.util.Random;
  * Class that defines a KademliaId.
  * It is representing by the hasCode of the user's phone number
  *
- * @see <a href="https://pdos.csail.mit.edu/~petar/papers/maymounkov-kademlia-lncs.pdf">Kademlia's
- * paper</a> for more details.
  * @author Edoardo Raimondi
  * @author Marco Cognolato
  * @author Giovanni Velludo
+ * @see <a href="https://pdos.csail.mit.edu/~petar/papers/maymounkov-kademlia-lncs.pdf">Kademlia's
+ * paper</a> for more details.
  */
 public class KademliaId implements Serializable {
 
@@ -47,6 +47,7 @@ public class KademliaId implements Serializable {
      * @author Giovanni Velludo
      */
     public KademliaId(SMSPeer peer) {
+        if (peer == null) throw new IllegalArgumentException("The SMSPeer must not be NULL");
         try {
             MessageDigest md = MessageDigest.getInstance(HASHING_ALG);
             md.update(peer.getAddress().getBytes());
@@ -70,15 +71,14 @@ public class KademliaId implements Serializable {
      */
     public KademliaId(String data) {
         // if it's in hex form, convert to byte array
-        if(data.matches("[0-9A-F]{" + ID_LENGTH_BYTES*2+"}")){
+        if (data.matches("[0-9A-F]{" + ID_LENGTH_BYTES * 2 + "}")) {
             this.keyBytes = new byte[ID_LENGTH_BYTES];
             for (int i = 0; i < keyBytes.length; i++) {
                 int index = i * 2;
                 int j = Integer.parseInt(data.substring(index, index + 2), 16);
                 keyBytes[i] = (byte) j;
             }
-        }
-        else constructId(data.getBytes());
+        } else constructId(data.getBytes());
     }
 
     /**
@@ -98,7 +98,7 @@ public class KademliaId implements Serializable {
      * @param bytes The byte array to construct the id from
      * @throws IllegalArgumentException If the byte array is longer than {@link #ID_LENGTH_BYTES}
      */
-    private void constructId(byte[] bytes){
+    private void constructId(byte[] bytes) {
         if (bytes.length > ID_LENGTH_BYTES) {
             throw new IllegalArgumentException(
                     "Specified Data need to be " + ID_LENGTH_BYTES
@@ -106,7 +106,7 @@ public class KademliaId implements Serializable {
         }
         this.keyBytes = bytes;
         //if the byte array it's too short, add some leading null bytes
-        if(bytes.length < ID_LENGTH_BYTES){
+        if (bytes.length < ID_LENGTH_BYTES) {
             this.keyBytes = addLeadingZeros(this.keyBytes);
         }
     }
@@ -114,14 +114,15 @@ public class KademliaId implements Serializable {
 
     /**
      * Returns a byte array of length ID_LENGTH_BYTES with zeroes at the beginning and then the given number
+     *
      * @param number The byte array of the number to trail with zeros
      * @return A byte array with the number trailed with zeros
-     * @throws IndexOutOfBoundsException  if {@code number.length} is longer than {@link #ID_LENGTH_BYTES}.
-     * @throws NullPointerException if {@code number} is null.
+     * @throws IndexOutOfBoundsException if {@code number.length} is longer than {@link #ID_LENGTH_BYTES}.
+     * @throws NullPointerException      if {@code number} is null.
      * @author Marco Cognolato
      * @author edits by Giovanni Velludo
      */
-    private byte[] addLeadingZeros(byte[] number){
+    private byte[] addLeadingZeros(byte[] number) {
         //by default each element is set to 0x00
         byte[] toReturn = new byte[ID_LENGTH_BYTES];
         //add to the end (as expected) each element
@@ -153,7 +154,7 @@ public class KademliaId implements Serializable {
     public boolean equals(Object toCompare) {
         if (toCompare instanceof KademliaId) {
             KademliaId nid = (KademliaId) toCompare;
-            return Arrays.equals(this.keyBytes,nid.getBytes());
+            return Arrays.equals(this.keyBytes, nid.getBytes());
         }
         return false;
     }
@@ -195,16 +196,16 @@ public class KademliaId implements Serializable {
      * @author Edoardo Raimondi, improvements by Marco Cognolato
      */
     public KademliaId generateNodeIdByDistance(int distance) {
-        if(distance < 0 || distance >= ID_LENGTH) throw new IllegalArgumentException();
+        if (distance < 0 || distance >= ID_LENGTH) throw new IllegalArgumentException();
 
         byte[] result = keyBytes.clone();
 
         // calculate the index of the byte and bit to update
         int byteToUpdateIndex = (distance) / BYTE_SIZE;
-        int bitToUpdateIndex = (BYTE_SIZE-1) - (distance % BYTE_SIZE);
+        int bitToUpdateIndex = (BYTE_SIZE - 1) - (distance % BYTE_SIZE);
 
         //change only the bit at the distance requested
-        result[byteToUpdateIndex] = (byte)(result[byteToUpdateIndex] ^ 0x01<<bitToUpdateIndex);
+        result[byteToUpdateIndex] = (byte) (result[byteToUpdateIndex] ^ 0x01 << bitToUpdateIndex);
         return new KademliaId(result);
     }
 
@@ -216,12 +217,12 @@ public class KademliaId implements Serializable {
      * @author Edoardo Raimondi, improvements by Marco Cognolato
      */
     public int getFirstSetBitIndex() {
-        for(int byteIndex = 0; byteIndex < keyBytes.length; byteIndex++) {
+        for (int byteIndex = 0; byteIndex < keyBytes.length; byteIndex++) {
             byte currentByte = keyBytes[byteIndex];
             //8 bits in a byte, from 0 to 7
-            for(int bitIndex = BYTE_SIZE-1; bitIndex >= 0; bitIndex--) {
-                if(((0x01 << bitIndex) & currentByte) == (0x01 << bitIndex)){
-                    return ((BYTE_SIZE-1)-bitIndex) + byteIndex * BYTE_SIZE;
+            for (int bitIndex = BYTE_SIZE - 1; bitIndex >= 0; bitIndex--) {
+                if (((0x01 << bitIndex) & currentByte) == (0x01 << bitIndex)) {
+                    return ((BYTE_SIZE - 1) - bitIndex) + byteIndex * BYTE_SIZE;
                 }
             }
         }
@@ -239,16 +240,17 @@ public class KademliaId implements Serializable {
      */
     public int getDistance(KademliaId to) {
         int diffIndex = this.xor(to).getFirstSetBitIndex();
-        if(diffIndex == INVALID_VALUE) return 0;
+        if (diffIndex == INVALID_VALUE) return 0;
         return ID_LENGTH - diffIndex;
     }
 
     /**
      * Returns the distance from this Id to a given Id in the xor metric system.
+     *
      * @param to The node to check the distance to
      * @return A BigInteger saying the distance between the two Ids in the metric xor system
      */
-    public BigInteger getXorDistance(KademliaId to){
+    public BigInteger getXorDistance(KademliaId to) {
         //The xor distance is defined as the number returned
         // by the xor of the 2 numbers to compare
         return this.xor(to).getInt();

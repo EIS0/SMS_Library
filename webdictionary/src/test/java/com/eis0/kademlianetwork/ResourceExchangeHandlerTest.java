@@ -37,7 +37,7 @@ public class ResourceExchangeHandlerTest {
     private final SMSPeer VALID_PEER = new SMSPeer("+393423541601");
     private final SMSKademliaNode MAIN_NODE = new SMSKademliaNode(VALID_PEER);
     private final SMSKademliaListener mockListener = mock(SMSKademliaListener.class);
-
+    private KademliaNetwork kadNet;
     private ResourceExchangeHandler.Request request1;
 
     @Before
@@ -59,7 +59,6 @@ public class ResourceExchangeHandlerTest {
         String resource2 = "Resource2";
         when(request2.getResource()).thenReturn(resource2);
 
-
         SmsManager smsManagerMock = mock(SmsManager.class);
 
         PowerMockito.mockStatic(SmsManager.class);
@@ -67,8 +66,9 @@ public class ResourceExchangeHandlerTest {
         //when(smsManagerMock.sendTextMessage(any(String.class), any(String.class), any(String.class), any(PendingIntent.class), any(PendingIntent.class)));
 
 
-        KademliaNetwork kadNet = KademliaNetwork.getInstance();
+        kadNet = KademliaNetwork.getInstance();
         kadNet.init(MAIN_NODE, UtilityMocks.setupMocks());
+        when(kadNet.isAlive(MAIN_NODE.getPeer())).thenReturn(true);
         //resourceExchangeHandler.createAddRequest(KEY2, resource2);
     }
 
