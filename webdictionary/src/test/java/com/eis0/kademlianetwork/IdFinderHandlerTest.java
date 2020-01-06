@@ -29,11 +29,12 @@ import static org.mockito.Mockito.when;
 public class IdFinderHandlerTest {
     private final SMSPeer SEARCHER = new SMSPeer("+393423541601");
     private final KademliaId SEARCHER_ID = new KademliaId(SEARCHER);
-    private final SMSKademliaNode NODE = new SMSKademliaNode(SEARCHER_ID);
+    private final SMSKademliaNode LOCAL_NODE = new SMSKademliaNode(SEARCHER_ID);
 
     private final KademliaId VALID_ID1 = new KademliaId("0000000000000001");
 
-    private final SMSKademliaNode NODE_ID1 = new SMSKademliaNode(VALID_ID1);
+    private final SMSPeer VALID_PEER1 = new SMSPeer("+393331530477");
+    private final SMSKademliaNode NODE_ID1 = new SMSKademliaNode(VALID_PEER1);
 
     private final SMSPeer VALID_PEER2 = new SMSPeer("+393423541602");
     private final KademliaId VALID_FROM_PEER2 = new KademliaId(VALID_PEER2);
@@ -42,7 +43,7 @@ public class IdFinderHandlerTest {
     private KademliaNetwork networkMock;
     private SMSManager smsManagerMock;
 
-    private final SMSKademliaRoutingTable routingTable = new SMSKademliaRoutingTable(NODE, new DefaultConfiguration());
+    private final SMSKademliaRoutingTable routingTable = new SMSKademliaRoutingTable(LOCAL_NODE, new DefaultConfiguration());
 
 
     @Before
@@ -55,7 +56,7 @@ public class IdFinderHandlerTest {
         PowerMockito.mockStatic(SMSManager.class);
         PowerMockito.when(SMSManager.getInstance()).thenReturn(smsManagerMock);
 
-        when(networkMock.getLocalNode()).thenReturn(NODE);
+        when(networkMock.getLocalNode()).thenReturn(LOCAL_NODE);
         when(networkMock.getLocalRoutingTable()).thenReturn(routingTable);
 
         when(networkMock.isAlive(SEARCHER)).thenReturn(true);
@@ -88,8 +89,8 @@ public class IdFinderHandlerTest {
     public void findIdInTable(){
         routingTable.insert(NODE_ID1);
         when(networkMock.isNodeInNetwork(NODE_ID1)).thenReturn(true);
-        IdFinderHandler.searchId(VALID_ID1, SEARCHER, ResearchMode.AddToDictionary);
-        String expectedTextMessage = RequestTypes.ResultAddRequest.ordinal() + " " + VALID_ID1 + " / / /";
+        IdFinderHandler.searchId(NODE_ID1.getId(), SEARCHER, ResearchMode.AddToDictionary);
+        String expectedTextMessage = RequestTypes.ResultAddRequest.ordinal() + " " + NODE_ID1.getId() + " / / /";
         SMSMessage expectedMessage = new SMSMessage(SEARCHER, expectedTextMessage);
         verify(smsManagerMock, times(1)).sendMessage(expectedMessage);
     }

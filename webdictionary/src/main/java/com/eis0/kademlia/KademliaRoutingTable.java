@@ -37,13 +37,13 @@ interface KademliaRoutingTable {
     int getBucketId(KademliaId nid);
 
     /**
-     * Find the closest set of contacts to a given NodeId
+     * Finds the closest set of contacts to a given NodeId.
      *
      * @param target           The NodeId to find contacts close to
      * @param numNodesRequired The number of contacts to find
-     * @return List A List of contacts closest to target
+     * @return A List of contacts closest to target, ordered from the closest to the least close.
      */
-    List<SMSKademliaNode> findClosest(KademliaId target, int numNodesRequired);
+    List<SMSKademliaNode> getClosestNodes(KademliaId target, int numNodesRequired);
 
     /**
      * @return List A List of all Nodes in this RoutingTable

@@ -89,18 +89,18 @@ public class SMSKademliaRoutingTable implements KademliaRoutingTable {
     }
 
     /**
-     * Find the closest set of contacts to a given NodeId
-     * It used a treeSet in order to add elements using a {@link KeyComparator}
+     * Finds the closest set of contacts to a given NodeId.
+     * It uses a TreeSet, which sorts added elements using a {@link KeyComparator}.
      *
      * @param target           The NodeId to find contacts close to
      * @param numNodesRequired The number of contacts to find
-     * @return A List of contacts closest to target
+     * @return A List of contacts closest to target, ordered from the closest to the least close.
      */
     @Override
-    public final List<SMSKademliaNode> findClosest(KademliaId target, int numNodesRequired) {
+    public final List<SMSKademliaNode> getClosestNodes(KademliaId target, int numNodesRequired) {
         TreeSet<SMSKademliaNode> sortedSet = new TreeSet<>(new KeyComparator(target));
         /*Now every element added will be in a coherent position to the target Id
-         * (first element will be the closer one, second will be the second one...)*/
+         * (first element will be the closest one, second will be the second closest...)*/
         sortedSet.addAll(this.getAllNodes());
 
         List<SMSKademliaNode> closestList = new ArrayList<>(numNodesRequired);

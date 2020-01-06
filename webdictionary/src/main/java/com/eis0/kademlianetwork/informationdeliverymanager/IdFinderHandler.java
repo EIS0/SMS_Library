@@ -69,19 +69,26 @@ public class IdFinderHandler {
         }
 
         //Obtain the KademliaId belonging to the local node (myself)
-        KademliaId netId = KademliaNetwork.getInstance().getLocalNode().getId();
+        KademliaId myId = KademliaNetwork.getInstance().getLocalNode().getId();
         //Obtain the local RoutingTable
         SMSKademliaRoutingTable table = KademliaNetwork.getInstance().getLocalRoutingTable();
         //Get the node with the node ID closest to the idToFind
-        SMSKademliaNode closestNode = table.findClosest(idToFind, 1).get(0);
+        SMSKademliaNode closestNode = table.getClosestNodes(idToFind, 1).get(0);
 
-        BigInteger idToFindDistanceFromNetId = idToFind.getXorDistance(netId);
-        BigInteger idToFindDistanceFromClosest = idToFind.getXorDistance(closestNode.getId());
+        BigInteger distanceFromMyId = idToFind.getXorDistance(myId);
+        BigInteger distanceFromClosest = idToFind.getXorDistance(closestNode.getId());
 
+        if (distanceFromMyId.equals(new BigInteger("0")) ||
+                distanceFromClosest.equals(new BigInteger("0"))) {
+            // My Id or the Id of somebody in my routing table is the one being searched
+            sendResult(taskResult, idToFind, searcher);
+            return;
+            //TODO: are there any other operations that need to be performed? Maybe retryIfDead()?
+        }
         //1. Checking if I'm the searched id (fail safe), or the closest one
         //2. Checking if inside my RoutingTable there is a node with the ID to find
 
-        if (idToFindDistanceFromClosest.compareTo(idToFindDistanceFromNetId) >= 0) {
+        if (distanceFromClosest.compareTo(distanceFromMyId) >= 0) {
             sendResult(taskResult, idToFind, searcher);
             retryIfDead(idToFind, searcher, researchMode, searcher);
             return;

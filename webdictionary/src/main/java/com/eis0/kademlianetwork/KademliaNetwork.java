@@ -46,7 +46,7 @@ public class KademliaNetwork {
     // Singleton instance
     private static KademliaNetwork instance;
     // Constructor following the Singleton Design Pattern
-    public  KademliaNetwork(){
+    public KademliaNetwork(){
 
     }
     

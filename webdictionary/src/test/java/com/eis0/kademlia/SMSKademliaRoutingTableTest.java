@@ -116,7 +116,7 @@ public class SMSKademliaRoutingTableTest {
     @Test
     public void findClosestTest_OneElement(){
         routingTable.insert(NODE2);
-        List<SMSKademliaNode> result = routingTable.findClosest(ID2, 1);
+        List<SMSKademliaNode> result = routingTable.getClosestNodes(ID2, 1);
         assertEquals(result.get(0), NODE2);
     }
 
@@ -125,7 +125,7 @@ public class SMSKademliaRoutingTableTest {
         routingTable.insert(NODE1);
         routingTable.insert(NODE2);
         routingTable.insert(MAIN_NODE);
-        List<SMSKademliaNode> result = routingTable.findClosest(ID2, 1);
+        List<SMSKademliaNode> result = routingTable.getClosestNodes(ID2, 1);
         assertEquals(result.get(0), NODE2);
     }
 
@@ -134,7 +134,7 @@ public class SMSKademliaRoutingTableTest {
         routingTable.insert(NODE1);
         routingTable.insert(NODE2);
         routingTable.insert(MAIN_NODE);
-        List<SMSKademliaNode> result = routingTable.findClosest(ID1, 1);
+        List<SMSKademliaNode> result = routingTable.getClosestNodes(ID1, 1);
         assertEquals(result.get(0), NODE2);
     }
 
@@ -143,7 +143,7 @@ public class SMSKademliaRoutingTableTest {
         routingTable.insert(NODE1);
         routingTable.insert(NODE2);
         routingTable.insert(MAIN_NODE);
-        List<SMSKademliaNode> result = routingTable.findClosest(ID4, 1);
+        List<SMSKademliaNode> result = routingTable.getClosestNodes(ID4, 1);
         assertEquals(result.get(0), NODE1);
     }
 
@@ -152,7 +152,7 @@ public class SMSKademliaRoutingTableTest {
         routingTable.insert(NODE1);
         routingTable.insert(NODE2);
         routingTable.insert(MAIN_NODE);
-        List<SMSKademliaNode> result = routingTable.findClosest(ID5, 1);
+        List<SMSKademliaNode> result = routingTable.getClosestNodes(ID5, 1);
         assertEquals(result.get(0), MAIN_NODE);
     }
 
@@ -161,7 +161,7 @@ public class SMSKademliaRoutingTableTest {
         routingTable.insert(NODE1);
         routingTable.insert(NODE2);
         routingTable.insert(MAIN_NODE);
-        List<SMSKademliaNode> result = routingTable.findClosest(ID4, 2);
+        List<SMSKademliaNode> result = routingTable.getClosestNodes(ID4, 2);
         assertEquals(result.get(0), NODE1);
         assertEquals(result.get(1), NODE2);
     }
