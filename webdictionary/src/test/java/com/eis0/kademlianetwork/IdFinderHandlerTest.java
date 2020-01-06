@@ -86,10 +86,10 @@ public class IdFinderHandlerTest {
 
     @Test
     public void findIdInTable(){
-        routingTable.insert(NODE_ID1);
-        when(networkMock.isNodeInNetwork(NODE_ID1)).thenReturn(true);
-        IdFinderHandler.searchId(VALID_ID1, SEARCHER, ResearchMode.AddToDictionary);
-        String expectedTextMessage = RequestTypes.ResultAddRequest.ordinal() + " " + VALID_ID1 + " / / /";
+        routingTable.insert(VALID_NODE2);
+        when(networkMock.isNodeInNetwork(VALID_NODE2)).thenReturn(true);
+        IdFinderHandler.searchId(VALID_FROM_PEER2, SEARCHER, ResearchMode.AddToDictionary);
+        String expectedTextMessage = RequestTypes.ResultAddRequest.ordinal() + " " + VALID_NODE2 + " / / /";
         SMSMessage expectedMessage = new SMSMessage(SEARCHER, expectedTextMessage);
         verify(smsManagerMock, times(1)).sendMessage(expectedMessage);
     }

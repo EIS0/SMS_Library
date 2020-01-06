@@ -123,7 +123,8 @@ public class IntMsgKademliaListener {
                 SystemMessages.sendAcknowledge(peer);
                 KademliaNetwork.getInstance().addNodeToTable(new SMSKademliaNode(peer));
                 //2. Processes the information brought by the message received
-                Log.i(LOG_TAG, "Received ID research request RESULT: " + idToFind);
+                //@TODO: il Log genera errore nei test, come risolvere
+                //Log.i(LOG_TAG, "Received ID research request RESULT: " + idToFind);
                 resourceExchangeHandler.completeRequest(idToFind, peer, ResearchMode.AddToDictionary);
                 break;
             case AddToDict:
@@ -193,6 +194,8 @@ public class IntMsgKademliaListener {
                 Log.i(LOG_TAG, "Received AddToDictionary request.\nKey: " + key);
                 KademliaNetwork.getInstance().removeFromLocalDictionary(key);
                 break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + incomingRequest);
         }
     }
 }
