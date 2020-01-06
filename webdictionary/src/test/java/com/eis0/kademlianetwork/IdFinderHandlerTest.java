@@ -7,9 +7,9 @@ import com.eis0.kademlia.DefaultConfiguration;
 import com.eis0.kademlia.KademliaId;
 import com.eis0.kademlia.SMSKademliaNode;
 import com.eis0.kademlia.SMSKademliaRoutingTable;
-import com.eis0.kademlianetwork.InformationDeliveryManager.IdFinderHandler;
-import com.eis0.kademlianetwork.InformationDeliveryManager.RequestTypes;
-import com.eis0.kademlianetwork.InformationDeliveryManager.ResearchMode;
+import com.eis0.kademlianetwork.informationdeliverymanager.IdFinderHandler;
+import com.eis0.kademlianetwork.informationdeliverymanager.RequestTypes;
+import com.eis0.kademlianetwork.informationdeliverymanager.ResearchMode;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -32,24 +32,17 @@ public class IdFinderHandlerTest {
     private final SMSKademliaNode NODE = new SMSKademliaNode(SEARCHER_ID);
 
     private final KademliaId VALID_ID1 = new KademliaId("0000000000000001");
-    private final KademliaId VALID_ID2 = new KademliaId("0000000000000002");
-    private final KademliaId VALID_ID3 = new KademliaId("0000000000000003");
 
     private final SMSKademliaNode NODE_ID1 = new SMSKademliaNode(VALID_ID1);
-    private final SMSKademliaNode NODE_ID2 = new SMSKademliaNode(VALID_ID2);
-    private final SMSKademliaNode NODE_ID3 = new SMSKademliaNode(VALID_ID3);
 
-    private final SMSPeer VALID_PEER1 = new SMSPeer("+393423541600");
     private final SMSPeer VALID_PEER2 = new SMSPeer("+393423541602");
-    private final KademliaId VALID_FROM_PEER1 = new KademliaId(VALID_PEER1);
     private final KademliaId VALID_FROM_PEER2 = new KademliaId(VALID_PEER2);
-    private final SMSKademliaNode VALID_NODE1 = new SMSKademliaNode(VALID_PEER1);
     private final SMSKademliaNode VALID_NODE2 = new SMSKademliaNode(VALID_PEER2);
 
     private KademliaNetwork networkMock;
     private SMSManager smsManagerMock;
 
-    private SMSKademliaRoutingTable routingTable = new SMSKademliaRoutingTable(NODE, new DefaultConfiguration());
+    private final SMSKademliaRoutingTable routingTable = new SMSKademliaRoutingTable(NODE, new DefaultConfiguration());
 
 
     @Before

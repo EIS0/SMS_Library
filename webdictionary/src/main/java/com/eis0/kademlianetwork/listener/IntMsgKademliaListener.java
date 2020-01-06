@@ -1,4 +1,4 @@
-package com.eis0.kademlianetwork.Listener;
+package com.eis0.kademlianetwork.listener;
 
 import android.util.Log;
 
@@ -7,16 +7,16 @@ import com.eis.smslibrary.SMSMessage;
 import com.eis.smslibrary.SMSPeer;
 import com.eis0.kademlia.KademliaId;
 import com.eis0.kademlia.SMSKademliaNode;
-import com.eis0.kademlianetwork.ActivityStatus.SystemMessages;
+import com.eis0.kademlianetwork.activitystatus.SystemMessages;
+import com.eis0.kademlianetwork.informationdeliverymanager.IdFinderHandler;
+import com.eis0.kademlianetwork.informationdeliverymanager.RequestTypes;
+import com.eis0.kademlianetwork.informationdeliverymanager.ResearchMode;
+import com.eis0.kademlianetwork.informationdeliverymanager.ResourceExchangeHandler;
+import com.eis0.kademlianetwork.routingtablemanager.TableUpdateHandler;
 import com.eis0.kademlianetwork.ConnectionHandler;
-import com.eis0.kademlianetwork.InformationDeliveryManager.IdFinderHandler;
-import com.eis0.kademlianetwork.InformationDeliveryManager.KademliaMessageAnalyzer;
-import com.eis0.kademlianetwork.InformationDeliveryManager.KademliaMessageBuilder;
-import com.eis0.kademlianetwork.InformationDeliveryManager.RequestTypes;
-import com.eis0.kademlianetwork.InformationDeliveryManager.ResearchMode;
-import com.eis0.kademlianetwork.InformationDeliveryManager.ResourceExchangeHandler;
+import com.eis0.kademlianetwork.informationdeliverymanager.KademliaMessageAnalyzer;
+import com.eis0.kademlianetwork.informationdeliverymanager.KademliaMessageBuilder;
 import com.eis0.kademlianetwork.KademliaNetwork;
-import com.eis0.kademlianetwork.RoutingTableManager.TableUpdateHandler;
 
 /**
  * Listener class which sends the appropriate command to the relative appropriate handler
@@ -28,8 +28,8 @@ import com.eis0.kademlianetwork.RoutingTableManager.TableUpdateHandler;
  */
 public class IntMsgKademliaListener {
     private final static String LOG_TAG = "MSG_LSTNR";
-    private KademliaNetwork kadNet;
-    private ResourceExchangeHandler resourceExchangeHandler;
+    private final KademliaNetwork kadNet;
+    private final ResourceExchangeHandler resourceExchangeHandler;
     private static IntMsgKademliaListener instance;
 
     private IntMsgKademliaListener(KademliaNetwork kadNet) {
@@ -61,12 +61,12 @@ public class IntMsgKademliaListener {
         KademliaId idFound = idToFind;
         //Starts a specific action depending upon the request or the command sent by other users
         switch (incomingRequest) {
-            /**Acknowledge messages*/
+            /*Acknowledge messages*/
             case AcknowledgeMessage:
                 kadNet.connectionInfo.setRespond(true);
                 break;
 
-            /**Refreshing operations*/
+            /*Refreshing operations*/
             case Ping:
                 //Lets others know I'm alive and I'm happy to be
                 SystemMessages.sendPong(peer);
@@ -87,7 +87,7 @@ public class IntMsgKademliaListener {
                 break;
 
 
-            /**Joining a network */
+            /*Joining a network */
             case JoinPermission:
                 ConnectionHandler.sendAcceptRequest(peer);
                 break;
@@ -109,7 +109,7 @@ public class IntMsgKademliaListener {
                 break;
 
 
-            /**Adding a resource to the Dictionary */
+            /*Adding a resource to the Dictionary */
             case FindIdForAddRequest:
                 //1. I inform that I'm alive and happy to be
                 SystemMessages.sendAcknowledge(peer);
@@ -136,7 +136,7 @@ public class IntMsgKademliaListener {
                 break;
 
 
-            /**Asking for a resource to the Dictionary*/
+            /*Asking for a resource to the Dictionary*/
             case FindIdForGetRequest:
                 //1. I inform that I'm alive and happy to be
                 SystemMessages.sendAcknowledge(peer);
@@ -169,7 +169,7 @@ public class IntMsgKademliaListener {
                 break;
 
 
-            /**Remove a resource from the Dictionary */
+            /*Remove a resource from the Dictionary */
             case FindIdForDeleteRequest:
                 //1. I inform that I'm alive and happy to be
                 SystemMessages.sendAcknowledge(peer);

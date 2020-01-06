@@ -1,16 +1,17 @@
-package com.eis0.kademlianetwork.ActivityStatus;
+package com.eis0.kademlianetwork.activitystatus;
 
 import com.eis.smslibrary.SMSManager;
 import com.eis.smslibrary.SMSMessage;
 import com.eis.smslibrary.SMSPeer;
 import com.eis0.kademlia.SMSKademliaNode;
-import com.eis0.kademlianetwork.InformationDeliveryManager.KademliaMessageBuilder;
-import com.eis0.kademlianetwork.InformationDeliveryManager.RequestTypes;
+import com.eis0.kademlianetwork.informationdeliverymanager.RequestTypes;
+import com.eis0.kademlianetwork.informationdeliverymanager.KademliaMessageBuilder;
 
 /**
  * This class contains all the methods that send system messages
  *
  * @author Edoardo Raimondi
+ * @author edits by Giovanni Velludo
  */
 
 public class SystemMessages {
@@ -20,7 +21,7 @@ public class SystemMessages {
      *
      * @param peer The {@link SMSPeer} of the node that contacted me
      */
-    public static final void sendAcknowledge(SMSPeer peer) {
+    public static void sendAcknowledge(SMSPeer peer) {
         SMSMessage acknowledgeMessage = new KademliaMessageBuilder()
                 .setPeer(peer)
                 .setCommand(RequestTypes.AcknowledgeMessage)
@@ -34,7 +35,7 @@ public class SystemMessages {
      *
      * @param peer The {@link SMSPeer} of the node that contacted me
      */
-    public static final void sendPong(SMSPeer peer) {
+    public static void sendPong(SMSPeer peer) {
         SMSMessage pongMessage = new KademliaMessageBuilder()
                 .setPeer(peer)
                 .setCommand(RequestTypes.Pong)
@@ -48,7 +49,7 @@ public class SystemMessages {
      *
      * @param receiver The {@link SMSKademliaNode} represented by peer that I'm looking for
      */
-    public static final void sendPing(SMSKademliaNode receiver) {
+    public static void sendPing(SMSKademliaNode receiver) {
         SMSMessage pingMessage = new KademliaMessageBuilder()
                 .setPeer(receiver.getPeer())
                 .setCommand(RequestTypes.Ping)

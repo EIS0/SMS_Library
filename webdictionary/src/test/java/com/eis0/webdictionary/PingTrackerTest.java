@@ -98,7 +98,7 @@ public class PingTrackerTest {
     }
 
     @Test
-    public void disableThenReenabled_conbinedShouldWork(){
+    public void disableThenReenable_combinedShouldWork(){
         tracker1.disable();
         for(int i = 0; i < MAX_PING_MISSES*2; i++){
             tracker1.tick();

@@ -1,4 +1,4 @@
-package com.eis0.kademlianetwork.ActivityStatus;
+package com.eis0.kademlianetwork.activitystatus;
 
 /**
  * Every node has some connection information.

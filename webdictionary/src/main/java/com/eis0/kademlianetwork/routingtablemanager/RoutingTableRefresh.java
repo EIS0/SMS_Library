@@ -1,13 +1,13 @@
-package com.eis0.kademlianetwork.RoutingTableManager;
+package com.eis0.kademlianetwork.routingtablemanager;
 
 import com.eis.smslibrary.SMSPeer;
 import com.eis0.kademlia.KademliaId;
 import com.eis0.kademlia.SMSKademliaNode;
-import com.eis0.kademlianetwork.ActivityStatus.RespondTimer;
-import com.eis0.kademlianetwork.ActivityStatus.SystemMessages;
-import com.eis0.kademlianetwork.InformationDeliveryManager.IdFinderHandler;
+import com.eis0.kademlianetwork.activitystatus.RespondTimer;
+import com.eis0.kademlianetwork.activitystatus.SystemMessages;
+import com.eis0.kademlianetwork.informationdeliverymanager.IdFinderHandler;
 import com.eis0.kademlianetwork.KademliaNetwork;
-import com.eis0.kademlianetwork.InformationDeliveryManager.ResearchMode;
+import com.eis0.kademlianetwork.informationdeliverymanager.ResearchMode;
 
 import java.util.List;
 
@@ -19,11 +19,11 @@ import java.util.List;
 
 public class RoutingTableRefresh{
     //create a timer to verify if I had a pong in at least 10 secs
-    private RespondTimer timer = new RespondTimer();
+    private final RespondTimer timer = new RespondTimer();
     //node doing this refresh
-    private SMSKademliaNode localNode;
+    private final SMSKademliaNode localNode;
     //kademlia network of the local node
-    private KademliaNetwork net;
+    private final KademliaNetwork net;
 
     public RoutingTableRefresh(SMSKademliaNode node, KademliaNetwork net){
         localNode = node;

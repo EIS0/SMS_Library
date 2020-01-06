@@ -4,12 +4,12 @@ import com.eis.smslibrary.SMSPeer;
 
 import java.util.TimerTask;
 
-public class PingTracker extends TimerTask {
-    private int maxPingMisses;
+class PingTracker extends TimerTask {
+    private final int maxPingMisses;
     private int pingsMissed = 0;
     private boolean shouldRun = true;
-    private SMSPeer toTrack;
-    private NetworkConnection net;
+    private final SMSPeer toTrack;
+    private final NetworkConnection net;
 
     /**
      * Constructor for the timer object

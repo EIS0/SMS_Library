@@ -6,10 +6,9 @@ import com.eis.smslibrary.SMSPeer;
 import com.eis0.UtilityMocks;
 import com.eis0.kademlia.KademliaId;
 import com.eis0.kademlia.SMSKademliaNode;
-import com.eis0.kademlianetwork.InformationDeliveryManager.IRequest;
-import com.eis0.kademlianetwork.InformationDeliveryManager.IdFinderHandler;
-import com.eis0.kademlianetwork.InformationDeliveryManager.ResourceExchangeHandler;
-import com.eis0.kademlianetwork.Listener.SMSKademliaListener;
+import com.eis0.kademlianetwork.informationdeliverymanager.IRequest;
+import com.eis0.kademlianetwork.informationdeliverymanager.ResourceExchangeHandler;
+import com.eis0.kademlianetwork.listener.SMSKademliaListener;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -31,27 +30,26 @@ public class ResourceExchangeHandlerTest {
     private ResourceExchangeHandler resourceExchangeHandler;
     private final String KEY1 = "Key1";
     private final String KEY2 = "Key1";
-    private final String RESOURCE1 = "Resource1";
-    private final String RESOURCE2 = "Resource2";
     private final KademliaId KAD_ID1 = new KademliaId(KEY1);
     private final KademliaId KAD_ID2 = new KademliaId(KEY2);
     private final SMSPeer VALID_PEER = new SMSPeer("+393423541601");
     private final SMSKademliaNode MAIN_NODE = new SMSKademliaNode(VALID_PEER);
-    private final IdFinderHandler idFinderHandler = new IdFinderHandler();
     private final SMSKademliaListener mockListener = mock(SMSKademliaListener.class);
 
     @Before
     public void setUp() {
         resourceExchangeHandler = new ResourceExchangeHandler();
-        ResourceExchangeHandler.Request REQUEST1 = mock(ResourceExchangeHandler.Request.class);
-        when(REQUEST1.getKey()).thenReturn(KEY1);
-        when(REQUEST1.getKeyId()).thenReturn(KAD_ID1);
-        when(REQUEST1.getResource()).thenReturn(RESOURCE1);
+        ResourceExchangeHandler.Request request1 = mock(ResourceExchangeHandler.Request.class);
+        when(request1.getKey()).thenReturn(KEY1);
+        when(request1.getKeyId()).thenReturn(KAD_ID1);
+        String resource1 = "Resource1";
+        when(request1.getResource()).thenReturn(resource1);
 
-        ResourceExchangeHandler.Request REQUEST2 = mock(ResourceExchangeHandler.Request.class);
-        when(REQUEST2.getKey()).thenReturn(KEY2);
-        when(REQUEST2.getKeyId()).thenReturn(KAD_ID2);
-        when(REQUEST2.getResource()).thenReturn(RESOURCE2);
+        ResourceExchangeHandler.Request request2 = mock(ResourceExchangeHandler.Request.class);
+        when(request2.getKey()).thenReturn(KEY2);
+        when(request2.getKeyId()).thenReturn(KAD_ID2);
+        String resource2 = "Resource2";
+        when(request2.getResource()).thenReturn(resource2);
 
 
         SmsManager smsManagerMock = mock(SmsManager.class);
@@ -62,9 +60,8 @@ public class ResourceExchangeHandlerTest {
 
 
         KademliaNetwork kadNet = KademliaNetwork.getInstance();
-        kadNet.init(MAIN_NODE, mockListener, UtilityMocks.setupMocks());
-        SMSKademliaListener listener = new SMSKademliaListener(kadNet);
-        //resourceExchangeHandler.createAddRequest(KEY2, RESOURCE2);
+        kadNet.init(MAIN_NODE, UtilityMocks.setupMocks());
+        //resourceExchangeHandler.createAddRequest(KEY2, resource2);
     }
 
     @Test

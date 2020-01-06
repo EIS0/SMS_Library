@@ -2,8 +2,8 @@ package com.eis0.kademlianetwork;
 
 import com.eis.smslibrary.SMSMessage;
 import com.eis.smslibrary.SMSPeer;
-import com.eis0.kademlianetwork.InformationDeliveryManager.KademliaMessageBuilder;
-import com.eis0.kademlianetwork.InformationDeliveryManager.RequestTypes;
+import com.eis0.kademlianetwork.informationdeliverymanager.KademliaMessageBuilder;
+import com.eis0.kademlianetwork.informationdeliverymanager.RequestTypes;
 
 import org.junit.Test;
 
@@ -11,7 +11,7 @@ import static org.junit.Assert.assertEquals;
 
 public class KademliaMessageBuilderText {
 
-    public final SMSPeer VALID_PEER = new SMSPeer("+393423541601");
+    private final SMSPeer VALID_PEER = new SMSPeer("+393423541601");
 
     @Test
     public void buildMessage_everythingCorrect() {

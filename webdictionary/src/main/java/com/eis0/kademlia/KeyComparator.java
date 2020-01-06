@@ -9,7 +9,7 @@ import java.util.Comparator;
  *
  * @author Edoardo Raimondi
  */
-public class KeyComparator implements Comparator<SMSKademliaNode> {
+class KeyComparator implements Comparator<SMSKademliaNode> {
 
     private final BigInteger key;
 

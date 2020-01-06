@@ -1,4 +1,4 @@
-package com.eis0.kademlianetwork.InformationDeliveryManager;
+package com.eis0.kademlianetwork.informationdeliverymanager;
 
 public enum ResearchMode {
     JoinNetwork,

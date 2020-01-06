@@ -1,16 +1,16 @@
-package com.eis0.kademlianetwork.InformationDeliveryManager;
+package com.eis0.kademlianetwork.informationdeliverymanager;
 
 import com.eis.smslibrary.SMSMessage;
 import com.eis.smslibrary.SMSPeer;
 import com.eis0.kademlia.KademliaId;
 
 public class KademliaMessageAnalyzer {
-    private SMSPeer peer;
-    private RequestTypes command;
-    KademliaId idToFind;
-    SMSPeer searcher;
-    String key;
-    String resource;
+    private final SMSPeer peer;
+    private final RequestTypes command;
+    private final KademliaId idToFind;
+    private final SMSPeer searcher;
+    private final String key;
+    private final String resource;
 
     /**
      * Constructor for the SMSMessage analyzer:

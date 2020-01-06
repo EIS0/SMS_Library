@@ -23,13 +23,12 @@ import java.util.Random;
  */
 public class KademliaId implements Serializable {
 
-    public final static int ID_LENGTH = 64;
-
     //A Byte is 8 bits, so this shouldn't be changed
-    public final static int BYTE_SIZE = 8;
+    private final static int BYTE_SIZE = 8;
+    final static int ID_LENGTH_BYTES = 8;
+    public final static int ID_LENGTH = BYTE_SIZE * ID_LENGTH_BYTES;
 
     private static final String HASHING_ALG = "SHA-256";
-    final static int ID_LENGTH_BYTES = ID_LENGTH / BYTE_SIZE;
     private byte[] keyBytes;
     private final static int INVALID_VALUE = -1;
 
@@ -114,25 +113,26 @@ public class KademliaId implements Serializable {
 
 
     /**
-     * Returns a byte array of length ID_LENGTH_BYTES with zeros and then a given number
+     * Returns a byte array of length ID_LENGTH_BYTES with zeroes at the beginning and then the given number
      * @param number The byte array of the number to trail with zeros
      * @return A byte array with the number trailed with zeros
+     * @throws IndexOutOfBoundsException  if {@code number.length} is longer than {@link #ID_LENGTH_BYTES}.
+     * @throws NullPointerException if {@code number} is null.
      * @author Marco Cognolato
+     * @author edits by Giovanni Velludo
      */
     private byte[] addLeadingZeros(byte[] number){
         //by default each element is set to 0x00
         byte[] toReturn = new byte[ID_LENGTH_BYTES];
-        //add to the end (ax expected) each element
-        for(int i = 0; i < number.length; i++){
-            toReturn[i+ID_LENGTH_BYTES-number.length] = number[i];
-        }
+        //add to the end (as expected) each element
+        System.arraycopy(number, 0, toReturn, ID_LENGTH_BYTES - number.length, number.length);
         return toReturn;
     }
 
     /**
      * @return Bytes' array (if used)
      */
-    public byte[] getBytes() {
+    private byte[] getBytes() {
         return this.keyBytes;
     }
 

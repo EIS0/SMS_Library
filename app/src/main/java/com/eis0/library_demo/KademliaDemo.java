@@ -24,7 +24,7 @@ import com.eis0.kademlia.Contact;
 import com.eis0.kademlia.SMSKademliaNode;
 import com.eis0.kademlianetwork.KademliaListener;
 import com.eis0.kademlianetwork.KademliaNetwork;
-import com.eis0.kademlianetwork.Listener.SMSKademliaListener;
+import com.eis0.kademlianetwork.listener.SMSKademliaListener;
 
 import java.util.Set;
 
@@ -79,7 +79,7 @@ public class KademliaDemo extends AppCompatActivity implements KademliaListener 
         routingTableRclView.setLayoutManager(new LinearLayoutManager(this));
 
         // Instantiates a new kademlia network with only this phone
-        network.init(new SMSKademliaNode(getPhoneNumber()), smsKademliaListener, this);
+        network.init(new SMSKademliaNode(getPhoneNumber()), this);
 
         // Display initialization data
         myPhoneNumberLbl.setText(network.getLocalNode().getPeer().toString());

@@ -4,6 +4,7 @@ package com.eis0.webdictionary;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -19,10 +20,8 @@ public class SMSNetTest {
 
     //SerializableObject key implementation
     public class SerializableObjectTestKey extends SerializableObject {
-        public int key;
 
-        public SerializableObjectTestKey() {
-            key = 1;
+        SerializableObjectTestKey() {
         }
 
         @Override
@@ -44,9 +43,9 @@ public class SMSNetTest {
     }
     //SerializableObject Value implementation
     public class SerializableObjectTestValue extends SerializableObject {
-        public String value;
+        final String value;
 
-        public SerializableObjectTestValue() {
+        SerializableObjectTestValue() {
             value = "test";
         }
 
@@ -69,12 +68,11 @@ public class SMSNetTest {
     }
 
     //creation of the the keys
-    SerializableObjectTestKey k1 = new SerializableObjectTestKey();
-    SerializableObjectTestKey k2 = new SerializableObjectTestKey();
+    private final SerializableObjectTestKey k1 = new SerializableObjectTestKey();
 
     //creation of the values
-    SerializableObjectTestValue v1 = new SerializableObjectTestValue();
-    SerializableObjectTestValue v2 = new SerializableObjectTestValue();
+    private final SerializableObjectTestValue v1 = new SerializableObjectTestValue();
+    private final SerializableObjectTestValue v2 = new SerializableObjectTestValue();
 
     @Test
     public void addResource_CheckIfAdded() {
@@ -88,6 +86,6 @@ public class SMSNetTest {
         SMSNetVocabulary net = new SMSNetVocabulary();
         net.add(k1, v1);
         net.remove(k1);
-        assertEquals(net.getResource(k1), null);
+        assertNull(net.getResource(k1));
     }
 }

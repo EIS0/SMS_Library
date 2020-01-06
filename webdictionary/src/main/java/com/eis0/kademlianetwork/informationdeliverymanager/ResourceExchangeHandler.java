@@ -1,4 +1,4 @@
-package com.eis0.kademlianetwork.InformationDeliveryManager;
+package com.eis0.kademlianetwork.informationdeliverymanager;
 
 import com.eis.smslibrary.SMSManager;
 import com.eis.smslibrary.SMSMessage;
@@ -33,9 +33,9 @@ public class ResourceExchangeHandler {
 
     //Maps containing the pending Requests waiting to be completed; each pending request is identified
     //inside the Map by the request ID that the request must process
-    private Map<KademliaId, Request> pendingAddRequests;
-    private Map<KademliaId, Request> pendingGetRequests;
-    private Map<KademliaId, Request> pendingDeleteRequests;
+    private final Map<KademliaId, Request> pendingAddRequests;
+    private final Map<KademliaId, Request> pendingGetRequests;
+    private final Map<KademliaId, Request> pendingDeleteRequests;
 
     /**
      * This constructor initializes the three pending requests lists
@@ -117,7 +117,7 @@ public class ResourceExchangeHandler {
      * @param idToFind     The {@link KademliaId} of the resource key; it's used to trace back the
      *                     Request in the pending requests list
      * @param targetPeer   The {@link SMSPeer} of the node which answered the research and receive the
-     *                     <key, resurce> pair
+     *                     <key, resource> pair
      * @param researchMode The research mode, represents the final purpose of the research
      * @throws IllegalArgumentException If the idToFind or the targetPeer are null
      */

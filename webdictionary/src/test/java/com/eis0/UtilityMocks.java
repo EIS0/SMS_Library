@@ -10,9 +10,9 @@ import static org.mockito.Mockito.when;
 
 public class UtilityMocks {
 
-    private static Context mockContext = mock(Context.class);
-    private static SharedPreferences mockPref = mock(SharedPreferences.class);
-    private static SharedPreferences.Editor mockEditor = mock(SharedPreferences.Editor.class);
+    private static final Context mockContext = mock(Context.class);
+    private static final SharedPreferences mockPref = mock(SharedPreferences.class);
+    private static final SharedPreferences.Editor mockEditor = mock(SharedPreferences.Editor.class);
 
     public static Context setupMocks(){
         when(mockContext.getPackageName()).thenReturn("mock");

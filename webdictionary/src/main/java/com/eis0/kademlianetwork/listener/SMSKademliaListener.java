@@ -1,9 +1,9 @@
-package com.eis0.kademlianetwork.Listener;
+package com.eis0.kademlianetwork.listener;
 
 
 import com.eis.smslibrary.SMSMessage;
 import com.eis.smslibrary.listeners.SMSReceivedServiceListener;
-import com.eis0.kademlianetwork.InformationDeliveryManager.RequestTypes;
+import com.eis0.kademlianetwork.informationdeliverymanager.RequestTypes;
 import com.eis0.kademlianetwork.KademliaNetwork;
 
 /**
@@ -16,7 +16,7 @@ import com.eis0.kademlianetwork.KademliaNetwork;
  */
 
 public class SMSKademliaListener extends SMSReceivedServiceListener {
-    IntMsgKademliaListener msgListener;
+    private final IntMsgKademliaListener msgListener;
 
     public SMSKademliaListener(KademliaNetwork kadNet) {
         msgListener = IntMsgKademliaListener.getInstance(kadNet);

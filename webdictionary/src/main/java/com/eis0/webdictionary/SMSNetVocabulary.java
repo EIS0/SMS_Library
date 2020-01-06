@@ -8,7 +8,7 @@ import java.util.Map;
  */
 public class SMSNetVocabulary implements NetworkVocabulary<SerializableObject, SerializableObject> {
 
-    private Map<SerializableObject, SerializableObject> netDict = new HashMap<>();
+    private final Map<SerializableObject, SerializableObject> netDict = new HashMap<>();
 
     public SMSNetVocabulary(){ }
 

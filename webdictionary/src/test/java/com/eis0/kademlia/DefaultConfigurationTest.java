@@ -7,7 +7,7 @@ import static org.junit.Assert.assertEquals;
 public class DefaultConfigurationTest {
 
     /* Set up */
-    DefaultConfiguration test = new DefaultConfiguration();
+    private final DefaultConfiguration test = new DefaultConfiguration();
 
     @Test
     public void k() {

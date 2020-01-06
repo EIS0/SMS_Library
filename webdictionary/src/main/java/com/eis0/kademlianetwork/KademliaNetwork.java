@@ -9,11 +9,11 @@ import com.eis0.kademlia.DefaultConfiguration;
 import com.eis0.kademlia.KademliaId;
 import com.eis0.kademlia.SMSKademliaNode;
 import com.eis0.kademlia.SMSKademliaRoutingTable;
-import com.eis0.kademlianetwork.ActivityStatus.NodeConnectionInfo;
-import com.eis0.kademlianetwork.ActivityStatus.RespondTimer;
-import com.eis0.kademlianetwork.Listener.SMSKademliaListener;
-import com.eis0.kademlianetwork.RoutingTableManager.RoutingTableRefresh;
-import com.eis0.kademlianetwork.RoutingTableManager.TableUpdateHandler;
+import com.eis0.kademlianetwork.activitystatus.NodeConnectionInfo;
+import com.eis0.kademlianetwork.activitystatus.RespondTimer;
+import com.eis0.kademlianetwork.listener.SMSKademliaListener;
+import com.eis0.kademlianetwork.routingtablemanager.RoutingTableRefresh;
+import com.eis0.kademlianetwork.routingtablemanager.TableUpdateHandler;
 import com.eis0.webdictionary.SMSNetVocabulary;
 import com.eis0.webdictionary.SMSSerialization;
 import com.eis0.webdictionary.SerializableObject;
@@ -34,14 +34,13 @@ public class KademliaNetwork {
     private SMSKademliaNode localNode;
     //Routing table for this user of the network
     private SMSKademliaRoutingTable localRoutingTable;
-    private ConnectionHandler connectionHandler = new ConnectionHandler();
-    public RoutingTableRefresh refresh = new RoutingTableRefresh(this.localNode, this);
-    public NodeConnectionInfo connectionInfo = new NodeConnectionInfo();
-    private SMSKademliaListener listener;
-    private SMSKademliaListener smsKademliaListener = new SMSKademliaListener(this);
+    private final ConnectionHandler connectionHandler = new ConnectionHandler();
+    public final RoutingTableRefresh refresh = new RoutingTableRefresh(this.localNode, this);
+    public final NodeConnectionInfo connectionInfo = new NodeConnectionInfo();
+    private final SMSKademliaListener smsKademliaListener = new SMSKademliaListener(this);
     //Dictionary containing the resources stored by the local node
     private SMSNetVocabulary localKademliaDictionary;
-    private RespondTimer timer = new RespondTimer();
+    private final RespondTimer timer = new RespondTimer();
 
 
     // Singleton instance
@@ -70,10 +69,9 @@ public class KademliaNetwork {
      * @param localNode The SMSKademliaNode to set.
      * @author Matteo Carnelos
      */
-    public void init(SMSKademliaNode localNode, SMSKademliaListener listener, Context context) {
+    public void init(SMSKademliaNode localNode, Context context) {
         SMSManager.getInstance().setReceivedListener(smsKademliaListener.getClass(), context);
         this.localNode = localNode;
-        this.listener = listener;
         localRoutingTable = new SMSKademliaRoutingTable(localNode, new DefaultConfiguration());
     }
 

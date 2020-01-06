@@ -9,8 +9,8 @@ import com.eis.smslibrary.listeners.SMSReceivedServiceListener;
  * Network listener listening for incoming Network-related Events
  */
 class NetworkListener extends SMSReceivedServiceListener {
-    private NetworkConnection net;
-    private final String LOG_KEY = "NetListener";
+    private final NetworkConnection net;
+
     NetworkListener(NetworkConnection net){
         this.net = net;
     }
@@ -27,7 +27,7 @@ class NetworkListener extends SMSReceivedServiceListener {
         RequestType incomingRequest = RequestType.values()[Integer.parseInt(text.split(" ")[0])];
         //starts a specific action based on the action received from the other user
         if(incomingRequest == RequestType.JoinPermission){
-            net.acceptJoin(peer, text.substring(2));
+            net.acceptJoin(text.substring(2));
         }
         else if(incomingRequest == RequestType.AcceptJoin){
             net.addToNet(text.substring(2));

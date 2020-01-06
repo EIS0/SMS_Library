@@ -5,8 +5,6 @@ import android.telephony.SmsManager;
 import com.eis.smslibrary.SMSPeer;
 import com.eis0.UtilityMocks;
 import com.eis0.kademlia.SMSKademliaNode;
-import com.eis0.kademlianetwork.Listener.SMSKademliaListener;
-import com.eis0.kademlianetwork.RoutingTableManager.RoutingTableRefresh;
 
 
 import org.junit.Before;
@@ -15,32 +13,23 @@ import org.powermock.api.mockito.PowerMockito;
 
 import static org.junit.Assert.assertTrue;
 
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 
 public class RoutingTableRefreshTest {
 
-    private SMSPeer peer1 = new SMSPeer("+5554");
-    private SMSPeer peer2 = new SMSPeer("+5555");
-    private SMSPeer peer3 = new SMSPeer("+5556");
-    private SMSPeer peer4 = new SMSPeer("+5554");
+    private final SMSPeer peer1 = new SMSPeer("+5554");
+    private final SMSPeer peer2 = new SMSPeer("+5555");
+    private final SMSPeer peer3 = new SMSPeer("+5556");
+    private final SMSPeer peer4 = new SMSPeer("+5554");
 
-    private SMSKademliaNode NODE1 = new SMSKademliaNode(peer1); //local node
-    private SMSKademliaNode NODE2 = new SMSKademliaNode(peer2);
-    private SMSKademliaNode NODE3 = new SMSKademliaNode(peer3);
-    private SMSKademliaNode NODE4 = new SMSKademliaNode(peer4);
+    private final SMSKademliaNode NODE1 = new SMSKademliaNode(peer1); //local node
+    private final SMSKademliaNode NODE2 = new SMSKademliaNode(peer2);
+    private final SMSKademliaNode NODE3 = new SMSKademliaNode(peer3);
+    private final SMSKademliaNode NODE4 = new SMSKademliaNode(peer4);
 
     private final KademliaNetwork net1 = new KademliaNetwork();
-    private final KademliaNetwork net2 = new KademliaNetwork();
     private final KademliaNetwork net3 = new KademliaNetwork();
     private final KademliaNetwork net4 = new KademliaNetwork();
-
-    private RoutingTableRefresh refresh = new RoutingTableRefresh(NODE1, net1);
-
-    private final SMSKademliaListener mockListener1 = mock(SMSKademliaListener.class);
-    //private final KademliaListener mockListener2 = mock(KademliaListener.class);
-    private final SMSKademliaListener mockListener3 = mock(SMSKademliaListener.class);
-    private final SMSKademliaListener mockListener4 = mock(SMSKademliaListener.class);
 
     @Before
     public void setUp(){
@@ -51,11 +40,10 @@ public class RoutingTableRefreshTest {
         PowerMockito.when(SmsManager.getDefault()).thenReturn(smsManagerMock);
 
 
-        net1.init(NODE1, mockListener1, UtilityMocks.setupMocks());
+        net1.init(NODE1, UtilityMocks.setupMocks());
         //I don't set Node2 listener in order to set it unresponsive
-        //net2.init(NODE2, mockListener2, UtilityMocks.setupMocks());
-        net3.init(NODE3, mockListener3, UtilityMocks.setupMocks());
-        net4.init(NODE4, mockListener4, UtilityMocks.setupMocks());
+        net3.init(NODE3, UtilityMocks.setupMocks());
+        net4.init(NODE4, UtilityMocks.setupMocks());
 
         //net1 routing table population
         net1.addNodeToTable(NODE2);

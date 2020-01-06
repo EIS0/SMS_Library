@@ -5,9 +5,9 @@ import com.eis.smslibrary.SMSMessage;
 import com.eis.smslibrary.SMSPeer;
 import com.eis0.UtilityMocks;
 import com.eis0.kademlia.SMSKademliaNode;
-import com.eis0.kademlianetwork.ActivityStatus.RespondTimer;
-import com.eis0.kademlianetwork.InformationDeliveryManager.KademliaOldMessage;
-import com.eis0.kademlianetwork.InformationDeliveryManager.RequestTypes;
+import com.eis0.kademlianetwork.listener.SMSKademliaListener;
+import com.eis0.kademlianetwork.informationdeliverymanager.RequestTypes;
+import com.eis0.kademlianetwork.informationdeliverymanager.KademliaOldMessage;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -26,15 +26,12 @@ import static org.mockito.Mockito.verify;
 @PrepareForTest({KademliaNetwork.class, SMSManager.class})
 public class SMSKademliaListenerTest {
 
-    private SMSPeer peer1 = new SMSPeer("+556");
-    private SMSPeer peer2 = new SMSPeer("+554");
+    private final SMSPeer peer1 = new SMSPeer("+556");
 
-    private SMSKademliaNode node1 = new SMSKademliaNode(peer1);
-    private SMSKademliaNode node2 = new SMSKademliaNode(peer2);
+    private final SMSKademliaNode node1 = new SMSKademliaNode(peer1);
 
     private SMSManager smsManagerMock;
 
-    private RespondTimer timer = new RespondTimer();
     @Spy
     private KademliaNetwork spyNetwork = new KademliaNetwork();
 
@@ -42,17 +39,17 @@ public class SMSKademliaListenerTest {
     private SMSKademliaListener spyListener = new SMSKademliaListener(spyNetwork);
 
     /*Default messages*/
-    KademliaOldMessage acknowledge = new KademliaOldMessage(RequestTypes.AcknowledgeMessage, null, null, null, null);
-    SMSMessage acknowledgeMessage = new SMSMessage(peer1, acknowledge.toString());
-    KademliaOldMessage ping = new KademliaOldMessage(RequestTypes.Ping, null, null, null, null);
-    SMSMessage pingMessage = new SMSMessage(peer1, ping.toString());
-    KademliaOldMessage pong = new KademliaOldMessage(RequestTypes.Pong, null, null, null, null);
-    SMSMessage pongMessage = new SMSMessage(peer1, pong.toString());
+    private final KademliaOldMessage acknowledge = new KademliaOldMessage(RequestTypes.AcknowledgeMessage, null, null, null, null);
+    private final SMSMessage acknowledgeMessage = new SMSMessage(peer1, acknowledge.toString());
+    private final KademliaOldMessage ping = new KademliaOldMessage(RequestTypes.Ping, null, null, null, null);
+    private final SMSMessage pingMessage = new SMSMessage(peer1, ping.toString());
+    private final KademliaOldMessage pong = new KademliaOldMessage(RequestTypes.Pong, null, null, null, null);
+    private final SMSMessage pongMessage = new SMSMessage(peer1, pong.toString());
 
     @Before
     public void setUp(){
 
-        spyNetwork.init(node1, spyListener, UtilityMocks.setupMocks());
+        spyNetwork.init(node1, UtilityMocks.setupMocks());
 
         smsManagerMock = mock(SMSManager.class);
         PowerMockito.mockStatic(SMSManager.class);
@@ -78,7 +75,7 @@ public class SMSKademliaListenerTest {
 
     @Test
     public void PongAction(){
-        //I suppose somone sent me a pong message
+        //I suppose someone sent me a pong message
         spyListener.onMessageReceived(pongMessage);
         assertTrue(spyNetwork.connectionInfo.hasPong());
     }

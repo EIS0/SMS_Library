@@ -1,4 +1,4 @@
-package com.eis0.kademlianetwork.InformationDeliveryManager;
+package com.eis0.kademlianetwork.informationdeliverymanager;
 
 import com.eis.smslibrary.SMSMessage;
 import com.eis.smslibrary.SMSPeer;
@@ -19,11 +19,11 @@ public class KademliaOldMessage {
     private static final String DEFAULT = "/";
     private static final String BLANK = " ";
 
-    public RequestTypes requestType;
-    public KademliaId idToFind;
-    public SMSPeer searcher;
-    public String key;
-    public String resource;
+    private final RequestTypes requestType;
+    private final KademliaId idToFind;
+    private final SMSPeer searcher;
+    private String key;
+    private String resource;
 
     /**
      * This is the constructor of the class, it allows to create an instance of the KademliaOldMessage
@@ -55,7 +55,11 @@ public class KademliaOldMessage {
         idToFind = new KademliaId(splitted[1]);
         searcher = new SMSPeer(splitted[2]);
         key = splitted[3];
-        for (int i = 4; i < splitted.length; i++) resource += splitted[i] + BLANK;
+        StringBuilder resourceBuilder = new StringBuilder();
+        for (int i = 4; i < splitted.length; i++) {
+            resourceBuilder.append(splitted[i]).append(BLANK);
+        }
+        resource = resourceBuilder.toString();
     }
 
     /**
@@ -107,12 +111,10 @@ public class KademliaOldMessage {
         if (key == null) key = DEFAULT;
         if (resource == null) resource = DEFAULT;
 
-        String messageToCreate =
-                requestType.ordinal() + BLANK +
-                        stringIdToFind + BLANK +
-                        stringSearcher + BLANK +
-                        key + BLANK +
-                        resource;
-        return messageToCreate;
+        return requestType.ordinal() + BLANK +
+                stringIdToFind + BLANK +
+                stringSearcher + BLANK +
+                key + BLANK +
+                resource;
     }
 }

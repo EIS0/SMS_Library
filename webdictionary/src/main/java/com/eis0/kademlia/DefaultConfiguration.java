@@ -27,7 +27,7 @@ public class DefaultConfiguration implements KadConfiguration {
     }
 
     /**
-     * @return int representing the size of the replacement chache
+     * @return int representing the size of the replacement cache
      */
     public int replacementCacheSize() {
         return RCSIZE;
