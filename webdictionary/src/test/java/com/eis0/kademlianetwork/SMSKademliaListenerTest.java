@@ -5,9 +5,9 @@ import com.eis.smslibrary.SMSMessage;
 import com.eis.smslibrary.SMSPeer;
 import com.eis0.UtilityMocks;
 import com.eis0.kademlia.SMSKademliaNode;
-import com.eis0.kademlianetwork.listener.SMSKademliaListener;
+import com.eis0.kademlianetwork.informationdeliverymanager.KademliaMessage;
 import com.eis0.kademlianetwork.informationdeliverymanager.RequestTypes;
-import com.eis0.kademlianetwork.informationdeliverymanager.KademliaOldMessage;
+import com.eis0.kademlianetwork.listener.SMSKademliaListener;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -17,7 +17,7 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -39,12 +39,18 @@ public class SMSKademliaListenerTest {
     private SMSKademliaListener spyListener = new SMSKademliaListener(spyNetwork);
 
     /*Default messages*/
-    private final KademliaOldMessage acknowledge = new KademliaOldMessage(RequestTypes.AcknowledgeMessage, null, null, null, null);
-    private final SMSMessage acknowledgeMessage = new SMSMessage(peer1, acknowledge.toString());
-    private final KademliaOldMessage ping = new KademliaOldMessage(RequestTypes.Ping, null, null, null, null);
-    private final SMSMessage pingMessage = new SMSMessage(peer1, ping.toString());
-    private final KademliaOldMessage pong = new KademliaOldMessage(RequestTypes.Pong, null, null, null, null);
-    private final SMSMessage pongMessage = new SMSMessage(peer1, pong.toString());
+    private final SMSMessage acknowledge = new KademliaMessage()
+            .setPeer(peer1)
+            .setRequestType(RequestTypes.AcknowledgeMessage)
+            .buildMessage();
+    private final SMSMessage ping = new KademliaMessage()
+            .setPeer(peer1)
+            .setRequestType(RequestTypes.Ping)
+            .buildMessage();
+    private final SMSMessage pong = new KademliaMessage()
+            .setPeer(peer1)
+            .setRequestType(RequestTypes.Pong)
+            .buildMessage();
 
     @Before
     public void setUp(){
@@ -55,7 +61,7 @@ public class SMSKademliaListenerTest {
         PowerMockito.mockStatic(SMSManager.class);
         PowerMockito.when(SMSManager.getInstance()).thenReturn(smsManagerMock);
 
-        doCallRealMethod().when(spyListener).onMessageReceived(acknowledgeMessage);
+        doCallRealMethod().when(spyListener).onMessageReceived(acknowledge);
     }
 
 
@@ -63,21 +69,21 @@ public class SMSKademliaListenerTest {
     @Test
     public void AcknowledgeAction(){
         //I suppose someone sent me an acknowledge message
-        spyListener.onMessageReceived(acknowledgeMessage);
+        spyListener.onMessageReceived(acknowledge);
         assertTrue(spyNetwork.connectionInfo.hasRespond());
     }
 
     @Test
     public void PingAction(){
         //I suppose someone sent me a ping message
-        spyListener.onMessageReceived(pingMessage);
-        verify(smsManagerMock).sendMessage(pongMessage);
+        spyListener.onMessageReceived(ping);
+        verify(smsManagerMock).sendMessage(pong);
     }
 
     @Test
     public void PongAction(){
         //I suppose someone sent me a pong message
-        spyListener.onMessageReceived(pongMessage);
+        spyListener.onMessageReceived(pong);
         assertTrue(spyNetwork.connectionInfo.hasPong());
     }
 
