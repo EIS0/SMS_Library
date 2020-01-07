@@ -196,7 +196,7 @@ public class ResourceExchangeHandler {
      * distributed dictionary, plus the {@link KademliaId} of the resource key, used to distinguish
      * each Request from the other
      */
-    public class Request implements IRequest {
+    public class Request {
         private KademliaId resourceKeyId;
         private String key;
         private String resource;

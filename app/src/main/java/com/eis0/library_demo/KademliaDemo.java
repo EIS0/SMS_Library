@@ -20,9 +20,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.eis.smslibrary.SMSPeer;
-import com.eis0.kademlia.Contact;
 import com.eis0.kademlia.SMSKademliaNode;
-import com.eis0.kademlianetwork.KademliaListener;
 import com.eis0.kademlianetwork.KademliaNetwork;
 import com.eis0.kademlianetwork.listener.SMSKademliaListener;
 
@@ -33,7 +31,7 @@ import java.util.Set;
  *
  * @author Matteo Carnelos
  */
-public class KademliaDemo extends AppCompatActivity implements KademliaListener {
+public class KademliaDemo extends AppCompatActivity {
 
     private static final String[] PERMISSIONS = {
             Manifest.permission.SEND_SMS,
@@ -87,18 +85,7 @@ public class KademliaDemo extends AppCompatActivity implements KademliaListener 
         routingTableAdapter = new RoutingTableAdapter(network.getLocalRoutingTable().getAllContacts());
         routingTableRclView.setAdapter(routingTableAdapter);
     }
-
-    /**
-     * Method called when a contact is added to the routing table. Refresh the recycler view.
-     *
-     * @param contact The contact added.
-     * @author Matteo Carnelos
-     */
-    @Override
-    public void onNewContact(Contact contact) {
-        routingTableAdapter.addContact(contact);
-    }
-
+    
     /**
      * Called when the button to add a new peer to the network is pressed, it adds the new peer to
      * the network.
