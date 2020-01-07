@@ -108,9 +108,9 @@ public class IdFinderHandler {
      * @param targetPeer  The Peer representing the target that will receive the result
      */
     private static void sendResult(RequestTypes requestType, KademliaId idToFind, SMSPeer targetPeer) {
-        SMSMessage searchResult = new KademliaMessageBuilder()
+        SMSMessage searchResult = new MessageBuilder()
                 .setPeer(targetPeer)
-                .setCommand(requestType)
+                //.setCommand(requestType)
                 .addArguments(idToFind.toString(), null, null, null)
                 .buildMessage();
         if(targetPeer.equals(KademliaNetwork.getInstance().getLocalNode().getPeer())) {
@@ -138,9 +138,9 @@ public class IdFinderHandler {
      * @param closerNode   The node with the {@link KademliaId} closer to the idToFind
      */
     private static void keepLooking(RequestTypes requestType, KademliaId idToFind, SMSPeer searcherNode, SMSPeer closerNode) {
-        SMSMessage requestMessage = new KademliaMessageBuilder()
+        SMSMessage requestMessage = new MessageBuilder()
                 .setPeer(closerNode)
-                .setCommand(requestType)
+                //.setCommand(requestType)
                 .addArguments(idToFind.toString(), searcherNode.toString(), null, null)
                 .buildMessage();
         SMSManager.getInstance().sendMessage(requestMessage);

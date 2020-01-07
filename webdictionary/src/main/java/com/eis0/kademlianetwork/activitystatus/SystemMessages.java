@@ -4,8 +4,7 @@ import com.eis.smslibrary.SMSManager;
 import com.eis.smslibrary.SMSMessage;
 import com.eis.smslibrary.SMSPeer;
 import com.eis0.kademlia.SMSKademliaNode;
-import com.eis0.kademlianetwork.informationdeliverymanager.RequestTypes;
-import com.eis0.kademlianetwork.informationdeliverymanager.KademliaMessageBuilder;
+import com.eis0.kademlianetwork.informationdeliverymanager.MessageBuilder;
 
 /**
  * This class contains all the methods that send system messages
@@ -22,9 +21,9 @@ public class SystemMessages {
      * @param peer The {@link SMSPeer} of the node that contacted me
      */
     public static void sendAcknowledge(SMSPeer peer) {
-        SMSMessage acknowledgeMessage = new KademliaMessageBuilder()
+        SMSMessage acknowledgeMessage = new MessageBuilder()
                 .setPeer(peer)
-                .setCommand(RequestTypes.AcknowledgeMessage)
+                //.setCommand(RequestTypes.AcknowledgeMessage)
                 .addArguments(null, null, null, null)
                 .buildMessage();
         SMSManager.getInstance().sendMessage(acknowledgeMessage);
@@ -36,9 +35,9 @@ public class SystemMessages {
      * @param peer The {@link SMSPeer} of the node that contacted me
      */
     public static void sendPong(SMSPeer peer) {
-        SMSMessage pongMessage = new KademliaMessageBuilder()
+        SMSMessage pongMessage = new MessageBuilder()
                 .setPeer(peer)
-                .setCommand(RequestTypes.Pong)
+                //.setCommand(RequestTypes.Pong)
                 .addArguments(null, null, null, null)
                 .buildMessage();
         SMSManager.getInstance().sendMessage(pongMessage);
@@ -50,9 +49,9 @@ public class SystemMessages {
      * @param receiver The {@link SMSKademliaNode} represented by peer that I'm looking for
      */
     public static void sendPing(SMSKademliaNode receiver) {
-        SMSMessage pingMessage = new KademliaMessageBuilder()
+        SMSMessage pingMessage = new MessageBuilder()
                 .setPeer(receiver.getPeer())
-                .setCommand(RequestTypes.Ping)
+                //.setCommand(RequestTypes.Ping)
                 .addArguments(null, null, null, null)
                 .buildMessage();
         SMSManager.getInstance().sendMessage(pingMessage);

@@ -15,7 +15,7 @@ import com.eis0.kademlianetwork.informationdeliverymanager.ResourceExchangeHandl
 import com.eis0.kademlianetwork.routingtablemanager.TableUpdateHandler;
 import com.eis0.kademlianetwork.ConnectionHandler;
 import com.eis0.kademlianetwork.informationdeliverymanager.KademliaMessageAnalyzer;
-import com.eis0.kademlianetwork.informationdeliverymanager.KademliaMessageBuilder;
+import com.eis0.kademlianetwork.informationdeliverymanager.MessageBuilder;
 import com.eis0.kademlianetwork.KademliaNetwork;
 
 /**
@@ -161,9 +161,9 @@ public class IntMsgKademliaListener {
                 Log.i(LOG_TAG, "Received GetFromDictionary request.\nKey: " + key);
                 resource = KademliaNetwork.getInstance().getFromLocalDictionary(key).toString();
                 //2. Send the <key, resource> pair
-                message = new KademliaMessageBuilder()
+                message = new MessageBuilder()
                         .setPeer(peer)
-                        .setCommand(RequestTypes.AddToDict)
+                        //.setCommand(RequestTypes.AddToDict)
                         .addArguments(null, null, key, resource)
                         .buildMessage();
                 SMSManager.getInstance().sendMessage(message);
