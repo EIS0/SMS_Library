@@ -62,6 +62,8 @@ public class KademliaMessage {
      * Sets a resource-key parameter of the message
      * @param key The String key to set as a parameter
      * @return Returns an instance of this KademliaMessage to chain calls together
+     * @throws IllegalArgumentException If the Key is invalid.
+     * A key is undefined invalid if it's more than one word
      */
     public KademliaMessage setKey(String key){
         return null;
@@ -91,7 +93,7 @@ public class KademliaMessage {
      * @throws IllegalArgumentException If the peer or the RequestType parameters have
      * not been setup correctly.
      */
-    public SMSMessage getMessage(){
+    public SMSMessage buildMessage(){
         return null;
     }
 
