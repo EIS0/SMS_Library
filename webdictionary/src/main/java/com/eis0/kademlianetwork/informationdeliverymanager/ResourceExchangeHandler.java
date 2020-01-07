@@ -153,10 +153,11 @@ public class ResourceExchangeHandler {
         String key = aboutToClose.getKey();
         String resource = aboutToClose.getResource();
         //2. Send the message
-        SMSMessage message = new MessageBuilder()
+        SMSMessage message = new KademliaMessage()
                 .setPeer(targetPeer)
-                //.setCommand(requestType)
-                .addArguments(null, null, key, resource)
+                .setRequestType(requestType)
+                .setKey(key)
+                .setResource(resource)
                 .buildMessage();
         SMSManager.getInstance().sendMessage(message);
     }

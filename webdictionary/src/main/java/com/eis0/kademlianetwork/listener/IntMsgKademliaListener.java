@@ -7,16 +7,16 @@ import com.eis.smslibrary.SMSMessage;
 import com.eis.smslibrary.SMSPeer;
 import com.eis0.kademlia.KademliaId;
 import com.eis0.kademlia.SMSKademliaNode;
+import com.eis0.kademlianetwork.ConnectionHandler;
+import com.eis0.kademlianetwork.KademliaNetwork;
 import com.eis0.kademlianetwork.activitystatus.SystemMessages;
 import com.eis0.kademlianetwork.informationdeliverymanager.IdFinderHandler;
+import com.eis0.kademlianetwork.informationdeliverymanager.KademliaMessage;
+import com.eis0.kademlianetwork.informationdeliverymanager.KademliaMessageAnalyzer;
 import com.eis0.kademlianetwork.informationdeliverymanager.RequestTypes;
 import com.eis0.kademlianetwork.informationdeliverymanager.ResearchMode;
 import com.eis0.kademlianetwork.informationdeliverymanager.ResourceExchangeHandler;
 import com.eis0.kademlianetwork.routingtablemanager.TableUpdateHandler;
-import com.eis0.kademlianetwork.ConnectionHandler;
-import com.eis0.kademlianetwork.informationdeliverymanager.KademliaMessageAnalyzer;
-import com.eis0.kademlianetwork.informationdeliverymanager.MessageBuilder;
-import com.eis0.kademlianetwork.KademliaNetwork;
 
 /**
  * Listener class which sends the appropriate command to the relative appropriate handler
@@ -161,10 +161,11 @@ public class IntMsgKademliaListener {
                 Log.i(LOG_TAG, "Received GetFromDictionary request.\nKey: " + key);
                 resource = KademliaNetwork.getInstance().getFromLocalDictionary(key).toString();
                 //2. Send the <key, resource> pair
-                message = new MessageBuilder()
+                message = new KademliaMessage()
                         .setPeer(peer)
-                        //.setCommand(RequestTypes.AddToDict)
-                        .addArguments(null, null, key, resource)
+                        .setRequestType(RequestTypes.AddToDict)
+                        .setKey(key)
+                        .setResource(resource)
                         .buildMessage();
                 SMSManager.getInstance().sendMessage(message);
                 break;
