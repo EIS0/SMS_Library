@@ -33,8 +33,10 @@ public class ResourceExchangeHandlerTest {
     private final String RESOURCE2 = "Second resource";
     private final KademliaId KAD_ID1 = new KademliaId(KEY1);
     private final KademliaId KAD_ID2 = new KademliaId(KEY2);
+
     private final SMSPeer VALID_PEER = new SMSPeer("+393423541601");
     private final SMSKademliaNode MAIN_NODE = new SMSKademliaNode(VALID_PEER);
+
     private final SMSKademliaListener mockListener = mock(SMSKademliaListener.class);
     private KademliaNetwork kadNet;
     private ResourceExchangeHandler.Request request1;

@@ -85,7 +85,7 @@ public class KademliaDemo extends AppCompatActivity {
         routingTableAdapter = new RoutingTableAdapter(network.getLocalRoutingTable().getAllContacts());
         routingTableRclView.setAdapter(routingTableAdapter);
     }
-    
+
     /**
      * Called when the button to add a new peer to the network is pressed, it adds the new peer to
      * the network.

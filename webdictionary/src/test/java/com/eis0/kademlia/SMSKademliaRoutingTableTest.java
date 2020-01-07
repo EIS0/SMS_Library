@@ -117,7 +117,15 @@ public class SMSKademliaRoutingTableTest {
     public void findClosestTest_OneElement(){
         routingTable.insert(NODE2);
         List<SMSKademliaNode> result = routingTable.findClosest(ID2, 1);
-        assertEquals(result.get(0), NODE2);
+        SMSKademliaNode resultNode = result.get(0);
+        assertEquals(resultNode, NODE2);
+    }
+
+    @Test
+    public void findClosest_OnlyMainNode() {
+        List<SMSKademliaNode> closestNodes = routingTable.findClosest(ID2, 1);
+        SMSKademliaNode closestNode = closestNodes.get(0);
+        assertEquals(closestNode, MAIN_NODE);
     }
 
     @Test

@@ -59,6 +59,7 @@ public class SMSKademliaListenerTest {
     }
 
 
+
     @Test
     public void AcknowledgeAction(){
         //I suppose someone sent me an acknowledge message
