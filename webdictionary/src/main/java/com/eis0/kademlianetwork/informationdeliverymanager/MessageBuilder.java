@@ -8,6 +8,8 @@ import com.eis.smslibrary.SMSPeer;
  * <a href="https://refactoring.guru/design-patterns/builder">Builder Design Pattern</a>.
  * Thanks to this class it's possible to create space separated messages by building a
  * message argument by argument.
+ *
+ * @author Marco Cognolato
  */
 public class MessageBuilder {
 
@@ -49,6 +51,15 @@ public class MessageBuilder {
         if(messageText == null) builder.deleteCharAt(0);
         messageText = builder.toString();
         return this;
+    }
+
+    /**
+     * Resets the Message builder to his default state
+     * @return Returns an instance of this MessageBuilder so you
+     * can concatenate construction calls
+     */
+    public MessageBuilder reset(){
+        return new MessageBuilder();
     }
 
     /**
