@@ -16,11 +16,15 @@ import com.eis0.kademlia.KademliaId;
 public class KademliaMessage {
     //Builder used to construct a KademliaMessage
     private MessageBuilder builder = new MessageBuilder();
-    private RequestTypes requestType;
-    private KademliaId idToFind;
-    private SMSPeer searcher;
-    private String key;
-    private String resource;
+
+    private SMSPeer peer = null;
+    private RequestTypes requestType = null;
+    private KademliaId idToFind = null;
+    private SMSPeer searcher = null;
+    private String key = null;
+    private String resource = null;
+
+    private final String BLANK = "/";
 
     /**
      * Sets an SMSPeer as the destination Peer of the SMSMessage
@@ -28,7 +32,8 @@ public class KademliaMessage {
      * @return Returns an instance of this KademliaMessage to chain calls together
      */
     public KademliaMessage setPeer(SMSPeer peer){
-        return null;
+        this.peer = peer;
+        return this;
     }
 
     /**
@@ -37,7 +42,8 @@ public class KademliaMessage {
      * @return Returns an instance of this KademliaMessage to chain calls together
      */
     public KademliaMessage setRequestType(RequestTypes requestType){
-        return null;
+        this.requestType = requestType;
+        return this;
     }
 
     /**
@@ -46,7 +52,8 @@ public class KademliaMessage {
      * @return Returns an instance of this KademliaMessage to chain calls together
      */
     public KademliaMessage setIdToFind(KademliaId idToFind){
-        return null;
+        this.idToFind = idToFind;
+        return this;
     }
 
     /**
@@ -55,7 +62,8 @@ public class KademliaMessage {
      * @return Returns an instance of this KademliaMessage to chain calls together
      */
     public KademliaMessage setSearcher(SMSPeer searcher){
-        return null;
+        this.searcher = searcher;
+        return this;
     }
 
     /**
@@ -66,7 +74,10 @@ public class KademliaMessage {
      * A key is undefined invalid if it's more than one word
      */
     public KademliaMessage setKey(String key){
-        return null;
+        if(!key.matches("^\\w*$")) throw new IllegalArgumentException("Key is invalid!" +
+                " Be sure to only have one word as a key!");
+        this.key = key;
+        return this;
     }
 
     /**
@@ -75,7 +86,8 @@ public class KademliaMessage {
      * @return Returns an instance of this KademliaMessage to chain calls together
      */
     public KademliaMessage setResource(String resource){
-        return null;
+        this.resource = resource;
+        return this;
     }
 
     /**
@@ -83,18 +95,25 @@ public class KademliaMessage {
      * @return Returns an instance of this KademliaMessage to chain calls together
      */
     public KademliaMessage reset(){
-        return null;
+        return new KademliaMessage();
     }
 
     /**
      * Constructs the final message. If any of the parameters has not been set up, it
-     * will instead defaul to a "/"
+     * will instead default to a "/"
      * @return Returns the SMSMessage used by Kademlia Operations
      * @throws IllegalArgumentException If the peer or the RequestType parameters have
      * not been setup correctly.
      */
     public SMSMessage buildMessage(){
-        return null;
+        if(peer == null) throw new IllegalArgumentException("Peer has not been setup!");
+        if(requestType == null) throw new IllegalArgumentException("RequestType has not been setup!");
+        String builtMessage = requestType.ordinal() + " "
+                + (idToFind == null ? BLANK : idToFind) + " "
+                + (searcher == null ? BLANK : searcher) + " "
+                + (key      == null ? BLANK : key     ) + " "
+                + (resource == null ? BLANK : resource);
+        return new SMSMessage(peer, builtMessage);
     }
 
     /*

@@ -35,11 +35,28 @@ public class KademliaMessageTest {
                 .setPeer(PEER1)
                 .setRequestType(REQUEST1)
                 .setIdToFind(ID1)
+                .setSearcher(PEER1)
                 .setKey(KEY1)
                 .setResource(RESOURCE1)
                 .buildMessage();
         String expectedMessage = REQUEST1.ordinal() + " " + ID1
-                + " " + KEY1 + " " + RESOURCE1;
+                + " " + PEER1 + " " + KEY1 + " " + RESOURCE1;
+        assertEquals(constructed.getPeer(), PEER1);
+        assertEquals(constructed.getData(), expectedMessage);
+    }
+
+    @Test
+    public void constructValidMessage_differentOrder(){
+        SMSMessage constructed = new KademliaMessage()
+                .setIdToFind(ID1)
+                .setResource(RESOURCE1)
+                .setSearcher(PEER1)
+                .setPeer(PEER1)
+                .setKey(KEY1)
+                .setRequestType(REQUEST1)
+                .buildMessage();
+        String expectedMessage = REQUEST1.ordinal() + " " + ID1
+                + " " + PEER1 + " " + KEY1 + " " + RESOURCE1;
         assertEquals(constructed.getPeer(), PEER1);
         assertEquals(constructed.getData(), expectedMessage);
     }
@@ -50,11 +67,12 @@ public class KademliaMessageTest {
                 .setPeer(PEER1)
                 .setRequestType(REQUEST1)
                 .setIdToFind(ID1)
+                .setSearcher(PEER1)
                 .setKey(KEY1)
                 .setResource(RESOURCE2)
                 .buildMessage();
         String expectedMessage = REQUEST1.ordinal() + " " + ID1
-                + " " + KEY1 + " " + RESOURCE2;
+                + " " + PEER1 + " " + KEY1 + " " + RESOURCE2;
         assertEquals(constructed.getPeer(), PEER1);
         assertEquals(constructed.getData(), expectedMessage);
     }
@@ -64,11 +82,12 @@ public class KademliaMessageTest {
         SMSMessage constructed = new KademliaMessage()
                 .setPeer(PEER1)
                 .setRequestType(REQUEST1)
+                .setSearcher(PEER1)
                 .setKey(KEY1)
                 .setResource(RESOURCE1)
                 .buildMessage();
         String expectedMessage = REQUEST1.ordinal() + " " + BLANK
-                + " " + KEY1 + " " + RESOURCE1;
+                + " " + PEER1 + " " + KEY1 + " " + RESOURCE1;
         assertEquals(constructed.getPeer(), PEER1);
         assertEquals(constructed.getData(), expectedMessage);
     }
@@ -79,10 +98,11 @@ public class KademliaMessageTest {
                 .setPeer(PEER1)
                 .setRequestType(REQUEST1)
                 .setIdToFind(ID1)
+                .setSearcher(PEER1)
                 .setResource(RESOURCE1)
                 .buildMessage();
         String expectedMessage = REQUEST1.ordinal() + " " + ID1
-                + " " + BLANK + " " + RESOURCE1;
+                + " " + PEER1 + " " + BLANK + " " + RESOURCE1;
         assertEquals(constructed.getPeer(), PEER1);
         assertEquals(constructed.getData(), expectedMessage);
     }
@@ -93,10 +113,26 @@ public class KademliaMessageTest {
                 .setPeer(PEER1)
                 .setRequestType(REQUEST1)
                 .setIdToFind(ID1)
+                .setSearcher(PEER1)
                 .setKey(KEY1)
                 .buildMessage();
         String expectedMessage = REQUEST1.ordinal() + " " + ID1
-                + " " + KEY1 + " " + BLANK;
+                + " " + PEER1 + " " + KEY1 + " " + BLANK;
+        assertEquals(constructed.getPeer(), PEER1);
+        assertEquals(constructed.getData(), expectedMessage);
+    }
+
+    @Test
+    public void constructValidMessage_missingSearcher(){
+        SMSMessage constructed = new KademliaMessage()
+                .setPeer(PEER1)
+                .setRequestType(REQUEST1)
+                .setIdToFind(ID1)
+                .setKey(KEY1)
+                .setResource(RESOURCE1)
+                .buildMessage();
+        String expectedMessage = REQUEST1.ordinal() + " " + ID1
+                + " " + BLANK + " " + KEY1 + " " + RESOURCE1;
         assertEquals(constructed.getPeer(), PEER1);
         assertEquals(constructed.getData(), expectedMessage);
     }
@@ -106,10 +142,11 @@ public class KademliaMessageTest {
         SMSMessage constructed = new KademliaMessage()
                 .setPeer(PEER1)
                 .setRequestType(REQUEST1)
+                .setSearcher(PEER1)
                 .setResource(RESOURCE1)
                 .buildMessage();
         String expectedMessage = REQUEST1.ordinal() + " " + BLANK
-                + " " + BLANK + " " + RESOURCE1;
+                + " " + PEER1 + " " + BLANK + " " + RESOURCE1;
         assertEquals(constructed.getPeer(), PEER1);
         assertEquals(constructed.getData(), expectedMessage);
     }
@@ -120,9 +157,10 @@ public class KademliaMessageTest {
                 .setPeer(PEER1)
                 .setRequestType(REQUEST1)
                 .setIdToFind(ID1)
+                .setSearcher(PEER1)
                 .buildMessage();
         String expectedMessage = REQUEST1.ordinal() + " " + ID1
-                + " " + BLANK + " " + BLANK;
+                + " " + PEER1 + " " + BLANK + " " + BLANK;
         assertEquals(constructed.getPeer(), PEER1);
         assertEquals(constructed.getData(), expectedMessage);
     }
@@ -132,10 +170,105 @@ public class KademliaMessageTest {
         SMSMessage constructed = new KademliaMessage()
                 .setPeer(PEER1)
                 .setRequestType(REQUEST1)
+                .setSearcher(PEER1)
                 .setKey(KEY1)
                 .buildMessage();
         String expectedMessage = REQUEST1.ordinal() + " " + BLANK
-                + " " + KEY1 + " " + BLANK;
+                + " " + PEER1 + " " + KEY1 + " " + BLANK;
+        assertEquals(constructed.getPeer(), PEER1);
+        assertEquals(constructed.getData(), expectedMessage);
+    }
+
+    @Test
+    public void constructValidMessage_missingSearcherAndId(){
+        SMSMessage constructed = new KademliaMessage()
+                .setPeer(PEER1)
+                .setRequestType(REQUEST1)
+                .setKey(KEY1)
+                .setResource(RESOURCE1)
+                .buildMessage();
+        String expectedMessage = REQUEST1.ordinal() + " " + BLANK
+                + " " + BLANK + " " + KEY1 + " " + RESOURCE1;
+        assertEquals(constructed.getPeer(), PEER1);
+        assertEquals(constructed.getData(), expectedMessage);
+    }
+
+    @Test
+    public void constructValidMessage_missingSearcherAndKey(){
+        SMSMessage constructed = new KademliaMessage()
+                .setPeer(PEER1)
+                .setRequestType(REQUEST1)
+                .setIdToFind(ID1)
+                .setResource(RESOURCE1)
+                .buildMessage();
+        String expectedMessage = REQUEST1.ordinal() + " " + ID1
+                + " " + BLANK + " " + BLANK + " " + RESOURCE1;
+        assertEquals(constructed.getPeer(), PEER1);
+        assertEquals(constructed.getData(), expectedMessage);
+    }
+
+    @Test
+    public void constructValidMessage_missingSearcherAndResource(){
+        SMSMessage constructed = new KademliaMessage()
+                .setPeer(PEER1)
+                .setRequestType(REQUEST1)
+                .setIdToFind(ID1)
+                .setKey(KEY1)
+                .buildMessage();
+        String expectedMessage = REQUEST1.ordinal() + " " + ID1
+                + " " + BLANK + " " + KEY1 + " " + BLANK;
+        assertEquals(constructed.getPeer(), PEER1);
+        assertEquals(constructed.getData(), expectedMessage);
+    }
+
+    @Test
+    public void constructValidMessage_onlySearcher(){
+        SMSMessage constructed = new KademliaMessage()
+                .setPeer(PEER1)
+                .setRequestType(REQUEST1)
+                .setSearcher(PEER1)
+                .buildMessage();
+        String expectedMessage = REQUEST1.ordinal() + " " + BLANK
+                + " " + PEER1 + " " + BLANK + " " + BLANK;
+        assertEquals(constructed.getPeer(), PEER1);
+        assertEquals(constructed.getData(), expectedMessage);
+    }
+
+    @Test
+    public void constructValidMessage_onlyId(){
+        SMSMessage constructed = new KademliaMessage()
+                .setPeer(PEER1)
+                .setRequestType(REQUEST1)
+                .setIdToFind(ID1)
+                .buildMessage();
+        String expectedMessage = REQUEST1.ordinal() + " " + ID1
+                + " " + BLANK + " " + BLANK + " " + BLANK;
+        assertEquals(constructed.getPeer(), PEER1);
+        assertEquals(constructed.getData(), expectedMessage);
+    }
+
+    @Test
+    public void constructValidMessage_onlyKey(){
+        SMSMessage constructed = new KademliaMessage()
+                .setPeer(PEER1)
+                .setRequestType(REQUEST1)
+                .setKey(KEY1)
+                .buildMessage();
+        String expectedMessage = REQUEST1.ordinal() + " " + BLANK
+                + " " + BLANK + " " + KEY1 + " " + BLANK;
+        assertEquals(constructed.getPeer(), PEER1);
+        assertEquals(constructed.getData(), expectedMessage);
+    }
+
+    @Test
+    public void constructValidMessage_onlyResource(){
+        SMSMessage constructed = new KademliaMessage()
+                .setPeer(PEER1)
+                .setRequestType(REQUEST1)
+                .setResource(RESOURCE1)
+                .buildMessage();
+        String expectedMessage = REQUEST1.ordinal() + " " + BLANK
+                + " " + BLANK + " " + BLANK + " " + RESOURCE1;
         assertEquals(constructed.getPeer(), PEER1);
         assertEquals(constructed.getData(), expectedMessage);
     }
@@ -147,7 +280,7 @@ public class KademliaMessageTest {
                 .setRequestType(REQUEST1)
                 .buildMessage();
         String expectedMessage = REQUEST1.ordinal() + " " + BLANK
-                + " " + BLANK + " " + BLANK;
+                + " " + BLANK + " " + BLANK + " " + BLANK;
         assertEquals(constructed.getPeer(), PEER1);
         assertEquals(constructed.getData(), expectedMessage);
     }
@@ -193,11 +326,12 @@ public class KademliaMessageTest {
                 .setPeer(PEER2)
                 .setRequestType(REQUEST2)
                 .setIdToFind(ID2)
+                .setSearcher(PEER1)
                 .setKey(KEY1)
                 .setResource(RESOURCE1)
                 .buildMessage();
         String expectedMessage = REQUEST2.ordinal() + " " + ID2
-                + " " + KEY1 + " " + RESOURCE1;
+                + " " + PEER1 + " " + KEY1 + " " + RESOURCE1;
         assertEquals(constructed.getPeer(), PEER2);
         assertEquals(constructed.getData(), expectedMessage);
     }
