@@ -5,6 +5,8 @@ import com.eis.smslibrary.SMSPeer;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.NoSuchElementException;
 
@@ -19,80 +21,101 @@ public class SMSKademliaBucketTest {
     private final SMSPeer PEER1 = new SMSPeer("+393408140326");
     private final SMSPeer PEER2 = new SMSPeer("+393497364511");
     private final SMSPeer PEER3 = new SMSPeer("+393497312345");
+    private final SMSPeer PEER4 = new SMSPeer("+393479281192");
 
     private final SMSKademliaNode NODE1 = new SMSKademliaNode(PEER1);
     private final SMSKademliaNode NODE2 = new SMSKademliaNode(PEER2);
     private final SMSKademliaNode NODE3 = new SMSKademliaNode(PEER3);
+    private final SMSKademliaNode NODE4 = new SMSKademliaNode(PEER4);
 
     private final Contact CONTACT1 = new Contact(NODE1);
     private final Contact CONTACT2 = new Contact(NODE2);
     private final Contact CONTACT3 = new Contact(NODE3);
+    private final Contact CONTACT4 = new Contact(NODE4);
 
     private SMSKademliaBucket bucket;
 
+    private Method insertIntoReplacementCache;
+    private Method removeFromReplacementCache;
+
     @Before
-    public void setup(){
+    public void setup() throws NoSuchMethodException, NoSuchFieldException {
         bucket = new SMSKademliaBucket(5, config);
         CONTACT1.resetStaleCount();
         bucket.insert(NODE1);
+        insertIntoReplacementCache = SMSKademliaBucket.class.getDeclaredMethod("insertIntoReplacementCache", Contact.class);
+        insertIntoReplacementCache.setAccessible(true);
+        removeFromReplacementCache = SMSKademliaBucket.class.getDeclaredMethod("removeFromReplacementCache", SMSKademliaNode.class);
+        removeFromReplacementCache.setAccessible(true);
     }
 
     @Test
-    public void bucketConstruction_noErrors(){
+    public void bucketConstruction_noErrors() {
         new SMSKademliaBucket(5, config);
     }
 
     @Test
-    public void insertContact_getsInserted(){
+    public void insertContact_getsInserted() {
         bucket.insert(CONTACT1);
         assertTrue(bucket.containsContact(CONTACT1));
     }
 
     @Test
-    public void insertNode_getsInserted(){
+    public void insertNode_getsInserted() {
         bucket.insert(NODE1);
         assertTrue(bucket.containsContact(CONTACT1));
     }
 
     @Test
-    public void emptyBucket_doesNotContainContact(){
+    public void emptyBucket_doesNotContainContact() {
         assertFalse(bucket.containsContact(CONTACT2));
     }
 
     @Test
-    public void emptyBucket_doesNotContainNode(){
+    public void emptyBucket_doesNotContainNode() {
         assertFalse(bucket.containsNode(NODE2));
     }
 
     @Test
-    public void removeContact_getsRemoved(){
+    public void removeContact_getsRemoved() {
         bucket.insert(CONTACT1);
         bucket.removeContact(CONTACT1);
         assertFalse(bucket.containsContact(CONTACT1));
     }
 
     @Test
-    public void getFromContactTest(){
+    public void getFromContactTest() {
         bucket.insert(CONTACT1);
         Contact toReturn = bucket.getFromContacts(NODE1);
         assertEquals(toReturn, CONTACT1);
     }
 
     @Test
-    public void containsNodeOfAnInsertedContact(){
+    public void containsNodeOfAnInsertedContact() {
         bucket.insert(CONTACT1);
         assertTrue(bucket.containsNode(NODE1));
     }
 
     @Test
-    public void removeNode_removed(){
+    public void removeNode_nodePresent() {
         bucket.insert(CONTACT1);
         bucket.removeNode(NODE1);
         assertFalse(bucket.containsNode(NODE1));
     }
 
     @Test
-    public void addContacts_IfFullBucket(){
+    public void removeNode_nodeNotPresent() {
+        bucket.insert(CONTACT1);
+        bucket.removeContact(CONTACT2);
+        boolean contains = bucket.containsContact(CONTACT1);
+        boolean doesnTcontain = bucket.containsContact(CONTACT2);
+        assertTrue(contains);
+        assertFalse(doesnTcontain);
+
+    }
+
+    @Test
+    public void addContacts_IfFullBucket() {
         /*with default configuration buckets are 2 units capacious*/
         Contact c1 = new Contact(NODE1);
         Contact c2 = new Contact(NODE2);
@@ -105,18 +128,38 @@ public class SMSKademliaBucketTest {
     }
 
     @Test
-    public void getReplacementCacheSizeTest(){
+    public void getReplacementCacheSizeTest() {
         assertEquals(bucket.getReplacementCacheSize(), 0);
     }
 
+    @Test
+    public void insertIntoReplacementCacheTest_emptyCache() throws InvocationTargetException, IllegalAccessException {
+        insertIntoReplacementCache.invoke(bucket, CONTACT1);
+    }
+
+    @Test
+    public void insertIntoReplacementCacheTest_contactAlreadyInserted() throws InvocationTargetException, IllegalAccessException {
+        insertIntoReplacementCache.invoke(bucket, CONTACT1);
+        insertIntoReplacementCache.invoke(bucket, CONTACT1);
+
+    }
+    @Test
+    public void insertIntoReplacementCacheTest_fullCache() throws InvocationTargetException, IllegalAccessException {
+        insertIntoReplacementCache.invoke(bucket, CONTACT1);
+        insertIntoReplacementCache.invoke(bucket, CONTACT2);
+        insertIntoReplacementCache.invoke(bucket, CONTACT3);
+        insertIntoReplacementCache.invoke(bucket, CONTACT4);
+        
+
+    }
 
     @Test(expected = NoSuchElementException.class)
-    public void getFromContact_NotInBucket(){
+    public void getFromContact_NotInBucket() {
         bucket.getFromContacts(NODE2);
     }
 
     @Test
-    public void insertAlreadyPresent_getsUpdatedStaleCount(){
+    public void insertAlreadyPresent_getsUpdatedStaleCount() {
         bucket.insert(CONTACT1);
         CONTACT1.incrementStaleCount();
         bucket.insert(CONTACT1);
@@ -124,21 +167,21 @@ public class SMSKademliaBucketTest {
     }
 
     @Test
-    public void insertAlreadyPresent_isStillPresent(){
+    public void insertAlreadyPresent_isStillPresent() {
         bucket.insert(CONTACT1);
         bucket.insert(CONTACT1);
         assertTrue(bucket.containsContact(CONTACT1));
     }
 
     @Test
-    public void checkNumContacts_asExpected(){
+    public void checkNumContacts_asExpected() {
         bucket.insert(CONTACT1);
         bucket.insert(CONTACT2);
         assertEquals(bucket.numContacts(), 2);
     }
 
     @Test
-    public void getContactList(){
+    public void getContactList() {
         ArrayList<Contact> contList = new ArrayList<>();
         contList.add(CONTACT1);
         //contList.add(CONTACT2);
@@ -148,7 +191,7 @@ public class SMSKademliaBucketTest {
     }
 
     @Test
-    public void getContactList_withCache(){
+    public void getContactList_withCache() {
         ArrayList<Contact> contList = new ArrayList<>();
         contList.add(CONTACT2);
         contList.add(CONTACT1);
@@ -160,7 +203,7 @@ public class SMSKademliaBucketTest {
     }
 
     @Test
-    public void toStringTest(){
+    public void toStringTest() {
         String expected = "Bucket at depth: 5\n" +
                 " Nodes: \n" +
                 "Node: 8202021E5EF98F7A (stale: 0)";
