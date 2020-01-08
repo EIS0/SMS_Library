@@ -4,8 +4,12 @@ import com.eis.smslibrary.SMSPeer;
 
 import org.junit.Test;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
 
 public class KademliaIdTest {
 
@@ -77,6 +81,7 @@ public class KademliaIdTest {
         assertEquals(testByByte, testByByte);
     }
 
+
     @Test
     public void xorDistanceTestByString() {
         KademliaId toCompareDistance = new KademliaId("11111110");
@@ -101,6 +106,21 @@ public class KademliaIdTest {
         KademliaId toReturn = NUMBER_ID.xor(toCompareDistance);
         assertEquals(toReturn.getInt().toString(16), "0");
     }
+    @Test
+    public void getInt(){
+        byte[] to = new byte[1];
+        to[0] = 3;
+        BigInteger expected = new BigInteger(to);
+        assertEquals(SIMPLE_ID1.getInt(), expected);
+    }
+
+    @Test
+    public void equals(){
+        KademliaId STRING_ID = new KademliaId("11111111");
+        assertTrue(STRING_ID.equals(STRING_ID));
+    }
+
+
 
     @Test
     public void getFirstSetBitIndexTest() {

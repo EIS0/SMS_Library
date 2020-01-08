@@ -7,6 +7,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 public class SMSKademliaNodeTest {
 
@@ -75,5 +76,17 @@ public class SMSKademliaNodeTest {
     @Test
     public void nodeById_getPeer_returnNull() {
         assertNull(NODE_BY_ID.getPeer());
+    }
+
+    @Test
+    public void hasCodeTest() {
+        int expected = -1199924090;
+        assertEquals(NODE1.hashCode(), expected);
+    }
+
+    @Test
+    public void toStringTest(){
+        String expected = "8B9D0EAE850B323A";
+        assertEquals(NODE1.toString(), expected);
     }
 }

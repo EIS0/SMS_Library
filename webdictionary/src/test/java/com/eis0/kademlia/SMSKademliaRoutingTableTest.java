@@ -71,6 +71,11 @@ public class SMSKademliaRoutingTableTest {
     }
 
     @Test
+    public void setConfiguration(){
+        routingTable.setConfiguration(CONFIG);
+    }
+
+    @Test
     public void insertOneNode_isAdded(){
         routingTable.insert(NODE1);
         assertArrayEquals(routingTable.getAllNodes().toArray(), partialList.toArray());
@@ -111,6 +116,14 @@ public class SMSKademliaRoutingTableTest {
         List<SMSKademliaNode> result = new ArrayList<>();
         result.add(MAIN_NODE);
         assertEquals(routingTable.getAllNodes(), result);
+    }
+
+    @Test
+    public void getAllContacts_OnlyLocalNodeInside(){
+        List<Contact> result = new ArrayList<>();
+        Contact contact = new Contact(MAIN_NODE);
+        result.add(contact);
+        assertEquals(routingTable.getAllContacts(), result);
     }
 
     @Test
@@ -184,5 +197,23 @@ public class SMSKademliaRoutingTableTest {
     public void removeNode_CheckByRoutingTable(){
         routingTable.getBuckets()[0].removeNode(MAIN_NODE);
         assertFalse(routingTable.getBuckets()[0].containsNode(MAIN_NODE));
+    }
+
+    @Test
+    public void size(){
+        int expected = 1;
+        assertEquals(routingTable.size(), expected);
+    }
+
+    @Test
+    public void toString_test(){
+        String toReturn = "Printing Routing Table Started... \n" +
+                "# nodes in Bucket with depth 0: 1\n" +
+                "Bucket at depth: 0\n" +
+                " Nodes: \n" +
+                "Node: 6F52A67F144121EC (stale: 0)\n" +
+                "\n" +
+                "Total Contacts: 1";
+        assertEquals(routingTable.toString(), toReturn);
     }
 }

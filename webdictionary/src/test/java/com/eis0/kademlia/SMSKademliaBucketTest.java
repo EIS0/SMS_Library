@@ -34,6 +34,7 @@ public class SMSKademliaBucketTest {
     public void setup(){
         bucket = new SMSKademliaBucket(5, config);
         CONTACT1.resetStaleCount();
+        bucket.insert(NODE1);
     }
 
     @Test
@@ -55,12 +56,12 @@ public class SMSKademliaBucketTest {
 
     @Test
     public void emptyBucket_doesNotContainContact(){
-        assertFalse(bucket.containsContact(CONTACT1));
+        assertFalse(bucket.containsContact(CONTACT2));
     }
 
     @Test
     public void emptyBucket_doesNotContainNode(){
-        assertFalse(bucket.containsNode(NODE1));
+        assertFalse(bucket.containsNode(NODE2));
     }
 
     @Test
@@ -108,9 +109,10 @@ public class SMSKademliaBucketTest {
         assertEquals(bucket.getReplacementCacheSize(), 0);
     }
 
+
     @Test(expected = NoSuchElementException.class)
     public void getFromContact_NotInBucket(){
-        bucket.getFromContacts(NODE1);
+        bucket.getFromContacts(NODE2);
     }
 
     @Test
@@ -155,5 +157,13 @@ public class SMSKademliaBucketTest {
         bucket.insert(CONTACT3);
         assertArrayEquals(contList.toArray(), bucket.getContacts().toArray());
         assertEquals(bucket.getReplacementCacheSize(), 1);
+    }
+
+    @Test
+    public void toStringTest(){
+        String expected = "Bucket at depth: 5\n" +
+                " Nodes: \n" +
+                "Node: 8202021E5EF98F7A (stale: 0)";
+        assertEquals(bucket.toString(), expected);
     }
 }

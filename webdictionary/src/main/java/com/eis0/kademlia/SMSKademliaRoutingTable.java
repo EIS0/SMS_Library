@@ -185,7 +185,7 @@ public class SMSKademliaRoutingTable implements KademliaRoutingTable {
      */
     @Override
     public final String toString() {
-        StringBuilder sb = new StringBuilder("\nPrinting Routing Table Started... \n");
+        StringBuilder sb = new StringBuilder("Printing Routing Table Started... \n");
         int totalContacts = 0;
         for (KademliaBucket b : this.buckets) {
             if (b.numContacts() > 0) {
@@ -201,7 +201,6 @@ public class SMSKademliaRoutingTable implements KademliaRoutingTable {
         }
         sb.append("\nTotal Contacts: ");
         sb.append(totalContacts);
-        sb.append("\n");
         return sb.toString();
     }
 }

@@ -13,13 +13,6 @@ public class DefaultConfiguration implements KadConfiguration {
     private final static int MAX_STALE_COUNT = 1;
 
     /**
-     * Default constructor
-     */
-    public DefaultConfiguration() {
-
-    }
-
-    /**
      * @return int representing K parameter
      */
     public int k() {

@@ -271,7 +271,7 @@ public class SMSKademliaBucket implements KademliaBucket {
     }
 
     /**
-     * @return A String with all the bucket's informations
+     * @return A String with all the bucket's information
      */
     @Override
     public String toString() {
@@ -284,7 +284,6 @@ public class SMSKademliaBucket implements KademliaBucket {
             sb.append(" (stale: ");
             sb.append(contact.staleCount());
             sb.append(")");
-            sb.append("\n");
         }
 
         return sb.toString();

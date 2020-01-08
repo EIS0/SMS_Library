@@ -44,4 +44,14 @@ public class ContactTest {
         assertEquals(test.lastSeen(),System.currentTimeMillis()/1000L );
     }
 
+    @Test
+    public void compareToTest(){
+        assertEquals(test.compareTo(test), 0);
+    }
+
+    @Test
+    public void hashCodeTest(){
+        int expected = 1889745535;
+        assertEquals(test.hashCode(), expected);
+    }
 }
