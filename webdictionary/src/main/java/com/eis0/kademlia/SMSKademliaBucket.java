@@ -11,11 +11,11 @@ import java.util.TreeSet;
  * between 2i and 2i+1 from itself.
  * These List are called bucket.
  *
- * @see <a href="https://pdos.csail.mit.edu/~petar/papers/maymounkov-kademlia-lncs.pdf">Kademlia's
- * *      paper</a> for more details.
  * @author Edoardo Raimondi
  * @author edits by Marco Cognolato
  * @author edits by Giovanni Velludo
+ * @see <a href="https://pdos.csail.mit.edu/~petar/papers/maymounkov-kademlia-lncs.pdf">Kademlia's
+ * *      paper</a> for more details.
  */
 public class SMSKademliaBucket implements KademliaBucket {
 
@@ -40,7 +40,7 @@ public class SMSKademliaBucket implements KademliaBucket {
     /**
      * Constructor for the bucket
      *
-     * @param depth How deep in the routing tree is this bucket
+     * @param depth  How deep in the routing tree is this bucket
      * @param config Configuration for this kademlia bucket
      */
     public SMSKademliaBucket(int depth, KadConfiguration config) {
@@ -49,11 +49,10 @@ public class SMSKademliaBucket implements KademliaBucket {
     }
 
     /**
-     *
      * @return the size of the bucket
      */
     public int size() {
-    return contacts.size();
+        return contacts.size();
     }
 
     /**
@@ -82,9 +81,8 @@ public class SMSKademliaBucket implements KademliaBucket {
                 for (Contact tmp : this.contacts) {
                     if (tmp.staleCount() >= this.config.stale()) {
                         /* Contact is stale */
-                        if (stalest == null) {
-                            stalest = tmp;
-                        } else if (tmp.staleCount() > stalest.staleCount()) {
+                        if (stalest == null) stalest = tmp;
+                        else if (tmp.staleCount() > stalest.staleCount()) {
                             stalest = tmp;
                         }
                     }
@@ -135,8 +133,8 @@ public class SMSKademliaBucket implements KademliaBucket {
     /**
      * Removes a contact from the bucket, if a
      * replacement exists in the cache it's also replaced
-     * @param contact The contact to remove
      *
+     * @param contact The contact to remove
      * @author Edoardo Raimondi
      * @author edits by Marco Cognolato
      */
@@ -202,13 +200,11 @@ public class SMSKademliaBucket implements KademliaBucket {
      * @return A list of all the contacts in the bucket
      */
     @Override
-    public List<Contact> getContacts()
-    {
+    public List<Contact> getContacts() {
         final ArrayList<Contact> ret = new ArrayList<>();
 
         /* If we have no contacts, return the blank ArrayList */
-        if (this.contacts.isEmpty())
-        {
+        if (this.contacts.isEmpty()) {
             return ret;
         }
 

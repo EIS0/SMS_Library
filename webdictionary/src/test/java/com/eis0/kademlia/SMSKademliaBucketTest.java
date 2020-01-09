@@ -42,7 +42,14 @@ public class SMSKademliaBucketTest {
     public void setup() throws NoSuchMethodException, NoSuchFieldException {
         bucket = new SMSKademliaBucket(5, config);
         CONTACT1.resetStaleCount();
-        bucket.insert(NODE1);
+        CONTACT2.resetStaleCount();
+        CONTACT3.resetStaleCount();
+        CONTACT4.resetStaleCount();
+
+        // insert firstNode
+        bucket.insert(NODE1);   //-> insert(CONTACT1);
+
+
         insertIntoReplacementCache = SMSKademliaBucket.class.getDeclaredMethod("insertIntoReplacementCache", Contact.class);
         insertIntoReplacementCache.setAccessible(true);
         removeFromReplacementCache = SMSKademliaBucket.class.getDeclaredMethod("removeFromReplacementCache", SMSKademliaNode.class);
@@ -62,7 +69,7 @@ public class SMSKademliaBucketTest {
 
     @Test
     public void insertNode_getsInserted() {
-        bucket.insert(NODE1);
+        //bucket.insert(NODE1);
         assertTrue(bucket.containsContact(CONTACT1));
     }
 
@@ -78,7 +85,7 @@ public class SMSKademliaBucketTest {
 
     @Test
     public void removeContact_getsRemoved() {
-        bucket.insert(CONTACT1);
+        //bucket.insert(CONTACT1);
         bucket.removeContact(CONTACT1);
         assertFalse(bucket.containsContact(CONTACT1));
     }
@@ -91,13 +98,14 @@ public class SMSKademliaBucketTest {
      * Find the CONTACT2
      * Place it inside of the Bucket
      * Extract if from the bucket, verify its identity
+     *
      * @throws InvocationTargetException
      * @throws IllegalAccessException
      */
     @Test
     public void removeContact_ReplacementCacheNotEmpty() throws InvocationTargetException, IllegalAccessException {
         insertIntoReplacementCache.invoke(bucket, CONTACT2);
-        bucket.insert(CONTACT1);
+        //bucket.insert(CONTACT1);
         bucket.removeContact(CONTACT1);
         Contact contact2 = bucket.getFromContacts(NODE2);
         assertEquals(contact2, CONTACT2);
@@ -105,20 +113,26 @@ public class SMSKademliaBucketTest {
 
     @Test
     public void getFromContactTest() {
-        bucket.insert(CONTACT1);
+        //bucket.insert(CONTACT1);
         Contact toReturn = bucket.getFromContacts(NODE1);
         assertEquals(toReturn, CONTACT1);
     }
 
     @Test
     public void containsNodeOfAnInsertedContact() {
-        bucket.insert(CONTACT1);
+        //bucket.insert(CONTACT1);
         assertTrue(bucket.containsNode(NODE1));
     }
 
     @Test
-    public void removeNode_nodePresent() {
-        bucket.insert(CONTACT1);
+    public void removeNode_notPresent() {
+        //bucket.insert(CONTACT1);
+        assertFalse(bucket.containsNode(NODE2));
+    }
+
+    @Test
+    public void removeNode_alreadyRemoved() {
+        //bucket.insert(CONTACT1);
         bucket.removeNode(NODE1);
         assertFalse(bucket.containsNode(NODE1));
     }
@@ -137,16 +151,44 @@ public class SMSKademliaBucketTest {
     @Test
     public void addContacts_IfFullBucket() {
         /*with default configuration buckets are 2 units capacious*/
-        Contact c1 = new Contact(NODE1);
+        //Contact c1 = new Contact(NODE1);
         Contact c2 = new Contact(NODE2);
         /*I expect this CONTACT1 to be add to the replacement cache*/
         Contact c3 = new Contact(NODE3);
-        bucket.insert(c1);
+        //bucket.insert(c1);
         bucket.insert(c2);
         bucket.insert(c3);
         assertEquals(bucket.getReplacementCacheSize(), 1);
     }
 
+    @Test
+    public void addContacts_FullBucket_noStaledContacts() {
+        //bucket.insert(CONTACT1);
+        bucket.insert(CONTACT2);
+        bucket.insert(CONTACT3);
+        assertFalse(bucket.containsContact(CONTACT3));
+    }
+
+    @Test
+    public void addContacts_FullBucket_OneStaledContact() {
+        //bucket.insert(CONTACT1);
+        for (int i = 0; i < 3; i++) CONTACT4.incrementStaleCount();
+        bucket.insert(CONTACT4);
+        bucket.insert(CONTACT3);
+        assertFalse(bucket.containsContact(CONTACT4));
+        assertTrue(bucket.containsContact(CONTACT3));
+    }
+
+    @Test
+    public void addContacts_FullBucket_TwoStaledContacts() {
+        //bucket.insert(CONTACT1);
+        for (int i = 0; i < 2; i++) CONTACT1.incrementStaleCount();
+        for (int i = 0; i < 3; i++) CONTACT4.incrementStaleCount();
+        bucket.insert(CONTACT4);
+        bucket.insert(CONTACT3);
+        assertFalse(bucket.containsContact(CONTACT4));
+        assertTrue(bucket.containsContact(CONTACT3));
+    }
     @Test
     public void getReplacementCacheSizeTest() {
         assertEquals(bucket.getReplacementCacheSize(), 0);
@@ -155,6 +197,8 @@ public class SMSKademliaBucketTest {
     @Test
     public void insertIntoReplacementCacheTest_emptyCache() throws InvocationTargetException, IllegalAccessException {
         insertIntoReplacementCache.invoke(bucket, CONTACT1);
+        Contact contact1 = (Contact) removeFromReplacementCache.invoke(bucket, NODE1);
+        assertEquals(contact1, CONTACT1);
     }
 
     @Test

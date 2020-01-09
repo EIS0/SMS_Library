@@ -23,10 +23,8 @@ public class SMSKademliaRoutingTable implements KademliaRoutingTable {
     private transient KadConfiguration config;
 
     public SMSKademliaRoutingTable(SMSKademliaNode localNode, KadConfiguration config) {
-        if (localNode == null) throw new IllegalArgumentException("The localNode must not be NULL");
-        if (config == null)
-            throw new IllegalArgumentException("The configuration must not be NULL");
-
+        if(localNode == null) throw new IllegalArgumentException("localNode can't be null");
+        if(config == null) throw new IllegalArgumentException("config can't be null");
         this.localNode = localNode;
         this.config = config;
 
@@ -35,10 +33,6 @@ public class SMSKademliaRoutingTable implements KademliaRoutingTable {
 
         /* Insert the local node */
         insert(localNode);
-
-        //fail safe
-        if (this.size() == 0)
-            throw new IllegalArgumentException("The localNode has not been inserted inside the Routing Table");
     }
 
     /**
@@ -89,9 +83,6 @@ public class SMSKademliaRoutingTable implements KademliaRoutingTable {
         int bucketPosition = this.getBucketId(node.getId());
         SMSKademliaBucket targetBucket = this.buckets[bucketPosition];
         targetBucket.insert(node);
-        //fail safe
-        if (targetBucket.size() == 0)
-            throw new IllegalArgumentException("The insertion has not been executed");
     }
 
     /**
@@ -134,8 +125,6 @@ public class SMSKademliaRoutingTable implements KademliaRoutingTable {
                 break;
             }
         }
-        if (closestList.size() == 0)
-            throw new IllegalArgumentException("The list of closest nodes is empty");
         return closestList;
     }
 
