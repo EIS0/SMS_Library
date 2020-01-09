@@ -234,7 +234,7 @@ public class SMSKademliaBucket implements KademliaBucket {
             Contact tmp = this.removeFromReplacementCache(contact.getNode());
             tmp.setSeenNow();
             this.replacementCache.add(tmp);
-        } else if (this.replacementCache.size() > this.config.k()) {
+        } else if (this.replacementCache.size() == this.config.k()) {
             /* if our cache is filled, we remove the least recently seen contact */
             this.replacementCache.remove(this.replacementCache.last());
             this.replacementCache.add(contact);

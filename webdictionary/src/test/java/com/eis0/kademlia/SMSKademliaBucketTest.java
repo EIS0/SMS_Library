@@ -138,19 +138,40 @@ public class SMSKademliaBucketTest {
     }
 
     @Test
-    public void insertIntoReplacementCacheTest_contactAlreadyInserted() throws InvocationTargetException, IllegalAccessException {
+    public void insertIntoReplacementCacheTest_contactInsertedTwice() throws InvocationTargetException, IllegalAccessException {
         insertIntoReplacementCache.invoke(bucket, CONTACT1);
         insertIntoReplacementCache.invoke(bucket, CONTACT1);
-
+        Contact contact1 = (Contact) removeFromReplacementCache.invoke(bucket, NODE1);
+        assertEquals(contact1, CONTACT1);
     }
+
     @Test
-    public void insertIntoReplacementCacheTest_fullCache() throws InvocationTargetException, IllegalAccessException {
+    public void removeFromReplacementCache_contactInserteOnce() throws InvocationTargetException, IllegalAccessException {
+        insertIntoReplacementCache.invoke(bucket, CONTACT1);
+        Contact contact1 = (Contact) removeFromReplacementCache.invoke(bucket, NODE1);
+        assertEquals(contact1, CONTACT1);
+    }
+
+    @Test(expected = InvocationTargetException.class)
+    public void removeFromReplacementCache_emptyReplacementCache() throws InvocationTargetException, IllegalAccessException {
+        removeFromReplacementCache.invoke(bucket, NODE1);
+    }
+
+    @Test(expected = InvocationTargetException.class)
+    public void insertIntoReplacementCacheTest_fullCache_extractFirstInserted() throws InvocationTargetException, IllegalAccessException {
         insertIntoReplacementCache.invoke(bucket, CONTACT1);
         insertIntoReplacementCache.invoke(bucket, CONTACT2);
         insertIntoReplacementCache.invoke(bucket, CONTACT3);
-        insertIntoReplacementCache.invoke(bucket, CONTACT4);
-        
+        removeFromReplacementCache.invoke(bucket, NODE1);
+    }
 
+    @Test
+    public void insertIntoReplacementCacheTest_fullCache_extractLastInserted() throws InvocationTargetException, IllegalAccessException {
+        insertIntoReplacementCache.invoke(bucket, CONTACT1);
+        insertIntoReplacementCache.invoke(bucket, CONTACT2);
+        insertIntoReplacementCache.invoke(bucket, CONTACT3);
+        Contact contact3 = (Contact) removeFromReplacementCache.invoke(bucket, NODE3);
+        assertEquals(contact3, CONTACT3);
     }
 
     @Test(expected = NoSuchElementException.class)
