@@ -83,6 +83,26 @@ public class SMSKademliaBucketTest {
         assertFalse(bucket.containsContact(CONTACT1));
     }
 
+    /**
+     * Insert a Contact in the ReplacementCache, insert a Contact in the bucket, remove a Contact
+     * from the bucket
+     * Removing the contact starts the verification of possible substitute inside of the
+     * replacementCache
+     * Find the CONTACT2
+     * Place it inside of the Bucket
+     * Extract if from the bucket, verify its identity
+     * @throws InvocationTargetException
+     * @throws IllegalAccessException
+     */
+    @Test
+    public void removeContact_ReplacementCacheNotEmpty() throws InvocationTargetException, IllegalAccessException {
+        insertIntoReplacementCache.invoke(bucket, CONTACT2);
+        bucket.insert(CONTACT1);
+        bucket.removeContact(CONTACT1);
+        Contact contact2 = bucket.getFromContacts(NODE2);
+        assertEquals(contact2, CONTACT2);
+    }
+
     @Test
     public void getFromContactTest() {
         bucket.insert(CONTACT1);
