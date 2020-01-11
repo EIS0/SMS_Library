@@ -16,7 +16,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.viewpager.widget.ViewPager;
 
-import com.eis0.easypoll.poll.BinaryPoll;
 import com.eis0.easypoll.poll.PollManager;
 import com.eis0.easypoll.ui.SectionsPagerAdapter;
 import com.eis0.smslibrary.SMSPeer;

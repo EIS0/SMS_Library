@@ -52,6 +52,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal|center_vertical"
         android:drawableTop="@drawable/ic_playlist_add_black_48dp"
+        android:onClick="newPollBtnOnClick"
         android:text="@string/polls_info_text"
         android:textSize="18sp"
         android:visibility="gone"

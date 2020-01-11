@@ -48,8 +48,8 @@ public class CreatePollActivity extends AppCompatActivity {
     View.OnFocusChangeListener focusChangeListener = new View.OnFocusChangeListener() {
         @Override
         public void onFocusChange(View v, boolean hasFocus) {
-            if(hasFocus) addPeerBtn.setImageResource(R.drawable.ic_add_box_black_24dp);
-            else addPeerBtn.setImageResource(R.drawable.ic_contact_phone_black_24dp);
+            if(hasFocus) addPeerBtn.setImageResource(R.drawable.ic_add_black_48dp);
+            else addPeerBtn.setImageResource(R.drawable.ic_person_add_black_48dp);
         }
     };
     TextView.OnEditorActionListener editorActionListener = new TextView.OnEditorActionListener() {
@@ -120,9 +120,7 @@ public class CreatePollActivity extends AppCompatActivity {
      */
     public void addPeerBtnOnClick(View view) {
         if(!peerTxt.hasFocus()) {
-            Intent contactPickerIntent = new Intent(Intent.ACTION_PICK);
-            contactPickerIntent.setType(ContactsContract.CommonDataKinds.Phone.CONTENT_TYPE);
-            startActivityForResult(contactPickerIntent, CONTACT_PICKER_REQUEST_CODE);
+            openContactPicker(view);
             return;
         }
         if(peersAdapter.getItemCount() >= MAX_USERS_ALLOWED) {
@@ -140,6 +138,17 @@ public class CreatePollActivity extends AppCompatActivity {
         catch (IllegalArgumentException e) {
             Toast.makeText(this, getString(R.string.invalid_peer_message), Toast.LENGTH_SHORT).show();
         }
+    }
+
+    /**
+     * Open the system contact picker.
+     *
+     * @author Matteo Carnelos
+     */
+    public void openContactPicker(View view) {
+        Intent contactPickerIntent = new Intent(Intent.ACTION_PICK);
+        contactPickerIntent.setType(ContactsContract.CommonDataKinds.Phone.CONTENT_TYPE);
+        startActivityForResult(contactPickerIntent, CONTACT_PICKER_REQUEST_CODE);
     }
 
     /**

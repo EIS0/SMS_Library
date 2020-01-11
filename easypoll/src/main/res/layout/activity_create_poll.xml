@@ -98,24 +98,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/peerTxt"
         app:layout_constraintEnd_toEndOf="@+id/peersRclView"
         app:layout_constraintTop_toTopOf="@+id/peerTxt"
-        app:srcCompat="@drawable/ic_contact_phone_black_24dp" />
-
-    <TextView
-        android:id="@+id/infoTxt"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"
-        android:drawableTop="@drawable/ic_person_add_black_48dp"
-        android:gravity="center"
-        android:text="@string/peers_info_text"
-        android:textAlignment="center"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="@+id/peersRclView"
-        app:layout_constraintEnd_toEndOf="@+id/peersRclView"
-        app:layout_constraintStart_toStartOf="@+id/peersRclView"
-        app:layout_constraintTop_toTopOf="@+id/peersRclView"
-        app:layout_constraintVertical_bias="0.45" />
+        app:srcCompat="@drawable/ic_person_add_black_48dp" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/peersRclView"
@@ -133,4 +116,25 @@
         app:layout_constraintTop_toBottomOf="@+id/peerTxt"
         app:layout_constraintVertical_bias="0.0"
         tools:itemCount="0" />
+
+    <TextView
+        android:id="@+id/infoTxt"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:alpha="0.5"
+        android:drawableTop="@drawable/ic_person_add_black_48dp"
+        android:gravity="center"
+        android:onClick="openContactPicker"
+        android:text="@string/peers_info_text"
+        android:textAlignment="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/peersRclView"
+        app:layout_constraintEnd_toEndOf="@+id/peersRclView"
+        app:layout_constraintStart_toStartOf="@+id/peersRclView"
+        app:layout_constraintTop_toTopOf="@+id/peersRclView"
+        app:layout_constraintVertical_bias="0.45" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

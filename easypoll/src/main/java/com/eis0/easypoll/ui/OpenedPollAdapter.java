@@ -1,6 +1,7 @@
 package com.eis0.easypoll.ui;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +27,12 @@ import java.util.Observer;
 class OpenedPollAdapter extends BaseAdapter implements Observer {
 
     private static LayoutInflater inflater = null;
+    // Same as primary color
+    static final int POSITIVE_COLOR = Color.parseColor("#008577");
+    // Same as accent color
+    static final int NEGATIVE_COLOR = Color.parseColor("#D81B60");
+    // Dark Gray
+    static final int NEUTRAL_COLOR = Color.parseColor("#808080");
 
     /**
      * Constructor of the OpenedPollAdapter, it sets the LayoutInflater.
@@ -120,7 +127,9 @@ class OpenedPollAdapter extends BaseAdapter implements Observer {
         TextView usersCountTxt = convertView.findViewById(R.id.usersCountTxt);
         ProgressBar pollProgressBar = convertView.findViewById(R.id.pollProgressBar);
         TextView yesNumTxt = convertView.findViewById(R.id.yesNumTxt);
+        TextView yesTxt = convertView.findViewById(R.id.yesTxt);
         TextView noNumTxt = convertView.findViewById(R.id.noNumTxt);
+        TextView noTxt = convertView.findViewById(R.id.noTxt);
 
         BinaryPoll poll = DataProvider.getOpenedPolls().get(position);
 
@@ -134,8 +143,21 @@ class OpenedPollAdapter extends BaseAdapter implements Observer {
         answersCountTxt.setText(String.valueOf(poll.getNoCount() + poll.getYesCount()));
         usersCountTxt.setText(String.valueOf(poll.getUsersCount()));
         pollProgressBar.setProgress(closedPercentage);
-        yesNumTxt.setText(String.valueOf(poll.getYesCount()));
-        noNumTxt.setText(String.valueOf(poll.getNoCount()));
+        int yesCount = poll.getYesCount();
+        int noCount = poll.getNoCount();
+        yesNumTxt.setText(String.valueOf(yesCount));
+        noNumTxt.setText(String.valueOf(noCount));
+        if(yesCount == noCount) {
+            yesNumTxt.setTextColor(NEUTRAL_COLOR);
+            yesTxt.setTextColor(NEUTRAL_COLOR);
+            noNumTxt.setTextColor(NEUTRAL_COLOR);
+            noTxt.setTextColor(NEUTRAL_COLOR);
+        } else {
+            yesNumTxt.setTextColor((yesCount > noCount)? POSITIVE_COLOR : NEUTRAL_COLOR);
+            yesTxt.setTextColor((yesCount > noCount)? POSITIVE_COLOR : NEUTRAL_COLOR);
+            noNumTxt.setTextColor((noCount > yesCount)? NEGATIVE_COLOR : NEUTRAL_COLOR);
+            noTxt.setTextColor((noCount > yesCount)? NEGATIVE_COLOR : NEUTRAL_COLOR);
+        }
 
         return convertView;
     }
