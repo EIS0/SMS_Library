@@ -12,6 +12,7 @@ import com.eis0.smslibrary.SMSMessage;
 import com.eis0.smslibrary.SMSPeer;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -141,13 +142,13 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
             //                   [0]         [1]           [2]             [3...]
             // ---- cmd ----|-------------------------- [args] --------------------------
             case PollCommands.NEW_POLL:
+                // Data gathering
                 String name = args.get(1);
                 String question = args.get(2);
                 List<String> addresses = args.subList(3, args.size());
-                List<SMSPeer> users = new ArrayList<>();
-                for(String address : addresses) users.add(new SMSPeer(address));
-                Network usersNetwork = NetworksPool.obtainNetwork(users);
+                Network usersNetwork = extractNetworkFromAddresses(addresses);
                 authorNetwork = NetworksPool.obtainNetwork(peer);
+                // Command execution
                 BinaryPoll poll = new BinaryPoll(number, name, question, authorNetwork, usersNetwork);
                 dataProvider.addPoll(poll);
                 break;
@@ -156,19 +157,48 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
             //                      [0]           [1]            [2]
             // ------ cmd -----|---------------- [args] ----------------
             case PollCommands.ANSWER_POLL:
+                // Data gathering
                 String authorAddress = args.get(1);
-                // Check if the authorAddress is the LOCALNET_ADDR, it means that the answer is for
-                // polls that I have created
-                if(authorAddress.equals(Network.LOCALNET_ADDR)) authorNetwork = NetworksPool.obtainLocalNetwork();
-                else authorNetwork = NetworksPool.obtainNetwork(new SMSPeer((authorAddress)));
+                authorNetwork = extractNetworkFromAddresses(Collections.singletonList(authorAddress));
                 boolean answer = args.get(2).equals(PollCommands.YES_ANSWER);
-                for(BinaryPoll openedPoll : DataProvider.getOpenedPolls()) {
-                    if(openedPoll.getNumber() == number && openedPoll.getAuthor().equals(authorNetwork)) {
-                        openedPoll.setAnswer(answer);
-                        dataProvider.updatePoll(openedPoll);
-                    }
-                }
+                // Command execution
+                applyAnswerToPoll(number, authorNetwork, answer);
                 break;
+        }
+    }
+
+    /**
+     * Extract the correspondent {@link Network} object given a list of addresses.
+     *
+     * @param addresses The list of addresses in the network. If this list contains only the
+     *                  LOCALNET_ADDR, the LOCALNET will be returned.
+     * @return The correspondent {@link Network} object.
+     * @author Matteo Carnelos
+     */
+    private Network extractNetworkFromAddresses(@NonNull List<String> addresses) {
+        // Check if the authorAddress is the LOCALNET_ADDR, it means that the extracted network
+        // will be the LOCALNET
+        if(addresses.size() == 1 && addresses.get(0).equals(Network.LOCALNET_ADDR))
+            return NetworksPool.obtainLocalNetwork();
+        List<SMSPeer> peers = new ArrayList<>();
+        for(String address : addresses) peers.add(new SMSPeer(address));
+        return NetworksPool.obtainNetwork(peers);
+    }
+
+    /**
+     * Apply the given answer to the correspondent poll giving its identification.
+     *
+     * @param number The number of the poll.
+     * @param author The author of the poll.
+     * @param answer The answer to apply.
+     * @author Matteo Carnelos
+     */
+    private void applyAnswerToPoll(long number, Network author, boolean answer) {
+        for(BinaryPoll openedPoll : DataProvider.getOpenedPolls()) {
+            if(openedPoll.getNumber() == number && openedPoll.getAuthor().equals(author)) {
+                openedPoll.setAnswer(answer);
+                dataProvider.updatePoll(openedPoll);
+            }
         }
     }
 }
