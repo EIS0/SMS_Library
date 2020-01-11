@@ -33,6 +33,8 @@ class OpenedPollAdapter extends BaseAdapter implements Observer {
     static final int NEGATIVE_COLOR = Color.parseColor("#D81B60");
     // Dark Gray
     static final int NEUTRAL_COLOR = Color.parseColor("#808080");
+    // Black
+    static final int BLACK_COLOR = Color.parseColor("#000000");
 
     /**
      * Constructor of the OpenedPollAdapter, it sets the LayoutInflater.
@@ -148,15 +150,18 @@ class OpenedPollAdapter extends BaseAdapter implements Observer {
         yesNumTxt.setText(String.valueOf(yesCount));
         noNumTxt.setText(String.valueOf(noCount));
         if(yesCount == noCount) {
-            yesNumTxt.setTextColor(NEUTRAL_COLOR);
-            yesTxt.setTextColor(NEUTRAL_COLOR);
-            noNumTxt.setTextColor(NEUTRAL_COLOR);
-            noTxt.setTextColor(NEUTRAL_COLOR);
+            int color = (yesCount == 0)? NEUTRAL_COLOR : BLACK_COLOR;
+            yesNumTxt.setTextColor(color);
+            yesTxt.setTextColor(color);
+            noNumTxt.setTextColor(color);
+            noTxt.setTextColor(color);
         } else {
-            yesNumTxt.setTextColor((yesCount > noCount)? POSITIVE_COLOR : NEUTRAL_COLOR);
-            yesTxt.setTextColor((yesCount > noCount)? POSITIVE_COLOR : NEUTRAL_COLOR);
-            noNumTxt.setTextColor((noCount > yesCount)? NEGATIVE_COLOR : NEUTRAL_COLOR);
-            noTxt.setTextColor((noCount > yesCount)? NEGATIVE_COLOR : NEUTRAL_COLOR);
+            int yesColor = (yesCount > noCount)? POSITIVE_COLOR : NEUTRAL_COLOR;
+            int noColor = (noCount > yesCount)? NEGATIVE_COLOR : NEUTRAL_COLOR;
+            yesNumTxt.setTextColor(yesColor);
+            yesTxt.setTextColor(yesColor);
+            noNumTxt.setTextColor(noColor);
+            noTxt.setTextColor(noColor);
         }
 
         return convertView;

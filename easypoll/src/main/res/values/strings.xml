@@ -19,11 +19,8 @@
 
     <!-- Create Poll strings -->
     <string name="poll_name">Poll Name</string>
-    <string name="name_hint">Choose the name</string>
     <string name="poll_question">Poll Question</string>
-    <string name="question_hint">Type the question&#8230;</string>
     <string name="users">Users</string>
-    <string name="users_hint">Add some friends!</string>
     <string name="add_peer_btn_cont_desc">Add</string>
     <string name="remove_btn_text">Remove</string>
     <string name="button_send">Send</string>

@@ -198,6 +198,7 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
             if(openedPoll.getNumber() == number && openedPoll.getAuthor().equals(author)) {
                 openedPoll.setAnswer(answer);
                 dataProvider.updatePoll(openedPoll);
+                break;
             }
         }
     }

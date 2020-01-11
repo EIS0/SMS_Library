@@ -16,6 +16,7 @@ import com.eis0.easypoll.poll.BinaryPoll;
 import java.util.Observable;
 import java.util.Observer;
 
+import static com.eis0.easypoll.ui.OpenedPollAdapter.BLACK_COLOR;
 import static com.eis0.easypoll.ui.OpenedPollAdapter.NEGATIVE_COLOR;
 import static com.eis0.easypoll.ui.OpenedPollAdapter.NEUTRAL_COLOR;
 import static com.eis0.easypoll.ui.OpenedPollAdapter.POSITIVE_COLOR;
@@ -131,15 +132,17 @@ public class ClosedPollAdapter extends BaseAdapter implements Observer {
         yesNumTxt.setText(String.valueOf(yesCount));
         noNumTxt.setText(String.valueOf(noCount));
         if(yesCount == noCount) {
-            yesNumTxt.setTextColor(NEUTRAL_COLOR);
-            yesTxt.setTextColor(NEUTRAL_COLOR);
-            noNumTxt.setTextColor(NEUTRAL_COLOR);
-            noTxt.setTextColor(NEUTRAL_COLOR);
+            yesNumTxt.setTextColor(BLACK_COLOR);
+            yesTxt.setTextColor(BLACK_COLOR);
+            noNumTxt.setTextColor(BLACK_COLOR);
+            noTxt.setTextColor(BLACK_COLOR);
         } else {
-            yesNumTxt.setTextColor((yesCount > noCount)? POSITIVE_COLOR : NEUTRAL_COLOR);
-            yesTxt.setTextColor((yesCount > noCount)? POSITIVE_COLOR : NEUTRAL_COLOR);
-            noNumTxt.setTextColor((noCount > yesCount)? NEGATIVE_COLOR : NEUTRAL_COLOR);
-            noTxt.setTextColor((noCount > yesCount)? NEGATIVE_COLOR : NEUTRAL_COLOR);
+            int yesColor = (yesCount > noCount)? POSITIVE_COLOR : NEUTRAL_COLOR;
+            int noColor = (noCount > yesCount)? NEGATIVE_COLOR : NEUTRAL_COLOR;
+            yesNumTxt.setTextColor(yesColor);
+            yesTxt.setTextColor(yesColor);
+            noNumTxt.setTextColor(noColor);
+            noTxt.setTextColor(noColor);
         }
 
         return convertView;

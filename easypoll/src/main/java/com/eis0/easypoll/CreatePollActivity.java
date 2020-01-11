@@ -9,6 +9,7 @@ import android.provider.ContactsContract;
 import android.transition.Slide;
 import android.view.KeyEvent;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -60,6 +61,20 @@ public class CreatePollActivity extends AppCompatActivity {
             return true;
         }
     };
+    View.OnTouchListener fullAlphaTouchListener = new View.OnTouchListener() {
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            v.setAlpha((event.getAction() == MotionEvent.ACTION_DOWN)? 0.5f : 1f);
+            return false;
+        }
+    };
+    public static View.OnTouchListener halfAlphaTouchListener = new View.OnTouchListener() {
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            v.setAlpha((event.getAction() == MotionEvent.ACTION_DOWN)? 0.25f : 0.5f);
+            return false;
+        }
+    };
 
     /**
      * Called when the activity is being created.
@@ -86,15 +101,18 @@ public class CreatePollActivity extends AppCompatActivity {
         pollQuestionTxt = findViewById(R.id.pollQuestionTxt);
         peerTxt = findViewById(R.id.peerTxt);
         addPeerBtn = findViewById(R.id.addPeerBtn);
+        TextView infoTxt = findViewById(R.id.infoTxt);
 
         peerTxt.setOnFocusChangeListener(focusChangeListener);
         peerTxt.setOnEditorActionListener(editorActionListener);
+        addPeerBtn.setOnTouchListener(fullAlphaTouchListener);
+        infoTxt.setOnTouchListener(halfAlphaTouchListener);
 
         RecyclerView peerList = findViewById(R.id.peersRclView);
         peerList.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         peerList.setLayoutManager(layoutManager);
-        peersAdapter = new PeersAdapter((TextView)findViewById(R.id.infoTxt));
+        peersAdapter = new PeersAdapter(infoTxt);
         peerList.setAdapter(peersAdapter);
     }
 
