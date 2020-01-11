@@ -193,7 +193,7 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
      * @param answer The answer to apply.
      * @author Matteo Carnelos
      */
-    private void applyAnswerToPoll(long number, Network author, boolean answer) {
+    private synchronized void applyAnswerToPoll(long number, Network author, boolean answer) {
         for(BinaryPoll openedPoll : DataProvider.getOpenedPolls()) {
             if(openedPoll.getNumber() == number && openedPoll.getAuthor().equals(author)) {
                 openedPoll.setAnswer(answer);
