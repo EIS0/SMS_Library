@@ -57,6 +57,16 @@ public class SMSKademliaRoutingTableTest {
         new SMSKademliaRoutingTable(MAIN_NODE, CONFIG).initialize();
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void initializationTest_ConfigNULL() {
+        new SMSKademliaRoutingTable(MAIN_NODE, null).initialize();
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void initializationTest_LocalNodeNull() {
+        new SMSKademliaRoutingTable(null, CONFIG );
+    }
+
     @Test
     public void insertNoNode_mainIsPresent(){
         assertEquals(routingTable.getAllNodes().size(), 1);
@@ -201,8 +211,8 @@ public class SMSKademliaRoutingTableTest {
 
     @Test
     public void size(){
-        int expected = 1;
-        assertEquals(routingTable.size(), expected);
+        int size= routingTable.size();
+        assertEquals(size, 1);
     }
 
     @Test
