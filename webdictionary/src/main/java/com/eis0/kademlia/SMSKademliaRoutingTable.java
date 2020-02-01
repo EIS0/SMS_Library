@@ -69,7 +69,7 @@ public class SMSKademliaRoutingTable implements KademliaRoutingTable {
      * @param contact The contact to add
      */
     @Override
-    public final void insert(Contact contact) {
+    public synchronized final void insert(Contact contact) {
         this.insert(contact.getNode());
     }
 
@@ -79,7 +79,7 @@ public class SMSKademliaRoutingTable implements KademliaRoutingTable {
      * @param node The node to add
      */
 
-    public final void insert(SMSKademliaNode node) {
+    public synchronized final void insert(SMSKademliaNode node) {
         int bucketPosition = this.getBucketId(node.getId());
         SMSKademliaBucket targetBucket = this.buckets[bucketPosition];
         targetBucket.insert(node);
@@ -109,7 +109,7 @@ public class SMSKademliaRoutingTable implements KademliaRoutingTable {
      * @return A List of contacts closest to target
      */
     @Override
-    public final List<SMSKademliaNode> findClosest(KademliaId target, int numNodesRequired) {
+    public synchronized final List<SMSKademliaNode> findClosest(KademliaId target, int numNodesRequired) {
         TreeSet<SMSKademliaNode> sortedSet = new TreeSet<>(new KeyComparator(target));
         /*Now every element added will be in a coherent position to the target Id
          * (first element will be the closer one, second will be the second one...)*/
@@ -173,7 +173,7 @@ public class SMSKademliaRoutingTable implements KademliaRoutingTable {
      * @return String representing the routing table
      */
     @Override
-    public final String toString() {
+    public synchronized final String toString() {
         StringBuilder sb = new StringBuilder("Printing Routing Table Started... \n");
         int totalContacts = 0;
         for (KademliaBucket b : this.buckets) {

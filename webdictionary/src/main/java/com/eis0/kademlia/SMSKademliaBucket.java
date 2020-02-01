@@ -62,7 +62,7 @@ public class SMSKademliaBucket implements KademliaBucket {
      * @param contact The contact to add
      */
     @Override
-    public void insert(Contact contact) {
+    public synchronized void insert(Contact contact) {
         if (this.contacts.contains(contact)) {
             /*
              * If the contact is already in the bucket, lets update that we've seen it
@@ -108,7 +108,7 @@ public class SMSKademliaBucket implements KademliaBucket {
      * @param node The node to create the contact from
      */
     @Override
-    public void insert(SMSKademliaNode node) {
+    public synchronized void insert(SMSKademliaNode node) {
         this.insert(new Contact(node));
     }
 
@@ -117,7 +117,7 @@ public class SMSKademliaBucket implements KademliaBucket {
      * @return true if there is contact
      */
     @Override
-    public boolean containsContact(Contact contact) {
+    public synchronized boolean containsContact(Contact contact) {
         return this.contacts.contains(contact);
     }
 
@@ -126,7 +126,7 @@ public class SMSKademliaBucket implements KademliaBucket {
      * @return true if there is node
      */
     @Override
-    public boolean containsNode(SMSKademliaNode node) {
+    public synchronized boolean containsNode(SMSKademliaNode node) {
         return this.containsContact(new Contact(node));
     }
 
@@ -139,7 +139,7 @@ public class SMSKademliaBucket implements KademliaBucket {
      * @author edits by Marco Cognolato
      */
     @Override
-    public void removeContact(Contact contact) {
+    public synchronized void removeContact(Contact contact) {
         /* If the contact does not exist, we don't have anything to remove */
         if (!this.contacts.contains(contact)) {
             return;
@@ -161,7 +161,7 @@ public class SMSKademliaBucket implements KademliaBucket {
      * @return The contact associated with that node
      * @throws NoSuchElementException if the contact isn't in the list
      */
-    public Contact getFromContacts(SMSKademliaNode node) {
+    public synchronized Contact getFromContacts(SMSKademliaNode node) {
         for (Contact contact : this.contacts) {
             if (contact.getNode().equals(node)) {
                 return contact;
@@ -176,7 +176,7 @@ public class SMSKademliaBucket implements KademliaBucket {
      * @param node The node of the contact to remove
      */
     @Override
-    public void removeNode(SMSKademliaNode node) {
+    public synchronized void removeNode(SMSKademliaNode node) {
         this.removeContact(new Contact(node));
     }
 
@@ -184,7 +184,7 @@ public class SMSKademliaBucket implements KademliaBucket {
      * @return Int representing the contacts number
      */
     @Override
-    public int numContacts() {
+    public synchronized int numContacts() {
         return this.contacts.size();
     }
 
@@ -192,7 +192,7 @@ public class SMSKademliaBucket implements KademliaBucket {
      * @return Int representing the bucket depth
      */
     @Override
-    public int getDepth() {
+    public synchronized int getDepth() {
         return this.depth;
     }
 
@@ -200,7 +200,7 @@ public class SMSKademliaBucket implements KademliaBucket {
      * @return A list of all the contacts in the bucket
      */
     @Override
-    public List<Contact> getContacts() {
+    public synchronized List<Contact> getContacts() {
         final ArrayList<Contact> ret = new ArrayList<>();
 
         /* If we have no contacts, return the blank ArrayList */
@@ -220,7 +220,7 @@ public class SMSKademliaBucket implements KademliaBucket {
      *
      * @param contact to insert
      */
-    private void insertIntoReplacementCache(Contact contact) {
+    private synchronized void insertIntoReplacementCache(Contact contact) {
         /* Just return if this contact is already in our replacement cache */
         if (this.replacementCache.contains(contact)) {
             /*
@@ -247,7 +247,7 @@ public class SMSKademliaBucket implements KademliaBucket {
      * @return Contact removed
      * @throws NoSuchElementException if the node isn't in the list
      */
-    private Contact removeFromReplacementCache(SMSKademliaNode node) {
+    private synchronized Contact removeFromReplacementCache(SMSKademliaNode node) {
         for (Contact contact : this.replacementCache) {
             if (contact.getNode().equals(node)) {
                 this.replacementCache.remove(contact);
@@ -262,7 +262,7 @@ public class SMSKademliaBucket implements KademliaBucket {
     /**
      * @return replacement Cache size
      */
-    public int getReplacementCacheSize() {
+    public synchronized int getReplacementCacheSize() {
         return this.replacementCache.size();
     }
 
@@ -270,7 +270,7 @@ public class SMSKademliaBucket implements KademliaBucket {
      * @return A String with all the bucket's information
      */
     @Override
-    public String toString() {
+    public synchronized String toString() {
         StringBuilder sb = new StringBuilder("Bucket at depth: ");
         sb.append(this.depth);
         sb.append("\n Nodes: \n");
