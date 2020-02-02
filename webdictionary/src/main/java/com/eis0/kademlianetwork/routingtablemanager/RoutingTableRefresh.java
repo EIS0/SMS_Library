@@ -48,12 +48,12 @@ public class RoutingTableRefresh{
             if (net.connectionInfo.hasPong()) {
                 //is alive, set the pong state to false in order to do it again
                 net.connectionInfo.setPong(false);
-            } else { //the node is not alive. I must remove it.
+            } else { //the node is not alive at the moment
                 KademliaId currentId = currentNode.getId();
                 //I check the bucket Id that contains that node
                 int b = net.getLocalRoutingTable().getBucketId(currentId);
-                //I remove it. If there is a replacement in the cache, it will automatically replace my node.
-                net.getLocalRoutingTable().getBuckets()[b].removeNode(currentNode);
+                //Increment its stale count
+                net.getLocalRoutingTable().getBuckets()[b].getFromContacts(currentNode).incrementStaleCount();
                 //now I search for another one
                 askForId(currentId);
             }

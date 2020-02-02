@@ -93,14 +93,13 @@ public class KademliaNetwork {
             connectionInfo.setRespond(false);
             return true;
         }
-        else { //My target node is broken. I remove it from my routing table
+        else { //My target node is unresponsive.
             //create the node by the peer
             KademliaId id = new KademliaId(targetPeer);
-            SMSKademliaNode toRemove = new SMSKademliaNode(id);
-            //remove it
-            //@TODO according to the Network Logic, should it be removed, or should its staleCount be updated?
-            this.localRoutingTable.getBuckets()[this.localRoutingTable.getBucketId(id)].removeNode(toRemove);
-            //the node is not alive
+            SMSKademliaNode unresponsive = new SMSKademliaNode(id);
+            //increment its stale count, it will be considered unresponsive
+            this.localRoutingTable.getBuckets()[this.localRoutingTable.getBucketId(id)].getFromContacts(unresponsive).incrementStaleCount();
+            //the node is not alive at the moment
             return false;
         }
     }
