@@ -1,5 +1,7 @@
 package com.eis0.kademlianetwork.informationdeliverymanager;
 
+import androidx.annotation.NonNull;
+
 import com.eis.smslibrary.SMSManager;
 import com.eis.smslibrary.SMSMessage;
 import com.eis.smslibrary.SMSPeer;
@@ -54,26 +56,18 @@ public class ResourceExchangeHandler {
      * @param key          The String value of the key of the resource to add to the Dictionary
      * @param resource     The String value of the resource itself to be added to the Dictionary
      * @param researchMode The research mode, represents the final purpose of the research
-     * @throws IllegalArgumentException If the key is null
      */
-    public void createRequest(String key, String resource, ResearchMode researchMode) {
-        if (key == null) throw new IllegalArgumentException(KEY_NULL);
-        Request currentRequest;
-        KademliaId idToFind = null;
+    public void createRequest(@NonNull String key, String resource, ResearchMode researchMode) {
+        Request currentRequest = new Request(key, resource);
+        KademliaId idToFind = currentRequest.getKeyId();
         switch (researchMode) {
             case AddToDictionary:
-                currentRequest = new Request(key, resource);
-                idToFind = currentRequest.getKeyId();
                 pendingAddRequests.put(idToFind, currentRequest);
                 break;
             case FindInDictionary:
-                currentRequest = new Request(key, null);
-                idToFind = currentRequest.getKeyId();
                 pendingGetRequests.put(idToFind, currentRequest);
                 break;
             case RemoveFromDictionary:
-                currentRequest = new Request(key, null);
-                idToFind = currentRequest.getKeyId();
                 pendingDeleteRequests.put(idToFind, currentRequest);
                 break;
         }
