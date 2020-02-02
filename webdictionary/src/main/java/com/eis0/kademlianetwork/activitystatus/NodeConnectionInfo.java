@@ -3,10 +3,11 @@ package com.eis0.kademlianetwork.activitystatus;
 /**
  * Every node has some connection information.
  * It has to check if another node reply or pong him, in order to consider it alive or less.
- * Then It has to coherently modify the params.
+ * Then it has to coherently modify the params.
  *
  * @author Edoardo Raimondi
  */
+
 public class NodeConnectionInfo {
 
     //To know if I had a positive acknowledge respond to a sent command
@@ -47,8 +48,4 @@ public class NodeConnectionInfo {
      * @author Edoardo Raimondi
      */
     public void setPong(boolean value) { hasPong = value; }
-
-
-
-
 }
