@@ -60,11 +60,6 @@ public class RoutingTableRefreshTest {
         //I expected node4 to be added in my routing table
         NET1.refresh.start();
     }
-
-    @Test()
-    public void testIfSwitched(){
-        int bucketId = NET1.getLocalRoutingTable().getBucketId(NODE1_V2.getId());
-        assertTrue(NET1.getLocalRoutingTable().getBuckets()[bucketId].containsNode(NODE1_V2));
-    }
+    
 
 }

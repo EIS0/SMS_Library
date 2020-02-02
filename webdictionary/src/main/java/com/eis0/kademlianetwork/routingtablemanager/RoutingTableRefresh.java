@@ -49,15 +49,24 @@ public class RoutingTableRefresh{
                 //is alive, set the pong state to false in order to do it again
                 net.connectionInfo.setPong(false);
             } else { //the node is not alive at the moment
-                KademliaId currentId = currentNode.getId();
-                //I check the bucket Id that contains that node
-                int b = net.getLocalRoutingTable().getBucketId(currentId);
-                //Increment its stale count
-                net.getLocalRoutingTable().getBuckets()[b].getFromContacts(currentNode).incrementStaleCount();
+               setUnresponsive(currentNode);
                 //now I search for another one
-                askForId(currentId);
+                askForId(currentNode.getId());
             }
         }
+    }
+
+    /**
+     * Setting a contact as unresponsive
+     *
+     * @param node Contact node
+     */
+    private void setUnresponsive(SMSKademliaNode node){
+        KademliaId currentId = node.getId();
+        //I check the bucket Id that contains that node
+        int b = net.getLocalRoutingTable().getBucketId(currentId);
+        //Increment its stale count
+        net.getLocalRoutingTable().getBuckets()[b].getFromContacts(node).incrementStaleCount();
     }
 
     /**
