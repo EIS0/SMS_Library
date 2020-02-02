@@ -64,9 +64,9 @@ public class RoutingTableRefresh{
      */
     private void setUnresponsive(SMSKademliaNode node){
         KademliaId currentId = node.getId();
-        //I check the bucket Id that contains that node
+        //I check the bucket Id that contains that node.
         int b = net.getLocalRoutingTable().getBucketId(currentId);
-        //Increment its stale count
+        //Increment its stale count.
         net.getLocalRoutingTable().getBuckets()[b].getFromContacts(node).incrementStaleCount();
     }
 

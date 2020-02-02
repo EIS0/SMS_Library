@@ -95,10 +95,10 @@ public class KademliaNetwork {
             return true;
         }
         else { //My target node is unresponsive.
-            //create the node by the peer
+            //create the node by the peer.
             KademliaId id = new KademliaId(targetPeer);
             SMSKademliaNode unresponsive = new SMSKademliaNode(id);
-            //increment its stale count, it will be considered unresponsive
+            //increment its stale count, it will be considered unresponsive.
             this.localRoutingTable.getBuckets()[this.localRoutingTable.getBucketId(id)].getFromContacts(unresponsive).incrementStaleCount();
             //the node is not alive at the moment
             return false;
@@ -106,7 +106,7 @@ public class KademliaNetwork {
     }
 
     /**
-     * Add a peer to the kademlia network.
+     * Add a peer to the Kademlia network.
      *
      * @param peer The SMSPeer to add.
      * @author Matteo Carnelos
