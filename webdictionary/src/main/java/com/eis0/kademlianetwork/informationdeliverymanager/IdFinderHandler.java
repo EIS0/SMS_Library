@@ -26,9 +26,8 @@ public class IdFinderHandler {
 
     /**
      * Searches for a specific Id, which needs to be closer to a given resource Id.
-     * If it's found it's sent to a given SMSPeer who's searching, else sends a request to find it
-     * to a closer person than the actual node. By a chain process, if the node is not found
-     * it's sent to searcher the closest id found on the net
+     * If found, it's sent the searching Peer, else sends a request to find it
+     * to a closer person than the actual node. So on by a chain process
      *
      * @param idToFind     The ID to find in the network
      * @param searcher     The Peer which is searching the ID
@@ -86,10 +85,6 @@ public class IdFinderHandler {
             retryIfDead(idToFind, searcher, researchMode, searcher);
             return;
         }
-        /*if(KademliaNetwork.getInstance().isNodeInNetwork(nodeToFind))
-        => This case doesn't need to be verified, if the node is inside my routing table, it will
-        the closest one, so this case is contained inside the "else" case
-         */
         //else, I ask to the closest node inside my Routing Table to continue the research
         SMSPeer closer = closestNode.getPeer();
         keepLooking(findId, idToFind, searcher, closer);
@@ -122,7 +117,7 @@ public class IdFinderHandler {
     }
 
     /**
-     * This method is called if the local node couldn't find the searched ID, it sends a request to
+     * This method is called if the local node couldn't find the searched ID. It sends a request to
      * the node inside its RoutingTable with the node ID closest to the resource ID, and ask it to
      * continue the research; if the closerNode find the searched ID, it sends it directly to the
      * node which originated the research, without retracing back all the node that took part to the
@@ -148,8 +143,8 @@ public class IdFinderHandler {
     }
 
     /**
-     * This method verify if the nodeToCheck is still valid, if the node returns any sign of life
-     * the process ends, otherwise the research for the ID is restarted
+     * This method verify if the nodeToCheck is still valid. If the node returns any sign of life
+     * the process ends, otherwise the research for the ID restarted
      *
      * @param idToFind     The ID to find inside the network
      * @param searcherNode The Peer which is searching the ID
