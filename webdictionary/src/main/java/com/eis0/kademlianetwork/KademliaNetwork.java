@@ -84,6 +84,7 @@ public class KademliaNetwork {
      * @return true if alive, false otherwise
      * @author Edoardo Raimondi
      */
+
     public boolean isAlive(SMSPeer targetPeer){
         //I wait 10 secs
         timer.run();
