@@ -1,0 +1,112 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.eis0.smslibrary.test" >
+4
+5    <uses-sdk
+5-->C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\build\intermediates\tmp\manifest\androidTest\debug\manifestMerger7558897770742981457.xml:5:5-74
+6        android:minSdkVersion="22"
+6-->C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\build\intermediates\tmp\manifest\androidTest\debug\manifestMerger7558897770742981457.xml:5:15-41
+7        android:targetSdkVersion="29" />
+7-->C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\build\intermediates\tmp\manifest\androidTest\debug\manifestMerger7558897770742981457.xml:5:42-71
+8
+9    <instrumentation
+9-->C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\build\intermediates\tmp\manifest\androidTest\debug\manifestMerger7558897770742981457.xml:11:5-15:74
+10        android:name="androidx.test.runner.AndroidJUnitRunner"
+10-->C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\build\intermediates\tmp\manifest\androidTest\debug\manifestMerger7558897770742981457.xml:11:22-76
+11        android:functionalTest="false"
+11-->C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\build\intermediates\tmp\manifest\androidTest\debug\manifestMerger7558897770742981457.xml:14:22-52
+12        android:handleProfiling="false"
+12-->C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\build\intermediates\tmp\manifest\androidTest\debug\manifestMerger7558897770742981457.xml:13:22-53
+13        android:label="Tests for com.eis0.smslibrary.test"
+13-->C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\build\intermediates\tmp\manifest\androidTest\debug\manifestMerger7558897770742981457.xml:15:22-72
+14        android:targetPackage="com.eis0.smslibrary.test" />
+14-->C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\build\intermediates\tmp\manifest\androidTest\debug\manifestMerger7558897770742981457.xml:12:22-70
+15
+16    <uses-permission android:name="android.permission.REORDER_TASKS" />
+16-->[androidx.test:core:1.2.0] C:\Users\Spectre 13-ac000nl\.gradle\caches\transforms-2\files-2.1\8b905dc169db8069fa57dc4a2866d2d4\core-1.2.0\AndroidManifest.xml:24:5-72
+16-->[androidx.test:core:1.2.0] C:\Users\Spectre 13-ac000nl\.gradle\caches\transforms-2\files-2.1\8b905dc169db8069fa57dc4a2866d2d4\core-1.2.0\AndroidManifest.xml:24:22-69
+17
+18    <application
+18-->C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\build\intermediates\tmp\manifest\androidTest\debug\manifestMerger7558897770742981457.xml:7:5-9:19
+19        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+19-->[androidx.core:core:1.1.0] C:\Users\Spectre 13-ac000nl\.gradle\caches\transforms-2\files-2.1\f01b27bb220ecb79298884ef36a7a2fb\core-1.1.0\AndroidManifest.xml:24:18-86
+20        android:debuggable="true" >
+20-->C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\build\intermediates\tmp\manifest\androidTest\debug\manifestMerger7558897770742981457.xml:7:18-43
+21        <uses-library android:name="android.test.runner" />
+21-->C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\build\intermediates\tmp\manifest\androidTest\debug\manifestMerger7558897770742981457.xml:8:9-60
+21-->C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\build\intermediates\tmp\manifest\androidTest\debug\manifestMerger7558897770742981457.xml:8:23-57
+22
+23        <receiver
+23-->[__tested_artifact__::smslibrary] C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\build\intermediates\library_manifest\debug\AndroidManifest.xml:12:9-19:20
+24            android:name="com.eis0.smslibrary.SMSCore"
+24-->[__tested_artifact__::smslibrary] C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\build\intermediates\library_manifest\debug\AndroidManifest.xml:13:13-55
+25            android:enabled="true"
+25-->[__tested_artifact__::smslibrary] C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\build\intermediates\library_manifest\debug\AndroidManifest.xml:14:13-35
+26            android:exported="true" >
+26-->[__tested_artifact__::smslibrary] C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\build\intermediates\library_manifest\debug\AndroidManifest.xml:15:13-36
+27            <intent-filter>
+27-->[__tested_artifact__::smslibrary] C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\build\intermediates\library_manifest\debug\AndroidManifest.xml:16:13-18:29
+28                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
+28-->[__tested_artifact__::smslibrary] C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\build\intermediates\library_manifest\debug\AndroidManifest.xml:17:17-82
+28-->[__tested_artifact__::smslibrary] C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\build\intermediates\library_manifest\debug\AndroidManifest.xml:17:25-79
+29            </intent-filter>
+30        </receiver>
+31
+32        <service
+32-->[__tested_artifact__::smslibrary] C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\build\intermediates\library_manifest\debug\AndroidManifest.xml:21:9-28:19
+33            android:name="com.eis0.smslibrary.SMSHandler"
+33-->[__tested_artifact__::smslibrary] C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\build\intermediates\library_manifest\debug\AndroidManifest.xml:22:13-58
+34            android:label="Access requested to cancel boring app notification"
+34-->[__tested_artifact__::smslibrary] C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\build\intermediates\library_manifest\debug\AndroidManifest.xml:23:13-79
+35            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE" >
+35-->[__tested_artifact__::smslibrary] C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\build\intermediates\library_manifest\debug\AndroidManifest.xml:24:13-87
+36            <intent-filter>
+36-->[__tested_artifact__::smslibrary] C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\build\intermediates\library_manifest\debug\AndroidManifest.xml:25:13-27:29
+37                <action android:name="android.service.notification.NotificationListenerService" />
+37-->[__tested_artifact__::smslibrary] C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\build\intermediates\library_manifest\debug\AndroidManifest.xml:26:17-99
+37-->[__tested_artifact__::smslibrary] C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\build\intermediates\library_manifest\debug\AndroidManifest.xml:26:25-96
+38            </intent-filter>
+39        </service>
+40
+41        <activity
+41-->[androidx.test:core:1.2.0] C:\Users\Spectre 13-ac000nl\.gradle\caches\transforms-2\files-2.1\8b905dc169db8069fa57dc4a2866d2d4\core-1.2.0\AndroidManifest.xml:27:9-33:20
+42            android:name="androidx.test.core.app.InstrumentationActivityInvoker$BootstrapActivity"
+42-->[androidx.test:core:1.2.0] C:\Users\Spectre 13-ac000nl\.gradle\caches\transforms-2\files-2.1\8b905dc169db8069fa57dc4a2866d2d4\core-1.2.0\AndroidManifest.xml:28:13-99
+43            android:theme="@android:style/Theme" >
+43-->[androidx.test:core:1.2.0] C:\Users\Spectre 13-ac000nl\.gradle\caches\transforms-2\files-2.1\8b905dc169db8069fa57dc4a2866d2d4\core-1.2.0\AndroidManifest.xml:29:13-49
+44            <intent-filter>
+44-->[androidx.test:core:1.2.0] C:\Users\Spectre 13-ac000nl\.gradle\caches\transforms-2\files-2.1\8b905dc169db8069fa57dc4a2866d2d4\core-1.2.0\AndroidManifest.xml:30:13-32:29
+45                <action android:name="android.intent.action.MAIN" />
+45-->[androidx.test:core:1.2.0] C:\Users\Spectre 13-ac000nl\.gradle\caches\transforms-2\files-2.1\8b905dc169db8069fa57dc4a2866d2d4\core-1.2.0\AndroidManifest.xml:31:17-69
+45-->[androidx.test:core:1.2.0] C:\Users\Spectre 13-ac000nl\.gradle\caches\transforms-2\files-2.1\8b905dc169db8069fa57dc4a2866d2d4\core-1.2.0\AndroidManifest.xml:31:25-66
+46            </intent-filter>
+47        </activity>
+48        <activity
+48-->[androidx.test:core:1.2.0] C:\Users\Spectre 13-ac000nl\.gradle\caches\transforms-2\files-2.1\8b905dc169db8069fa57dc4a2866d2d4\core-1.2.0\AndroidManifest.xml:34:9-40:20
+49            android:name="androidx.test.core.app.InstrumentationActivityInvoker$EmptyActivity"
+49-->[androidx.test:core:1.2.0] C:\Users\Spectre 13-ac000nl\.gradle\caches\transforms-2\files-2.1\8b905dc169db8069fa57dc4a2866d2d4\core-1.2.0\AndroidManifest.xml:35:13-95
+50            android:theme="@android:style/Theme" >
+50-->[androidx.test:core:1.2.0] C:\Users\Spectre 13-ac000nl\.gradle\caches\transforms-2\files-2.1\8b905dc169db8069fa57dc4a2866d2d4\core-1.2.0\AndroidManifest.xml:36:13-49
+51            <intent-filter>
+51-->[androidx.test:core:1.2.0] C:\Users\Spectre 13-ac000nl\.gradle\caches\transforms-2\files-2.1\8b905dc169db8069fa57dc4a2866d2d4\core-1.2.0\AndroidManifest.xml:30:13-32:29
+52                <action android:name="android.intent.action.MAIN" />
+52-->[androidx.test:core:1.2.0] C:\Users\Spectre 13-ac000nl\.gradle\caches\transforms-2\files-2.1\8b905dc169db8069fa57dc4a2866d2d4\core-1.2.0\AndroidManifest.xml:31:17-69
+52-->[androidx.test:core:1.2.0] C:\Users\Spectre 13-ac000nl\.gradle\caches\transforms-2\files-2.1\8b905dc169db8069fa57dc4a2866d2d4\core-1.2.0\AndroidManifest.xml:31:25-66
+53            </intent-filter>
+54        </activity>
+55        <activity
+55-->[androidx.test:core:1.2.0] C:\Users\Spectre 13-ac000nl\.gradle\caches\transforms-2\files-2.1\8b905dc169db8069fa57dc4a2866d2d4\core-1.2.0\AndroidManifest.xml:41:9-47:20
+56            android:name="androidx.test.core.app.InstrumentationActivityInvoker$EmptyFloatingActivity"
+56-->[androidx.test:core:1.2.0] C:\Users\Spectre 13-ac000nl\.gradle\caches\transforms-2\files-2.1\8b905dc169db8069fa57dc4a2866d2d4\core-1.2.0\AndroidManifest.xml:42:13-103
+57            android:theme="@android:style/Theme.Dialog" >
+57-->[androidx.test:core:1.2.0] C:\Users\Spectre 13-ac000nl\.gradle\caches\transforms-2\files-2.1\8b905dc169db8069fa57dc4a2866d2d4\core-1.2.0\AndroidManifest.xml:43:13-56
+58            <intent-filter>
+58-->[androidx.test:core:1.2.0] C:\Users\Spectre 13-ac000nl\.gradle\caches\transforms-2\files-2.1\8b905dc169db8069fa57dc4a2866d2d4\core-1.2.0\AndroidManifest.xml:30:13-32:29
+59                <action android:name="android.intent.action.MAIN" />
+59-->[androidx.test:core:1.2.0] C:\Users\Spectre 13-ac000nl\.gradle\caches\transforms-2\files-2.1\8b905dc169db8069fa57dc4a2866d2d4\core-1.2.0\AndroidManifest.xml:31:17-69
+59-->[androidx.test:core:1.2.0] C:\Users\Spectre 13-ac000nl\.gradle\caches\transforms-2\files-2.1\8b905dc169db8069fa57dc4a2866d2d4\core-1.2.0\AndroidManifest.xml:31:25-66
+60            </intent-filter>
+61        </activity>
+62    </application>
+63
+64</manifest>

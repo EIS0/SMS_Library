@@ -1,0 +1,48 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.eis0.smslibrary"
+4    android:versionCode="1"
+5    android:versionName="1.0" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="22"
+8-->C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\src\main\AndroidManifest.xml
+9        android:targetSdkVersion="29" />
+9-->C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\src\main\AndroidManifest.xml
+10
+11    <application>
+11-->C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\src\main\AndroidManifest.xml:4:5-22:19
+12        <receiver
+12-->C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\src\main\AndroidManifest.xml:5:9-12:20
+13            android:name="com.eis0.smslibrary.SMSCore"
+13-->C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\src\main\AndroidManifest.xml:6:9-51
+14            android:enabled="true"
+14-->C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\src\main\AndroidManifest.xml:7:9-31
+15            android:exported="true" >
+15-->C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\src\main\AndroidManifest.xml:8:9-32
+16            <intent-filter>
+16-->C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\src\main\AndroidManifest.xml:9:9-11:25
+17                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
+17-->C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\src\main\AndroidManifest.xml:10:13-78
+17-->C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\src\main\AndroidManifest.xml:10:21-75
+18            </intent-filter>
+19        </receiver>
+20
+21        <service
+21-->C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\src\main\AndroidManifest.xml:14:9-21:19
+22            android:name="com.eis0.smslibrary.SMSHandler"
+22-->C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\src\main\AndroidManifest.xml:15:9-54
+23            android:label="Access requested to cancel boring app notification"
+23-->C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\src\main\AndroidManifest.xml:16:9-75
+24            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE" >
+24-->C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\src\main\AndroidManifest.xml:17:9-83
+25            <intent-filter>
+25-->C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\src\main\AndroidManifest.xml:18:9-20:25
+26                <action android:name="android.service.notification.NotificationListenerService" />
+26-->C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\src\main\AndroidManifest.xml:19:13-95
+26-->C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\src\main\AndroidManifest.xml:19:21-92
+27            </intent-filter>
+28        </service>
+29    </application>
+30
+31</manifest>

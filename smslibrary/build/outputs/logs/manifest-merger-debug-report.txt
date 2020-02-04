@@ -1,0 +1,67 @@
+-- Merging decision tree log ---
+manifest
+ADDED from C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\src\main\AndroidManifest.xml:1:1-24:12
+INJECTED from C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\src\main\AndroidManifest.xml:1:1-24:12
+INJECTED from C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\src\main\AndroidManifest.xml:1:1-24:12
+INJECTED from C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\src\main\AndroidManifest.xml:1:1-24:12
+INJECTED from C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\src\main\AndroidManifest.xml:1:1-24:12
+INJECTED from C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\src\main\AndroidManifest.xml:1:1-24:12
+INJECTED from C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\src\main\AndroidManifest.xml:1:1-24:12
+	package
+		ADDED from C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\src\main\AndroidManifest.xml:2:5-34
+		INJECTED from C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\src\main\AndroidManifest.xml
+		INJECTED from C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\src\main\AndroidManifest.xml
+	android:versionName
+		INJECTED from C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\src\main\AndroidManifest.xml
+		ADDED from C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\src\main\AndroidManifest.xml:1:1-24:12
+		INJECTED from C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\src\main\AndroidManifest.xml
+	android:versionCode
+		INJECTED from C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\src\main\AndroidManifest.xml
+		ADDED from C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\src\main\AndroidManifest.xml:1:1-24:12
+		INJECTED from C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\src\main\AndroidManifest.xml
+	xmlns:android
+		ADDED from C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\src\main\AndroidManifest.xml:1:11-69
+application
+ADDED from C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\src\main\AndroidManifest.xml:4:5-22:19
+receiver#com.eis0.smslibrary.SMSCore
+ADDED from C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\src\main\AndroidManifest.xml:5:9-12:20
+	android:enabled
+		ADDED from C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\src\main\AndroidManifest.xml:7:9-31
+	android:exported
+		ADDED from C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\src\main\AndroidManifest.xml:8:9-32
+	android:name
+		ADDED from C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\src\main\AndroidManifest.xml:6:9-51
+intent-filter#action:name:android.provider.Telephony.SMS_RECEIVED
+ADDED from C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\src\main\AndroidManifest.xml:9:9-11:25
+action#android.provider.Telephony.SMS_RECEIVED
+ADDED from C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\src\main\AndroidManifest.xml:10:13-78
+	android:name
+		ADDED from C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\src\main\AndroidManifest.xml:10:21-75
+service#com.eis0.smslibrary.SMSHandler
+ADDED from C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\src\main\AndroidManifest.xml:14:9-21:19
+	android:label
+		ADDED from C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\src\main\AndroidManifest.xml:16:9-75
+	android:permission
+		ADDED from C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\src\main\AndroidManifest.xml:17:9-83
+	android:name
+		ADDED from C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\src\main\AndroidManifest.xml:15:9-54
+intent-filter#action:name:android.service.notification.NotificationListenerService
+ADDED from C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\src\main\AndroidManifest.xml:18:9-20:25
+action#android.service.notification.NotificationListenerService
+ADDED from C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\src\main\AndroidManifest.xml:19:13-95
+	android:name
+		ADDED from C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\src\main\AndroidManifest.xml:19:21-92
+uses-sdk
+INJECTED from C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\src\main\AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\src\main\AndroidManifest.xml
+INJECTED from C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\src\main\AndroidManifest.xml
+INJECTED from C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\src\main\AndroidManifest.xml
+INJECTED from C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\src\main\AndroidManifest.xml
+	android:targetSdkVersion
+		INJECTED from C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\src\main\AndroidManifest.xml
+		ADDED from C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\src\main\AndroidManifest.xml
+		INJECTED from C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\src\main\AndroidManifest.xml
+	android:minSdkVersion
+		INJECTED from C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\src\main\AndroidManifest.xml
+		ADDED from C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\src\main\AndroidManifest.xml
+		INJECTED from C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\src\main\AndroidManifest.xml

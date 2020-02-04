@@ -1,0 +1,114 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.eis0.easypoll"
+4    android:versionCode="1"
+5    android:versionName="1.0" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="22"
+8-->C:\Users\Spectre 13-ac000nl\EIS0\easypoll\src\main\AndroidManifest.xml
+9        android:targetSdkVersion="29" />
+9-->C:\Users\Spectre 13-ac000nl\EIS0\easypoll\src\main\AndroidManifest.xml
+10
+11    <uses-permission android:name="android.permission.SEND_SMS" />
+11-->C:\Users\Spectre 13-ac000nl\EIS0\easypoll\src\main\AndroidManifest.xml:5:5-67
+11-->C:\Users\Spectre 13-ac000nl\EIS0\easypoll\src\main\AndroidManifest.xml:5:22-64
+12    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+12-->C:\Users\Spectre 13-ac000nl\EIS0\easypoll\src\main\AndroidManifest.xml:6:5-70
+12-->C:\Users\Spectre 13-ac000nl\EIS0\easypoll\src\main\AndroidManifest.xml:6:22-67
+13    <uses-permission android:name="android.permission.READ_SMS" />
+13-->C:\Users\Spectre 13-ac000nl\EIS0\easypoll\src\main\AndroidManifest.xml:7:5-67
+13-->C:\Users\Spectre 13-ac000nl\EIS0\easypoll\src\main\AndroidManifest.xml:7:22-64
+14    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+14-->C:\Users\Spectre 13-ac000nl\EIS0\easypoll\src\main\AndroidManifest.xml:8:5-75
+14-->C:\Users\Spectre 13-ac000nl\EIS0\easypoll\src\main\AndroidManifest.xml:8:22-72
+15
+16    <application
+16-->C:\Users\Spectre 13-ac000nl\EIS0\easypoll\src\main\AndroidManifest.xml:11:5-31:19
+17        android:allowBackup="true"
+17-->C:\Users\Spectre 13-ac000nl\EIS0\easypoll\src\main\AndroidManifest.xml:12:9-35
+18        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+18-->[androidx.core:core:1.1.0] C:\Users\Spectre 13-ac000nl\.gradle\caches\transforms-2\files-2.1\f01b27bb220ecb79298884ef36a7a2fb\core-1.1.0\AndroidManifest.xml:24:18-86
+19        android:debuggable="true"
+20        android:icon="@mipmap/ic_launcher"
+20-->C:\Users\Spectre 13-ac000nl\EIS0\easypoll\src\main\AndroidManifest.xml:13:9-43
+21        android:label="@string/app_name"
+21-->C:\Users\Spectre 13-ac000nl\EIS0\easypoll\src\main\AndroidManifest.xml:14:9-41
+22        android:roundIcon="@mipmap/ic_launcher_round"
+22-->C:\Users\Spectre 13-ac000nl\EIS0\easypoll\src\main\AndroidManifest.xml:15:9-54
+23        android:supportsRtl="true"
+23-->C:\Users\Spectre 13-ac000nl\EIS0\easypoll\src\main\AndroidManifest.xml:16:9-35
+24        android:theme="@style/AppTheme" >
+24-->C:\Users\Spectre 13-ac000nl\EIS0\easypoll\src\main\AndroidManifest.xml:17:9-40
+25        <activity
+25-->C:\Users\Spectre 13-ac000nl\EIS0\easypoll\src\main\AndroidManifest.xml:18:9-21:20
+26            android:name="com.eis0.easypoll.CreatePollActivity"
+26-->C:\Users\Spectre 13-ac000nl\EIS0\easypoll\src\main\AndroidManifest.xml:19:13-64
+27            android:windowSoftInputMode="adjustPan" >
+27-->C:\Users\Spectre 13-ac000nl\EIS0\easypoll\src\main\AndroidManifest.xml:20:13-52
+28        </activity>
+29        <activity
+29-->C:\Users\Spectre 13-ac000nl\EIS0\easypoll\src\main\AndroidManifest.xml:22:9-30:20
+30            android:name="com.eis0.easypoll.MainActivity"
+30-->C:\Users\Spectre 13-ac000nl\EIS0\easypoll\src\main\AndroidManifest.xml:23:13-58
+31            android:label="@string/app_name"
+31-->C:\Users\Spectre 13-ac000nl\EIS0\easypoll\src\main\AndroidManifest.xml:24:13-45
+32            android:theme="@style/AppTheme.NoActionBar" >
+32-->C:\Users\Spectre 13-ac000nl\EIS0\easypoll\src\main\AndroidManifest.xml:25:13-56
+33            <intent-filter>
+33-->C:\Users\Spectre 13-ac000nl\EIS0\easypoll\src\main\AndroidManifest.xml:26:13-29:29
+34                <action android:name="android.intent.action.MAIN" />
+34-->C:\Users\Spectre 13-ac000nl\EIS0\easypoll\src\main\AndroidManifest.xml:27:17-69
+34-->C:\Users\Spectre 13-ac000nl\EIS0\easypoll\src\main\AndroidManifest.xml:27:25-66
+35
+36                <category android:name="android.intent.category.LAUNCHER" />
+36-->C:\Users\Spectre 13-ac000nl\EIS0\easypoll\src\main\AndroidManifest.xml:28:17-77
+36-->C:\Users\Spectre 13-ac000nl\EIS0\easypoll\src\main\AndroidManifest.xml:28:27-74
+37            </intent-filter>
+38        </activity>
+39
+40        <receiver
+40-->[:smslibrary] C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\build\intermediates\library_manifest\debug\AndroidManifest.xml:12:9-19:20
+41            android:name="com.eis0.smslibrary.SMSCore"
+41-->[:smslibrary] C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\build\intermediates\library_manifest\debug\AndroidManifest.xml:13:13-55
+42            android:enabled="true"
+42-->[:smslibrary] C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\build\intermediates\library_manifest\debug\AndroidManifest.xml:14:13-35
+43            android:exported="true" >
+43-->[:smslibrary] C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\build\intermediates\library_manifest\debug\AndroidManifest.xml:15:13-36
+44            <intent-filter>
+44-->[:smslibrary] C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\build\intermediates\library_manifest\debug\AndroidManifest.xml:16:13-18:29
+45                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
+45-->[:smslibrary] C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\build\intermediates\library_manifest\debug\AndroidManifest.xml:17:17-82
+45-->[:smslibrary] C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\build\intermediates\library_manifest\debug\AndroidManifest.xml:17:25-79
+46            </intent-filter>
+47        </receiver>
+48
+49        <service
+49-->[:smslibrary] C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\build\intermediates\library_manifest\debug\AndroidManifest.xml:21:9-28:19
+50            android:name="com.eis0.smslibrary.SMSHandler"
+50-->[:smslibrary] C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\build\intermediates\library_manifest\debug\AndroidManifest.xml:22:13-58
+51            android:label="Access requested to cancel boring app notification"
+51-->[:smslibrary] C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\build\intermediates\library_manifest\debug\AndroidManifest.xml:23:13-79
+52            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE" >
+52-->[:smslibrary] C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\build\intermediates\library_manifest\debug\AndroidManifest.xml:24:13-87
+53            <intent-filter>
+53-->[:smslibrary] C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\build\intermediates\library_manifest\debug\AndroidManifest.xml:25:13-27:29
+54                <action android:name="android.service.notification.NotificationListenerService" />
+54-->[:smslibrary] C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\build\intermediates\library_manifest\debug\AndroidManifest.xml:26:17-99
+54-->[:smslibrary] C:\Users\Spectre 13-ac000nl\EIS0\smslibrary\build\intermediates\library_manifest\debug\AndroidManifest.xml:26:25-96
+55            </intent-filter>
+56        </service>
+57
+58        <provider
+58-->[androidx.lifecycle:lifecycle-process:2.1.0] C:\Users\Spectre 13-ac000nl\.gradle\caches\transforms-2\files-2.1\55580b0ab45b69249933074462ab11c2\lifecycle-process-2.1.0\AndroidManifest.xml:23:9-27:43
+59            android:name="androidx.lifecycle.ProcessLifecycleOwnerInitializer"
+59-->[androidx.lifecycle:lifecycle-process:2.1.0] C:\Users\Spectre 13-ac000nl\.gradle\caches\transforms-2\files-2.1\55580b0ab45b69249933074462ab11c2\lifecycle-process-2.1.0\AndroidManifest.xml:24:13-79
+60            android:authorities="com.eis0.easypoll.lifecycle-process"
+60-->[androidx.lifecycle:lifecycle-process:2.1.0] C:\Users\Spectre 13-ac000nl\.gradle\caches\transforms-2\files-2.1\55580b0ab45b69249933074462ab11c2\lifecycle-process-2.1.0\AndroidManifest.xml:25:13-69
+61            android:exported="false"
+61-->[androidx.lifecycle:lifecycle-process:2.1.0] C:\Users\Spectre 13-ac000nl\.gradle\caches\transforms-2\files-2.1\55580b0ab45b69249933074462ab11c2\lifecycle-process-2.1.0\AndroidManifest.xml:26:13-37
+62            android:multiprocess="true" />
+62-->[androidx.lifecycle:lifecycle-process:2.1.0] C:\Users\Spectre 13-ac000nl\.gradle\caches\transforms-2\files-2.1\55580b0ab45b69249933074462ab11c2\lifecycle-process-2.1.0\AndroidManifest.xml:27:13-40
+63    </application>
+64
+65</manifest>
