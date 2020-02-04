@@ -10,6 +10,7 @@ import com.eis0.kademlia.KademliaId;
 import com.eis0.kademlia.SMSKademliaNode;
 import com.eis0.kademlia.SMSKademliaRoutingTable;
 import com.eis0.kademlianetwork.activitystatus.NodeConnectionInfo;
+import com.eis0.kademlianetwork.activitystatus.RefreshTimer;
 import com.eis0.kademlianetwork.activitystatus.RespondTimer;
 import com.eis0.kademlianetwork.listener.SMSKademliaListener;
 import com.eis0.kademlianetwork.routingtablemanager.RoutingTableRefresh;
@@ -41,7 +42,6 @@ public class KademliaNetwork {
     //Dictionary containing the resources stored by the local node
     private SMSNetVocabulary localKademliaDictionary;
     private final RespondTimer timer = new RespondTimer();
-
 
     // Singleton instance
     private static KademliaNetwork instance;
@@ -214,4 +214,6 @@ public class KademliaNetwork {
     public void updateLocalDictionary(String key, String resource) {
         localKademliaDictionary.update(new SMSSerialization(key), new SMSSerialization(resource));
     }
+
+
 }

@@ -21,7 +21,7 @@ import java.util.List;
  * @author Edoardo Raimondi
  */
 
-public class RoutingTableRefresh{
+public final class RoutingTableRefresh{
     //create a timer to verify if I had a pong in at least 10 secs
     private final RespondTimer timer = new RespondTimer();
     //node doing this refresh
@@ -50,7 +50,8 @@ public class RoutingTableRefresh{
     }
 
     /**
-     * Setting a contact as unresponsive
+     * Remove a contact if unresponsive (its stale count is more than the one permitted by
+     * the configuration
      *
      * @param node Contact node
      * @return true if the node has been correctly removed
