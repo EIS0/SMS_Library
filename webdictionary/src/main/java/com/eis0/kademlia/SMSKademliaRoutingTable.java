@@ -44,6 +44,13 @@ public class SMSKademliaRoutingTable implements KademliaRoutingTable {
     }
 
     /**
+     * @return the current using configuration
+     */
+    public KadConfiguration getConfig(){
+        return config;
+    }
+
+    /**
      * Initialize the RoutingTable to it's default state
      */
     @Override

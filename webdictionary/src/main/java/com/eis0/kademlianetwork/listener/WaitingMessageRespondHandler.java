@@ -8,7 +8,7 @@ import java.io.IOException;
  * This class provides a synchronized way to manage responds waiting.
  */
 final class WaitingMessageRespondHandler implements MessageRespondhandler{
-    private boolean hasRespond;
+    private boolean hasFinished;
     private IOException myIoException;
     private Contact contact;
 
@@ -18,7 +18,7 @@ final class WaitingMessageRespondHandler implements MessageRespondhandler{
      * @param contact The contact
      */
     WaitingMessageRespondHandler(Contact contact){
-        hasRespond = false;
+        hasFinished = false;
         this.contact = contact;
     }
 
@@ -36,10 +36,10 @@ final class WaitingMessageRespondHandler implements MessageRespondhandler{
     /**
      * Waits a respond from someone
      *
-     * @throws InterruptedException whenever the thread waiting is interrupted
+     * @throws InterruptedException whenever the waiting thread is interrupted
      */
     public synchronized void waitForRespond() throws InterruptedException{
-        while(!hasRespond){
+        while(!hasFinished){
             this.wait();
         }
 
@@ -54,7 +54,7 @@ final class WaitingMessageRespondHandler implements MessageRespondhandler{
      * Set hasRespond as true
      */
     private synchronized void finish(){
-        hasRespond = true;
+        hasFinished = true;
         this.notifyAll();
     }
 }

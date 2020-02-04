@@ -10,7 +10,7 @@ public class DefaultConfiguration implements KadConfiguration {
 
     private final static int K = 2; // system-wide replication parameter
     private final static int RCSIZE = 3; //replacement cache size
-    private final static int MAX_STALE_COUNT = 1;
+    private final static int MAX_STALE_COUNT = 2;
 
     /**
      * @return int representing K parameter

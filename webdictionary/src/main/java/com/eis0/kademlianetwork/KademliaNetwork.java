@@ -49,7 +49,11 @@ public class KademliaNetwork {
     public  KademliaNetwork(){
 
     }
-    
+
+    /**
+     * Return the configuration
+     */
+
     /**
      * Return an instance of KademliaNetwork.
      *
@@ -78,7 +82,7 @@ public class KademliaNetwork {
     /**
      * Check if I received an acknowledge respond to my request.
      * (so if the node is alive)
-     * If death, the {@link SMSKademliaNode} of the target peer is removed from the routing table
+     * If death, the {@link SMSKademliaNode} of the target peer is set as unresponsive
      *
      * @param  targetPeer the receiver {@link SMSPeer}
      * @return true if alive, false otherwise
