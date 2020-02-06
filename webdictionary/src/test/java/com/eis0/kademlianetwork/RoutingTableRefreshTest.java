@@ -4,7 +4,10 @@ import android.telephony.SmsManager;
 
 import com.eis.smslibrary.SMSPeer;
 import com.eis0.UtilityMocks;
+import com.eis0.kademlia.Contact;
+import com.eis0.kademlia.KademliaId;
 import com.eis0.kademlia.SMSKademliaNode;
+import com.eis0.kademlianetwork.routingtablemanager.RoutingTableRefresh;
 
 
 import org.junit.Before;
@@ -14,6 +17,7 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import static org.mockito.Mockito.mock;
@@ -36,6 +40,9 @@ public class RoutingTableRefreshTest {
     private final KademliaNetwork NET2 = new KademliaNetwork();
     private final KademliaNetwork NET3 = new KademliaNetwork();
 
+
+    RoutingTableRefresh tableRefresh = new RoutingTableRefresh(NODE1, NET1);
+
     @Before
     public void setUp(){
 
@@ -55,10 +62,18 @@ public class RoutingTableRefreshTest {
         NET1.addNodeToTable(NODE3);
         //NET2 routing table population
         NET2.addNodeToTable(NODE1_V2);
+    }
 
+    @Test
+    public void setUnresponsiveTest(){
+        //I imagine NODE2 to be unresponsive
+        tableRefresh.setUnresponsive(NODE2);
 
-        //I expected node4 to be added in my routing table
-        NET1.refresh.start();
+        KademliaId currentId = NODE2.getId();
+        //I check the bucket Id that contains that node
+        int b = NET1.getLocalRoutingTable().getBucketId(currentId);
+
+        assertEquals( NET1.getLocalRoutingTable().getBuckets()[b].getFromContacts(NODE2).staleCount(), 1);
     }
 
 

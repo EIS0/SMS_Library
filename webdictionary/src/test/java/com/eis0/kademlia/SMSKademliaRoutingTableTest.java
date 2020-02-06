@@ -82,6 +82,7 @@ public class SMSKademliaRoutingTableTest {
 
     @Test
     public void setConfiguration(){
+        //just check doing it without error
         routingTable.setConfiguration(CONFIG);
     }
 
@@ -108,6 +109,21 @@ public class SMSKademliaRoutingTableTest {
     @Test
     public void getBucketIdTest(){
         assertEquals(routingTable.getBucketId(ID1), KademliaId.ID_LENGTH-2);
+    }
+
+    @Test
+    public void getBucketIdTest_moreNodeInsideTheTable(){
+        routingTable.insert(NODE2);
+        routingTable.insert(NODE1);
+        int b = routingTable.getBucketId(NODE2.getId());
+        //bucket id compute by external program as the "getBucketId" method work
+        assertEquals(b, 62);
+    }
+
+    @Test
+    public void getBucketIdTest_MainNode(){
+        //if I try to find the bucket of the routing table owner node, It will be 0
+        assertEquals(routingTable.getBucketId(MAIN_NODE.getId()), 0);
     }
 
     @Test
@@ -211,7 +227,7 @@ public class SMSKademliaRoutingTableTest {
 
     @Test
     public void size(){
-        int size= routingTable.size();
+        int size = routingTable.size();
         assertEquals(size, 1);
     }
 

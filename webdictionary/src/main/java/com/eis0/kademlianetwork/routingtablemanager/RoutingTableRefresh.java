@@ -61,7 +61,7 @@ public class RoutingTableRefresh{
      *
      * @param node Contact node
      */
-    private void setUnresponsive(SMSKademliaNode node){
+    public void setUnresponsive(SMSKademliaNode node){
         KademliaId currentId = node.getId();
         //I check the bucket Id that contains that node
         int b = net.getLocalRoutingTable().getBucketId(currentId);
