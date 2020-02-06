@@ -164,8 +164,7 @@ public class KademliaId implements Serializable {
      */
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 83 * hash + Arrays.hashCode(this.keyBytes);
+        int hash = Arrays.hashCode(this.keyBytes);
         return hash;
     }
 
