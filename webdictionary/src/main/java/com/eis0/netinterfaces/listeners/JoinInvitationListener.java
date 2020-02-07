@@ -1,6 +1,6 @@
-package com.eis.communication.network.listeners;
+package com.eis0.netinterfaces.listeners;
 
-import com.eis.communication.network.Invitation;
+import com.eis0.netinterfaces.Invitation;
 
 /**
  * Listener for invitations to join a network.

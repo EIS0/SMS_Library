@@ -1,7 +1,7 @@
-package com.eis.communication.network;
+package com.eis0.netinterfaces;
 
 import com.eis.communication.Peer;
-import com.eis.communication.network.listeners.JoinInvitationListener;
+import com.eis0.netinterfaces.listeners.JoinInvitationListener;
 
 /**
  * Manager for networks where the join has to be done manually and is not performed automatically.

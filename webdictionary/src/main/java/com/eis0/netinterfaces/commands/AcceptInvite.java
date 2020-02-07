@@ -1,6 +1,6 @@
-package com.eis.communication.network.commands;
+package com.eis0.netinterfaces.commands;
 
-import com.eis.communication.network.Invitation;
+import com.eis0.netinterfaces.Invitation;
 
 /**
  * Command to accept an Invitation to the network

@@ -1,8 +1,8 @@
-package com.eis.communication.network.commands;
+package com.eis0.netinterfaces.commands;
 
 import androidx.annotation.NonNull;
 
-import com.eis.communication.network.NetDictionary;
+import com.eis0.netinterfaces.NetDictionary;
 
 /**
  * Command to add a resource to the net dictionary

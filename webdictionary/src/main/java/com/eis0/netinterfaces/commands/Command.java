@@ -1,4 +1,4 @@
-package com.eis.communication.network.commands;
+package com.eis0.netinterfaces.commands;
 
 /**
  * Basic structure of a Command to be executed by the CommandExecutor.

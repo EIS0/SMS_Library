@@ -1,4 +1,4 @@
-package com.eis.communication.network;
+package com.eis0.netinterfaces;
 
 /**
  * Interface to define a network dictionary

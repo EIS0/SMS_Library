@@ -1,4 +1,4 @@
-package com.eis.communication.network.commands;
+package com.eis0.netinterfaces;
 
 /**
  * Class that manages all the sent commands.
@@ -14,7 +14,7 @@ public class CommandExecutor {
      *
      * @param command to be performed
      */
-    public static void execute(Command command) {
+    public void execute(Command command) {
         command.execute();
     }
 }

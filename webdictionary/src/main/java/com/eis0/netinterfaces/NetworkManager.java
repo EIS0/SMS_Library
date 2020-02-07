@@ -1,10 +1,10 @@
-package com.eis.communication.network;
+package com.eis0.netinterfaces;
 
 import com.eis.communication.Peer;
-import com.eis.communication.network.listeners.GetResourceListener;
-import com.eis.communication.network.listeners.InviteListener;
-import com.eis.communication.network.listeners.RemoveResourceListener;
-import com.eis.communication.network.listeners.SetResourceListener;
+import com.eis0.netinterfaces.listeners.GetResourceListener;
+import com.eis0.netinterfaces.listeners.InviteListener;
+import com.eis0.netinterfaces.listeners.RemoveResourceListener;
+import com.eis0.netinterfaces.listeners.SetResourceListener;
 /**
  * Manager of any type of network, contains methods that should be in every network
  *

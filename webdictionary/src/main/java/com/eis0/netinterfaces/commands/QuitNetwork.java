@@ -1,9 +1,9 @@
-package com.eis.communication.network.commands;
+package com.eis0.netinterfaces.commands;
 
 import androidx.annotation.NonNull;
 
 import com.eis.communication.Peer;
-import com.eis.communication.network.NetSubscriberList;
+import com.eis0.netinterfaces.NetSubscriberList;
 
 /**
  * Command to quit a network, which is, removing myself from the network I'm in

@@ -1,4 +1,4 @@
-package com.eis.communication.network;
+package com.eis0.netinterfaces;
 
 /**
  * Basic interface for a Command to be executed by the net.

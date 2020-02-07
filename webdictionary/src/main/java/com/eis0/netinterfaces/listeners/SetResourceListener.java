@@ -1,6 +1,6 @@
-package com.eis.communication.network.listeners;
+package com.eis0.netinterfaces.listeners;
 
-import com.eis.communication.network.FailReason;
+import com.eis0.netinterfaces.FailReason;
 
 /**
  * Listener for resource saving requests, often passed as parameter when making a set resource request.

@@ -1,4 +1,4 @@
-package com.eis.communication.network;
+package com.eis0.netinterfaces;
 
 import com.eis.communication.Peer;
 
