@@ -36,7 +36,7 @@ import com.eis0.webdictionary.SerializableObject;
  * @author Matteo Carnelos
  * @author Edoardo Raimondi
  */
-public class KademliaNetwork implements NetworkManager<String, String, SMSPeer, KademliaFailReason>  {
+public class KademliaNetwork implements NetworkManager<String, String, SMSPeer, KademliaFailReason> {
 
     //User node of the network
     private SMSKademliaNode localNode;
@@ -53,11 +53,12 @@ public class KademliaNetwork implements NetworkManager<String, String, SMSPeer, 
 
     // Singleton instance
     private static KademliaNetwork instance;
+
     // Constructor following the Singleton Design Pattern
-    public  KademliaNetwork(){
+    public KademliaNetwork() {
 
     }
-    
+
     /**
      * Return an instance of KademliaNetwork.
      *
@@ -66,7 +67,7 @@ public class KademliaNetwork implements NetworkManager<String, String, SMSPeer, 
      * @author Matteo Carnelos
      */
     public static KademliaNetwork getInstance() {
-        if(instance == null) instance = new KademliaNetwork();
+        if (instance == null) instance = new KademliaNetwork();
         return instance;
     }
 
@@ -88,20 +89,19 @@ public class KademliaNetwork implements NetworkManager<String, String, SMSPeer, 
      * (so if the node is alive)
      * If death, the {@link SMSKademliaNode} of the target peer is removed from the routing table
      *
-     * @param  targetPeer the receiver {@link SMSPeer}
+     * @param targetPeer the receiver {@link SMSPeer}
      * @return true if alive, false otherwise
      * @author Edoardo Raimondi
      */
-    public boolean isAlive(SMSPeer targetPeer){
+    public boolean isAlive(SMSPeer targetPeer) {
         //I wait 10 secs
         timer.run();
         //check if I had an acknowledge respond to my request
-        if(connectionInfo.hasRespond()){
+        if (connectionInfo.hasRespond()) {
             //I know my request has ben received successfully. I set false in order to do it again
             connectionInfo.setRespond(false);
             return true;
-        }
-        else { //My target node is unresponsive.
+        } else { //My target node is unresponsive.
             setUnresponsive(targetPeer);
             //the node is not alive at the moment
             return false;
@@ -110,27 +110,15 @@ public class KademliaNetwork implements NetworkManager<String, String, SMSPeer, 
 
     /**
      * Set a node has unresponsive
+     *
      * @param peer that seems to be death
      */
-    private void setUnresponsive(SMSPeer peer){
+    private void setUnresponsive(SMSPeer peer) {
         //create the node by the peer
         KademliaId id = new KademliaId(peer);
         SMSKademliaNode unresponsive = new SMSKademliaNode(id);
         //increment its stale count, it will be considered unresponsive
         this.localRoutingTable.getBuckets()[this.localRoutingTable.getBucketId(id)].getFromContacts(unresponsive).incrementStaleCount();
-    }
-
-
-
-    /**
-     * Add a peer to the kademlia network.
-     *
-     * @param peer The SMSPeer to add.
-     * @author Matteo Carnelos
-     */
-    public void addToNetwork(SMSPeer peer) {
-        if(!isNodeInNetwork(new SMSKademliaNode(peer)))
-            connectionHandler.inviteToJoin(peer);
     }
 
     /**
@@ -151,26 +139,28 @@ public class KademliaNetwork implements NetworkManager<String, String, SMSPeer, 
      */
     public SMSKademliaRoutingTable getLocalRoutingTable() {
         return localRoutingTable;
-	}
+    }
 
     /**
      * Returns if a given valid {@link SMSKademliaNode} is inside this
      * network's routing table
+     *
      * @param node The node to find in the routing table
      * @return True if node is in the routing table, false otherwise
      * @author Marco Cognolato
      */
-    public boolean isNodeInNetwork(SMSKademliaNode node){
+    public boolean isNodeInNetwork(SMSKademliaNode node) {
         Contact nodeContact = new Contact(node);
         return localRoutingTable.getAllContacts().contains(nodeContact);
     }
 
     /**
      * Adds a given valid SMSKademliaNode to the routing table of this network
+     *
      * @param node The valid node to add to the net
      * @author Marco Cognolato
      */
-    public void addNodeToTable(SMSKademliaNode node){
+    public void addNodeToTable(SMSKademliaNode node) {
         Contact nodeContact = new Contact(node);
         localRoutingTable.insert(nodeContact);
     }
@@ -178,7 +168,7 @@ public class KademliaNetwork implements NetworkManager<String, String, SMSPeer, 
     /**
      * Updates the routing table
      */
-    public void updateTable(){
+    public void updateTable() {
         //calls the proper handler to update the routing table
         SMSPeer netPeer = localNode.getPeer();
         TableUpdateHandler.updateTable(localRoutingTable, localNode.getId(), netPeer);
@@ -229,11 +219,6 @@ public class KademliaNetwork implements NetworkManager<String, String, SMSPeer, 
     }
 
 
-
-
-
-
-
     /**
      * Saves a resource value in the network for the specified key. If the save is successful
      * {@link SetResourceListener#onResourceSet(Object, Object)} is be called.
@@ -242,7 +227,7 @@ public class KademliaNetwork implements NetworkManager<String, String, SMSPeer, 
      * @param value               The identified value of the resource.
      * @param setResourceListener Listener called on resource successfully saved or on fail.
      */
-    public void setResource(String key, String value, SetResourceListener<String, String, KademliaFailReason> setResourceListener){
+    public void setResource(String key, String value, SetResourceListener<String, String, KademliaFailReason> setResourceListener) {
 
     }
 
@@ -253,7 +238,7 @@ public class KademliaNetwork implements NetworkManager<String, String, SMSPeer, 
      * @param key                 The key identifier for the resource.
      * @param getResourceListener Listener called on resource successfully retrieved or on fail.
      */
-    public void getResource(String key, GetResourceListener<String, String, KademliaFailReason> getResourceListener){
+    public void getResource(String key, GetResourceListener<String, String, KademliaFailReason> getResourceListener) {
 
     }
 
@@ -264,7 +249,7 @@ public class KademliaNetwork implements NetworkManager<String, String, SMSPeer, 
      * @param key                    The key identifier for the resource.
      * @param removeResourceListener Listener called on resource successfully removed or on fail.
      */
-    public void removeResource(String key, RemoveResourceListener<String, KademliaFailReason> removeResourceListener){
+    public void removeResource(String key, RemoveResourceListener<String, KademliaFailReason> removeResourceListener) {
 
     }
 
@@ -274,13 +259,17 @@ public class KademliaNetwork implements NetworkManager<String, String, SMSPeer, 
      *
      * @param peer           The address of the user to invite to join the network.
      * @param inviteListener Listener called on user invited or on fail.
+     * @author Marco Cognolato
      */
-    public void invite(SMSPeer peer, InviteListener<SMSPeer, KademliaFailReason> inviteListener){
-        try{
+    public void invite(SMSPeer peer, InviteListener<SMSPeer, KademliaFailReason> inviteListener) {
+        //don't invite a peer if it's already in the net
+        if (isNodeInNetwork(new SMSKademliaNode(peer)))
+            return;
+
+        try {
             KademliaInvitation invitation = new KademliaInvitation(peer);
             CommandExecutor.execute(new KadSendInvitation(invitation));
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             inviteListener.onInvitationNotSent(peer, KademliaFailReason.GENERIC_FAIL);
             return;
         }

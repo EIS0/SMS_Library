@@ -18,6 +18,11 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+/**
+ * Tests to check if the SendInvitation command works correctly
+ *
+ * @author Marco Cognolato
+ */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(SMSManager.class)
 public class KadSendInvitationTest {
@@ -38,7 +43,7 @@ public class KadSendInvitationTest {
     }
 
     @Test
-    public void execute_asExpected(){
+    public void execute_asExpected() {
         CommandExecutor.execute(new KadSendInvitation(validInvitation));
         String expectedString = RequestTypes.JoinPermission.ordinal() + " / / / /";
         SMSMessage expectedMessage = new SMSMessage(validPeer, expectedString);
@@ -46,7 +51,7 @@ public class KadSendInvitationTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void execute_wrongInvitation(){
+    public void execute_wrongInvitation() {
         CommandExecutor.execute(new KadSendInvitation(invalidInvitation));
     }
 }

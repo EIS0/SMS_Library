@@ -22,8 +22,10 @@ public class KadSendInvitation extends SendInvitation<KademliaInvitation> {
 
     /**
      * Execute the SendInvitation logic: sends a request to join a network
+     *
+     * @author Marco Cognolato
      */
-    protected void execute(){
+    protected void execute() {
         SMSMessage message = new KademliaMessage()
                 .setPeer(invitation.getInviterPeer())
                 .setRequestType(RequestTypes.JoinPermission)

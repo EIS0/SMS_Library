@@ -16,30 +16,6 @@ import com.eis0.kademlianetwork.informationdeliverymanager.MessageBuilder;
 public class ConnectionHandler {
 
     /**
-     * Invites a given valid SMSPeer to join my kademlia network
-     *
-     * @param peer The peer to invite to my network
-     */
-    public void inviteToJoin(SMSPeer peer) {
-        SMSMessage message = new MessageBuilder()
-                .setPeer(peer)
-                //.setCommand(RequestTypes.JoinPermission)
-                .addArguments(null, null, null, null)
-                .buildMessage();
-        SMSManager.getInstance().sendMessage(message);
-    }
-
-    /**
-     * Sends to a target peer a request to join his Kademlia Network
-     *
-     * @param peer The peer to send the request to
-     */
-    public void askToJoin(SMSPeer peer) {
-        //asking to join has the same functionality as inviting someone to join
-        inviteToJoin(peer);
-    }
-
-    /**
      * Accepts the request sent by an SMSPeer (by notifying him)
      *
      * @param peer The peer who sent the request (and to notify back)

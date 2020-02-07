@@ -21,8 +21,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.eis.smslibrary.SMSPeer;
 import com.eis0.kademlia.SMSKademliaNode;
+import com.eis0.kademlianetwork.KademliaFailReason;
 import com.eis0.kademlianetwork.KademliaNetwork;
 import com.eis0.kademlianetwork.listener.SMSKademliaListener;
+import com.eis0.netinterfaces.listeners.InviteListener;
 
 import java.util.Set;
 
@@ -31,7 +33,7 @@ import java.util.Set;
  *
  * @author Matteo Carnelos
  */
-public class KademliaDemo extends AppCompatActivity {
+public class KademliaDemo extends AppCompatActivity implements InviteListener<SMSPeer, KademliaFailReason> {
 
     private static final String[] PERMISSIONS = {
             Manifest.permission.SEND_SMS,
@@ -95,7 +97,7 @@ public class KademliaDemo extends AppCompatActivity {
      */
     public void addButtonOnClick(View v) {
         String address = phoneNumberTxt.getText().toString();
-        network.addToNetwork(new SMSPeer(address));
+        network.invite(new SMSPeer(address), this);
     }
 
     /**
@@ -154,5 +156,27 @@ public class KademliaDemo extends AppCompatActivity {
     private void openNotificationListenSettings() {
         Intent intent = new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS);
         startActivity(intent);
+    }
+
+
+    /**
+     * Callback for successful sent invitation.
+     *
+     * @param invitedPeer Who has been invited.
+     * @author Marco Cognolato
+     */
+    public void onInvitationSent(SMSPeer invitedPeer){
+
+    }
+
+    /**
+     * Callback for failed sending of invitation.
+     *
+     * @param notInvitedPeer Who were to be invited.
+     * @param failReason     The reason for the failed invitation send.
+     * @author Marco Cognolato
+     */
+    public void onInvitationNotSent(SMSPeer notInvitedPeer, KademliaFailReason failReason){
+
     }
 }
