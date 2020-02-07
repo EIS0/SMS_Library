@@ -1,7 +1,9 @@
 package com.eis0.kademlianetwork;
 
 import com.eis.smslibrary.SMSPeer;
+import com.eis0.kademlianetwork.commands.KadAcceptInvite;
 import com.eis0.netinterfaces.JoinableNetworkManager;
+import com.eis0.netinterfaces.commands.CommandExecutor;
 import com.eis0.netinterfaces.listeners.JoinInvitationListener;
 
 /**
@@ -39,7 +41,7 @@ public class KademliaJoinableNetwork extends KademliaNetwork
      * @param invitation The invitation previously received.
      */
     public void acceptJoinInvitation(KademliaInvitation invitation) {
-
+        CommandExecutor.execute(new KadAcceptInvite(invitation, KademliaJoinableNetwork.getInstance()));
     }
 
     /**

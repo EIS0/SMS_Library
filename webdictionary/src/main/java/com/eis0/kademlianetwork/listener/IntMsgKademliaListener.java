@@ -7,10 +7,11 @@ import com.eis.smslibrary.SMSMessage;
 import com.eis.smslibrary.SMSPeer;
 import com.eis0.kademlia.KademliaId;
 import com.eis0.kademlia.SMSKademliaNode;
-import com.eis0.kademlianetwork.ConnectionHandler;
+import com.eis0.kademlianetwork.KademliaInvitation;
 import com.eis0.kademlianetwork.KademliaJoinableNetwork;
 import com.eis0.kademlianetwork.KademliaNetwork;
 import com.eis0.kademlianetwork.activitystatus.SystemMessages;
+import com.eis0.kademlianetwork.commands.KadAddPeer;
 import com.eis0.kademlianetwork.informationdeliverymanager.IdFinderHandler;
 import com.eis0.kademlianetwork.informationdeliverymanager.KademliaMessage;
 import com.eis0.kademlianetwork.informationdeliverymanager.KademliaMessageAnalyzer;
@@ -18,6 +19,7 @@ import com.eis0.kademlianetwork.informationdeliverymanager.RequestTypes;
 import com.eis0.kademlianetwork.informationdeliverymanager.ResearchMode;
 import com.eis0.kademlianetwork.informationdeliverymanager.ResourceExchangeHandler;
 import com.eis0.kademlianetwork.routingtablemanager.TableUpdateHandler;
+import com.eis0.netinterfaces.commands.CommandExecutor;
 
 /**
  * Listener class which sends the appropriate command to the relative appropriate handler
@@ -90,10 +92,11 @@ public class IntMsgKademliaListener {
 
             /*Joining a network */
             case JoinPermission:
-                ConnectionHandler.sendAcceptRequest(peer);
+                KademliaInvitation invitation = new KademliaInvitation(peer);
+                KademliaJoinableNetwork.getInstance().checkInvitation(invitation);
                 break;
             case AcceptJoin:
-                ConnectionHandler.acceptRequest(peer);
+                CommandExecutor.execute(new KadAddPeer(peer, KademliaJoinableNetwork.getInstance()));
                 break;
             case FindId:
                 //1. I inform that I'm alive and happy to be
