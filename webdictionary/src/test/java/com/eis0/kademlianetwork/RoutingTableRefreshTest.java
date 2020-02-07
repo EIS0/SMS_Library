@@ -4,11 +4,9 @@ import android.telephony.SmsManager;
 
 import com.eis.smslibrary.SMSPeer;
 import com.eis0.UtilityMocks;
-import com.eis0.kademlia.Contact;
 import com.eis0.kademlia.KademliaId;
 import com.eis0.kademlia.SMSKademliaNode;
 import com.eis0.kademlianetwork.routingtablemanager.RoutingTableRefresh;
-
 
 import org.junit.Before;
 import org.junit.Test;
@@ -18,8 +16,6 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 import static org.mockito.Mockito.mock;
 
 @RunWith(PowerMockRunner.class)
@@ -67,7 +63,7 @@ public class RoutingTableRefreshTest {
     @Test
     public void setUnresponsiveTest(){
         //I imagine NODE2 to be unresponsive
-        tableRefresh.setUnresponsive(NODE2);
+        //tableRefresh.setUnresponsive(NODE2);
 
         KademliaId currentId = NODE2.getId();
         //I check the bucket Id that contains that node
