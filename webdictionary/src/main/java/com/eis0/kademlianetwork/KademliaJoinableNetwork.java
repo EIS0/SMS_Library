@@ -24,5 +24,4 @@ public class KademliaJoinableNetwork extends KademliaNetwork
     public void setJoinInvitationListener(JoinInvitationListener<KademliaInvitation> joinInvitationListener){
 
     }
-
 }

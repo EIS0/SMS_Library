@@ -12,10 +12,12 @@ import com.eis0.kademlia.SMSKademliaNode;
 import com.eis0.kademlia.SMSKademliaRoutingTable;
 import com.eis0.kademlianetwork.activitystatus.NodeConnectionInfo;
 import com.eis0.kademlianetwork.activitystatus.RespondTimer;
+import com.eis0.kademlianetwork.commands.KadSendInvitation;
 import com.eis0.kademlianetwork.listener.SMSKademliaListener;
 import com.eis0.kademlianetwork.routingtablemanager.RoutingTableRefresh;
 import com.eis0.kademlianetwork.routingtablemanager.TableUpdateHandler;
 import com.eis0.netinterfaces.NetworkManager;
+import com.eis0.netinterfaces.commands.CommandExecutor;
 import com.eis0.netinterfaces.listeners.GetResourceListener;
 import com.eis0.netinterfaces.listeners.InviteListener;
 import com.eis0.netinterfaces.listeners.RemoveResourceListener;
@@ -275,7 +277,8 @@ public class KademliaNetwork implements NetworkManager<String, String, SMSPeer, 
      */
     public void invite(SMSPeer peer, InviteListener<SMSPeer, KademliaFailReason> inviteListener){
         try{
-            connectionHandler.inviteToJoin(peer);
+            KademliaInvitation invitation = new KademliaInvitation(peer);
+            CommandExecutor.execute(new KadSendInvitation(invitation));
         }
         catch (Exception e){
             inviteListener.onInvitationNotSent(peer, KademliaFailReason.GENERIC_FAIL);
