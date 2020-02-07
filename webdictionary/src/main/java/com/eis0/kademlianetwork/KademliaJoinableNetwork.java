@@ -34,7 +34,7 @@ public class KademliaJoinableNetwork extends KademliaNetwork
     }
 
     /**
-     * Method used to join the network after an invitation in received.
+     * Method used to join the network after an invitation is received.
      *
      * @param invitation The invitation previously received.
      */

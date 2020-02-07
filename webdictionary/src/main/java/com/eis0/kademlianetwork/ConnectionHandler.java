@@ -3,9 +3,10 @@ package com.eis0.kademlianetwork;
 import com.eis.smslibrary.SMSManager;
 import com.eis.smslibrary.SMSMessage;
 import com.eis.smslibrary.SMSPeer;
-import com.eis0.kademlia.SMSKademliaNode;
+import com.eis0.kademlianetwork.commands.KadAcceptInvite;
 import com.eis0.kademlianetwork.informationdeliverymanager.KademliaMessage;
 import com.eis0.kademlianetwork.informationdeliverymanager.RequestTypes;
+import com.eis0.netinterfaces.commands.CommandExecutor;
 
 /**
  * Class handling the first time connection to a kademlia network.
@@ -54,9 +55,7 @@ public class ConnectionHandler {
          * creating contacts from the other network
          * */
 
-        SMSKademliaNode node = new SMSKademliaNode(peer);
-        KademliaJoinableNetwork.getInstance().addNodeToTable(node);
-        KademliaJoinableNetwork.getInstance().updateTable();
+        CommandExecutor.execute(new KadAcceptInvite(new KademliaInvitation(peer)));
     }
 
 }
