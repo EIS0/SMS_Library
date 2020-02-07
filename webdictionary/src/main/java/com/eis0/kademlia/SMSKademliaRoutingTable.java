@@ -64,6 +64,11 @@ public class SMSKademliaRoutingTable implements KademliaRoutingTable {
     }
 
     /**
+     * @return the configuration used by this routing table
+     */
+    public KadConfiguration getConfig(){ return config; }
+
+    /**
      * Adds a contact to the routing table based on how far it is from the LocalNode.
      *
      * @param contact The contact to add

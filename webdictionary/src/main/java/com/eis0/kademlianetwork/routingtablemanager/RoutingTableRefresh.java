@@ -1,7 +1,9 @@
 package com.eis0.kademlianetwork.routingtablemanager;
 
 import com.eis.smslibrary.SMSPeer;
+import com.eis0.kademlia.Contact;
 import com.eis0.kademlia.KademliaId;
+import com.eis0.kademlia.SMSKademliaBucket;
 import com.eis0.kademlia.SMSKademliaNode;
 import com.eis0.kademlianetwork.activitystatus.RespondTimer;
 import com.eis0.kademlianetwork.activitystatus.SystemMessages;
@@ -49,26 +51,42 @@ public class RoutingTableRefresh{
                 //is alive, set the pong state to false in order to do it again
                 net.connectionInfo.setPong(false);
             } else { //the node is not alive at the moment
-               setUnresponsive(currentNode);
-                //now I search for another one
-                askForId(currentNode.getId());
+                if (removeIfUnresponsive(currentNode)) {
+                    //now I search for another one
+                    askForId(currentNode.getId());
+                }
             }
         }
     }
 
     /**
-     * Setting a contact as unresponsive
+     * Remove a contact if unresponsive (its stale count is more than the one permitted by
+     * the configuration
      *
      * @param node Contact node
+     * @return true if the node has been correctly removed
      */
-    public void setUnresponsive(SMSKademliaNode node){
+    private boolean removeIfUnresponsive(SMSKademliaNode node){
         KademliaId currentId = node.getId();
-        //I check the bucket Id that contains that node
+        //I check the bucket Id that contains that node.
         int b = net.getLocalRoutingTable().getBucketId(currentId);
-        //Increment its stale count
-        net.getLocalRoutingTable().getBuckets()[b].getFromContacts(node).incrementStaleCount();
+        //I extract the bucket
+        SMSKademliaBucket currentBucket = net.getLocalRoutingTable().getBuckets()[b];
+        //I extract the contact
+        Contact currentContact = currentBucket.getFromContacts(node);
+        //If the contact has been stale more than two times, i remove it
+        if(currentContact.staleCount()> net.getLocalRoutingTable().getConfig().stale()){
+            currentBucket.removeContact(currentContact);
+            return true;
+        }
+        else { //let's update I've seen it. I need to remove and re-add the node to get the sort order
+            currentBucket.removeContact(currentContact);
+            currentContact.setSeenNow();
+            currentContact.resetStaleCount();
+            currentBucket.insert(currentContact);
+            return false;
+        }
     }
-
     /**
      * Generates an id to find and searches for it in the net sending a request
      *
