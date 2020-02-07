@@ -2,6 +2,7 @@ package com.eis0.kademlianetwork;
 
 import android.content.Context;
 
+import com.eis.communication.Peer;
 import com.eis.smslibrary.SMSManager;
 import com.eis.smslibrary.SMSPeer;
 import com.eis0.kademlia.Contact;
@@ -14,6 +15,11 @@ import com.eis0.kademlianetwork.activitystatus.RespondTimer;
 import com.eis0.kademlianetwork.listener.SMSKademliaListener;
 import com.eis0.kademlianetwork.routingtablemanager.RoutingTableRefresh;
 import com.eis0.kademlianetwork.routingtablemanager.TableUpdateHandler;
+import com.eis0.netinterfaces.NetworkManager;
+import com.eis0.netinterfaces.listeners.GetResourceListener;
+import com.eis0.netinterfaces.listeners.InviteListener;
+import com.eis0.netinterfaces.listeners.RemoveResourceListener;
+import com.eis0.netinterfaces.listeners.SetResourceListener;
 import com.eis0.webdictionary.SMSNetVocabulary;
 import com.eis0.webdictionary.SMSSerialization;
 import com.eis0.webdictionary.SerializableObject;
@@ -28,7 +34,7 @@ import com.eis0.webdictionary.SerializableObject;
  * @author Matteo Carnelos
  * @author Edoardo Raimondi
  */
-public class KademliaNetwork {
+public class KademliaNetwork implements NetworkManager<String, String, SMSPeer, KademliaFailReason>  {
 
     //User node of the network
     private SMSKademliaNode localNode;
@@ -218,5 +224,56 @@ public class KademliaNetwork {
      */
     public void updateLocalDictionary(String key, String resource) {
         localKademliaDictionary.update(new SMSSerialization(key), new SMSSerialization(resource));
+    }
+
+
+
+
+
+
+
+    /**
+     * Saves a resource value in the network for the specified key. If the save is successful
+     * {@link SetResourceListener#onResourceSet(Object, Object)} is be called.
+     *
+     * @param key                 The key identifier for the resource.
+     * @param value               The identified value of the resource.
+     * @param setResourceListener Listener called on resource successfully saved or on fail.
+     */
+    public void setResource(String key, String value, SetResourceListener<String, String, KademliaFailReason> setResourceListener){
+
+    }
+
+    /**
+     * Retrieves a resource value from the network for the specified key. The value is returned inside
+     * {@link GetResourceListener#onGetResource(Object, Object)}.
+     *
+     * @param key                 The key identifier for the resource.
+     * @param getResourceListener Listener called on resource successfully retrieved or on fail.
+     */
+    public void getResource(String key, GetResourceListener<String, String, KademliaFailReason> getResourceListener){
+
+    }
+
+    /**
+     * Removes a resource value from the network for the specified key. If the removal is successful
+     * {@link RemoveResourceListener#onResourceRemoved(Object)} is called
+     *
+     * @param key                    The key identifier for the resource.
+     * @param removeResourceListener Listener called on resource successfully removed or on fail.
+     */
+    public void removeResource(String key, RemoveResourceListener<String, KademliaFailReason> removeResourceListener){
+
+    }
+
+    /**
+     * Invites another user to join the network. If the invitation is sent correctly
+     * {@link InviteListener#onInvitationSent(Peer)} will be called
+     *
+     * @param peer           The address of the user to invite to join the network.
+     * @param inviteListener Listener called on user invited or on fail.
+     */
+    public void invite(SMSPeer peer, InviteListener<SMSPeer, KademliaFailReason> inviteListener){
+
     }
 }
