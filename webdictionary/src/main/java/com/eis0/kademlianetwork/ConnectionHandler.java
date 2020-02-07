@@ -1,11 +1,8 @@
 package com.eis0.kademlianetwork;
 
-import com.eis.smslibrary.SMSManager;
-import com.eis.smslibrary.SMSMessage;
 import com.eis.smslibrary.SMSPeer;
 import com.eis0.kademlianetwork.commands.KadAcceptInvite;
-import com.eis0.kademlianetwork.informationdeliverymanager.KademliaMessage;
-import com.eis0.kademlianetwork.informationdeliverymanager.RequestTypes;
+import com.eis0.kademlianetwork.commands.KadAddPeer;
 import com.eis0.netinterfaces.commands.CommandExecutor;
 
 /**
@@ -27,18 +24,9 @@ public class ConnectionHandler {
          * Both if I get invited to another one's network,
          * or someone asked to enter my network,
          * I have to send back an accept message
-         * */
-
-        SMSMessage message = new KademliaMessage()
-                .setPeer(peer)
-                .setRequestType(RequestTypes.AcceptJoin)
-                .buildMessage();
-        SMSManager.getInstance().sendMessage(message);
-
-        /*
-        * Then I have to create/update my routing table, so I call the proper function
-        * */
-        acceptRequest(peer);
+         * Then I have to create/update my routing table, so I call the proper function
+         */
+        CommandExecutor.execute(new KadAcceptInvite(new KademliaInvitation(peer), KademliaJoinableNetwork.getInstance()));
     }
 
     /**
@@ -55,7 +43,7 @@ public class ConnectionHandler {
          * creating contacts from the other network
          * */
 
-        CommandExecutor.execute(new KadAcceptInvite(new KademliaInvitation(peer), KademliaJoinableNetwork.getInstance()));
+        CommandExecutor.execute(new KadAddPeer(peer, KademliaJoinableNetwork.getInstance()));
     }
 
 }
