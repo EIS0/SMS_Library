@@ -6,7 +6,7 @@ import com.eis.smslibrary.SMSManager;
 import com.eis.smslibrary.SMSMessage;
 import com.eis.smslibrary.SMSPeer;
 import com.eis0.kademlia.KademliaId;
-import com.eis0.kademlianetwork.KademliaNetwork;
+import com.eis0.kademlianetwork.KademliaJoinableNetwork;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -72,7 +72,7 @@ public class ResourceExchangeHandler {
                 break;
         }
         //Starts to search for the closest ID
-        SMSPeer searcher = KademliaNetwork.getInstance().getLocalNode().getPeer();
+        SMSPeer searcher = KademliaJoinableNetwork.getInstance().getLocalNode().getPeer();
         processRequest(idToFind, searcher, ResearchMode.AddToDictionary);
     }
 

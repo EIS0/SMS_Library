@@ -1,8 +1,6 @@
 package com.eis0.kademlianetwork;
 
 
-import androidx.core.widget.TextViewCompat;
-
 import com.eis.smslibrary.SMSPeer;
 import com.eis0.UtilityMocks;
 import com.eis0.kademlia.Contact;
@@ -70,8 +68,8 @@ public class KademliaNetworkTest {
 
     @Test
     public void testSingleton(){
-        assertEquals(KademliaNetwork.getInstance(),
-                     KademliaNetwork.getInstance());
+        assertEquals(KademliaJoinableNetwork.getInstance(),
+                KademliaJoinableNetwork.getInstance());
     }
 
     @Test

@@ -67,7 +67,7 @@ public class ResourceExchangeHandlerTest {
         //when(smsManagerMock.sendTextMessage(any(String.class), any(String.class), any(String.class), any(PendingIntent.class), any(PendingIntent.class)));
 
 
-        kadNet = KademliaNetwork.getInstance();
+        kadNet = KademliaJoinableNetwork.getInstance();
         kadNet.init(MAIN_NODE, UtilityMocks.setupMocks());
         when(kadNet.isAlive(MAIN_NODE.getPeer())).thenReturn(true);
         //resourceExchangeHandler.createAddRequest(KEY2, resource2);

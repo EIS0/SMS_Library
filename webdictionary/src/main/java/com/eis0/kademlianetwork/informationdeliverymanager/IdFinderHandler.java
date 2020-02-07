@@ -6,8 +6,8 @@ import com.eis.smslibrary.SMSPeer;
 import com.eis0.kademlia.KademliaId;
 import com.eis0.kademlia.SMSKademliaNode;
 import com.eis0.kademlia.SMSKademliaRoutingTable;
+import com.eis0.kademlianetwork.KademliaJoinableNetwork;
 import com.eis0.kademlianetwork.listener.IntMsgKademliaListener;
-import com.eis0.kademlianetwork.KademliaNetwork;
 
 import java.math.BigInteger;
 
@@ -68,9 +68,9 @@ public class IdFinderHandler {
         }
 
         //Obtain the KademliaId belonging to the local node (myself)
-        KademliaId netId = KademliaNetwork.getInstance().getLocalNode().getId();
+        KademliaId netId = KademliaJoinableNetwork.getInstance().getLocalNode().getId();
         //Obtain the local RoutingTable
-        SMSKademliaRoutingTable table = KademliaNetwork.getInstance().getLocalRoutingTable();
+        SMSKademliaRoutingTable table = KademliaJoinableNetwork.getInstance().getLocalRoutingTable();
         //Get the node with the node ID closest to the idToFind
         SMSKademliaNode closestNode = table.findClosest(idToFind, 1).get(0);
 
@@ -80,7 +80,7 @@ public class IdFinderHandler {
         //1. Checking if I'm the searched id (fail safe), or the closest one
         //2. Checking if inside my RoutingTable there is a node with the ID to find
 
-        if (closestNode.equals(KademliaNetwork.getInstance().getLocalNode())) {
+        if (closestNode.equals(KademliaJoinableNetwork.getInstance().getLocalNode())) {
             sendResult(taskResult, idToFind, searcher);
             retryIfDead(idToFind, searcher, researchMode, searcher);
             return;
@@ -108,8 +108,8 @@ public class IdFinderHandler {
                 .setRequestType(requestType)
                 .setIdToFind(idToFind)
                 .buildMessage();
-        if(targetPeer.equals(KademliaNetwork.getInstance().getLocalNode().getPeer())) {
-            IntMsgKademliaListener.getInstance(KademliaNetwork.getInstance()).processMessage(searchResult);
+        if(targetPeer.equals(KademliaJoinableNetwork.getInstance().getLocalNode().getPeer())) {
+            IntMsgKademliaListener.getInstance(KademliaJoinableNetwork.getInstance()).processMessage(searchResult);
             return;
         }
         //else
@@ -154,7 +154,7 @@ public class IdFinderHandler {
      *                     again
      */
     private static void retryIfDead(KademliaId idToFind, SMSPeer searcherNode, ResearchMode researchMode, SMSPeer nodeToCheck) {
-        if (!KademliaNetwork.getInstance().isAlive(nodeToCheck)) {
+        if (!KademliaJoinableNetwork.getInstance().isAlive(nodeToCheck)) {
             //The target node is not alive. It is no more in my routing table
             //I try with another one, starting another ID research, with the same values, but now
             //that I executed the .isAlive(nodeToCheck) method, the invalid node it's been removed

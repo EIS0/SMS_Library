@@ -55,8 +55,8 @@ public class ConnectionHandler {
          * */
 
         SMSKademliaNode node = new SMSKademliaNode(peer);
-        KademliaNetwork.getInstance().addNodeToTable(node);
-        KademliaNetwork.getInstance().updateTable();
+        KademliaJoinableNetwork.getInstance().addNodeToTable(node);
+        KademliaJoinableNetwork.getInstance().updateTable();
     }
 
 }

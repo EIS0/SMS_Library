@@ -8,6 +8,7 @@ import com.eis.smslibrary.SMSPeer;
 import com.eis0.kademlia.KademliaId;
 import com.eis0.kademlia.SMSKademliaNode;
 import com.eis0.kademlianetwork.ConnectionHandler;
+import com.eis0.kademlianetwork.KademliaJoinableNetwork;
 import com.eis0.kademlianetwork.KademliaNetwork;
 import com.eis0.kademlianetwork.activitystatus.SystemMessages;
 import com.eis0.kademlianetwork.informationdeliverymanager.IdFinderHandler;
@@ -121,7 +122,7 @@ public class IntMsgKademliaListener {
             case ResultAddRequest:
                 //1. I inform that I'm alive and happy to be
                 SystemMessages.sendAcknowledge(peer);
-                KademliaNetwork.getInstance().addNodeToTable(new SMSKademliaNode(peer));
+                KademliaJoinableNetwork.getInstance().addNodeToTable(new SMSKademliaNode(peer));
                 //2. Processes the information brought by the message received
                 //@TODO: il Log genera errore nei test, come risolvere
                 //Log.i(LOG_TAG, "Received ID research request RESULT: " + idToFind);
@@ -133,7 +134,7 @@ public class IntMsgKademliaListener {
                 //2. Processes the information brought by the message received
                 Log.i(LOG_TAG, "Received AddToDictionary request.\nKey: " + key + ",\nResource:" +
                         resource);
-                KademliaNetwork.getInstance().addToLocalDictionary(key, resource);
+                KademliaJoinableNetwork.getInstance().addToLocalDictionary(key, resource);
                 break;
 
 
@@ -149,7 +150,7 @@ public class IntMsgKademliaListener {
             case ResultGetRequest:
                 //1. I inform that I'm alive and happy to be
                 SystemMessages.sendAcknowledge(peer);
-                KademliaNetwork.getInstance().addNodeToTable(new SMSKademliaNode(peer));
+                KademliaJoinableNetwork.getInstance().addNodeToTable(new SMSKademliaNode(peer));
                 //2. Processes the information brought by the message received
                 Log.i(LOG_TAG, "Received ID research request RESULT: " + idToFind);
                 resourceExchangeHandler.completeRequest(idToFind, peer, ResearchMode.FindInDictionary);
@@ -159,7 +160,7 @@ public class IntMsgKademliaListener {
                 SystemMessages.sendAcknowledge(peer);
                 //2. Processes the information brought by the message received
                 Log.i(LOG_TAG, "Received GetFromDictionary request.\nKey: " + key);
-                resource = KademliaNetwork.getInstance().getFromLocalDictionary(key).toString();
+                resource = KademliaJoinableNetwork.getInstance().getFromLocalDictionary(key).toString();
                 //2. Send the <key, resource> pair
                 message = new KademliaMessage()
                         .setPeer(peer)
@@ -183,7 +184,7 @@ public class IntMsgKademliaListener {
             case ResultDeleteRequest:
                 //1. I inform that I'm alive and happy to be
                 SystemMessages.sendAcknowledge(peer);
-                KademliaNetwork.getInstance().addNodeToTable(new SMSKademliaNode(peer));
+                KademliaJoinableNetwork.getInstance().addNodeToTable(new SMSKademliaNode(peer));
                 //2. Processes the information brought by the message received
                 Log.i(LOG_TAG, "Received ID research request RESULT: " + idToFind);
                 resourceExchangeHandler.completeRequest(idToFind, peer, ResearchMode.RemoveFromDictionary);
@@ -193,7 +194,7 @@ public class IntMsgKademliaListener {
                 SystemMessages.sendAcknowledge(peer);
                 //2. Processes the information brought by the message received
                 Log.i(LOG_TAG, "Received AddToDictionary request.\nKey: " + key);
-                KademliaNetwork.getInstance().removeFromLocalDictionary(key);
+                KademliaJoinableNetwork.getInstance().removeFromLocalDictionary(key);
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + incomingRequest);

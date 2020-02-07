@@ -25,7 +25,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({KademliaNetwork.class, SMSManager.class})
+@PrepareForTest({KademliaNetwork.class, SMSManager.class, KademliaJoinableNetwork.class})
 public class IdFinderHandlerTest {
     //SEARCHER
     private final SMSPeer SEARCHER_PEER = new SMSPeer("+393423541601");
@@ -41,7 +41,7 @@ public class IdFinderHandlerTest {
     private final KademliaId VALID_NODE2_ID = new KademliaId(VALID_PEER2);
     private final SMSKademliaNode VALID_NODE2 = new SMSKademliaNode(VALID_PEER2);
 
-    private KademliaNetwork networkMock;
+    private KademliaJoinableNetwork networkMock = mock(KademliaJoinableNetwork.class);
     private SMSManager smsManagerMock;
 
     private final SMSKademliaRoutingTable routingTable = new SMSKademliaRoutingTable(SEARCHER, new DefaultConfiguration());
@@ -49,13 +49,13 @@ public class IdFinderHandlerTest {
 
     @Before
     public void setup(){
-        networkMock = mock(KademliaNetwork.class);
-        PowerMockito.mockStatic(KademliaNetwork.class);
-        PowerMockito.when(KademliaNetwork.getInstance()).thenReturn(networkMock);
-
+        networkMock = mock(KademliaJoinableNetwork.class);
         smsManagerMock = mock(SMSManager.class);
         PowerMockito.mockStatic(SMSManager.class);
         PowerMockito.when(SMSManager.getInstance()).thenReturn(smsManagerMock);
+
+        PowerMockito.mockStatic(KademliaJoinableNetwork.class);
+        PowerMockito.when(KademliaJoinableNetwork.getInstance()).thenReturn(networkMock);
 
         when(networkMock.getLocalNode()).thenReturn(SEARCHER);
         when(networkMock.getLocalRoutingTable()).thenReturn(routingTable);

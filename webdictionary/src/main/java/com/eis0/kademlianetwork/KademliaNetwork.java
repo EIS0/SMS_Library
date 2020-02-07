@@ -38,39 +38,19 @@ import com.eis0.webdictionary.SerializableObject;
  */
 public class KademliaNetwork implements NetworkManager<String, String, SMSPeer, KademliaFailReason> {
 
-    //User node of the network
-    private SMSKademliaNode localNode;
-    //Routing table for this user of the network
-    private SMSKademliaRoutingTable localRoutingTable;
-    private final ConnectionHandler connectionHandler = new ConnectionHandler();
-    public final RoutingTableRefresh refresh = new RoutingTableRefresh(this.localNode, this);
+
     public final NodeConnectionInfo connectionInfo = new NodeConnectionInfo();
-    private final SMSKademliaListener smsKademliaListener = new SMSKademliaListener(this);
+    public final RoutingTableRefresh refresh = new RoutingTableRefresh(this.localNode, this);
+
+    //Routing table for this user of the network
+    protected SMSKademliaRoutingTable localRoutingTable;
+    //User node of the network
+    protected SMSKademliaNode localNode;
     //Dictionary containing the resources stored by the local node
-    private SMSNetVocabulary localKademliaDictionary;
+    protected SMSNetVocabulary localKademliaDictionary;
+    protected final SMSKademliaListener smsKademliaListener = new SMSKademliaListener(this);
+
     private final RespondTimer timer = new RespondTimer();
-
-
-    // Singleton instance
-    private static KademliaNetwork instance;
-
-    // Constructor following the Singleton Design Pattern
-    public KademliaNetwork() {
-
-    }
-
-    /**
-     * Return an instance of KademliaNetwork.
-     *
-     * @return Returns a single KademliaNetwork instance as per the
-     * <a href="https://refactoring.guru/design-patterns/singleton">Singleton Design Pattern</a>.
-     * @author Matteo Carnelos
-     */
-    public static KademliaNetwork getInstance() {
-        if (instance == null) instance = new KademliaNetwork();
-        return instance;
-    }
-
 
     /**
      * Initialize the network by setting the current node.

@@ -26,7 +26,7 @@ public class ConnectionHandlerTest {
 
     @Before
     public void setup(){
-        instance = KademliaNetwork.getInstance();
+        instance = KademliaJoinableNetwork.getInstance();
         instance.init(VALID_NODE, UtilityMocks.setupMocks());
     }
 
