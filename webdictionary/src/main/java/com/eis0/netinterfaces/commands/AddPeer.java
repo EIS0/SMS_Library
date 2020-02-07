@@ -3,7 +3,7 @@ package com.eis0.netinterfaces.commands;
 import androidx.annotation.NonNull;
 
 import com.eis.communication.Peer;
-import com.eis0.netinterfaces.NetSubscriberList;
+import com.eis0.kademlianetwork.KademliaNetwork;
 
 /**
  * Command to add a peer to the Subscribers list
@@ -15,17 +15,17 @@ import com.eis0.netinterfaces.NetSubscriberList;
 public abstract class AddPeer<T extends Peer> extends Command {
 
     protected final T peer;
-    protected final NetSubscriberList<T> netSubscribers;
+    protected final KademliaNetwork kademliaNetwork;
 
     /**
      * AddPeer command constructor, receives the data it needs to operate on.
      *
      * @param peer           The Peer to add to the network
-     * @param netSubscribers The subscribers to notify of the newest member
+     * @param kademliaNetwork The kademlia network used by the command to add the peer to
      */
-    public AddPeer(@NonNull T peer, @NonNull NetSubscriberList<T> netSubscribers) {
+    public AddPeer(@NonNull T peer, @NonNull KademliaNetwork kademliaNetwork) {
         this.peer = peer;
-        this.netSubscribers = netSubscribers;
+        this.kademliaNetwork = kademliaNetwork;
     }
 
     /**

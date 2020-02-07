@@ -2,12 +2,12 @@ package com.eis0.kademlianetwork.commands;
 
 import com.eis.smslibrary.SMSManager;
 import com.eis.smslibrary.SMSMessage;
-import com.eis0.kademlia.SMSKademliaNode;
 import com.eis0.kademlianetwork.KademliaInvitation;
-import com.eis0.kademlianetwork.KademliaJoinableNetwork;
+import com.eis0.kademlianetwork.KademliaNetwork;
 import com.eis0.kademlianetwork.informationdeliverymanager.KademliaMessage;
 import com.eis0.kademlianetwork.informationdeliverymanager.RequestTypes;
 import com.eis0.netinterfaces.commands.AcceptInvite;
+import com.eis0.netinterfaces.commands.CommandExecutor;
 
 /**
  * Command to accept an invite when it's received
@@ -16,13 +16,16 @@ import com.eis0.netinterfaces.commands.AcceptInvite;
  */
 public class KadAcceptInvite extends AcceptInvite<KademliaInvitation> {
 
+    private KademliaNetwork kademliaNetwork;
+
     /**
      * Constructor for AcceptInvite command, requires data to work
      *
      * @param invitation The Invitation to a network
      */
-    public KadAcceptInvite(KademliaInvitation invitation) {
+    public KadAcceptInvite(KademliaInvitation invitation, KademliaNetwork kademliaNetwork) {
         super(invitation);
+        this.kademliaNetwork = kademliaNetwork;
     }
 
     /**
@@ -39,8 +42,6 @@ public class KadAcceptInvite extends AcceptInvite<KademliaInvitation> {
         SMSManager.getInstance().sendMessage(message);
 
         //AddPeer procedure
-        SMSKademliaNode node = new SMSKademliaNode(invitation.getInviterPeer());
-        KademliaJoinableNetwork.getInstance().addNodeToTable(node);
-        KademliaJoinableNetwork.getInstance().updateTable();
+        CommandExecutor.execute(new KadAddPeer(invitation.getInviterPeer(), kademliaNetwork));
     }
 }

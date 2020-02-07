@@ -55,7 +55,7 @@ public class ConnectionHandler {
          * creating contacts from the other network
          * */
 
-        CommandExecutor.execute(new KadAcceptInvite(new KademliaInvitation(peer)));
+        CommandExecutor.execute(new KadAcceptInvite(new KademliaInvitation(peer), KademliaJoinableNetwork.getInstance()));
     }
 
 }
