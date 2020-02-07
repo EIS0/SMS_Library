@@ -274,6 +274,13 @@ public class KademliaNetwork implements NetworkManager<String, String, SMSPeer, 
      * @param inviteListener Listener called on user invited or on fail.
      */
     public void invite(SMSPeer peer, InviteListener<SMSPeer, KademliaFailReason> inviteListener){
-
+        try{
+            connectionHandler.inviteToJoin(peer);
+        }
+        catch (Exception e){
+            inviteListener.onInvitationNotSent(peer, KademliaFailReason.GENERIC_FAIL);
+            return;
+        }
+        inviteListener.onInvitationSent(peer);
     }
 }
