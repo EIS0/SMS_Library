@@ -5,11 +5,12 @@ import com.eis0.kademlia.Contact;
 import com.eis0.kademlia.KademliaId;
 import com.eis0.kademlia.SMSKademliaBucket;
 import com.eis0.kademlia.SMSKademliaNode;
-import com.eis0.kademlianetwork.activitystatus.RespondTimer;
-import com.eis0.kademlianetwork.activitystatus.SystemMessages;
-import com.eis0.kademlianetwork.informationdeliverymanager.IdFinderHandler;
 import com.eis0.kademlianetwork.KademliaNetwork;
+import com.eis0.kademlianetwork.activitystatus.RespondTimer;
+import com.eis0.kademlianetwork.commands.KadPing;
+import com.eis0.kademlianetwork.informationdeliverymanager.IdFinderHandler;
 import com.eis0.kademlianetwork.informationdeliverymanager.ResearchMode;
+import com.eis0.netinterfaces.commands.CommandExecutor;
 
 import java.util.List;
 
@@ -41,7 +42,7 @@ public class RoutingTableRefresh{
         List<SMSKademliaNode> allRoutingTableNodes = net.getLocalRoutingTable().getAllNodes();
         for (int i = 0; i < allRoutingTableNodes.size(); i++) {
             SMSKademliaNode currentNode = allRoutingTableNodes.get(i);
-            SystemMessages.sendPing(currentNode);
+            CommandExecutor.execute(new KadPing(currentNode.getPeer()));
 
             //wait 10 secs to get a pong answer
             timer.run();
