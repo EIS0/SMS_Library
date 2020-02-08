@@ -6,6 +6,7 @@ import com.eis.smslibrary.SMSPeer;
 import com.eis0.UtilityMocks;
 import com.eis0.kademlia.KademliaId;
 import com.eis0.kademlia.SMSKademliaNode;
+import com.eis0.kademlianetwork.informationdeliverymanager.Request;
 import com.eis0.kademlianetwork.informationdeliverymanager.ResearchMode;
 import com.eis0.kademlianetwork.informationdeliverymanager.ResourceExchangeHandler;
 import com.eis0.kademlianetwork.listener.SMSKademliaListener;
@@ -39,7 +40,7 @@ public class ResourceExchangeHandlerTest {
 
     private final SMSKademliaListener mockListener = mock(SMSKademliaListener.class);
     private KademliaNetwork kadNet;
-    private ResourceExchangeHandler.Request request1;
+    private Request request1;
 
     @Before
     public void setUp() {
@@ -54,7 +55,7 @@ public class ResourceExchangeHandlerTest {
 
          */
 
-        ResourceExchangeHandler.Request request2 = mock(ResourceExchangeHandler.Request.class);
+        Request request2 = mock(Request.class);
         when(request2.getKey()).thenReturn(KEY2);
         when(request2.getKeyId()).thenReturn(KAD_ID2);
         String resource2 = "Resource2";
@@ -84,9 +85,9 @@ public class ResourceExchangeHandlerTest {
     }
 
     public void createAddRequest_notEquals() {
-        Map<KademliaId, ResourceExchangeHandler.Request> addRequests = resourceExchangeHandler.getPendingAddRequests();
-        ResourceExchangeHandler.Request request1 = addRequests.get(KAD_ID1);
-        ResourceExchangeHandler.Request request2 = addRequests.get(KAD_ID2);
+        Map<KademliaId, Request> addRequests = resourceExchangeHandler.getPendingAddRequests();
+        Request request1 = addRequests.get(KAD_ID1);
+        Request request2 = addRequests.get(KAD_ID2);
         assertNotEquals(request1.getKeyId(), request2.getKeyId());
     }
 }
