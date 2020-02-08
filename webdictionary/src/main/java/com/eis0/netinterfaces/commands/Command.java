@@ -7,7 +7,7 @@ package com.eis0.netinterfaces.commands;
  *
  * @author Edoardo Raimondi, idea by Marco Cognolato, Enrico Cestaro, Giovanni Velludo
  */
-abstract class Command {
+public abstract class Command {
 
     /**
      * Execute the specific class command
