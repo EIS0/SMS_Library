@@ -96,7 +96,7 @@ public class KademliaNetwork implements NetworkManager<String, String, SMSPeer, 
     private void setUnresponsive(SMSPeer peer) {
         //create the node by the peer
         KademliaId id = new KademliaId(peer);
-        SMSKademliaNode unresponsive = new SMSKademliaNode(id);
+        SMSKademliaNode unresponsive = new SMSKademliaNode(peer);
         //increment its stale count, it will be considered unresponsive
         this.localRoutingTable.getBuckets()[this.localRoutingTable.getBucketId(id)].getFromContacts(unresponsive).incrementStaleCount();
     }
