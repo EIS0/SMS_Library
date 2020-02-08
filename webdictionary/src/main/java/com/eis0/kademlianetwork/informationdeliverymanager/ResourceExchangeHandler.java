@@ -73,33 +73,8 @@ public class ResourceExchangeHandler {
         }
         //Starts to search for the closest ID
         SMSPeer searcher = KademliaJoinableNetwork.getInstance().getLocalNode().getPeer();
-        processRequest(idToFind, searcher, ResearchMode.AddToDictionary);
+        IdFinderHandler.searchId(idToFind, searcher, ResearchMode.AddToDictionary);
     }
-
-
-    /**
-     * This method starts the ID research inside the network, according to the type of research the
-     * request is asking for
-     *
-     * @param idToFind     The {@link KademliaId} of the resource key, sent in the network asking for
-     *                     the node with the closest node ID
-     * @param searcher     The {@link SMSPeer} of the node which started the research, it's sent in the
-     *                     network to allow the final receiver to send the answer right to the initial node
-     * @param researchMode The research mode, represents the final purpose of the research
-     * @throws IllegalArgumentException If the idToFind or the searcher are null
-     */
-    public void processRequest(KademliaId idToFind, SMSPeer searcher, ResearchMode researchMode) {
-        if (idToFind == null) throw new IllegalArgumentException(ID_TO_FIND_NULL);
-        if (searcher == null) throw new IllegalArgumentException(SEARCHER_NULL);
-        if (researchMode == null) throw new IllegalArgumentException(RESEARCH_MODE_NULL);
-
-        //If it's found, the Node with the closest id will send message containing:
-        // 1. The code of the message
-        // 2. the ID of the resource
-        // 3. the SMSPeer of the
-        IdFinderHandler.searchId(idToFind, searcher, researchMode);
-    }
-
 
     /**
      * This method is called whenever the network returns the node ID closest to the resource ID.

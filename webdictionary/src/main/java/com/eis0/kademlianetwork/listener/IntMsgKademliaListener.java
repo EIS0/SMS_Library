@@ -120,7 +120,7 @@ public class IntMsgKademliaListener {
                 //2. Processes the information brought by the message received
                 Log.i(LOG_TAG, "Received ID research request from: " + searcher + ".\nTarget: " +
                         idToFind);
-                resourceExchangeHandler.processRequest(idToFind, searcher, ResearchMode.AddToDictionary);
+                IdFinderHandler.searchId(idToFind, searcher, ResearchMode.AddToDictionary);
                 break;
             case ResultAddRequest:
                 //1. I inform that I'm alive and happy to be
@@ -148,7 +148,7 @@ public class IntMsgKademliaListener {
                 //2. Processes the information brought by the message received
                 Log.i(LOG_TAG, "Received ID research request from: " + searcher + ".\nTarget: " +
                         idToFind);
-                resourceExchangeHandler.processRequest(idToFind, searcher, ResearchMode.FindInDictionary);
+                IdFinderHandler.searchId(idToFind, searcher, ResearchMode.FindInDictionary);
                 break;
             case ResultGetRequest:
                 //1. I inform that I'm alive and happy to be
@@ -182,7 +182,7 @@ public class IntMsgKademliaListener {
                 //2. Processes the information brought by the message received
                 Log.i(LOG_TAG, "Received ID research request from: " + searcher + ".\nTarget: " +
                         idToFind);
-                resourceExchangeHandler.processRequest(idToFind, searcher, ResearchMode.RemoveFromDictionary);
+                IdFinderHandler.searchId(idToFind, searcher, ResearchMode.RemoveFromDictionary);
                 break;
             case ResultDeleteRequest:
                 //1. I inform that I'm alive and happy to be

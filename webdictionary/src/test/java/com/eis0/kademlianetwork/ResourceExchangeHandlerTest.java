@@ -89,14 +89,4 @@ public class ResourceExchangeHandlerTest {
         ResourceExchangeHandler.Request request2 = addRequests.get(KAD_ID2);
         assertNotEquals(request1.getKeyId(), request2.getKeyId());
     }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void processRequest_nullParameters() {
-        resourceExchangeHandler.processRequest(null, null, null);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void completeAddRequest_nullParameters() {
-        resourceExchangeHandler.processRequest(null, null, null);
-    }
 }
