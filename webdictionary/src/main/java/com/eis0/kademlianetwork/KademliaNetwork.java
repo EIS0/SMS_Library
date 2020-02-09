@@ -12,6 +12,7 @@ import com.eis0.kademlia.SMSKademliaNode;
 import com.eis0.kademlia.SMSKademliaRoutingTable;
 import com.eis0.kademlianetwork.activitystatus.NodeConnectionInfo;
 import com.eis0.kademlianetwork.activitystatus.RespondTimer;
+import com.eis0.kademlianetwork.commands.KadAddResource;
 import com.eis0.kademlianetwork.commands.KadSendInvitation;
 import com.eis0.kademlianetwork.listener.SMSKademliaListener;
 import com.eis0.kademlianetwork.routingtablemanager.RoutingTableRefresh;
@@ -65,7 +66,7 @@ public class KademliaNetwork implements NetworkManager<String, String, SMSPeer, 
     /**
      * Check if I received an acknowledge respond to my request.
      * (so if the node is alive)
-     * If death, the {@link SMSKademliaNode} of the target peer is removed from the routing table
+     * If death, the {@link SMSKademliaNode} of the target peer is set as unresponsive
      *
      * @param targetPeer the receiver {@link SMSPeer}
      * @return true if alive, false otherwise
@@ -90,6 +91,7 @@ public class KademliaNetwork implements NetworkManager<String, String, SMSPeer, 
      * Set a node has unresponsive
      *
      * @param peer that seems to be death
+     * @author Edoardo Raimondi
      */
     private void setUnresponsive(SMSPeer peer) {
         //create the node by the peer
@@ -145,6 +147,7 @@ public class KademliaNetwork implements NetworkManager<String, String, SMSPeer, 
 
     /**
      * Updates the routing table
+     * @author Edoardo Raimondi
      */
     public void updateTable() {
         //calls the proper handler to update the routing table
@@ -160,8 +163,7 @@ public class KademliaNetwork implements NetworkManager<String, String, SMSPeer, 
      * @author Enrico Cestaro
      */
     public void addToLocalDictionary(String key, String resource) {
-
-        localKademliaDictionary.addResource(key, resource);
+        new KadAddResource(key, resource, localKademliaDictionary).execute();
     }
 
     /**
@@ -207,7 +209,6 @@ public class KademliaNetwork implements NetworkManager<String, String, SMSPeer, 
      * @param setResourceListener Listener called on resource successfully saved or on fail.
      */
     public void setResource(String key, String value, SetResourceListener<String, String, KademliaFailReason> setResourceListener) {
-
     }
 
     /**
