@@ -7,7 +7,7 @@ import com.eis0.kademlia.SMSKademliaBucket;
 import com.eis0.kademlia.SMSKademliaNode;
 import com.eis0.kademlianetwork.KademliaNetwork;
 import com.eis0.kademlianetwork.activitystatus.RespondTimer;
-import com.eis0.kademlianetwork.commands.KadPing;
+import com.eis0.kademlianetwork.commands.messages.KadPing;
 import com.eis0.kademlianetwork.informationdeliverymanager.IdFinderHandler;
 import com.eis0.kademlianetwork.informationdeliverymanager.ResearchMode;
 import com.eis0.netinterfaces.commands.CommandExecutor;

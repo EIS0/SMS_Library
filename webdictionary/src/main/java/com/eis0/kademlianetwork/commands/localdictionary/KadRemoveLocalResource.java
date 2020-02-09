@@ -1,4 +1,4 @@
-package com.eis0.kademlianetwork.commands;
+package com.eis0.kademlianetwork.commands.localdictionary;
 
 import com.eis0.netinterfaces.NetDictionary;
 import com.eis0.netinterfaces.commands.RemoveResource;

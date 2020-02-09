@@ -11,8 +11,8 @@ import com.eis0.kademlianetwork.KademliaInvitation;
 import com.eis0.kademlianetwork.KademliaJoinableNetwork;
 import com.eis0.kademlianetwork.KademliaNetwork;
 import com.eis0.kademlianetwork.commands.KadAddPeer;
-import com.eis0.kademlianetwork.commands.KadPong;
-import com.eis0.kademlianetwork.commands.KadSendAcknowledge;
+import com.eis0.kademlianetwork.commands.messages.KadPong;
+import com.eis0.kademlianetwork.commands.messages.KadSendAcknowledge;
 import com.eis0.kademlianetwork.informationdeliverymanager.IdFinderHandler;
 import com.eis0.kademlianetwork.informationdeliverymanager.KademliaMessage;
 import com.eis0.kademlianetwork.informationdeliverymanager.KademliaMessageAnalyzer;
@@ -40,7 +40,6 @@ public class IntMsgKademliaListener {
         this.kadNet = kadNet;
         resourceExchangeHandler = new ResourceExchangeHandler();
     }
-    //@TODO change it in an ObjectPoll
     public static IntMsgKademliaListener getInstance(KademliaNetwork kadNet) {
             if(instance == null) instance = new IntMsgKademliaListener(kadNet);
             return instance;

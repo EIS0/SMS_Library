@@ -1,4 +1,4 @@
-package com.eis0.kademlianetwork.commands;
+package com.eis0.kademlianetwork.commands.messages;
 
 import com.eis.smslibrary.SMSManager;
 import com.eis.smslibrary.SMSMessage;
@@ -7,27 +7,27 @@ import com.eis0.kademlianetwork.informationdeliverymanager.KademliaMessage;
 import com.eis0.kademlianetwork.informationdeliverymanager.RequestTypes;
 import com.eis0.netinterfaces.commands.Command;
 
-public class KadSendAcknowledge extends Command {
+public class KadPong extends Command {
 
     private SMSPeer peer;
 
     /**
-     * Constructor for the KadSendAcknowledge command
+     * Constructor for the Ping command message
      *
-     * @param peer The {@link SMSPeer} of the node that contacted me
+     * @param peer The SMSPeer to send the ping to
      */
-    public KadSendAcknowledge(SMSPeer peer) {
+    public KadPong(SMSPeer peer) {
         this.peer = peer;
     }
 
     /**
-     * Sends an acknowledge message
+     * Sends a Ping message
      */
     protected void execute() {
-        SMSMessage acknowledgeMessage = new KademliaMessage()
+        SMSMessage pongMessage = new KademliaMessage()
                 .setPeer(peer)
-                .setRequestType(RequestTypes.AcknowledgeMessage)
+                .setRequestType(RequestTypes.Pong)
                 .buildMessage();
-        SMSManager.getInstance().sendMessage(acknowledgeMessage);
+        SMSManager.getInstance().sendMessage(pongMessage);
     }
 }

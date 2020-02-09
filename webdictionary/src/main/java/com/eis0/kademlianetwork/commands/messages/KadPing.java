@@ -1,4 +1,4 @@
-package com.eis0.kademlianetwork.commands;
+package com.eis0.kademlianetwork.commands.messages;
 
 import com.eis.smslibrary.SMSManager;
 import com.eis.smslibrary.SMSMessage;
