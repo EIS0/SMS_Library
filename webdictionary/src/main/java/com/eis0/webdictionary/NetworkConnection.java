@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Timer;
 
 /**
- * @author Marco Cognolato except where otherwise indicated
+ * @author Marco Cognolato except where otherwise indicated. Edits by Edoardo Raimondi
  */
 public class NetworkConnection {
 
@@ -291,25 +291,25 @@ public class NetworkConnection {
      * @param key   The key to add to the dictionary (and broadcast to all subscribers)
      * @param value The value to add to the dictionary with the key (and broadcast)
      */
-    public void addToDictionary(SerializableObject key, SerializableObject value) {
+    public void addToDictionary(String key, String value) {
         addToDictionaryNoCast(key, value);
-        broadcast(RequestType.AddToDict.ordinal() + " " + key.serialize() + " " + value.serialize());
+        broadcast(RequestType.AddToDict.ordinal() + " " + key + " " + value);
     }
 
     /**
      * Adds a key-value couple to the vocabulary without broadcasting to the whole net
      */
-    private void addToDictionaryNoCast(SerializableObject key, SerializableObject value) {
-        vocabulary.add(key, value);
+    private void addToDictionaryNoCast(String key, String value) {
+        vocabulary.addResource(key, value);
     }
 
     /**
      * Adds a key-value couple to the vocabulary without broadcasting to the whole net starting from a String
      */
     void addToDictionaryNoCast(String text) {
-        String[] objects = text.split(" ");
-        SMSSerialization key = new SMSSerialization(objects[0]);
-        SMSSerialization value = new SMSSerialization(objects[1]);
+        String[] strings = text.split(" ");
+        String key = strings[0];
+        String value = strings[1];
         addToDictionaryNoCast(key, value);
     }
     //endregion
@@ -321,26 +321,18 @@ public class NetworkConnection {
      *
      * @param key The key to remove from the dictionary (and broadcast to all subscribers)
      */
-    public void removeFromDictionary(SerializableObject key) {
+    public void removeFromDictionary(String key) {
         removeFromDictionaryNoCast(key);
-        broadcast(RequestType.RemoveFromDict.ordinal() + " " + key.serialize());
+        broadcast(RequestType.RemoveFromDict.ordinal() + " " + key);
     }
 
     /**
      * Removes a key from the vocabulary without broadcasting to the whole net
      */
-    private void removeFromDictionaryNoCast(SerializableObject key) {
-        vocabulary.remove(key);
+    private void removeFromDictionaryNoCast(String key) {
+        vocabulary.removeResource(key);
     }
 
-    /**
-     * Removes a key from the vocabulary without broadcasting to the whole net starting from a String
-     */
-    void removeFromDictionaryNoCast(String text) {
-        String[] objects = text.split(" ");
-        SMSSerialization key = new SMSSerialization(objects[0]);
-        removeFromDictionaryNoCast(key);
-    }
     //endregion
 
     //region updateDict
@@ -350,15 +342,15 @@ public class NetworkConnection {
      *
      * @param key The key to remove from the dictionary (and broadcast to all subscribers)
      */
-    public void updateDictionary(SerializableObject key, SerializableObject value) {
+    public void updateDictionary(String key, String value) {
         updateDictionaryNoCast(key, value);
-        broadcast(RequestType.RemoveFromDict.ordinal() + " " + key.serialize() + " " + value.serialize());
+        broadcast(RequestType.RemoveFromDict.ordinal() + " " + key + " " + value);
     }
 
     /**
      * Removes a key from the vocabulary without broadcasting to the whole net
      */
-    private void updateDictionaryNoCast(SerializableObject key, SerializableObject value) {
+    private void updateDictionaryNoCast(String key, String value) {
         vocabulary.update(key, value);
     }
 
@@ -366,9 +358,9 @@ public class NetworkConnection {
      * Removes a key from the vocabulary without broadcasting to the whole net starting from a String
      */
     void updateDictionaryNoCast(String text) {
-        String[] objects = text.split(" ");
-        SMSSerialization key = new SMSSerialization(objects[0]);
-        SMSSerialization value = new SMSSerialization(objects[1]);
+        String[] strings = text.split(" ");
+        String key = strings[0];
+        String value = strings[1];
         updateDictionaryNoCast(key, value);
     }
     //endregion
@@ -378,7 +370,7 @@ public class NetworkConnection {
     /**
      * Returns the Resource associated with the given valid key
      */
-    public SerializableObject getResource(SerializableObject key) {
+    public String getResource(String key) {
         return vocabulary.getResource(key);
     }
     //endregion
