@@ -1,8 +1,11 @@
 package com.eis0.kademlianetwork;
 
+import androidx.annotation.NonNull;
+
 import com.eis.smslibrary.SMSPeer;
 import com.eis0.kademlianetwork.commands.KadAcceptInvite;
 import com.eis0.netinterfaces.JoinableNetworkManager;
+import com.eis0.netinterfaces.NetDictionary;
 import com.eis0.netinterfaces.commands.CommandExecutor;
 import com.eis0.netinterfaces.listeners.JoinInvitationListener;
 
@@ -62,5 +65,15 @@ public class KademliaJoinableNetwork extends KademliaNetwork
     public void checkInvitation(KademliaInvitation invitation) {
         if (invitationListener == null) acceptJoinInvitation(invitation);
         else invitationListener.onJoinInvitationReceived(invitation);
+    }
+
+    /**
+     * Sets a given dictionary of resources, to provide the network
+     * with your own implementation
+     *
+     * @param dictionary A NetDictionary of type <String,String> to provide
+     */
+    public void setNetDictionary(@NonNull NetDictionary<String, String> dictionary) {
+        this.localKademliaDictionary = dictionary;
     }
 }

@@ -16,15 +16,13 @@ import com.eis0.kademlianetwork.commands.KadSendInvitation;
 import com.eis0.kademlianetwork.listener.SMSKademliaListener;
 import com.eis0.kademlianetwork.routingtablemanager.RoutingTableRefresh;
 import com.eis0.kademlianetwork.routingtablemanager.TableUpdateHandler;
+import com.eis0.netinterfaces.NetDictionary;
 import com.eis0.netinterfaces.NetworkManager;
 import com.eis0.netinterfaces.commands.CommandExecutor;
 import com.eis0.netinterfaces.listeners.GetResourceListener;
 import com.eis0.netinterfaces.listeners.InviteListener;
 import com.eis0.netinterfaces.listeners.RemoveResourceListener;
 import com.eis0.netinterfaces.listeners.SetResourceListener;
-import com.eis0.webdictionary.SMSNetVocabulary;
-import com.eis0.webdictionary.SMSSerialization;
-import com.eis0.webdictionary.SerializableObject;
 
 /**
  * Central class fo the KademliaNetwork. Instead of handling everything itself,
@@ -47,7 +45,7 @@ public class KademliaNetwork implements NetworkManager<String, String, SMSPeer, 
     //User node of the network
     protected SMSKademliaNode localNode;
     //Dictionary containing the resources stored by the local node
-    protected SMSNetVocabulary localKademliaDictionary;
+    protected NetDictionary<String, String> localKademliaDictionary;
     protected final SMSKademliaListener smsKademliaListener = new SMSKademliaListener(this);
 
     private final RespondTimer timer = new RespondTimer();
@@ -163,7 +161,7 @@ public class KademliaNetwork implements NetworkManager<String, String, SMSPeer, 
      */
     public void addToLocalDictionary(String key, String resource) {
 
-        localKademliaDictionary.add(new SMSSerialization(key), new SMSSerialization(resource));
+        localKademliaDictionary.addResource(key, resource);
     }
 
     /**
@@ -173,7 +171,7 @@ public class KademliaNetwork implements NetworkManager<String, String, SMSPeer, 
      * @author Enrico Cestaro
      */
     public void removeFromLocalDictionary(String key) {
-        localKademliaDictionary.remove(new SMSSerialization(key));
+        localKademliaDictionary.removeResource(key);
     }
 
     /**
@@ -183,8 +181,8 @@ public class KademliaNetwork implements NetworkManager<String, String, SMSPeer, 
      * @return The SerializableObject with the specified key
      * @author Enrico Cestaro
      */
-    public SerializableObject getFromLocalDictionary(String key) {
-        return localKademliaDictionary.getResource(new SMSSerialization(key));
+    public String getFromLocalDictionary(String key) {
+        return localKademliaDictionary.getResource(key);
     }
 
     /**
@@ -195,7 +193,8 @@ public class KademliaNetwork implements NetworkManager<String, String, SMSPeer, 
      * @author Enrico Cestaro
      */
     public void updateLocalDictionary(String key, String resource) {
-        localKademliaDictionary.update(new SMSSerialization(key), new SMSSerialization(resource));
+        //if the resource is already present it gets automatically updated
+        localKademliaDictionary.addResource(key, resource);
     }
 
 

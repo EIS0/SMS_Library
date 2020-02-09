@@ -1,14 +1,16 @@
 package com.eis0.webdictionary;
 
+import com.eis0.netinterfaces.NetDictionary;
+
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * @author Edoardo Raimondi, edits by Marco Cognolato
  */
-public class SMSNetVocabulary implements NetworkVocabulary<SerializableObject, SerializableObject> {
+public class SMSNetVocabulary implements NetDictionary<String, String> {
 
-    private final Map<SerializableObject, SerializableObject> netDict = new HashMap<>();
+    private final Map<String, String> netDict = new HashMap<>();
 
     public SMSNetVocabulary(){ }
 
@@ -17,7 +19,7 @@ public class SMSNetVocabulary implements NetworkVocabulary<SerializableObject, S
      * @param key The key for which we want a resource
      * @return Returns the key's resource if found, else returns null
      */
-    public SerializableObject getResource(SerializableObject key){
+    public String getResource(String key){
        return netDict.get(key);
     }
 
@@ -28,8 +30,9 @@ public class SMSNetVocabulary implements NetworkVocabulary<SerializableObject, S
      * @param resource A Resource to add to the dictionary
      * @throws NullPointerException If the key or resource is null
      */
-    public void add(SerializableObject key, SerializableObject resource){
-        if(key == null || resource == null) throw new NullPointerException();
+    public void addResource(String key, String resource){
+        if(key == null || resource == null)
+            throw new NullPointerException("Cannot add null keys/resources");
         if(!netDict.containsKey(key)) netDict.put(key, resource);
         else {
             //update the resource since it's already present
@@ -42,7 +45,7 @@ public class SMSNetVocabulary implements NetworkVocabulary<SerializableObject, S
      * @param key to remove
      * @throws NullPointerException If key is null
      */
-    public void remove(SerializableObject key) {
+    public void removeResource(String key) {
         if(key == null) throw new NullPointerException();
         netDict.remove(key);
     }
@@ -54,9 +57,16 @@ public class SMSNetVocabulary implements NetworkVocabulary<SerializableObject, S
      * @throws NullPointerException If key or resource is null
      * @author Marco Cognolato
      */
-    public void update(SerializableObject key, SerializableObject resource){
+    public void update(String key, String resource){
         netDict.remove(key);
         netDict.put(key, resource);
+    }
+
+    /**
+     * Removes all keys and resources from the dictionary.
+     */
+    public void clear(){
+        netDict.clear();
     }
 }
 
