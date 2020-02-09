@@ -12,7 +12,8 @@ import com.eis0.kademlia.SMSKademliaNode;
 import com.eis0.kademlia.SMSKademliaRoutingTable;
 import com.eis0.kademlianetwork.activitystatus.NodeConnectionInfo;
 import com.eis0.kademlianetwork.activitystatus.RespondTimer;
-import com.eis0.kademlianetwork.commands.KadAddResource;
+import com.eis0.kademlianetwork.commands.KadAddLocalResource;
+import com.eis0.kademlianetwork.commands.KadRemoveLocalResource;
 import com.eis0.kademlianetwork.commands.KadSendInvitation;
 import com.eis0.kademlianetwork.listener.SMSKademliaListener;
 import com.eis0.kademlianetwork.routingtablemanager.RoutingTableRefresh;
@@ -163,7 +164,7 @@ public class KademliaNetwork implements NetworkManager<String, String, SMSPeer, 
      * @author Enrico Cestaro
      */
     public void addToLocalDictionary(String key, String resource) {
-        new KadAddResource(key, resource, localKademliaDictionary).execute();
+        new KadAddLocalResource(key, resource, localKademliaDictionary).execute();
     }
 
     /**
@@ -173,7 +174,7 @@ public class KademliaNetwork implements NetworkManager<String, String, SMSPeer, 
      * @author Enrico Cestaro
      */
     public void removeFromLocalDictionary(String key) {
-        localKademliaDictionary.removeResource(key);
+        new KadRemoveLocalResource(key, localKademliaDictionary).execute();
     }
 
     /**

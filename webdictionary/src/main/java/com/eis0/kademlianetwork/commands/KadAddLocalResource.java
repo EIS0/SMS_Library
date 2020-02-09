@@ -5,7 +5,7 @@ import androidx.annotation.NonNull;
 import com.eis0.netinterfaces.NetDictionary;
 import com.eis0.netinterfaces.commands.AddResource;
 
-public class KadAddResource extends AddResource<String, String> {
+public class KadAddLocalResource extends AddResource<String, String> {
 
     private NetDictionary localDictionary;
 
@@ -14,7 +14,7 @@ public class KadAddResource extends AddResource<String, String> {
      * @param value
      * @param localDictionary where pair <key, value> has to be inserted
      */
-    public KadAddResource(@NonNull String key, @NonNull String value, @NonNull NetDictionary localDictionary){
+    public KadAddLocalResource(@NonNull String key, @NonNull String value, @NonNull NetDictionary localDictionary){
        super(key, value, localDictionary);
     }
 
