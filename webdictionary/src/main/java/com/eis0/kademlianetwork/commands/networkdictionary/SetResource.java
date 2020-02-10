@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 
 import com.eis0.kademlianetwork.informationdeliverymanager.ResearchMode;
 import com.eis0.kademlianetwork.informationdeliverymanager.ResourceExchangeHandler;
-import com.eis0.netinterfaces.commands.AddResource;
 
 public class SetResource {
 
@@ -28,7 +27,7 @@ public class SetResource {
      * @see {@link ResourceExchangeHandler} for more details
      */
     public void execute(){
-        resourceExchangeHandler.createRequest(key, resource, ResearchMode.valueOf("addToDictionary"));
+        resourceExchangeHandler.createRequest(key, resource, ResearchMode.AddToDictionary);
     }
 
 }

@@ -24,6 +24,6 @@ public class RemoveResource {
      * @see {@link ResourceExchangeHandler} for more details
      */
     public void execute(){
-        resourceExchangeHandler.createRequest(key, null, ResearchMode.valueOf("RemoveFromDictionary") );
+        resourceExchangeHandler.createRequest(key, null, ResearchMode.RemoveFromDictionary );
     }
 }
