@@ -329,7 +329,7 @@ public class NetworkConnection {
     /**
      * Removes a key from the vocabulary without broadcasting to the whole net
      */
-    private void removeFromDictionaryNoCast(String key) {
+    public void removeFromDictionaryNoCast(String key) {
         vocabulary.removeResource(key);
     }
 
