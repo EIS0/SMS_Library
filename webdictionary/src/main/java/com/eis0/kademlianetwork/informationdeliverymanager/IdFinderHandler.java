@@ -9,8 +9,6 @@ import com.eis0.kademlia.SMSKademliaRoutingTable;
 import com.eis0.kademlianetwork.KademliaJoinableNetwork;
 import com.eis0.kademlianetwork.listener.IntMsgKademliaListener;
 
-import java.math.BigInteger;
-
 /**
  * This Class is used to find the closest node ID to a specific resource ID inside the network
  *
@@ -67,19 +65,12 @@ public class IdFinderHandler {
                 taskResult = RequestTypes.SearchResultReplacement;
         }
 
-        //Obtain the KademliaId belonging to the local node (myself)
-        KademliaId netId = KademliaJoinableNetwork.getInstance().getLocalNode().getId();
         //Obtain the local RoutingTable
         SMSKademliaRoutingTable table = KademliaJoinableNetwork.getInstance().getLocalRoutingTable();
         //Get the node with the node ID closest to the idToFind
         SMSKademliaNode closestNode = table.findClosest(idToFind, 1).get(0);
 
-        BigInteger idToFindDistanceFromNetId = idToFind.getXorDistance(netId);
-        BigInteger idToFindDistanceFromClosest = idToFind.getXorDistance(closestNode.getId());
-
-        //1. Checking if I'm the searched id (fail safe), or the closest one
-        //2. Checking if inside my RoutingTable there is a node with the ID to find
-
+        // Checks if I'm closest node to the one to find
         if (closestNode.equals(KademliaJoinableNetwork.getInstance().getLocalNode())) {
             sendResult(taskResult, idToFind, searcher);
             retryIfDead(idToFind, searcher, researchMode, searcher);
@@ -112,7 +103,7 @@ public class IdFinderHandler {
             IntMsgKademliaListener.getInstance(KademliaJoinableNetwork.getInstance()).processMessage(searchResult);
             return;
         }
-        //else
+
         SMSManager.getInstance().sendMessage(searchResult);
     }
 
