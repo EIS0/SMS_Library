@@ -1,6 +1,7 @@
 package com.eis0.kademlianetwork;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.eis.communication.Peer;
 import com.eis.smslibrary.SMSManager;
@@ -15,6 +16,9 @@ import com.eis0.kademlianetwork.activitystatus.RespondTimer;
 import com.eis0.kademlianetwork.commands.localdictionary.KadAddLocalResource;
 import com.eis0.kademlianetwork.commands.localdictionary.KadRemoveLocalResource;
 import com.eis0.kademlianetwork.commands.messages.KadSendInvitation;
+import com.eis0.kademlianetwork.commands.networkdictionary.RemoveResource;
+import com.eis0.kademlianetwork.commands.networkdictionary.SetResource;
+import com.eis0.kademlianetwork.informationdeliverymanager.ResourceExchangeHandler;
 import com.eis0.kademlianetwork.listener.SMSKademliaListener;
 import com.eis0.kademlianetwork.routingtablemanager.RoutingTableRefresh;
 import com.eis0.kademlianetwork.routingtablemanager.TableUpdateHandler;
@@ -49,8 +53,11 @@ public class KademliaNetwork implements NetworkManager<String, String, SMSPeer, 
     //Dictionary containing the resources stored by the local node
     protected NetDictionary<String, String> localKademliaDictionary;
     protected final SMSKademliaListener smsKademliaListener = new SMSKademliaListener(this);
+    protected ResourceExchangeHandler resourceExchangeHandler = new ResourceExchangeHandler();
 
     private final RespondTimer timer = new RespondTimer();
+
+    private final String LOG_KEY = "KAD_NET";
 
     /**
      * Initialize the network by setting the current node.
@@ -210,6 +217,15 @@ public class KademliaNetwork implements NetworkManager<String, String, SMSPeer, 
      * @param setResourceListener Listener called on resource successfully saved or on fail.
      */
     public void setResource(String key, String value, SetResourceListener<String, String, KademliaFailReason> setResourceListener) {
+        try{
+            CommandExecutor.execute(new SetResource(key, value, resourceExchangeHandler));
+        }
+        catch (Exception e){
+            Log.e(LOG_KEY, e.toString());
+            setResourceListener.onResourceSetFail(key, value, KademliaFailReason.GENERIC_FAIL);
+            return;
+        }
+        setResourceListener.onResourceSet(key, value);
     }
 
     /**
@@ -231,7 +247,15 @@ public class KademliaNetwork implements NetworkManager<String, String, SMSPeer, 
      * @param removeResourceListener Listener called on resource successfully removed or on fail.
      */
     public void removeResource(String key, RemoveResourceListener<String, KademliaFailReason> removeResourceListener) {
-
+        try{
+            CommandExecutor.execute(new RemoveResource(key, resourceExchangeHandler));
+        }
+        catch (Exception e){
+            Log.e(LOG_KEY, e.toString());
+            removeResourceListener.onResourceRemoveFail(key, KademliaFailReason.GENERIC_FAIL);
+            return;
+        }
+        removeResourceListener.onResourceRemoved(key);
     }
 
     /**
@@ -253,9 +277,17 @@ public class KademliaNetwork implements NetworkManager<String, String, SMSPeer, 
             KademliaInvitation invitation = new KademliaInvitation(peer);
             CommandExecutor.execute(new KadSendInvitation(invitation));
         } catch (Exception e) {
+            Log.e(LOG_KEY, e.toString());
             inviteListener.onInvitationNotSent(peer, KademliaFailReason.GENERIC_FAIL);
             return;
         }
         inviteListener.onInvitationSent(peer);
+    }
+
+    /**
+     * Returns the network valid instance of the ResourceExchangeHandler
+     */
+    public ResourceExchangeHandler getResourceExchangeHandler(){
+        return resourceExchangeHandler;
     }
 }

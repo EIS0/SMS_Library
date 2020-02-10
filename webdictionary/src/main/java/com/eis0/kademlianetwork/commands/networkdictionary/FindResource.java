@@ -9,27 +9,30 @@ import com.eis0.kademlianetwork.informationdeliverymanager.IdFinderHandler;
 import com.eis0.kademlianetwork.informationdeliverymanager.Request;
 import com.eis0.kademlianetwork.informationdeliverymanager.ResearchMode;
 import com.eis0.kademlianetwork.informationdeliverymanager.ResourceExchangeHandler;
+import com.eis0.netinterfaces.commands.Command;
 
-public class FindResource {
+public class FindResource extends Command {
 
     protected final String key;
     private ResourceExchangeHandler resourceExchangeHandler;
 
     /**
-     * @param key
+     * Constructor for the FindResource command
+     *
+     * @param key                     The key to find in the network
+     * @param resourceExchangeHandler the ResourceExchangeHandler used by this command
      */
-    public FindResource(@NonNull String key){
+    public FindResource(@NonNull String key, @NonNull ResourceExchangeHandler resourceExchangeHandler) {
         this.key = key;
-        resourceExchangeHandler = new ResourceExchangeHandler();
+        this.resourceExchangeHandler = resourceExchangeHandler;
     }
 
     /**
-     *Remove a node from the network dictionary
-     * Search where it is. Remove it.
+     * Finds a node closest to a resource from the network dictionary
+     *
      * @see {@link ResourceExchangeHandler} for more details
      */
-    public void execute(){
-        //resourceExchangeHandler.createRequest(key, null, ResearchMode.RemoveFromDictionary );
+    public void execute() {
         Request currentRequest = new Request(key, null);
         KademliaId idToFind = currentRequest.getKeyId();
         resourceExchangeHandler.getPendingFindRequests().put(idToFind, currentRequest);

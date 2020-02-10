@@ -1,12 +1,9 @@
 package com.eis0.kademlianetwork.informationdeliverymanager;
 
-import androidx.annotation.NonNull;
-
 import com.eis.smslibrary.SMSManager;
 import com.eis.smslibrary.SMSMessage;
 import com.eis.smslibrary.SMSPeer;
 import com.eis0.kademlia.KademliaId;
-import com.eis0.kademlianetwork.KademliaJoinableNetwork;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -44,36 +41,6 @@ public class ResourceExchangeHandler {
         pendingAddRequests = new HashMap<>();
         pendingFindRequests = new HashMap<>();
         pendingDeleteRequests = new HashMap<>();
-    }
-
-    /**
-     * This method adds to the most suitable pending Requests list the new {@link Request}, and sends
-     * a message in the network asking for a receiver, that is the node with the node ID closest to
-     * the resource ID
-     *
-     * @param key          The String value of the key of the resource to add to the Dictionary
-     * @param resource     The String value of the resource itself to be added to the Dictionary
-     * @param researchMode The research mode, represents the final purpose of the research,
-     *                     can only be {@link ResearchMode#AddToDictionary},
-     *                     {@link ResearchMode#FindInDictionary} or {@link ResearchMode#RemoveFromDictionary}
-     */
-    public void createRequest(@NonNull String key, String resource, ResearchMode researchMode) {
-        Request currentRequest = new Request(key, resource);
-        KademliaId idToFind = currentRequest.getKeyId();
-        switch (researchMode) {
-            case AddToDictionary:
-                pendingAddRequests.put(idToFind, currentRequest);
-                break;
-            case FindInDictionary:
-                pendingFindRequests.put(idToFind, currentRequest);
-                break;
-            case RemoveFromDictionary:
-                pendingDeleteRequests.put(idToFind, currentRequest);
-                break;
-        }
-        //Starts to search for the closest ID
-        SMSPeer searcher = KademliaJoinableNetwork.getInstance().getLocalNode().getPeer();
-        IdFinderHandler.searchId(idToFind, searcher, researchMode);
     }
 
     /**

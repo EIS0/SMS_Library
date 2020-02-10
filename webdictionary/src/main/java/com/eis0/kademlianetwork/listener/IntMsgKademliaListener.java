@@ -38,12 +38,13 @@ public class IntMsgKademliaListener {
 
     private IntMsgKademliaListener(KademliaNetwork kadNet) {
         this.kadNet = kadNet;
-        resourceExchangeHandler = new ResourceExchangeHandler();
+        resourceExchangeHandler = KademliaJoinableNetwork.getInstance().getResourceExchangeHandler();
     }
+
     public static IntMsgKademliaListener getInstance(KademliaNetwork kadNet) {
-            if(instance == null) instance = new IntMsgKademliaListener(kadNet);
-            return instance;
-        }
+        if (instance == null) instance = new IntMsgKademliaListener(kadNet);
+        return instance;
+    }
 
     /**
      * This method analyzes the incoming messages, extracts the content, and processes it depending
