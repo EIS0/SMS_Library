@@ -6,7 +6,6 @@ import com.eis0.kademlia.KademliaId;
 import com.eis0.kademlia.SMSKademliaBucket;
 import com.eis0.kademlia.SMSKademliaNode;
 import com.eis0.kademlianetwork.KademliaNetwork;
-import com.eis0.kademlianetwork.activitystatus.RespondTimer;
 import com.eis0.kademlianetwork.commands.messages.KadPing;
 import com.eis0.kademlianetwork.informationdeliverymanager.IdFinderHandler;
 import com.eis0.kademlianetwork.informationdeliverymanager.ResearchMode;
@@ -21,8 +20,6 @@ import java.util.List;
  */
 
 public class RoutingTableRefresh{
-    //create a timer to verify if I had a pong in at least 10 secs
-    private final RespondTimer timer = new RespondTimer();
     //node doing this refresh
     private final SMSKademliaNode localNode;
     //kademlia network of the local node
@@ -35,7 +32,11 @@ public class RoutingTableRefresh{
 
 
     /**
-     * Method that performs a refresh
+     * Method that performs a refresh: checks if the users I have are still alive.
+     * If they're not I ask for a new id to get instead of him
+     *
+     * @author Edoardo Raimondi
+     * @author Marco Cognolato, little improvements
      */
     public void start() {
         //create the list of my routing table nodes. I need to check all that nodes.
@@ -45,17 +46,19 @@ public class RoutingTableRefresh{
             CommandExecutor.execute(new KadPing(currentNode.getPeer()));
 
             //wait 10 secs to get a pong answer
-            timer.run();
+            net.connectionInfo.run();
 
             //check if I received a pong (so if the node is alive)
             if (net.connectionInfo.hasPong()) {
                 //is alive, set the pong state to false in order to do it again
-                net.connectionInfo.setPong(false);
-            } else { //the node is not alive at the moment
-                if (removeIfUnresponsive(currentNode)) {
-                    //now I search for another one
-                    askForId(currentNode.getId());
-                }
+                net.connectionInfo.reset();
+                continue;
+            }
+            //If I'm here it means the node has not answered
+
+            if (removeIfUnresponsive(currentNode)) {
+                //now I search for another one
+                askForId(currentNode.getId());
             }
         }
     }

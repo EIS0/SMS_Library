@@ -12,7 +12,6 @@ import com.eis0.kademlia.KademliaId;
 import com.eis0.kademlia.SMSKademliaNode;
 import com.eis0.kademlia.SMSKademliaRoutingTable;
 import com.eis0.kademlianetwork.activitystatus.NodeConnectionInfo;
-import com.eis0.kademlianetwork.activitystatus.RespondTimer;
 import com.eis0.kademlianetwork.commands.localdictionary.KadAddLocalResource;
 import com.eis0.kademlianetwork.commands.localdictionary.KadRemoveLocalResource;
 import com.eis0.kademlianetwork.commands.messages.KadSendInvitation;
@@ -55,8 +54,6 @@ public class KademliaNetwork implements NetworkManager<String, String, SMSPeer, 
     protected final SMSKademliaListener smsKademliaListener = new SMSKademliaListener(this);
     protected ResourceExchangeHandler resourceExchangeHandler = new ResourceExchangeHandler();
 
-    private final RespondTimer timer = new RespondTimer();
-
     private final String LOG_KEY = "KAD_NET";
 
     /**
@@ -82,17 +79,17 @@ public class KademliaNetwork implements NetworkManager<String, String, SMSPeer, 
      */
     public boolean isAlive(SMSPeer targetPeer) {
         //I wait 10 secs
-        timer.run();
+        connectionInfo.run();
         //check if I had an acknowledge respond to my request
         if (connectionInfo.hasRespond()) {
-            //I know my request has ben received successfully. I set false in order to do it again
-            connectionInfo.setRespond(false);
+            //I know my request has ben received successfully. I reset the connectionInfo
+            connectionInfo.reset();
             return true;
-        } else { //My target node is unresponsive.
-            setUnresponsive(targetPeer);
-            //the node is not alive at the moment
-            return false;
         }
+        connectionInfo.reset();
+        setUnresponsive(targetPeer);
+        //the node is not alive at the moment
+        return false;
     }
 
     /**
