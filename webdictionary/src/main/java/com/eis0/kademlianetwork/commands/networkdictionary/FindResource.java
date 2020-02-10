@@ -10,7 +10,7 @@ import com.eis0.kademlianetwork.informationdeliverymanager.Request;
 import com.eis0.kademlianetwork.informationdeliverymanager.ResearchMode;
 import com.eis0.kademlianetwork.informationdeliverymanager.ResourceExchangeHandler;
 
-public class RemoveResource {
+public class FindResource {
 
     protected final String key;
     private ResourceExchangeHandler resourceExchangeHandler;
@@ -18,7 +18,7 @@ public class RemoveResource {
     /**
      * @param key
      */
-    public RemoveResource(@NonNull String key){
+    public FindResource(@NonNull String key){
         this.key = key;
         resourceExchangeHandler = new ResourceExchangeHandler();
     }
@@ -32,9 +32,9 @@ public class RemoveResource {
         //resourceExchangeHandler.createRequest(key, null, ResearchMode.RemoveFromDictionary );
         Request currentRequest = new Request(key, null);
         KademliaId idToFind = currentRequest.getKeyId();
-        resourceExchangeHandler.getPendingDeleteRequests().put(idToFind, currentRequest);
+        resourceExchangeHandler.getPendingFindRequests().put(idToFind, currentRequest);
         //Starts to search for the closest ID
         SMSPeer searcher = KademliaJoinableNetwork.getInstance().getLocalNode().getPeer();
-        IdFinderHandler.searchId(idToFind, searcher, ResearchMode.RemoveFromDictionary);
+        IdFinderHandler.searchId(idToFind, searcher, ResearchMode.FindInDictionary);
     }
 }

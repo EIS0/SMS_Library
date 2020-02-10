@@ -34,7 +34,7 @@ public class ResourceExchangeHandler {
     //Maps containing the pending Requests waiting to be completed; each pending request is identified
     //inside the Map by the request ID that the request must process
     private static Map<KademliaId, Request> pendingAddRequests;
-    private static Map<KademliaId, Request> pendingGetRequests;
+    private static Map<KademliaId, Request> pendingFindRequests;
     private static Map<KademliaId, Request> pendingDeleteRequests;
 
     /**
@@ -42,7 +42,7 @@ public class ResourceExchangeHandler {
      */
     public ResourceExchangeHandler() {
         pendingAddRequests = new HashMap<>();
-        pendingGetRequests = new HashMap<>();
+        pendingFindRequests = new HashMap<>();
         pendingDeleteRequests = new HashMap<>();
     }
 
@@ -65,7 +65,7 @@ public class ResourceExchangeHandler {
                 pendingAddRequests.put(idToFind, currentRequest);
                 break;
             case FindInDictionary:
-                pendingGetRequests.put(idToFind, currentRequest);
+                pendingFindRequests.put(idToFind, currentRequest);
                 break;
             case RemoveFromDictionary:
                 pendingDeleteRequests.put(idToFind, currentRequest);
@@ -106,7 +106,7 @@ public class ResourceExchangeHandler {
                 aboutToClose = pendingRequests.get(idToFind);
                 break;
             case FindInDictionary:
-                pendingRequests = pendingGetRequests;
+                pendingRequests = pendingFindRequests;
                 requestType = RequestTypes.GetFromDict;
                 aboutToClose = pendingRequests.get(idToFind);
                 break;
@@ -141,18 +141,18 @@ public class ResourceExchangeHandler {
     }
 
     /**
-     * This method returns the pendingGetRequests object of the class
+     * This method returns the pendingFindRequests object of the class
      *
-     * @return The pendingGetRequests map of the ResourceExchangeHandler class
+     * @return The pendingFindRequests map of the ResourceExchangeHandler class
      */
-    public Map<KademliaId, Request> getPendingGetRequests() {
-        return pendingGetRequests;
+    public Map<KademliaId, Request> getPendingFindRequests() {
+        return pendingFindRequests;
     }
 
     /**
-     * This method returns the pendingGetRequests object of the class
+     * This method returns the pendingFindRequests object of the class
      *
-     * @return The pendingGetRequests map of the ResourceExchangeHandler class
+     * @return The pendingFindRequests map of the ResourceExchangeHandler class
      */
     public Map<KademliaId, Request> getPendingDeleteRequests() {
         return pendingDeleteRequests;
