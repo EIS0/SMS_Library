@@ -136,7 +136,7 @@ public class ResourceExchangeHandler {
      *
      * @return The pendingAddRequests map of the ResourceExchangeHandler class
      */
-    public Map<KademliaId, Request> getPendingAddRequests() {
+    private Map<KademliaId, Request> getPendingAddRequests() {
         return pendingAddRequests;
     }
 
@@ -145,7 +145,7 @@ public class ResourceExchangeHandler {
      *
      * @return The pendingGetRequests map of the ResourceExchangeHandler class
      */
-    public Map<KademliaId, Request> getPendingGetRequests() {
+    private Map<KademliaId, Request> getPendingGetRequests() {
         return pendingGetRequests;
     }
 
@@ -154,7 +154,7 @@ public class ResourceExchangeHandler {
      *
      * @return The pendingGetRequests map of the ResourceExchangeHandler class
      */
-    public Map<KademliaId, Request> getPendingDeleteRequests() {
+    private Map<KademliaId, Request> getPendingDeleteRequests() {
         return pendingDeleteRequests;
     }
 }
