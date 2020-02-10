@@ -53,7 +53,9 @@ public class ResourceExchangeHandler {
      *
      * @param key          The String value of the key of the resource to add to the Dictionary
      * @param resource     The String value of the resource itself to be added to the Dictionary
-     * @param researchMode The research mode, represents the final purpose of the research
+     * @param researchMode The research mode, represents the final purpose of the research,
+     *                     can only be {@link ResearchMode#AddToDictionary},
+     *                     {@link ResearchMode#FindInDictionary} or {@link ResearchMode#RemoveFromDictionary}
      */
     public void createRequest(@NonNull String key, String resource, ResearchMode researchMode) {
         Request currentRequest = new Request(key, resource);
@@ -71,7 +73,7 @@ public class ResourceExchangeHandler {
         }
         //Starts to search for the closest ID
         SMSPeer searcher = KademliaJoinableNetwork.getInstance().getLocalNode().getPeer();
-        IdFinderHandler.searchId(idToFind, searcher, ResearchMode.AddToDictionary);
+        IdFinderHandler.searchId(idToFind, searcher, researchMode);
     }
 
     /**
