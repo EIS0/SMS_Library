@@ -171,7 +171,7 @@ public class KademliaNetwork implements NetworkManager<String, String, SMSPeer, 
      * @author Enrico Cestaro
      */
     public void addToLocalDictionary(String key, String resource) {
-        new KadAddLocalResource(key, resource, localKademliaDictionary).execute();
+        CommandExecutor.execute(new KadAddLocalResource(key, resource, localKademliaDictionary));
     }
 
     /**
@@ -181,7 +181,7 @@ public class KademliaNetwork implements NetworkManager<String, String, SMSPeer, 
      * @author Enrico Cestaro
      */
     public void removeFromLocalDictionary(String key) {
-        new KadRemoveLocalResource(key, localKademliaDictionary).execute();
+        CommandExecutor.execute(new KadRemoveLocalResource(key, localKademliaDictionary));
     }
 
     /**
