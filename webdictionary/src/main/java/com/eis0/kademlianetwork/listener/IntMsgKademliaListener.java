@@ -128,8 +128,7 @@ public class IntMsgKademliaListener {
                 CommandExecutor.execute(new KadSendAcknowledge(peer));
                 KademliaJoinableNetwork.getInstance().addNodeToTable(new SMSKademliaNode(peer));
                 //2. Processes the information brought by the message received
-                //@TODO: il Log genera errore nei test, come risolvere
-                //Log.i(LOG_TAG, "Received ID research request RESULT: " + idToFind);
+                Log.i(LOG_TAG, "Received ID research request RESULT: " + idToFind);
                 resourceExchangeHandler.completeRequest(idToFind, peer, ResearchMode.AddToDictionary);
                 break;
             case AddToDict:
