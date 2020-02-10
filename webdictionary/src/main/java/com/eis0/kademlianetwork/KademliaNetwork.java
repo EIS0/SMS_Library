@@ -244,8 +244,10 @@ public class KademliaNetwork implements NetworkManager<String, String, SMSPeer, 
      */
     public void invite(SMSPeer peer, InviteListener<SMSPeer, KademliaFailReason> inviteListener) {
         //don't invite a peer if it's already in the net
-        if (isNodeInNetwork(new SMSKademliaNode(peer)))
+        if (isNodeInNetwork(new SMSKademliaNode(peer))){
+            inviteListener.onInvitationNotSent(peer, KademliaFailReason.PEER_IN_NET);
             return;
+        }
 
         try {
             KademliaInvitation invitation = new KademliaInvitation(peer);
