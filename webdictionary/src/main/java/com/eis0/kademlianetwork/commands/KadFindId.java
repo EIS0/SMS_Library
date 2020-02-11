@@ -10,7 +10,6 @@ import com.eis0.kademlianetwork.activitystatus.FindIdTimer;
 import com.eis0.kademlianetwork.informationdeliverymanager.FindIdRequest;
 import com.eis0.kademlianetwork.informationdeliverymanager.IdFinderHandler;
 import com.eis0.kademlianetwork.informationdeliverymanager.RequestsHandler;
-import com.eis0.kademlianetwork.informationdeliverymanager.ResearchMode;
 import com.eis0.netinterfaces.commands.Command;
 
 public class KadFindId extends Command {
@@ -32,7 +31,7 @@ public class KadFindId extends Command {
     protected void execute(){
         FindIdRequest findIdRequest = requestsHandler.startFindIdRequest(idToFind);
         SMSPeer searcher = KademliaJoinableNetwork.getInstance().getLocalNode().getPeer();
-        IdFinderHandler.searchId(idToFind, searcher, ResearchMode.FindInDictionary);
+        IdFinderHandler.searchId(idToFind, searcher);
 
         //wait for the findIdRequest to finish
         new FindIdTimer(findIdRequest).run();
@@ -48,7 +47,7 @@ public class KadFindId extends Command {
     }
 
     /**
-     * @return Returns true if the FindId command completed successfully, false otherwise
+     * @return Returns true if the FindIdStarter command completed successfully, false otherwise
      */
     public boolean hasSuccessfullyCompleted(){
         return hasSucceeded;

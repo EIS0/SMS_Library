@@ -74,7 +74,7 @@ public class RequestsHandlerTest {
     @Test
     public void createAddRequest_equals() {
         /*
-        requestsHandler.createRequest(KEY1, RESOURCE1, ResearchMode.AddToDictionary);
+        requestsHandler.createRequest(KEY1, RESOURCE1);
         Map<KademliaId, RequestsHandler.DeleteResourceRequest> addRequests = requestsHandler.getPendingAddRequests();
         resourceRequest1 = addRequests.get(KAD_ID1);
         assertEquals(resourceRequest1.getKeyId(), KAD_ID1);
