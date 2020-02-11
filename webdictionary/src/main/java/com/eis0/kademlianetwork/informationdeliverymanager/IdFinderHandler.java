@@ -7,7 +7,6 @@ import com.eis0.kademlia.KademliaId;
 import com.eis0.kademlia.SMSKademliaNode;
 import com.eis0.kademlia.SMSKademliaRoutingTable;
 import com.eis0.kademlianetwork.KademliaJoinableNetwork;
-import com.eis0.kademlianetwork.listener.IntMsgKademliaListener;
 
 /**
  * This Class is used to find the closest node ID to a specific resource ID inside the network
@@ -46,13 +45,13 @@ public class IdFinderHandler {
 
         // Checks if I'm closest node to the one to find
         if (closestNode.equals(KademliaJoinableNetwork.getInstance().getLocalNode())) {
-            sendResult(RequestTypes.FindIdSearchResult, idToFind, searcher);
+            sendResult(idToFind, searcher);
             retryIfDead(idToFind, searcher, searcher);
             return;
         }
         //else, I ask to the closest node inside my Routing Table to continue the research
         SMSPeer closer = closestNode.getPeer();
-        keepLooking(RequestTypes.FindId, idToFind, searcher, closer);
+        keepLooking(idToFind, searcher, closer);
         retryIfDead(idToFind, searcher, closer);
     }
 
@@ -60,21 +59,19 @@ public class IdFinderHandler {
      * This method sends to the specified target {@link SMSPeer} the result of the previously
      * carried out research
      *
-     * @param requestType The type of the result, sent to allow the receiver of the
-     *                    result to define which request the result itself belongs to
-     *                    (There may be multiple pending requests, each of a different nature)
      * @param idToFind    The ID whose research originated the request
      *                    It's sent back as response to the research
      * @param targetPeer  The Peer representing the target that will receive the result
      */
-    private static void sendResult(RequestTypes requestType, KademliaId idToFind, SMSPeer targetPeer) {
+    private static void sendResult(KademliaId idToFind, SMSPeer targetPeer) {
         SMSMessage searchResult = new KademliaMessage()
                 .setPeer(targetPeer)
-                .setRequestType(requestType)
+                .setRequestType(RequestTypes.FindIdSearchResult)
                 .setIdToFind(idToFind)
                 .buildMessage();
         if (targetPeer.equals(KademliaJoinableNetwork.getInstance().getLocalNode().getPeer())) {
-            IntMsgKademliaListener.getInstance(KademliaJoinableNetwork.getInstance()).processMessage(searchResult);
+            //If I'm searching the id for myself, then I have a pending request I can directly fulfill
+            KademliaJoinableNetwork.getInstance().getRequestsHandler().completeFindIdRequest(idToFind, targetPeer);
             return;
         }
 
@@ -88,19 +85,15 @@ public class IdFinderHandler {
      * node which originated the research, without retracing back all the node that took part to the
      * research
      *
-     * @param requestType  The type of research, there are multiple processes
-     *                     that need to search for a specific ID, this value allows the receiver of
-     *                     the message to define which process asked for the ID, and to answer
-     *                     appropriately
      * @param idToFind     The ID whose research originated the request
      *                     It's sent back as response to the research
      * @param searcherNode The Peer which started the research
      * @param closerNode   The node with the {@link KademliaId} closer to the idToFind
      */
-    private static void keepLooking(RequestTypes requestType, KademliaId idToFind, SMSPeer searcherNode, SMSPeer closerNode) {
+    private static void keepLooking(KademliaId idToFind, SMSPeer searcherNode, SMSPeer closerNode) {
         SMSMessage requestMessage = new KademliaMessage()
                 .setPeer(closerNode)
-                .setRequestType(requestType)
+                .setRequestType(RequestTypes.FindId)
                 .setIdToFind(idToFind)
                 .setSearcher(searcherNode)
                 .buildMessage();
