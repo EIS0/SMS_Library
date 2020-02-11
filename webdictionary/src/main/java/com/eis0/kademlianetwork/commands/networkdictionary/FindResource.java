@@ -75,8 +75,7 @@ public class FindResource extends Command {
         SMSManager.getInstance().sendMessage(message);
 
         //5. Wait for that person to answer
-        GetResourceTimer resourceTimer = new GetResourceTimer(resourceRequest);
-        resourceTimer.run();
+        new GetResourceTimer(resourceRequest).run();
 
         //If I'm here it means that I've found the resource of the request took too long
         if(!resourceRequest.isCompleted()){
