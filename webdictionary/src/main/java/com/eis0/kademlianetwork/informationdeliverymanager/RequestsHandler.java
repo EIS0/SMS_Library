@@ -20,7 +20,7 @@ import java.util.Map;
  * @author Enrico Cestaro
  * @author Edoardo Raimondi
  */
-public class ResourceExchangeHandler {
+public class RequestsHandler {
 
     private static final String ID_TO_FIND_NULL = "The idToFind parameter is null";
     private static final String SEARCHER_NULL = "The searcher parameter is null";
@@ -37,7 +37,7 @@ public class ResourceExchangeHandler {
     /**
      * This constructor initializes the three pending requests lists
      */
-    public ResourceExchangeHandler() {
+    public RequestsHandler() {
         pendingAddRequests = new HashMap<>();
         pendingFindRequests = new HashMap<>();
         pendingDeleteRequests = new HashMap<>();
@@ -101,7 +101,7 @@ public class ResourceExchangeHandler {
     /**
      * This method returns the pendingAddRequests object of the class
      *
-     * @return The pendingAddRequests map of the ResourceExchangeHandler class
+     * @return The pendingAddRequests map of the RequestsHandler class
      */
     public Map<KademliaId, Request> getPendingAddRequests() {
         return pendingAddRequests;
@@ -110,7 +110,7 @@ public class ResourceExchangeHandler {
     /**
      * This method returns the pendingFindRequests object of the class
      *
-     * @return The pendingFindRequests map of the ResourceExchangeHandler class
+     * @return The pendingFindRequests map of the RequestsHandler class
      */
     public Map<KademliaId, Request> getPendingFindRequests() {
         return pendingFindRequests;
@@ -119,7 +119,7 @@ public class ResourceExchangeHandler {
     /**
      * This method returns the pendingFindRequests object of the class
      *
-     * @return The pendingFindRequests map of the ResourceExchangeHandler class
+     * @return The pendingFindRequests map of the RequestsHandler class
      */
     public Map<KademliaId, Request> getPendingDeleteRequests() {
         return pendingDeleteRequests;

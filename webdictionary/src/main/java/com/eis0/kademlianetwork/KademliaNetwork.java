@@ -17,7 +17,7 @@ import com.eis0.kademlianetwork.commands.localdictionary.KadRemoveLocalResource;
 import com.eis0.kademlianetwork.commands.messages.KadSendInvitation;
 import com.eis0.kademlianetwork.commands.networkdictionary.RemoveResource;
 import com.eis0.kademlianetwork.commands.networkdictionary.SetResource;
-import com.eis0.kademlianetwork.informationdeliverymanager.ResourceExchangeHandler;
+import com.eis0.kademlianetwork.informationdeliverymanager.RequestsHandler;
 import com.eis0.kademlianetwork.listener.SMSKademliaListener;
 import com.eis0.kademlianetwork.routingtablemanager.RoutingTableRefresh;
 import com.eis0.kademlianetwork.routingtablemanager.TableUpdateHandler;
@@ -52,7 +52,7 @@ public class KademliaNetwork implements NetworkManager<String, String, SMSPeer, 
     //Dictionary containing the resources stored by the local node
     protected NetDictionary<String, String> localKademliaDictionary;
     protected final SMSKademliaListener smsKademliaListener = new SMSKademliaListener(this);
-    protected ResourceExchangeHandler resourceExchangeHandler = new ResourceExchangeHandler();
+    protected RequestsHandler requestsHandler = new RequestsHandler();
 
     private final String LOG_KEY = "KAD_NET";
 
@@ -215,7 +215,7 @@ public class KademliaNetwork implements NetworkManager<String, String, SMSPeer, 
      */
     public void setResource(String key, String value, SetResourceListener<String, String, KademliaFailReason> setResourceListener) {
         try{
-            CommandExecutor.execute(new SetResource(key, value, resourceExchangeHandler));
+            CommandExecutor.execute(new SetResource(key, value, requestsHandler));
         }
         catch (Exception e){
             Log.e(LOG_KEY, e.toString());
@@ -245,7 +245,7 @@ public class KademliaNetwork implements NetworkManager<String, String, SMSPeer, 
      */
     public void removeResource(String key, RemoveResourceListener<String, KademliaFailReason> removeResourceListener) {
         try{
-            CommandExecutor.execute(new RemoveResource(key, resourceExchangeHandler));
+            CommandExecutor.execute(new RemoveResource(key, requestsHandler));
         }
         catch (Exception e){
             Log.e(LOG_KEY, e.toString());
@@ -282,9 +282,9 @@ public class KademliaNetwork implements NetworkManager<String, String, SMSPeer, 
     }
 
     /**
-     * Returns the network valid instance of the ResourceExchangeHandler
+     * Returns the network valid instance of the RequestsHandler
      */
-    public ResourceExchangeHandler getResourceExchangeHandler(){
-        return resourceExchangeHandler;
+    public RequestsHandler getRequestsHandler(){
+        return requestsHandler;
     }
 }

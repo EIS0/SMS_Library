@@ -8,14 +8,14 @@ import com.eis0.kademlianetwork.KademliaJoinableNetwork;
 import com.eis0.kademlianetwork.informationdeliverymanager.IdFinderHandler;
 import com.eis0.kademlianetwork.informationdeliverymanager.Request;
 import com.eis0.kademlianetwork.informationdeliverymanager.ResearchMode;
-import com.eis0.kademlianetwork.informationdeliverymanager.ResourceExchangeHandler;
+import com.eis0.kademlianetwork.informationdeliverymanager.RequestsHandler;
 import com.eis0.netinterfaces.commands.Command;
 
 public class SetResource extends Command {
 
     protected final String key;
     protected final String resource;
-    private final ResourceExchangeHandler resourceExchangeHandler;
+    private final RequestsHandler requestsHandler;
 
     /**
      * Set a <key, resource> pair in the network dictionary
@@ -23,21 +23,21 @@ public class SetResource extends Command {
      * @param key
      * @param resource
      */
-    public SetResource(@NonNull String key, @NonNull String resource, @NonNull ResourceExchangeHandler resourceExchangeHandler) {
+    public SetResource(@NonNull String key, @NonNull String resource, @NonNull RequestsHandler requestsHandler) {
         this.key = key;
         this.resource = resource;
-        this.resourceExchangeHandler = resourceExchangeHandler;
+        this.requestsHandler = requestsHandler;
     }
 
     /**
      * Search for the proper node to contain the resource. Add it.
      *
-     * @see {@link ResourceExchangeHandler} for more details
+     * @see {@link RequestsHandler} for more details
      */
     public void execute() {
         Request currentRequest = new Request(key, resource);
         KademliaId idToFind = currentRequest.getKeyId();
-        resourceExchangeHandler.getPendingAddRequests().put(idToFind, currentRequest);
+        requestsHandler.getPendingAddRequests().put(idToFind, currentRequest);
         //Starts to search for the closest ID
         SMSPeer searcher = KademliaJoinableNetwork.getInstance().getLocalNode().getPeer();
         IdFinderHandler.searchId(idToFind, searcher, ResearchMode.AddToDictionary);

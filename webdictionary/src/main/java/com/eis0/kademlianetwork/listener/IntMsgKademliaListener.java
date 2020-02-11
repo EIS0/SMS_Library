@@ -17,8 +17,8 @@ import com.eis0.kademlianetwork.informationdeliverymanager.IdFinderHandler;
 import com.eis0.kademlianetwork.informationdeliverymanager.KademliaMessage;
 import com.eis0.kademlianetwork.informationdeliverymanager.KademliaMessageAnalyzer;
 import com.eis0.kademlianetwork.informationdeliverymanager.RequestTypes;
+import com.eis0.kademlianetwork.informationdeliverymanager.RequestsHandler;
 import com.eis0.kademlianetwork.informationdeliverymanager.ResearchMode;
-import com.eis0.kademlianetwork.informationdeliverymanager.ResourceExchangeHandler;
 import com.eis0.kademlianetwork.routingtablemanager.TableUpdateHandler;
 import com.eis0.netinterfaces.commands.CommandExecutor;
 
@@ -33,12 +33,12 @@ import com.eis0.netinterfaces.commands.CommandExecutor;
 public class IntMsgKademliaListener {
     private final static String LOG_TAG = "MSG_LSTNR";
     private final KademliaNetwork kadNet;
-    private final ResourceExchangeHandler resourceExchangeHandler;
+    private final RequestsHandler requestsHandler;
     private static IntMsgKademliaListener instance;
 
     private IntMsgKademliaListener(KademliaNetwork kadNet) {
         this.kadNet = kadNet;
-        resourceExchangeHandler = KademliaJoinableNetwork.getInstance().getResourceExchangeHandler();
+        requestsHandler = KademliaJoinableNetwork.getInstance().getRequestsHandler();
     }
 
     public static IntMsgKademliaListener getInstance(KademliaNetwork kadNet) {
@@ -134,7 +134,7 @@ public class IntMsgKademliaListener {
                 KademliaJoinableNetwork.getInstance().addNodeToTable(new SMSKademliaNode(peer));
                 //2. Processes the information brought by the message received
                 Log.i(LOG_TAG, "Received ID research request RESULT: " + idToFind);
-                resourceExchangeHandler.completeRequest(idToFind, peer, ResearchMode.AddToDictionary);
+                requestsHandler.completeRequest(idToFind, peer, ResearchMode.AddToDictionary);
                 break;
             case AddToDict:
                 //1. I inform that I'm alive and happy to be
@@ -161,7 +161,7 @@ public class IntMsgKademliaListener {
                 KademliaJoinableNetwork.getInstance().addNodeToTable(new SMSKademliaNode(peer));
                 //2. Processes the information brought by the message received
                 Log.i(LOG_TAG, "Received ID research request RESULT: " + idToFind);
-                resourceExchangeHandler.completeRequest(idToFind, peer, ResearchMode.FindInDictionary);
+                requestsHandler.completeRequest(idToFind, peer, ResearchMode.FindInDictionary);
                 break;
             case GetFromDict:
                 //1. I inform that I'm alive and happy to be
@@ -195,7 +195,7 @@ public class IntMsgKademliaListener {
                 KademliaJoinableNetwork.getInstance().addNodeToTable(new SMSKademliaNode(peer));
                 //2. Processes the information brought by the message received
                 Log.i(LOG_TAG, "Received ID research request RESULT: " + idToFind);
-                resourceExchangeHandler.completeRequest(idToFind, peer, ResearchMode.RemoveFromDictionary);
+                requestsHandler.completeRequest(idToFind, peer, ResearchMode.RemoveFromDictionary);
                 break;
             case RemoveFromDict:
                 //1. I inform that I'm alive and happy to be

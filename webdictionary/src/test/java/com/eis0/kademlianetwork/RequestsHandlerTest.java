@@ -7,7 +7,7 @@ import com.eis0.UtilityMocks;
 import com.eis0.kademlia.KademliaId;
 import com.eis0.kademlia.SMSKademliaNode;
 import com.eis0.kademlianetwork.informationdeliverymanager.Request;
-import com.eis0.kademlianetwork.informationdeliverymanager.ResourceExchangeHandler;
+import com.eis0.kademlianetwork.informationdeliverymanager.RequestsHandler;
 import com.eis0.kademlianetwork.listener.SMSKademliaListener;
 
 import org.junit.Before;
@@ -25,8 +25,8 @@ import static org.mockito.Mockito.when;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(SmsManager.class)
-public class ResourceExchangeHandlerTest {
-    private ResourceExchangeHandler resourceExchangeHandler;
+public class RequestsHandlerTest {
+    private RequestsHandler requestsHandler;
     private final String KEY1 = "Key1";
     private final String KEY2 = "Key1";
     private final String RESOURCE1 = "First resource";
@@ -43,10 +43,10 @@ public class ResourceExchangeHandlerTest {
 
     @Before
     public void setUp() {
-        resourceExchangeHandler = new ResourceExchangeHandler();
+        requestsHandler = new RequestsHandler();
 
         /*
-        request1 = mock(ResourceExchangeHandler.Request.class);
+        request1 = mock(RequestsHandler.Request.class);
         when(request1.getKey()).thenReturn(KEY1);
         when(request1.getKeyId()).thenReturn(KAD_ID1);
         String resource1 = "Resource1";
@@ -70,14 +70,14 @@ public class ResourceExchangeHandlerTest {
         kadNet = KademliaJoinableNetwork.getInstance();
         kadNet.init(MAIN_NODE, UtilityMocks.setupMocks());
         when(kadNet.isAlive(MAIN_NODE.getPeer())).thenReturn(true);
-        //resourceExchangeHandler.createAddRequest(KEY2, resource2);
+        //requestsHandler.createAddRequest(KEY2, resource2);
     }
 
     @Test
     public void createAddRequest_equals() {
         /*
-        resourceExchangeHandler.createRequest(KEY1, RESOURCE1, ResearchMode.AddToDictionary);
-        Map<KademliaId, ResourceExchangeHandler.Request> addRequests = resourceExchangeHandler.getPendingAddRequests();
+        requestsHandler.createRequest(KEY1, RESOURCE1, ResearchMode.AddToDictionary);
+        Map<KademliaId, RequestsHandler.Request> addRequests = requestsHandler.getPendingAddRequests();
         request1 = addRequests.get(KAD_ID1);
         assertEquals(request1.getKeyId(), KAD_ID1);
 
@@ -85,7 +85,7 @@ public class ResourceExchangeHandlerTest {
     }
 
     public void createAddRequest_notEquals() {
-        Map<KademliaId, Request> addRequests = resourceExchangeHandler.getPendingAddRequests();
+        Map<KademliaId, Request> addRequests = requestsHandler.getPendingAddRequests();
         Request request1 = addRequests.get(KAD_ID1);
         Request request2 = addRequests.get(KAD_ID2);
         assertNotEquals(request1.getKeyId(), request2.getKeyId());
