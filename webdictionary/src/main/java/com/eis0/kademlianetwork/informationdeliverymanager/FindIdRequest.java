@@ -49,7 +49,7 @@ public class FindIdRequest {
     }
 
     /**
-     * @return Returns the SMSPeer found by the FindIdRequest
+     * @return Returns the SMSPeer found by the FindIdRequest. Null if no peer has been found.
      */
     public SMSPeer getPeerFound() {
         return peerFound;
