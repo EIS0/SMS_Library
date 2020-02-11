@@ -17,9 +17,6 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import java.util.Map;
-
-import static org.junit.Assert.assertNotEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -58,7 +55,6 @@ public class RequestsHandlerTest {
         when(resourceRequest2.getKey()).thenReturn(KEY2);
         when(resourceRequest2.getKeyId()).thenReturn(KAD_ID2);
         String resource2 = "Resource2";
-        when(resourceRequest2.getResource()).thenReturn(resource2);
 
         SmsManager smsManagerMock = mock(SmsManager.class);
 
@@ -84,10 +80,4 @@ public class RequestsHandlerTest {
          */
     }
 
-    public void createAddRequest_notEquals() {
-        Map<KademliaId, DeleteResourceRequest> addRequests = requestsHandler.getPendingAddRequests();
-        DeleteResourceRequest resourceRequest1 = addRequests.get(KAD_ID1);
-        DeleteResourceRequest resourceRequest2 = addRequests.get(KAD_ID2);
-        assertNotEquals(resourceRequest1.getKeyId(), resourceRequest2.getKeyId());
-    }
 }

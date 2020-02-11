@@ -39,7 +39,7 @@ public class IntMsgKademliaListener {
 
     private IntMsgKademliaListener(KademliaNetwork kadNet) {
         this.kadNet = kadNet;
-        requestsHandler = KademliaJoinableNetwork.getInstance().getRequestsHandler();
+        requestsHandler = kadNet.getRequestsHandler();
     }
 
     public static IntMsgKademliaListener getInstance(KademliaNetwork kadNet) {

@@ -3,9 +3,6 @@ package com.eis0.webdictionary;
 
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-
 /**
  * Example local unit test, which will execute on the development machine (host).
  *
@@ -74,6 +71,8 @@ public class SMSNetTest {
     private final SerializableObjectTestValue v1 = new SerializableObjectTestValue();
     private final SerializableObjectTestValue v2 = new SerializableObjectTestValue();
 
+    /*
+
     @Test
     public void addResource_CheckIfAdded() {
         SMSNetVocabulary net = new SMSNetVocabulary();
@@ -88,4 +87,5 @@ public class SMSNetTest {
         net.remove(k1);
         assertNull(net.getResource(k1));
     }
+     */
 }

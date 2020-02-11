@@ -30,11 +30,10 @@ public class IdFinderHandlerTest {
     //SEARCHER
     private final SMSPeer SEARCHER_PEER = new SMSPeer("+393423541601");
     private final KademliaId SEARCHER_ID = new KademliaId(SEARCHER_PEER);
-    private final SMSKademliaNode SEARCHER = new SMSKademliaNode(SEARCHER_ID);
+    private final SMSKademliaNode SEARCHER = new SMSKademliaNode(SEARCHER_PEER);
 
     //NODE1
     private final KademliaId VALID_NODE1_ID = new KademliaId("0000000000000001");
-    private final SMSKademliaNode VALID_NODE1 = new SMSKademliaNode(VALID_NODE1_ID);
 
     //NODE2
     private final SMSPeer VALID_PEER2 = new SMSPeer("+393423541602");

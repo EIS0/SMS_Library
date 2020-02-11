@@ -12,7 +12,7 @@ import java.util.TimerTask;
 
 class RefreshTimer extends TimerTask {
 
-     private static final long time = 72000000;
+     private static final long time = 7200000;
 
 
     @Override
@@ -25,7 +25,7 @@ class RefreshTimer extends TimerTask {
      */
     private void completeTask() {
         try {
-            //assuming it takes 10 secs to complete the task
+            //assuming it takes 2hours to complete the task
             Thread.sleep(time);
         } catch (InterruptedException e) {
         }

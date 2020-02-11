@@ -27,6 +27,7 @@ import com.eis0.netinterfaces.listeners.GetResourceListener;
 import com.eis0.netinterfaces.listeners.InviteListener;
 import com.eis0.netinterfaces.listeners.RemoveResourceListener;
 import com.eis0.netinterfaces.listeners.SetResourceListener;
+import com.eis0.webdictionary.SMSNetVocabulary;
 
 /**
  * Central class fo the KademliaNetwork. Instead of handling everything itself,
@@ -49,7 +50,7 @@ public class KademliaNetwork implements NetworkManager<String, String, SMSPeer, 
     //User node of the network
     protected SMSKademliaNode localNode;
     //Dictionary containing the resources stored by the local node
-    protected NetDictionary<String, String> localKademliaDictionary;
+    protected NetDictionary<String, String> localKademliaDictionary = new SMSNetVocabulary();
     protected final SMSKademliaListener smsKademliaListener = new SMSKademliaListener(this);
     protected RequestsHandler requestsHandler = new RequestsHandler();
 

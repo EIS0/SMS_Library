@@ -19,7 +19,7 @@ import java.util.List;
  * @author Edoardo Raimondi
  */
 
-public class RoutingTableRefresh{
+public class RoutingTableRefresh extends Thread{
     //node doing this refresh
     private final SMSKademliaNode localNode;
     //kademlia network of the local node
@@ -30,7 +30,6 @@ public class RoutingTableRefresh{
         this.net = net;
     }
 
-
     /**
      * Method that performs a refresh: checks if the users I have are still alive.
      * If they're not I ask for a new id to get instead of him
@@ -38,7 +37,7 @@ public class RoutingTableRefresh{
      * @author Edoardo Raimondi
      * @author Marco Cognolato, little improvements
      */
-    public void start() {
+    public void run() {
         //create the list of my routing table nodes. I need to check all that nodes.
         List<SMSKademliaNode> allRoutingTableNodes = net.getLocalRoutingTable().getAllNodes();
         for (int i = 0; i < allRoutingTableNodes.size(); i++) {

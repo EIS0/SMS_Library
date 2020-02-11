@@ -7,7 +7,6 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 
 public class SMSKademliaNodeTest {
 
@@ -19,9 +18,9 @@ public class SMSKademliaNodeTest {
     private final SMSKademliaNode NODE2 = new SMSKademliaNode(PEER2);
     private final KademliaId KAD_ID = new KademliaId("12345678");
     private final KademliaId KAD_ID2 = new KademliaId("11223344");
-    private final SMSKademliaNode NODE_BY_ID = new SMSKademliaNode(KAD_ID);
-    private final SMSKademliaNode NODE_BY_ID_V2 = new SMSKademliaNode(KAD_ID);
-    private final SMSKademliaNode NODE_BY_ID2 = new SMSKademliaNode(KAD_ID2);
+    private final SMSKademliaNode NODE_BY_ID = new SMSKademliaNode(PEER1);
+    private final SMSKademliaNode NODE_BY_ID_V2 = new SMSKademliaNode(PEER1);
+    private final SMSKademliaNode NODE_BY_ID2 = new SMSKademliaNode(PEER2);
 
     @Test
     public void getNodeIdTest() {
