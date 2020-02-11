@@ -29,12 +29,12 @@ import static org.mockito.Mockito.when;
 public class IdFinderHandlerTest {
     //SEARCHER
     private final SMSPeer SEARCHER_PEER = new SMSPeer("+393423541601");
-    private final KademliaId SEARCHER_ID = new KademliaId(SEARCHER_PEER);
-    private final SMSKademliaNode SEARCHER = new SMSKademliaNode(SEARCHER_ID);
+    private final SMSKademliaNode SEARCHER = new SMSKademliaNode(SEARCHER_PEER);
 
     //NODE1
-    private final KademliaId VALID_NODE1_ID = new KademliaId("0000000000000001");
-    private final SMSKademliaNode VALID_NODE1 = new SMSKademliaNode(VALID_NODE1_ID);
+    private final SMSPeer VALID_PEER1 = new SMSPeer("3408140326");
+    private final KademliaId VALID_NODE1_ID = new KademliaId(VALID_PEER1);
+    private final SMSKademliaNode VALID_NODE1 = new SMSKademliaNode(new SMSPeer("3408140326"));
 
     //NODE2
     private final SMSPeer VALID_PEER2 = new SMSPeer("+393423541602");
@@ -82,13 +82,6 @@ public class IdFinderHandlerTest {
         IdFinderHandler.searchId(VALID_NODE1_ID, SEARCHER_PEER, null);
     }
 
-    @Test
-    public void findMyId(){
-        IdFinderHandler.searchId(SEARCHER_ID, SEARCHER_PEER, ResearchMode.AddToDictionary);
-        String expectedTextMessage = RequestTypes.ResultAddRequest.ordinal() + " " + SEARCHER_ID + " / / /";
-        SMSMessage expectedMessage = new SMSMessage(SEARCHER_PEER, expectedTextMessage);
-        verify(smsManagerMock, times(1)).sendMessage(expectedMessage);
-    }
 
     @Test
     public void findIdInTable(){

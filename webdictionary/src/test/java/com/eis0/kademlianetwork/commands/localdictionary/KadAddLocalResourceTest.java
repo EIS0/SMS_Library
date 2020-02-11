@@ -8,7 +8,7 @@ import static org.junit.Assert.*;
 
 public class KadAddLocalResourceTest {
 
-    NetDictionary<String, String> test;
+    private NetDictionary<String, String> test;
 
 
     @Test

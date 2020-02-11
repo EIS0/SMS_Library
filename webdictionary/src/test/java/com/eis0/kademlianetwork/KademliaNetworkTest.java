@@ -99,7 +99,7 @@ public class KademliaNetworkTest {
         NET1.isAlive(peer1);
         //create the node by the peer
         KademliaId id = new KademliaId(peer1);
-        SMSKademliaNode responsive = new SMSKademliaNode(id);
+        SMSKademliaNode responsive = new SMSKademliaNode(peer1);
         //increment its stale count, it will be considered unresponsive
         Contact c = NET1.getLocalRoutingTable().getBuckets()[NET1.getLocalRoutingTable().getBucketId(id)].getFromContacts(responsive);
         //now I check if isAlive worked properly
@@ -111,7 +111,7 @@ public class KademliaNetworkTest {
         NET1.isAlive(peer1);
         //create the node by the peer
         KademliaId id = new KademliaId(peer1);
-        SMSKademliaNode unresponsive = new SMSKademliaNode(id);
+        SMSKademliaNode unresponsive = new SMSKademliaNode(peer1);
         //increment its stale count, it will be considered unresponsive
         Contact c = NET1.getLocalRoutingTable().getBuckets()[NET1.getLocalRoutingTable().getBucketId(id)].getFromContacts(unresponsive);
         //now I check if isAlive worked properly
