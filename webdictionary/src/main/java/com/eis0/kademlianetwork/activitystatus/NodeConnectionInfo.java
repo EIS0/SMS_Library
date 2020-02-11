@@ -60,6 +60,9 @@ public class NodeConnectionInfo {
         hasPong = value;
     }
 
+    /**
+     * Reset all the variables to false
+     */
     public void reset() {
         hasRespond = false;
         hasPong = false;

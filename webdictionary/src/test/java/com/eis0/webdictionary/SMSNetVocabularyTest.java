@@ -7,18 +7,18 @@ import org.junit.Test;
 public class SMSNetVocabularyTest {
 
     private SMSNetVocabulary net;
-    private TestObject key1;
-    private TestObject key2;
-    private TestObject value1;
-    private TestObject value2;
+    private String key1;
+    private String key2;
+    private String value1;
+    private String value2;
 
     @Before
     public void setup(){
         net = new SMSNetVocabulary();
-        key1 = new TestObject("key1");
-        key2 = new TestObject("key2");
-        value1 = new TestObject("value1");
-        value2 = new TestObject("value2");
+        key1 = "key1";
+        key2 = "key2";
+        value1 = "value1";
+        value2 = "value2";
     }
 
     @Test
@@ -33,13 +33,13 @@ public class SMSNetVocabularyTest {
 
     @Test
     public void addSingleResource_canFindIt(){
-        net.add(key1, value1);
+        net.addResource(key1, value1);
         Assert.assertEquals(net.getResource(key1), value1);
     }
 
     @Test
     public void addSingleResource_cantFindIfNotAdded(){
-        net.add(key1, value1);
+        net.addResource(key1, value1);
         Assert.assertNotEquals(net.getResource(key1), value2);
     }
 
@@ -50,57 +50,57 @@ public class SMSNetVocabularyTest {
 
     @Test
     public void addMultipleResources_canFindOne(){
-        net.add(key1, value1);
-        net.add(key2, value2);
+        net.addResource(key1, value1);
+        net.addResource(key2, value2);
         Assert.assertEquals(net.getResource(key1), value1);
     }
 
     @Test
     public void addMultipleResources_canFindOther(){
-        net.add(key1, value1);
-        net.add(key2, value2);
+        net.addResource(key1, value1);
+        net.addResource(key2, value2);
         Assert.assertEquals(net.getResource(key2), value2);
     }
 
     @Test
     public void updateResource_correctlyUpdates(){
-        net.add(key1, value1);
+        net.addResource(key1, value1);
         net.update(key1, value2);
         Assert.assertEquals(net.getResource(key1), value2);
     }
 
     @Test
     public void addingSameKey_updatesResource(){
-        net.add(key1, value1);
-        net.add(key1, value2);
+        net.addResource(key1, value1);
+        net.addResource(key1, value2);
         Assert.assertEquals(net.getResource(key1), value2);
     }
 
     @Test(expected = NullPointerException.class)
     public void addNullKey_throws(){
-        net.add(null, value1);
+        net.addResource(null, value1);
     }
 
     @Test(expected = NullPointerException.class)
     public void addNullResource_throws(){
-        net.add(key1, null);
+        net.addResource(key1, null);
     }
 
     @Test(expected = NullPointerException.class)
     public void addNullBoth_throws(){
-        net.add(null, null);
+        net.addResource(null, null);
     }
 
     @Test
     public void removeKey_cantFindIt(){
-        net.add(key1, value1);
-        net.remove(key1);
+        net.addResource(key1, value1);
+        net.removeResource(key1);
         Assert.assertNull(net.getResource(key1));
     }
 
     @Test(expected = NullPointerException.class)
     public void removeNull_throws(){
-        net.remove(null);
+        net.removeResource(null);
     }
 
 
