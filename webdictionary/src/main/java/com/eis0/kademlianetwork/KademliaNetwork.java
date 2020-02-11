@@ -51,7 +51,7 @@ public class KademliaNetwork implements NetworkManager<String, String, SMSPeer, 
     protected SMSKademliaNode localNode;
     //Dictionary containing the resources stored by the local node
     protected NetDictionary<String, String> localKademliaDictionary = new SMSNetVocabulary();
-    protected final SMSKademliaListener smsKademliaListener = new SMSKademliaListener(this);
+    protected final SMSKademliaListener smsKademliaListener = new SMSKademliaListener();
     protected RequestsHandler requestsHandler = new RequestsHandler();
 
     private final String LOG_KEY = "KAD_NET";
