@@ -32,7 +32,7 @@ public class RequestsHandler {
 
     //Maps containing the pending Requests waiting to be completed; each pending request is identified
     //inside the Map by the request ID that the request must process
-    private static Map<KademliaId, ResourceRequest> pendingAddRequests;
+    private static Map<KademliaId, AddResourceRequest> pendingAddRequests;
     private static Map<String, FindResourceRequest> pendingFindResourceRequests;
     private static Map<KademliaId, ResourceRequest> pendingDeleteRequests;
     private static Map<KademliaId, FindIdRequest> pendingFindIdRequests;
@@ -106,15 +106,6 @@ public class RequestsHandler {
     }
 
     /**
-     * This method returns the pendingAddRequests object of the class
-     *
-     * @return The pendingAddRequests map of the RequestsHandler class
-     */
-    public Map<KademliaId, ResourceRequest> getPendingAddRequests() {
-        return pendingAddRequests;
-    }
-
-    /**
      * This method returns the pendingDeleteRequests object of the class
      *
      * @return The pendingFindResourceRequests map of the RequestsHandler class
@@ -146,6 +137,17 @@ public class RequestsHandler {
     }
 
     /**
+     * Starts a new FindResourceRequest
+     * @param key The key of the resource to find, used to identify the pending request
+     * @return An instance of a specific FindResourceRequest
+     */
+    public AddResourceRequest startAddResourceRequest(@NonNull String key, @NonNull String resource){
+        AddResourceRequest resourceRequest = new AddResourceRequest(key, resource);
+        pendingAddRequests.put(resourceRequest.getKeyId(), resourceRequest);
+        return resourceRequest;
+    }
+
+    /**
      * Sets the corresponding FindIdRequest as completed
      *
      * @param idToFind The KademliaId to find originally
@@ -168,6 +170,18 @@ public class RequestsHandler {
     public void completeFindResourceRequest(String key, String resourceFound){
         if(pendingFindResourceRequests.containsKey(key)){
             pendingFindResourceRequests.get(key).setCompleted(resourceFound);
+        }
+    }
+
+    /**
+     * Sets the corresponding AddResourceRequest as completed
+     *
+     * @param key The key identifier of the AddResourceRequest
+     */
+    public void completeAddResourceRequest(String key){
+        KademliaId requestId = new KademliaId(key);
+        if(pendingAddRequests.containsKey(requestId)){
+            pendingAddRequests.get(requestId).setCompleted();
         }
     }
 }
