@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * This class handle the resource {@link Request}s, it allows the user to:
+ * This class handle the resource {@link ResourceRequest}s, it allows the user to:
  * 1. Create a request to process a resource inside the dictionary
  * 2. Rack up multiple pending requests, waiting to be triggered
  * 3. Handle the response to the request, which contains the node ID closest to the resource ID that
@@ -19,6 +19,7 @@ import java.util.Map;
  *
  * @author Enrico Cestaro
  * @author Edoardo Raimondi
+ * @author Marco Cognolato
  */
 public class RequestsHandler {
 
@@ -30,9 +31,9 @@ public class RequestsHandler {
 
     //Maps containing the pending Requests waiting to be completed; each pending request is identified
     //inside the Map by the request ID that the request must process
-    private static Map<KademliaId, Request> pendingAddRequests;
-    private static Map<KademliaId, Request> pendingFindRequests;
-    private static Map<KademliaId, Request> pendingDeleteRequests;
+    private static Map<KademliaId, ResourceRequest> pendingAddRequests;
+    private static Map<KademliaId, ResourceRequest> pendingFindRequests;
+    private static Map<KademliaId, ResourceRequest> pendingDeleteRequests;
 
     /**
      * This constructor initializes the three pending requests lists
@@ -45,13 +46,13 @@ public class RequestsHandler {
 
     /**
      * This method is called whenever the network returns the node ID closest to the resource ID.
-     * It searches for the corresponding {@link Request} which sent the ID research in the network,
+     * It searches for the corresponding {@link ResourceRequest} which sent the ID research in the network,
      * extracts it from the list of pending requests, and sends the <key, resource> pair contained in
      * the request to the targetPeer, that is the node which answered to the research.
-     * The {@link KademliaId} must correspond to an existing opened Request for the method to work.
+     * The {@link KademliaId} must correspond to an existing opened ResourceRequest for the method to work.
      *
      * @param idToFind     The {@link KademliaId} of the resource key; it's used to trace back the
-     *                     Request in the pending requests list
+     *                     ResourceRequest in the pending requests list
      * @param targetPeer   The {@link SMSPeer} of the node which answered the research and receive the
      *                     <key, resource> pair
      * @param researchMode The research mode, represents the final purpose of the research
@@ -61,8 +62,8 @@ public class RequestsHandler {
         if (idToFind == null) throw new IllegalArgumentException(ID_TO_FIND_NULL);
         if (targetPeer == null) throw new IllegalArgumentException(TARGET_PEER_NULL);
 
-        Map<KademliaId, Request> pendingRequests = null;
-        Request aboutToClose = null;
+        Map<KademliaId, ResourceRequest> pendingRequests = null;
+        ResourceRequest aboutToClose = null;
         RequestTypes requestType = null;
 
         //1. Verify what kind of request must be completed
@@ -85,7 +86,7 @@ public class RequestsHandler {
         }
         //Remove the request from the corresponding list
         pendingRequests.remove(idToFind);
-        //Extract the <key, resource> pair contained by the Request; the resource value can be null
+        //Extract the <key, resource> pair contained by the ResourceRequest; the resource value can be null
         String key = aboutToClose.getKey();
         String resource = aboutToClose.getResource();
         //2. Send the message
@@ -103,7 +104,7 @@ public class RequestsHandler {
      *
      * @return The pendingAddRequests map of the RequestsHandler class
      */
-    public Map<KademliaId, Request> getPendingAddRequests() {
+    public Map<KademliaId, ResourceRequest> getPendingAddRequests() {
         return pendingAddRequests;
     }
 
@@ -112,7 +113,7 @@ public class RequestsHandler {
      *
      * @return The pendingFindRequests map of the RequestsHandler class
      */
-    public Map<KademliaId, Request> getPendingFindRequests() {
+    public Map<KademliaId, ResourceRequest> getPendingFindRequests() {
         return pendingFindRequests;
     }
 
@@ -121,16 +122,16 @@ public class RequestsHandler {
      *
      * @return The pendingFindRequests map of the RequestsHandler class
      */
-    public Map<KademliaId, Request> getPendingDeleteRequests() {
+    public Map<KademliaId, ResourceRequest> getPendingDeleteRequests() {
         return pendingDeleteRequests;
     }
 }
 
 /*
 When a resource needs to be added to the network dictionary:
-1. A Request is created, it contains the <key, resource> pair
-2. The Request is added to the pendingAddRequests list, and is processed
-3. Processing the Request means that:
+1. A ResourceRequest is created, it contains the <key, resource> pair
+2. The ResourceRequest is added to the pendingAddRequests list, and is processed
+3. Processing the ResourceRequest means that:
     - The node which will contain the resource must be found, a message identified by the code
     FindIdForAddRequest is sent 'inside the network'
     (createAddRequest >> processRequest >> idFinderHandler >> 'Network / TargetNode')
@@ -139,7 +140,7 @@ When a resource needs to be added to the network dictionary:
     the Dictionary
     ('Network / TargetNode' >> SMSKademliaListener >> completeAddRequest)
 4. When the local node receives the result of the research, it searches inside the list of pending
-    AddRequests, find the corresponding one, and complete the Request sending to
+    AddRequests, find the corresponding one, and complete the ResourceRequest sending to
     the node which will store it the resource, inside a message identified by the code AddToDict
 5. The final node will receive the message, recognize it (with the SMSKademliaListener) as a request
     to store a resource, and do so

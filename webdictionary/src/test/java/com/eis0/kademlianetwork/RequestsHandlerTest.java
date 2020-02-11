@@ -6,7 +6,7 @@ import com.eis.smslibrary.SMSPeer;
 import com.eis0.UtilityMocks;
 import com.eis0.kademlia.KademliaId;
 import com.eis0.kademlia.SMSKademliaNode;
-import com.eis0.kademlianetwork.informationdeliverymanager.Request;
+import com.eis0.kademlianetwork.informationdeliverymanager.ResourceRequest;
 import com.eis0.kademlianetwork.informationdeliverymanager.RequestsHandler;
 import com.eis0.kademlianetwork.listener.SMSKademliaListener;
 
@@ -39,26 +39,26 @@ public class RequestsHandlerTest {
 
     private final SMSKademliaListener mockListener = mock(SMSKademliaListener.class);
     private KademliaNetwork kadNet;
-    private Request request1;
+    private ResourceRequest resourceRequest1;
 
     @Before
     public void setUp() {
         requestsHandler = new RequestsHandler();
 
         /*
-        request1 = mock(RequestsHandler.Request.class);
-        when(request1.getKey()).thenReturn(KEY1);
-        when(request1.getKeyId()).thenReturn(KAD_ID1);
+        resourceRequest1 = mock(RequestsHandler.ResourceRequest.class);
+        when(resourceRequest1.getKey()).thenReturn(KEY1);
+        when(resourceRequest1.getKeyId()).thenReturn(KAD_ID1);
         String resource1 = "Resource1";
-        when(request1.getResource()).thenReturn(resource1);
+        when(resourceRequest1.getResource()).thenReturn(resource1);
 
          */
 
-        Request request2 = mock(Request.class);
-        when(request2.getKey()).thenReturn(KEY2);
-        when(request2.getKeyId()).thenReturn(KAD_ID2);
+        ResourceRequest resourceRequest2 = mock(ResourceRequest.class);
+        when(resourceRequest2.getKey()).thenReturn(KEY2);
+        when(resourceRequest2.getKeyId()).thenReturn(KAD_ID2);
         String resource2 = "Resource2";
-        when(request2.getResource()).thenReturn(resource2);
+        when(resourceRequest2.getResource()).thenReturn(resource2);
 
         SmsManager smsManagerMock = mock(SmsManager.class);
 
@@ -77,17 +77,17 @@ public class RequestsHandlerTest {
     public void createAddRequest_equals() {
         /*
         requestsHandler.createRequest(KEY1, RESOURCE1, ResearchMode.AddToDictionary);
-        Map<KademliaId, RequestsHandler.Request> addRequests = requestsHandler.getPendingAddRequests();
-        request1 = addRequests.get(KAD_ID1);
-        assertEquals(request1.getKeyId(), KAD_ID1);
+        Map<KademliaId, RequestsHandler.ResourceRequest> addRequests = requestsHandler.getPendingAddRequests();
+        resourceRequest1 = addRequests.get(KAD_ID1);
+        assertEquals(resourceRequest1.getKeyId(), KAD_ID1);
 
          */
     }
 
     public void createAddRequest_notEquals() {
-        Map<KademliaId, Request> addRequests = requestsHandler.getPendingAddRequests();
-        Request request1 = addRequests.get(KAD_ID1);
-        Request request2 = addRequests.get(KAD_ID2);
-        assertNotEquals(request1.getKeyId(), request2.getKeyId());
+        Map<KademliaId, ResourceRequest> addRequests = requestsHandler.getPendingAddRequests();
+        ResourceRequest resourceRequest1 = addRequests.get(KAD_ID1);
+        ResourceRequest resourceRequest2 = addRequests.get(KAD_ID2);
+        assertNotEquals(resourceRequest1.getKeyId(), resourceRequest2.getKeyId());
     }
 }

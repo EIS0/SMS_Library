@@ -25,7 +25,7 @@ public class KademliaId implements Serializable {
 
     //A Byte is 8 bits, so this shouldn't be changed
     private final static int BYTE_SIZE = 8;
-    final static int ID_LENGTH_BYTES = 8;
+    final static int ID_LENGTH_BYTES = 15;
     public final static int ID_LENGTH = BYTE_SIZE * ID_LENGTH_BYTES;
 
     private static final String HASHING_ALG = "SHA-256";
