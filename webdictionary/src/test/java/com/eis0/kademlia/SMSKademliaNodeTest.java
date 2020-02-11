@@ -16,14 +16,6 @@ public class SMSKademliaNodeTest {
     private final SMSKademliaNode NODE1 = new SMSKademliaNode(PEER1);
     private final SMSKademliaNode NODE1_V2 = new SMSKademliaNode(PEER1);
     private final SMSKademliaNode NODE2 = new SMSKademliaNode(PEER2);
-<<<<<<< HEAD
-=======
-    private final KademliaId KAD_ID = new KademliaId("12345678");
-    private final KademliaId KAD_ID2 = new KademliaId("11223344");
-    private final SMSKademliaNode NODE_BY_ID = new SMSKademliaNode(PEER1);
-    private final SMSKademliaNode NODE_BY_ID_V2 = new SMSKademliaNode(PEER1);
-    private final SMSKademliaNode NODE_BY_ID2 = new SMSKademliaNode(PEER2);
->>>>>>> 6acf762ace63bb2f1f879e68c606b7d6aac9d1c0
 
     @Test
     public void getNodeIdTest() {

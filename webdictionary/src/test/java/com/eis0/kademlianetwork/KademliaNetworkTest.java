@@ -144,10 +144,6 @@ public class KademliaNetworkTest {
         assertTrue(NET1.isAlive(peer2));
     }
 
-    @Test
-    public void getLocalDictionary(){
-        assertNotNull(NET1.getLocalDictionary());
-    }
 
 
     private class TimerTest extends TimerTask{
