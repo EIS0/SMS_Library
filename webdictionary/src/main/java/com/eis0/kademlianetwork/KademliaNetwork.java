@@ -15,6 +15,7 @@ import com.eis0.kademlianetwork.activitystatus.NodeConnectionInfo;
 import com.eis0.kademlianetwork.commands.localdictionary.KadAddLocalResource;
 import com.eis0.kademlianetwork.commands.localdictionary.KadRemoveLocalResource;
 import com.eis0.kademlianetwork.commands.messages.KadSendInvitation;
+import com.eis0.kademlianetwork.commands.networkdictionary.FindResource;
 import com.eis0.kademlianetwork.commands.networkdictionary.RemoveResource;
 import com.eis0.kademlianetwork.commands.networkdictionary.SetResource;
 import com.eis0.kademlianetwork.informationdeliverymanager.RequestsHandler;
@@ -233,7 +234,22 @@ public class KademliaNetwork implements NetworkManager<String, String, SMSPeer, 
      * @param getResourceListener Listener called on resource successfully retrieved or on fail.
      */
     public void getResource(String key, GetResourceListener<String, String, KademliaFailReason> getResourceListener) {
+        FindResource resourceCommand;
+        try {
+            resourceCommand = new FindResource(key, requestsHandler);
+            CommandExecutor.execute(resourceCommand);
+        }
+        catch (Exception e){
+            Log.e(LOG_KEY, e.toString());
+            getResourceListener.onGetResourceFailed(key, KademliaFailReason.GENERIC_FAIL);
+            return;
+        }
 
+        if(!resourceCommand.hasSuccessfullyCompleted()){
+            getResourceListener.onGetResourceFailed(key, resourceCommand.getFailReason());
+            return;
+        }
+        getResourceListener.onGetResource(key, resourceCommand.getResource());
     }
 
     /**
