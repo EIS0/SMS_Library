@@ -19,26 +19,14 @@ public enum RequestTypes {
     //Requests to handle the resource exchange
     AddToDict,
     GetFromDict,
+    ResultGetRequest,
     RemoveFromDict,
 
     //Requests to handle the research closest ID
     FindId,
-    SearchResult,
-
-    //Requests to handle the research for the closest ID in the resource exchange process:
-    //Adding an element to the Dictionary
-    FindIdForAddRequest,
-    ResultAddRequest,
-    //Asking for an element in the Dictionary
-    FindIdForGetRequest,
-    ResultGetRequest,
-    //Deleting an element from the Dictionary
-    FindIdForDeleteRequest,
-    ResultDeleteRequest,
+    FindIdSearchResult,
 
     //Refreshing operation
     Ping,
     Pong,
-    FindIdRefresh,
-    SearchResultReplacement
 }

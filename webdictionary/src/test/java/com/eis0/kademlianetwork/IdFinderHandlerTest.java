@@ -9,7 +9,6 @@ import com.eis0.kademlia.SMSKademliaNode;
 import com.eis0.kademlia.SMSKademliaRoutingTable;
 import com.eis0.kademlianetwork.informationdeliverymanager.IdFinderHandler;
 import com.eis0.kademlianetwork.informationdeliverymanager.RequestTypes;
-import com.eis0.kademlianetwork.informationdeliverymanager.ResearchMode;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -68,23 +67,23 @@ public class IdFinderHandlerTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void nullId_throws(){
-        IdFinderHandler.searchId(null, SEARCHER_PEER, ResearchMode.AddToDictionary);
+        IdFinderHandler.searchId(null, SEARCHER_PEER);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void nullSearcher_throws(){
-        IdFinderHandler.searchId(VALID_NODE1_ID, null, ResearchMode.AddToDictionary);
+        IdFinderHandler.searchId(VALID_NODE1_ID, null);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void nullRequest_throws(){
-        IdFinderHandler.searchId(VALID_NODE1_ID, SEARCHER_PEER, null);
+        IdFinderHandler.searchId(VALID_NODE1_ID, SEARCHER_PEER);
     }
 
     @Test
     public void findMyId(){
-        IdFinderHandler.searchId(SEARCHER_ID, SEARCHER_PEER, ResearchMode.AddToDictionary);
-        String expectedTextMessage = RequestTypes.ResultAddRequest.ordinal() + " " + SEARCHER_ID + " / / /";
+        IdFinderHandler.searchId(SEARCHER_ID, SEARCHER_PEER);
+        String expectedTextMessage = RequestTypes.Ping.ordinal() + " " + SEARCHER_ID + " / / /";
         SMSMessage expectedMessage = new SMSMessage(SEARCHER_PEER, expectedTextMessage);
         verify(smsManagerMock, times(1)).sendMessage(expectedMessage);
     }
@@ -92,8 +91,8 @@ public class IdFinderHandlerTest {
     @Test
     public void findIdInTable(){
         routingTable.insert(VALID_NODE2);
-        IdFinderHandler.searchId(VALID_NODE2_ID, SEARCHER_PEER, ResearchMode.AddToDictionary);
-        String expectedTextMessage = RequestTypes.ResultAddRequest.ordinal() + " " + VALID_NODE2 + " / / /";
+        IdFinderHandler.searchId(VALID_NODE2_ID, SEARCHER_PEER);
+        String expectedTextMessage = RequestTypes.Ping.ordinal() + " " + VALID_NODE2 + " / / /";
         SMSMessage expectedMessage = new SMSMessage(SEARCHER_PEER, expectedTextMessage);
         verify(smsManagerMock, times(1)).sendMessage(expectedMessage);
     }
@@ -102,9 +101,9 @@ public class IdFinderHandlerTest {
     public void forwardRequest(){
         //routingTable.insert(VALID_NODE1);
         routingTable.insert(VALID_NODE2);
-        IdFinderHandler.searchId(VALID_NODE2_ID, SEARCHER_PEER, ResearchMode.AddToDictionary);
+        IdFinderHandler.searchId(VALID_NODE2_ID, SEARCHER_PEER);
         String expectedTextMessage =
-                RequestTypes.FindIdForAddRequest.ordinal() + " " +
+                RequestTypes.FindId.ordinal() + " " +
                         VALID_NODE2_ID + " " + SEARCHER_PEER + " / /";
         SMSMessage expectedMessage = new SMSMessage(VALID_PEER2, expectedTextMessage);
         verify(smsManagerMock, times(1)).sendMessage(expectedMessage);
