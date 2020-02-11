@@ -3,8 +3,6 @@ package com.eis0.kademlianetwork;
 
 import com.eis.smslibrary.SMSPeer;
 import com.eis0.UtilityMocks;
-import com.eis0.kademlia.Contact;
-import com.eis0.kademlia.KademliaId;
 import com.eis0.kademlia.SMSKademliaNode;
 import com.eis0.kademlianetwork.listener.SMSKademliaListener;
 
@@ -96,6 +94,7 @@ public class KademliaNetworkTest {
         //this will last 10s
         assertTrue(NET1.isAlive(peer1));
     }
+    /*
 
     @Test
     public void isAlive_checkIfSetUnresponsive_notCalled(){
@@ -122,6 +121,7 @@ public class KademliaNetworkTest {
         //now I check if isAlive worked properly
         assertEquals(c.staleCount(), 1);
     }
+     */
 
     @Test
     public void isAlive_calledTwice(){
@@ -142,6 +142,11 @@ public class KademliaNetworkTest {
         //I imagine receive a respond from peer2
         NET1.connectionInfo.setRespond(true);
         assertTrue(NET1.isAlive(peer2));
+    }
+
+    @Test
+    public void getLocalDictionary(){
+        assertNotNull(NET1.getLocalDictionary());
     }
 
 

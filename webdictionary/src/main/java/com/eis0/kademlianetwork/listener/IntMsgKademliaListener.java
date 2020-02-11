@@ -21,7 +21,6 @@ import com.eis0.kademlianetwork.informationdeliverymanager.KademliaMessageAnalyz
 import com.eis0.kademlianetwork.informationdeliverymanager.RequestTypes;
 import com.eis0.kademlianetwork.informationdeliverymanager.RequestsHandler;
 import com.eis0.kademlianetwork.informationdeliverymanager.ResearchMode;
-import com.eis0.kademlianetwork.routingtablemanager.TableUpdateHandler;
 import com.eis0.netinterfaces.commands.CommandExecutor;
 
 /**
@@ -40,7 +39,7 @@ public class IntMsgKademliaListener {
 
     private IntMsgKademliaListener(KademliaNetwork kadNet) {
         this.kadNet = kadNet;
-        requestsHandler = KademliaJoinableNetwork.getInstance().getRequestsHandler();
+        requestsHandler = kadNet.getRequestsHandler();
     }
 
     public static IntMsgKademliaListener getInstance(KademliaNetwork kadNet) {
@@ -117,7 +116,7 @@ public class IntMsgKademliaListener {
                 //1. I inform that I'm alive and happy to be
                 CommandExecutor.execute(new KadSendAcknowledge(peer));
                 //2. Processes the information brought by the message received
-                TableUpdateHandler.stepTableUpdate(peer);
+                requestsHandler.completeFindIdRequest(idToFind, peer);
                 break;
 
 

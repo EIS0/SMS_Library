@@ -6,8 +6,9 @@ import com.eis.smslibrary.SMSPeer;
 import com.eis0.kademlia.KademliaId;
 import com.eis0.kademlia.SMSKademliaNode;
 import com.eis0.kademlia.SMSKademliaRoutingTable;
-import com.eis0.kademlianetwork.informationdeliverymanager.IdFinderHandler;
-import com.eis0.kademlianetwork.informationdeliverymanager.ResearchMode;
+import com.eis0.kademlianetwork.commands.KadFindId;
+import com.eis0.kademlianetwork.informationdeliverymanager.RequestsHandler;
+import com.eis0.netinterfaces.commands.CommandExecutor;
 
 /**
  * Iterator for the execution of the update-table algorithm.
@@ -17,12 +18,13 @@ import com.eis0.kademlianetwork.informationdeliverymanager.ResearchMode;
  *
  * @author Marco Cognolato
  */
-class TableUpdateIterator {
+class TableUpdateIterator extends Thread{
     private int currentCount;
     private int maxCount;
     private KademliaId netId;
     private SMSKademliaRoutingTable table;
     private SMSPeer netPeer;
+    private RequestsHandler requestsHandler;
 
     /**
      * Constructs an Iterator object which is used to update a given table.
@@ -36,47 +38,45 @@ class TableUpdateIterator {
     public TableUpdateIterator(int maxCount,
                                @NonNull KademliaId netId,
                                @NonNull SMSKademliaRoutingTable table,
-                               @NonNull SMSPeer netPeer) {
+                               @NonNull SMSPeer netPeer,
+                               @NonNull RequestsHandler requestsHandler) {
         if(maxCount <= 0) throw new IllegalArgumentException("maxCount has to be at least 1!");
-        if(netId == null || table == null || netPeer == null)
-            throw new IllegalArgumentException("input parameters cannot be null!");
         this.maxCount = maxCount;
         this.currentCount = 0;
         this.netId = netId;
         this.table = table;
         this.netPeer = netPeer;
-
-        //step 1
-        askForId();
+        this.requestsHandler = requestsHandler;
     }
 
-    /**
-     * Steps execution of the algorithm once.
-     *
-     * @param peerReceived The SMSPeer received because of the last step
-     */
-    public void step(SMSPeer peerReceived) {
-        if (hasFinished()) {
-            //finished execution
-            return;
-        }
-        //check if I'm the id received: stop if I am
-        SMSKademliaNode receivedNode = new SMSKademliaNode(peerReceived);
-        if (receivedNode.getId() == netId) {
-            currentCount = maxCount + 1;
-            return;
-        }
-        //check if the id received is already in the table: stop if it is
-        if (table.getAllNodes().contains(receivedNode)) {
-            currentCount = maxCount + 1;
-            return;
-        }
-        //if I'm here I have a new node, add him to the table
-        table.insert(receivedNode);
-        //re-start algorithm for the next id
-        currentCount++;
+    public void run(){
+        while (!hasFinished()){
+            //create the fake id
+            KademliaId fakeId = netId.generateNodeIdByDistance(currentCount);
+            KadFindId findIdCommand = new KadFindId(fakeId, requestsHandler);
+            CommandExecutor.execute(findIdCommand);
+            if(!findIdCommand.hasSuccessfullyCompleted()){
+                return;
+            }
+            //If I'm here it means I've found a peer
+            SMSPeer peerReceived = findIdCommand.getPeerFound();
 
-        askForId();
+            //check if I'm the id received: stop if I am
+            SMSKademliaNode receivedNode = new SMSKademliaNode(peerReceived);
+            if (receivedNode.getId() == netId) {
+                currentCount = maxCount + 1;
+                return;
+            }
+            //check if the id received is already in the table: stop if it is
+            if (table.getAllNodes().contains(receivedNode)) {
+                currentCount = maxCount + 1;
+                return;
+            }
+            //if I'm here I have a new node, add him to the table
+            table.insert(receivedNode);
+            //re-start algorithm for the next id
+            currentCount++;
+        }
     }
 
     /**
@@ -86,13 +86,4 @@ class TableUpdateIterator {
         return currentCount >= maxCount;
     }
 
-    /**
-     * Generates an id to find and searches for it in the net sending a request
-     */
-    private void askForId() {
-        //create the fake id
-        KademliaId fakeId = netId.generateNodeIdByDistance(currentCount);
-        //search in the net for the fakeId and wait
-        IdFinderHandler.searchId(fakeId, netPeer, ResearchMode.JoinNetwork);
-    }
 }

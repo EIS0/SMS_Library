@@ -48,7 +48,7 @@ class NetworkListener extends SMSReceivedServiceListener {
             net.addToDictionaryNoCast(text.substring(2));
         }
         else if(incomingRequest == RequestType.RemoveFromDict){
-            net.removeFromDictionaryNoCast(text.substring(2));
+            //net.removeFromDictionaryNoCast(text.substring(2));
         }
         else if(incomingRequest == RequestType.UpdateDict){
             net.updateDictionaryNoCast(text.substring(2));

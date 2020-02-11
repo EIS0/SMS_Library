@@ -12,12 +12,10 @@ import com.eis0.kademlia.KademliaId;
 import com.eis0.kademlia.SMSKademliaNode;
 import com.eis0.kademlia.SMSKademliaRoutingTable;
 import com.eis0.kademlianetwork.activitystatus.NodeConnectionInfo;
-import com.eis0.kademlianetwork.commands.localdictionary.KadAddLocalResource;
-import com.eis0.kademlianetwork.commands.localdictionary.KadRemoveLocalResource;
 import com.eis0.kademlianetwork.commands.messages.KadSendInvitation;
 import com.eis0.kademlianetwork.commands.networkdictionary.FindResource;
-import com.eis0.kademlianetwork.commands.networkdictionary.KadDeleteResource;
 import com.eis0.kademlianetwork.commands.networkdictionary.KadAddResource;
+import com.eis0.kademlianetwork.commands.networkdictionary.KadDeleteResource;
 import com.eis0.kademlianetwork.informationdeliverymanager.RequestsHandler;
 import com.eis0.kademlianetwork.listener.SMSKademliaListener;
 import com.eis0.kademlianetwork.routingtablemanager.RoutingTableRefresh;
@@ -52,7 +50,7 @@ public class KademliaNetwork implements NetworkManager<String, String, SMSPeer, 
     //User node of the network
     protected SMSKademliaNode localNode;
     //Dictionary containing the resources stored by the local node
-    protected NetDictionary<String, String> localKademliaDictionary;
+    protected NetDictionary<String, String> localKademliaDictionary = new SMSNetVocabulary();
     protected final SMSKademliaListener smsKademliaListener = new SMSKademliaListener(this);
     protected RequestsHandler requestsHandler = new RequestsHandler();
     public final RoutingTableRefresh refresh = new RoutingTableRefresh(this.localNode, this);
@@ -161,7 +159,7 @@ public class KademliaNetwork implements NetworkManager<String, String, SMSPeer, 
     public void updateTable() {
         //calls the proper handler to update the routing table
         SMSPeer netPeer = localNode.getPeer();
-        TableUpdateHandler.updateTable(localRoutingTable, localNode.getId(), netPeer);
+        TableUpdateHandler.updateTable(localRoutingTable, localNode.getId(), netPeer, requestsHandler);
     }
 
     /**
