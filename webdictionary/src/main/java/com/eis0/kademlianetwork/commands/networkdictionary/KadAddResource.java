@@ -11,7 +11,7 @@ import com.eis0.kademlianetwork.informationdeliverymanager.ResearchMode;
 import com.eis0.kademlianetwork.informationdeliverymanager.RequestsHandler;
 import com.eis0.netinterfaces.commands.Command;
 
-public class SetResource extends Command {
+public class KadAddResource extends Command {
 
     protected final String key;
     protected final String resource;
@@ -23,7 +23,7 @@ public class SetResource extends Command {
      * @param key
      * @param resource
      */
-    public SetResource(@NonNull String key, @NonNull String resource, @NonNull RequestsHandler requestsHandler) {
+    public KadAddResource(@NonNull String key, @NonNull String resource, @NonNull RequestsHandler requestsHandler) {
         this.key = key;
         this.resource = resource;
         this.requestsHandler = requestsHandler;

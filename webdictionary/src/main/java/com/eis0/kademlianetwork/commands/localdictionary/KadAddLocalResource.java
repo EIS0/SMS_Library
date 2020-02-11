@@ -7,11 +7,10 @@ import com.eis0.netinterfaces.commands.AddResource;
 
 public class KadAddLocalResource extends AddResource<String, String> {
 
-    private NetDictionary localDictionary;
-
     /**
-     * @param key
-     * @param value
+     * Constructor for the AddLocalResource Command, needs data to work
+     * @param key The key identifier of the resource to add to the dictionary
+     * @param value The resource value to add to the dictionary
      * @param localDictionary where pair <key, value> has to be inserted
      */
     public KadAddLocalResource(@NonNull String key, @NonNull String value, @NonNull NetDictionary localDictionary){
@@ -19,10 +18,10 @@ public class KadAddLocalResource extends AddResource<String, String> {
     }
 
     /**
-     * Add the pair in the dictionary
+     * Add the key-resource pair in the dictionary
      */
     public void execute(){
-        localDictionary.addResource(key, value);
+        netDictionary.addResource(key, value);
     }
 
 }

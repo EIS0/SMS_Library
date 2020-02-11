@@ -17,7 +17,7 @@ import com.eis0.kademlianetwork.commands.localdictionary.KadRemoveLocalResource;
 import com.eis0.kademlianetwork.commands.messages.KadSendInvitation;
 import com.eis0.kademlianetwork.commands.networkdictionary.FindResource;
 import com.eis0.kademlianetwork.commands.networkdictionary.RemoveResource;
-import com.eis0.kademlianetwork.commands.networkdictionary.SetResource;
+import com.eis0.kademlianetwork.commands.networkdictionary.KadAddResource;
 import com.eis0.kademlianetwork.informationdeliverymanager.RequestsHandler;
 import com.eis0.kademlianetwork.listener.SMSKademliaListener;
 import com.eis0.kademlianetwork.routingtablemanager.RoutingTableRefresh;
@@ -169,7 +169,7 @@ public class KademliaNetwork implements NetworkManager<String, String, SMSPeer, 
      * @author Enrico Cestaro
      */
     public void addToLocalDictionary(String key, String resource) {
-        new KadAddLocalResource(key, resource, localKademliaDictionary).execute();
+        CommandExecutor.execute(new KadAddLocalResource(key, resource, localKademliaDictionary));
     }
 
     /**
@@ -179,7 +179,7 @@ public class KademliaNetwork implements NetworkManager<String, String, SMSPeer, 
      * @author Enrico Cestaro
      */
     public void removeFromLocalDictionary(String key) {
-        new KadRemoveLocalResource(key, localKademliaDictionary).execute();
+        CommandExecutor.execute(new KadRemoveLocalResource(key, localKademliaDictionary));
     }
 
     /**
@@ -216,7 +216,7 @@ public class KademliaNetwork implements NetworkManager<String, String, SMSPeer, 
      */
     public void setResource(String key, String value, SetResourceListener<String, String, KademliaFailReason> setResourceListener) {
         try{
-            CommandExecutor.execute(new SetResource(key, value, requestsHandler));
+            CommandExecutor.execute(new KadAddResource(key, value, requestsHandler));
         }
         catch (Exception e){
             Log.e(LOG_KEY, e.toString());
