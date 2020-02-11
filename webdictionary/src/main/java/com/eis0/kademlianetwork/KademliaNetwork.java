@@ -43,7 +43,7 @@ public class KademliaNetwork implements NetworkManager<String, String, SMSPeer, 
 
 
     public final NodeConnectionInfo connectionInfo = new NodeConnectionInfo();
-
+    public RoutingTableRefresh refresh;
 
     //Routing table for this user of the network
     protected SMSKademliaRoutingTable localRoutingTable;
@@ -53,7 +53,6 @@ public class KademliaNetwork implements NetworkManager<String, String, SMSPeer, 
     protected NetDictionary<String, String> localKademliaDictionary = new SMSNetVocabulary();
     protected final SMSKademliaListener smsKademliaListener = new SMSKademliaListener(this);
     protected RequestsHandler requestsHandler = new RequestsHandler();
-    public final RoutingTableRefresh refresh = new RoutingTableRefresh(this.localNode, this);
 
     private final String LOG_KEY = "KAD_NET";
 
@@ -67,7 +66,8 @@ public class KademliaNetwork implements NetworkManager<String, String, SMSPeer, 
         SMSManager.getInstance().setReceivedListener(smsKademliaListener.getClass(), context);
         this.localNode = localNode;
         localRoutingTable = new SMSKademliaRoutingTable(localNode, new DefaultConfiguration());
-        localKademliaDictionary = new SMSNetVocabulary();
+        refresh = new RoutingTableRefresh(this.localNode, this);
+        refresh.start();
     }
 
     /**
