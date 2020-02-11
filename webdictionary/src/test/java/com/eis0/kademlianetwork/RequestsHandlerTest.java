@@ -6,7 +6,7 @@ import com.eis.smslibrary.SMSPeer;
 import com.eis0.UtilityMocks;
 import com.eis0.kademlia.KademliaId;
 import com.eis0.kademlia.SMSKademliaNode;
-import com.eis0.kademlianetwork.informationdeliverymanager.ResourceRequest;
+import com.eis0.kademlianetwork.informationdeliverymanager.DeleteResourceRequest;
 import com.eis0.kademlianetwork.informationdeliverymanager.RequestsHandler;
 import com.eis0.kademlianetwork.listener.SMSKademliaListener;
 
@@ -39,14 +39,14 @@ public class RequestsHandlerTest {
 
     private final SMSKademliaListener mockListener = mock(SMSKademliaListener.class);
     private KademliaNetwork kadNet;
-    private ResourceRequest resourceRequest1;
+    private DeleteResourceRequest resourceRequest1;
 
     @Before
     public void setUp() {
         requestsHandler = new RequestsHandler();
 
         /*
-        resourceRequest1 = mock(RequestsHandler.ResourceRequest.class);
+        resourceRequest1 = mock(RequestsHandler.DeleteResourceRequest.class);
         when(resourceRequest1.getKey()).thenReturn(KEY1);
         when(resourceRequest1.getKeyId()).thenReturn(KAD_ID1);
         String resource1 = "Resource1";
@@ -54,7 +54,7 @@ public class RequestsHandlerTest {
 
          */
 
-        ResourceRequest resourceRequest2 = mock(ResourceRequest.class);
+        DeleteResourceRequest resourceRequest2 = mock(DeleteResourceRequest.class);
         when(resourceRequest2.getKey()).thenReturn(KEY2);
         when(resourceRequest2.getKeyId()).thenReturn(KAD_ID2);
         String resource2 = "Resource2";
@@ -77,7 +77,7 @@ public class RequestsHandlerTest {
     public void createAddRequest_equals() {
         /*
         requestsHandler.createRequest(KEY1, RESOURCE1, ResearchMode.AddToDictionary);
-        Map<KademliaId, RequestsHandler.ResourceRequest> addRequests = requestsHandler.getPendingAddRequests();
+        Map<KademliaId, RequestsHandler.DeleteResourceRequest> addRequests = requestsHandler.getPendingAddRequests();
         resourceRequest1 = addRequests.get(KAD_ID1);
         assertEquals(resourceRequest1.getKeyId(), KAD_ID1);
 
@@ -85,9 +85,9 @@ public class RequestsHandlerTest {
     }
 
     public void createAddRequest_notEquals() {
-        Map<KademliaId, ResourceRequest> addRequests = requestsHandler.getPendingAddRequests();
-        ResourceRequest resourceRequest1 = addRequests.get(KAD_ID1);
-        ResourceRequest resourceRequest2 = addRequests.get(KAD_ID2);
+        Map<KademliaId, DeleteResourceRequest> addRequests = requestsHandler.getPendingAddRequests();
+        DeleteResourceRequest resourceRequest1 = addRequests.get(KAD_ID1);
+        DeleteResourceRequest resourceRequest2 = addRequests.get(KAD_ID2);
         assertNotEquals(resourceRequest1.getKeyId(), resourceRequest2.getKeyId());
     }
 }
