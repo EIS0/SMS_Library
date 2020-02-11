@@ -14,10 +14,13 @@ public class KadRemoveLocalResourceTest {
 
     @Before
     public void setUp(){
+        //add a resource in order to be removed
         test.addResource("key", "");
     }
-    @Test
+
+    @Test(expected = NullPointerException.class)
     public void execute() {
-        
+        new KadRemoveLocalResource("key", test).execute();
+        test.getResource("key");
     }
 }
