@@ -135,8 +135,8 @@ public class IntMsgKademliaListener {
                 CommandExecutor.execute(new KadSendAcknowledge(peer));
                 KademliaJoinableNetwork.getInstance().addNodeToTable(new SMSKademliaNode(peer));
                 //2. Processes the information brought by the message received
-                Log.i(LOG_TAG, "Received ID research request RESULT: " + idToFind);
-                requestsHandler.completeRequest(idToFind, peer, ResearchMode.AddToDictionary);
+                Log.i(LOG_TAG, "Received find id for add resource request RESULT: " + idToFind);
+                requestsHandler.completeFindIdRequest(idToFind, peer);
                 break;
             case AddToDict:
                 //1. I inform that I'm alive and happy to be
@@ -157,21 +157,13 @@ public class IntMsgKademliaListener {
                         idToFind);
                 IdFinderHandler.searchId(idToFind, searcher, ResearchMode.FindInDictionary);
                 break;
-            case ResultGetIdRequest:
+            case ResultGetRequest:
                 //1. I inform that I'm alive and happy to be
                 CommandExecutor.execute(new KadSendAcknowledge(peer));
                 KademliaJoinableNetwork.getInstance().addNodeToTable(new SMSKademliaNode(peer));
                 //2. Processes the information brought by the message received
                 Log.i(LOG_TAG, "Received ID research request RESULT: " + idToFind);
                 requestsHandler.completeFindIdRequest(idToFind, peer);
-                break;
-            case ResultGetResourceRequest:
-                //1. I inform that I'm alive and happy to be
-                CommandExecutor.execute(new KadSendAcknowledge(peer));
-                KademliaJoinableNetwork.getInstance().addNodeToTable(new SMSKademliaNode(peer));
-                //2. Processes the information brought by the message received
-                Log.i(LOG_TAG, "Received resource RESULT: " + resource);
-                requestsHandler.completeFindResourceRequest(key, resource);
                 break;
             case GetFromDict:
                 //1. I inform that I'm alive and happy to be
@@ -184,7 +176,7 @@ public class IntMsgKademliaListener {
                 //2. Send the <key, resource> pair
                 message = new KademliaMessage()
                         .setPeer(peer)
-                        .setRequestType(RequestTypes.ResultGetIdRequest)
+                        .setRequestType(RequestTypes.ResultGetRequest)
                         .setKey(key)
                         .setResource(resource)
                         .buildMessage();
@@ -207,7 +199,7 @@ public class IntMsgKademliaListener {
                 KademliaJoinableNetwork.getInstance().addNodeToTable(new SMSKademliaNode(peer));
                 //2. Processes the information brought by the message received
                 Log.i(LOG_TAG, "Received resource delete request RESULT: " + key);
-                requestsHandler.completeDeleteResourceRequest(key);
+                requestsHandler.completeFindIdRequest(idToFind, peer);
                 break;
             case RemoveFromDict:
                 //1. I inform that I'm alive and happy to be

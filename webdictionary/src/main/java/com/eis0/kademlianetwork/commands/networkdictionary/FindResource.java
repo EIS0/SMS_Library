@@ -72,7 +72,8 @@ public class FindResource extends Command {
             return;
         }
 
-        //If I'm here it means that I've found the resounce, and completed this Command
+        //If I'm here it means that I've found the resource, and completed this Command
+        requestsHandler.completeFindResourceRequest(key, resourceRequest.getResource());
         hasSuccessfullyCompleted = true;
         resource = resourceRequest.getResource();
     }
