@@ -16,7 +16,7 @@ import com.eis0.kademlianetwork.commands.localdictionary.KadAddLocalResource;
 import com.eis0.kademlianetwork.commands.localdictionary.KadRemoveLocalResource;
 import com.eis0.kademlianetwork.commands.messages.KadSendInvitation;
 import com.eis0.kademlianetwork.commands.networkdictionary.FindResource;
-import com.eis0.kademlianetwork.commands.networkdictionary.RemoveResource;
+import com.eis0.kademlianetwork.commands.networkdictionary.KadDeleteResource;
 import com.eis0.kademlianetwork.commands.networkdictionary.KadAddResource;
 import com.eis0.kademlianetwork.informationdeliverymanager.RequestsHandler;
 import com.eis0.kademlianetwork.listener.SMSKademliaListener;
@@ -205,6 +205,13 @@ public class KademliaNetwork implements NetworkManager<String, String, SMSPeer, 
         localKademliaDictionary.addResource(key, resource);
     }
 
+    /**
+     * @return Returns the local dictionary used by the network
+     */
+    public NetDictionary<String, String> getLocalDictionary(){
+        return localKademliaDictionary;
+    }
+
 
     /**
      * Saves a resource value in the network for the specified key. If the save is successful
@@ -261,7 +268,7 @@ public class KademliaNetwork implements NetworkManager<String, String, SMSPeer, 
      */
     public void removeResource(String key, RemoveResourceListener<String, KademliaFailReason> removeResourceListener) {
         try{
-            CommandExecutor.execute(new RemoveResource(key, requestsHandler));
+            CommandExecutor.execute(new KadDeleteResource(key, requestsHandler));
         }
         catch (Exception e){
             Log.e(LOG_KEY, e.toString());

@@ -5,10 +5,10 @@ import androidx.annotation.NonNull;
 import com.eis0.kademlia.KademliaId;
 
 /**
- * This class allows to create ResourceRequest objects, which will be stored in the pending requests
- * lists; every ResourceRequest object contains the <key, resource> pair which will be stored in the
+ * This class allows to create DeleteResourceRequest objects, which will be stored in the pending requests
+ * lists; every DeleteResourceRequest object contains the <key, resource> pair which will be stored in the
  * distributed dictionary, plus the {@link KademliaId} of the resource key, used to distinguish
- * each ResourceRequest from the other
+ * each DeleteResourceRequest from the other
  *
  * @author Enrico Cestaro
  */
@@ -34,7 +34,7 @@ public class FindResourceRequest {
     }
 
     /**
-     * This method returns the key of the <key, resource> pair stored in the ResourceRequest
+     * This method returns the key of the <key, resource> pair stored in the DeleteResourceRequest
      *
      * @return The String value of the key of the <key, resource> pair
      */
@@ -43,7 +43,7 @@ public class FindResourceRequest {
     }
 
     /**
-     * This method returns the resource of the <key, resource> stored in the ResourceRequest
+     * This method returns the resource of the <key, resource> stored in the DeleteResourceRequest
      *
      * @return The String value of the resource of the <key, resource> pair
      */

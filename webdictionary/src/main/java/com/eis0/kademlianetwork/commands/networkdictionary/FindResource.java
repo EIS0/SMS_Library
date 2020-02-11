@@ -42,7 +42,7 @@ public class FindResource extends Command {
      */
     public void execute() {
         //Finding a resource goes as follows:
-        //1. Start a new ResourceRequest
+        //1. Start a new DeleteResourceRequest
         FindResourceRequest resourceRequest = requestsHandler.startFindResourceRequest(key);
 
         //2. Search the closest id to the resource you're searching

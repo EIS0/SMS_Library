@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * This class handle the resource {@link ResourceRequest}s, it allows the user to:
+ * This class handle the resource {@link DeleteResourceRequest}s, it allows the user to:
  * 1. Create a request to process a resource inside the dictionary
  * 2. Rack up multiple pending requests, waiting to be triggered
  * 3. Handle the response to the request, which contains the node ID closest to the resource ID that
@@ -34,7 +34,7 @@ public class RequestsHandler {
     //inside the Map by the request ID that the request must process
     private static Map<KademliaId, AddResourceRequest> pendingAddRequests;
     private static Map<String, FindResourceRequest> pendingFindResourceRequests;
-    private static Map<KademliaId, ResourceRequest> pendingDeleteRequests;
+    private static Map<KademliaId, DeleteResourceRequest> pendingDeleteRequests;
     private static Map<KademliaId, FindIdRequest> pendingFindIdRequests;
 
     /**
@@ -49,13 +49,13 @@ public class RequestsHandler {
 
     /**
      * This method is called whenever the network returns the node ID closest to the resource ID.
-     * It searches for the corresponding {@link ResourceRequest} which sent the ID research in the network,
+     * It searches for the corresponding {@link DeleteResourceRequest} which sent the ID research in the network,
      * extracts it from the list of pending requests, and sends the <key, resource> pair contained in
      * the request to the targetPeer, that is the node which answered to the research.
-     * The {@link KademliaId} must correspond to an existing opened ResourceRequest for the method to work.
+     * The {@link KademliaId} must correspond to an existing opened DeleteResourceRequest for the method to work.
      *
      * @param idToFind     The {@link KademliaId} of the resource key; it's used to trace back the
-     *                     ResourceRequest in the pending requests list
+     *                     DeleteResourceRequest in the pending requests list
      * @param targetPeer   The {@link SMSPeer} of the node which answered the research and receive the
      *                     <key, resource> pair
      * @param researchMode The research mode, represents the final purpose of the research
@@ -67,8 +67,8 @@ public class RequestsHandler {
         if (idToFind == null) throw new IllegalArgumentException(ID_TO_FIND_NULL);
         if (targetPeer == null) throw new IllegalArgumentException(TARGET_PEER_NULL);
 
-        Map<KademliaId, ResourceRequest> pendingRequests = null;
-        ResourceRequest aboutToClose = null;
+        Map<KademliaId, DeleteResourceRequest> pendingRequests = null;
+        DeleteResourceRequest aboutToClose = null;
         RequestTypes requestType = null;
 
         //1. Verify what kind of request must be completed
@@ -91,7 +91,7 @@ public class RequestsHandler {
         }
         //Remove the request from the corresponding list
         pendingRequests.remove(idToFind);
-        //Extract the <key, resource> pair contained by the ResourceRequest; the resource value can be null
+        //Extract the <key, resource> pair contained by the DeleteResourceRequest; the resource value can be null
         String key = aboutToClose.getKey();
         String resource = aboutToClose.getResource();
         //2. Send the message
@@ -110,7 +110,7 @@ public class RequestsHandler {
      *
      * @return The pendingFindResourceRequests map of the RequestsHandler class
      */
-    public Map<KademliaId, ResourceRequest> getPendingDeleteRequests() {
+    public Map<KademliaId, DeleteResourceRequest> getPendingDeleteRequests() {
         return pendingDeleteRequests;
     }
 
@@ -144,6 +144,17 @@ public class RequestsHandler {
     public AddResourceRequest startAddResourceRequest(@NonNull String key, @NonNull String resource){
         AddResourceRequest resourceRequest = new AddResourceRequest(key, resource);
         pendingAddRequests.put(resourceRequest.getKeyId(), resourceRequest);
+        return resourceRequest;
+    }
+
+    /**
+     * Starts a new FindResourceRequest
+     * @param key The key of the resource to find, used to identify the pending request
+     * @return An instance of a specific FindResourceRequest
+     */
+    public DeleteResourceRequest startDeleteResourceRequest(@NonNull String key){
+        DeleteResourceRequest resourceRequest = new DeleteResourceRequest(key);
+        pendingDeleteRequests.put(resourceRequest.getKeyId(), resourceRequest);
         return resourceRequest;
     }
 
@@ -184,13 +195,25 @@ public class RequestsHandler {
             pendingAddRequests.get(requestId).setCompleted();
         }
     }
+
+    /**
+     * Sets the corresponding AddResourceRequest as completed
+     *
+     * @param key The key identifier of the AddResourceRequest
+     */
+    public void completeDeleteResourceRequest(String key){
+        KademliaId requestId = new KademliaId(key);
+        if(pendingDeleteRequests.containsKey(requestId)){
+            pendingDeleteRequests.get(requestId).setCompleted();
+        }
+    }
 }
 
 /*
 When a resource needs to be added to the network dictionary:
-1. A ResourceRequest is created, it contains the <key, resource> pair
-2. The ResourceRequest is added to the pendingAddRequests list, and is processed
-3. Processing the ResourceRequest means that:
+1. A DeleteResourceRequest is created, it contains the <key, resource> pair
+2. The DeleteResourceRequest is added to the pendingAddRequests list, and is processed
+3. Processing the DeleteResourceRequest means that:
     - The node which will contain the resource must be found, a message identified by the code
     FindIdForAddRequest is sent 'inside the network'
     (createAddRequest >> processRequest >> idFinderHandler >> 'Network / TargetNode')
@@ -199,7 +222,7 @@ When a resource needs to be added to the network dictionary:
     the Dictionary
     ('Network / TargetNode' >> SMSKademliaListener >> completeAddRequest)
 4. When the local node receives the result of the research, it searches inside the list of pending
-    AddRequests, find the corresponding one, and complete the ResourceRequest sending to
+    AddRequests, find the corresponding one, and complete the DeleteResourceRequest sending to
     the node which will store it the resource, inside a message identified by the code AddToDict
 5. The final node will receive the message, recognize it (with the SMSKademliaListener) as a request
     to store a resource, and do so

@@ -11,6 +11,8 @@ import com.eis0.kademlianetwork.KademliaInvitation;
 import com.eis0.kademlianetwork.KademliaJoinableNetwork;
 import com.eis0.kademlianetwork.KademliaNetwork;
 import com.eis0.kademlianetwork.commands.KadAddPeer;
+import com.eis0.kademlianetwork.commands.localdictionary.KadAddLocalResource;
+import com.eis0.kademlianetwork.commands.localdictionary.KadRemoveLocalResource;
 import com.eis0.kademlianetwork.commands.messages.KadPong;
 import com.eis0.kademlianetwork.commands.messages.KadSendAcknowledge;
 import com.eis0.kademlianetwork.informationdeliverymanager.IdFinderHandler;
@@ -142,7 +144,7 @@ public class IntMsgKademliaListener {
                 //2. Processes the information brought by the message received
                 Log.i(LOG_TAG, "Received AddToDictionary request.\nKey: " + key + ",\nResource:" +
                         resource);
-                KademliaJoinableNetwork.getInstance().addToLocalDictionary(key, resource);
+                CommandExecutor.execute(new KadAddLocalResource(key, resource, KademliaJoinableNetwork.getInstance().getLocalDictionary()));
                 break;
 
 
@@ -202,15 +204,15 @@ public class IntMsgKademliaListener {
                 CommandExecutor.execute(new KadSendAcknowledge(peer));
                 KademliaJoinableNetwork.getInstance().addNodeToTable(new SMSKademliaNode(peer));
                 //2. Processes the information brought by the message received
-                Log.i(LOG_TAG, "Received ID research request RESULT: " + idToFind);
-                requestsHandler.completeRequest(idToFind, peer, ResearchMode.RemoveFromDictionary);
+                Log.i(LOG_TAG, "Received resource delete request RESULT: " + key);
+                requestsHandler.completeDeleteResourceRequest(key);
                 break;
             case RemoveFromDict:
                 //1. I inform that I'm alive and happy to be
                 CommandExecutor.execute(new KadSendAcknowledge(peer));
                 //2. Processes the information brought by the message received
                 Log.i(LOG_TAG, "Received AddToDictionary request.\nKey: " + key);
-                KademliaJoinableNetwork.getInstance().removeFromLocalDictionary(key);
+                CommandExecutor.execute(new KadRemoveLocalResource(key, KademliaJoinableNetwork.getInstance().getLocalDictionary()));
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + incomingRequest);
