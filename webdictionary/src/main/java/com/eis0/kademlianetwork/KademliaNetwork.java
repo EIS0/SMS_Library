@@ -29,6 +29,7 @@ import com.eis0.netinterfaces.listeners.GetResourceListener;
 import com.eis0.netinterfaces.listeners.InviteListener;
 import com.eis0.netinterfaces.listeners.RemoveResourceListener;
 import com.eis0.netinterfaces.listeners.SetResourceListener;
+import com.eis0.webdictionary.SMSNetVocabulary;
 
 /**
  * Central class fo the KademliaNetwork. Instead of handling everything itself,
@@ -44,7 +45,7 @@ public class KademliaNetwork implements NetworkManager<String, String, SMSPeer, 
 
 
     public final NodeConnectionInfo connectionInfo = new NodeConnectionInfo();
-    public final RoutingTableRefresh refresh = new RoutingTableRefresh(this.localNode, this);
+
 
     //Routing table for this user of the network
     protected SMSKademliaRoutingTable localRoutingTable;
@@ -54,6 +55,7 @@ public class KademliaNetwork implements NetworkManager<String, String, SMSPeer, 
     protected NetDictionary<String, String> localKademliaDictionary;
     protected final SMSKademliaListener smsKademliaListener = new SMSKademliaListener(this);
     protected RequestsHandler requestsHandler = new RequestsHandler();
+    public final RoutingTableRefresh refresh = new RoutingTableRefresh(this.localNode, this);
 
     private final String LOG_KEY = "KAD_NET";
 
@@ -67,6 +69,7 @@ public class KademliaNetwork implements NetworkManager<String, String, SMSPeer, 
         SMSManager.getInstance().setReceivedListener(smsKademliaListener.getClass(), context);
         this.localNode = localNode;
         localRoutingTable = new SMSKademliaRoutingTable(localNode, new DefaultConfiguration());
+        localKademliaDictionary = new SMSNetVocabulary();
     }
 
     /**

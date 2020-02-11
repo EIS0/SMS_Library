@@ -57,8 +57,6 @@ public class RequestsHandlerTest {
         DeleteResourceRequest resourceRequest2 = mock(DeleteResourceRequest.class);
         when(resourceRequest2.getKey()).thenReturn(KEY2);
         when(resourceRequest2.getKeyId()).thenReturn(KAD_ID2);
-        String resource2 = "Resource2";
-        when(resourceRequest2.getResource()).thenReturn(resource2);
 
         SmsManager smsManagerMock = mock(SmsManager.class);
 
@@ -82,12 +80,5 @@ public class RequestsHandlerTest {
         assertEquals(resourceRequest1.getKeyId(), KAD_ID1);
 
          */
-    }
-
-    public void createAddRequest_notEquals() {
-        Map<KademliaId, DeleteResourceRequest> addRequests = requestsHandler.getPendingAddRequests();
-        DeleteResourceRequest resourceRequest1 = addRequests.get(KAD_ID1);
-        DeleteResourceRequest resourceRequest2 = addRequests.get(KAD_ID2);
-        assertNotEquals(resourceRequest1.getKeyId(), resourceRequest2.getKeyId());
     }
 }

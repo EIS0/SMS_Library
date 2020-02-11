@@ -16,6 +16,7 @@ import java.util.TimerTask;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
@@ -35,7 +36,6 @@ public class KademliaNetworkTest {
 
     @Before
     public void setUp(){
-
         NET1.init(NODE1, UtilityMocks.setupMocks());
         NET1.getLocalRoutingTable().insert(new SMSKademliaNode(peer2));
     }
@@ -54,6 +54,11 @@ public class KademliaNetworkTest {
         NET1.addNodeToTable(NODE2);
         assertTrue(NET1.isNodeInNetwork(NODE1));
         assertTrue(NET1.isNodeInNetwork(NODE2));
+    }
+
+    @Test
+    public void getLocalDictionary(){
+        assertNotNull(NET1.getLocalDictionary());
     }
 
     @Test
