@@ -31,7 +31,8 @@ public enum RequestTypes {
     ResultAddRequest,
     //Asking for an element in the Dictionary
     FindIdForGetRequest,
-    ResultGetRequest,
+    ResultGetIdRequest,
+    ResultGetResourceRequest,
     //Deleting an element from the Dictionary
     FindIdForDeleteRequest,
     ResultDeleteRequest,

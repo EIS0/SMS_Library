@@ -155,24 +155,32 @@ public class IntMsgKademliaListener {
                         idToFind);
                 IdFinderHandler.searchId(idToFind, searcher, ResearchMode.FindInDictionary);
                 break;
-            case ResultGetRequest:
+            case ResultGetIdRequest:
                 //1. I inform that I'm alive and happy to be
                 CommandExecutor.execute(new KadSendAcknowledge(peer));
                 KademliaJoinableNetwork.getInstance().addNodeToTable(new SMSKademliaNode(peer));
                 //2. Processes the information brought by the message received
                 Log.i(LOG_TAG, "Received ID research request RESULT: " + idToFind);
-                requestsHandler.completeRequest(idToFind, peer, ResearchMode.FindInDictionary);
+                requestsHandler.completeFindIdRequest(idToFind, peer);
+                break;
+            case ResultGetResourceRequest:
+                //1. I inform that I'm alive and happy to be
+                CommandExecutor.execute(new KadSendAcknowledge(peer));
+                KademliaJoinableNetwork.getInstance().addNodeToTable(new SMSKademliaNode(peer));
+                //2. Processes the information brought by the message received
+                Log.i(LOG_TAG, "Received resource RESULT: " + resource);
+                requestsHandler.completeFindResourceRequest(key, resource);
                 break;
             case GetFromDict:
                 //1. I inform that I'm alive and happy to be
                 CommandExecutor.execute(new KadSendAcknowledge(peer));
                 //2. Processes the information brought by the message received
                 Log.i(LOG_TAG, "Received GetFromDictionary request.\nKey: " + key);
-                resource = KademliaJoinableNetwork.getInstance().getFromLocalDictionary(key).toString();
+                resource = KademliaJoinableNetwork.getInstance().getFromLocalDictionary(key);
                 //2. Send the <key, resource> pair
                 message = new KademliaMessage()
                         .setPeer(peer)
-                        .setRequestType(RequestTypes.AddToDict)
+                        .setRequestType(RequestTypes.ResultGetIdRequest)
                         .setKey(key)
                         .setResource(resource)
                         .buildMessage();

@@ -55,7 +55,7 @@ public class IdFinderHandler {
                 break;
             case FindInDictionary:
                 findId = RequestTypes.FindIdForGetRequest;
-                taskResult = RequestTypes.ResultGetRequest;
+                taskResult = RequestTypes.ResultGetIdRequest;
                 break;
             case RemoveFromDictionary:
                 findId = RequestTypes.FindIdForDeleteRequest;
