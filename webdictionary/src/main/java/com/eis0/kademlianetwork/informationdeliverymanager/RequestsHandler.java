@@ -1,9 +1,12 @@
 package com.eis0.kademlianetwork.informationdeliverymanager;
 
+import androidx.annotation.NonNull;
+
 import com.eis.smslibrary.SMSManager;
 import com.eis.smslibrary.SMSMessage;
 import com.eis.smslibrary.SMSPeer;
 import com.eis0.kademlia.KademliaId;
+import com.eis0.kademlia.SMSKademliaNode;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -34,6 +37,7 @@ public class RequestsHandler {
     private static Map<KademliaId, ResourceRequest> pendingAddRequests;
     private static Map<KademliaId, ResourceRequest> pendingFindRequests;
     private static Map<KademliaId, ResourceRequest> pendingDeleteRequests;
+    private static Map<KademliaId, FindIdRequest> pendingFindIdRequests;
 
     /**
      * This constructor initializes the three pending requests lists
@@ -42,6 +46,7 @@ public class RequestsHandler {
         pendingAddRequests = new HashMap<>();
         pendingFindRequests = new HashMap<>();
         pendingDeleteRequests = new HashMap<>();
+        pendingFindIdRequests = new HashMap<>();
     }
 
     /**
@@ -118,12 +123,46 @@ public class RequestsHandler {
     }
 
     /**
-     * This method returns the pendingFindRequests object of the class
+     * This method returns the pendingDeleteRequests object of the class
      *
      * @return The pendingFindRequests map of the RequestsHandler class
      */
     public Map<KademliaId, ResourceRequest> getPendingDeleteRequests() {
         return pendingDeleteRequests;
+    }
+
+    /**
+     * This method returns the pendingFindIdRequests object of the class
+     *
+     * @return The pendingFindIdRequests map of the RequestsHandler class
+     */
+    public Map<KademliaId, FindIdRequest> getPendingFindIdRequests() {
+        return pendingFindIdRequests;
+    }
+
+    /**
+     * Starts a new FindIdRequest
+     * @param idToFind The KademliaId to find, used as a key to identify a pending request
+     * @return An instance of a specific FindIdRequest
+     */
+    public FindIdRequest startFindIdRequest(@NonNull KademliaId idToFind){
+        FindIdRequest newRequest = new FindIdRequest(idToFind);
+        pendingFindIdRequests.put(idToFind, newRequest);
+        return newRequest;
+    }
+
+    /**
+     * Sets the corresponding FindIdRequest as completed
+     *
+     * @param idToFind The KademliaId to find originally
+     * @param peerFound The SMSPeer found for the FindIdRequest
+     */
+    public void completeFindIdRequest(KademliaId idToFind, SMSPeer peerFound){
+        SMSKademliaNode node = new SMSKademliaNode(peerFound);
+        KademliaId idFound = node.getId();
+        if(pendingFindIdRequests.containsKey(idFound)){
+            pendingFindIdRequests.get(idFound).setCompleted(peerFound);
+        }
     }
 }
 
