@@ -54,15 +54,21 @@ public class IntMsgKademliaListener {
      */
     public void processMessage(SMSMessage message) {
         KademliaMessageAnalyzer kadMessage = new KademliaMessageAnalyzer(message);
+        //the peer who sent the message
         SMSPeer peer = kadMessage.getPeer();
+        //the request sent inside the message
         RequestTypes incomingRequest = kadMessage.getCommand();
+        //the peer who's searching (if present)
         SMSPeer searcher = kadMessage.getSearcher();
+        //the id to find (if present)
         KademliaId idToFind = kadMessage.getIdToFind();
+        //the key of a resource (if present)
         String key = kadMessage.getKey();
+        //the resource (if present)
         String resource = kadMessage.getResource();
-        //The two values, idToFind and idFound, share the same field, depending upon the type of request
-        //the SMSKademliaListener knows which one of the two is occupying it, and process it consequently
-        KademliaId idFound = idToFind;
+        //the node object of who sent the message
+        SMSKademliaNode node = new SMSKademliaNode(peer);
+
         //Starts a specific action depending upon the request or the command sent by other users
         switch (incomingRequest) {
             /*Acknowledge messages*/
@@ -81,13 +87,12 @@ public class IntMsgKademliaListener {
                 break;
             case FindIdRefresh:
                 //Processes the information brought by the message received
-                Log.i(LOG_TAG, "IdFound: " + idFound);
+                Log.i(LOG_TAG, "Id To Find: " + idToFind);
                 IdFinderHandler.searchId(idToFind, searcher, ResearchMode.Refresh);
                 break;
             case SearchResultReplacement:
                 //I found the node, let's insert it in my routing table
-                SMSKademliaNode nodeToAdd = new SMSKademliaNode(idFound);
-                kadNet.addNodeToTable(nodeToAdd);
+                kadNet.addNodeToTable(node);
                 break;
 
 
@@ -103,14 +108,14 @@ public class IntMsgKademliaListener {
                 //1. I inform that I'm alive and happy to be
                 CommandExecutor.execute(new KadSendAcknowledge(peer));
                 //2. Processes the information brought by the message received
-                Log.i(LOG_TAG, "IdFound: " + idFound);
+                Log.i(LOG_TAG, "Id To Find: " + idToFind);
                 IdFinderHandler.searchId(idToFind, searcher, ResearchMode.JoinNetwork);
                 break;
             case SearchResult:
                 //1. I inform that I'm alive and happy to be
                 CommandExecutor.execute(new KadSendAcknowledge(peer));
                 //2. Processes the information brought by the message received
-                TableUpdateHandler.stepTableUpdate(idFound);
+                TableUpdateHandler.stepTableUpdate(peer);
                 break;
 
 

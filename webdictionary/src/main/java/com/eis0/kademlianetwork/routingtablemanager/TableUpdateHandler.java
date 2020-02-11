@@ -29,9 +29,9 @@ public class TableUpdateHandler {
      * then sends another, then waits etc. This way if the algorithms instantly
      * stops, I haven't yet to send all the messages.
      *
-     * @param idFound The KademliaId received as part of the algorithm.
+     * @param peerFound The SMSPeer received as part of the algorithm.
      */
-    public static void stepTableUpdate(KademliaId idFound) {
-        iterator.step(idFound);
+    public static void stepTableUpdate(SMSPeer peerFound) {
+        iterator.step(peerFound);
     }
 }

@@ -21,16 +21,6 @@ public class SMSKademliaNode implements Serializable {
     private SMSPeer peer;
 
     /**
-     * Create a Node in a traditional way
-     * in order to always have a generic method to create a node
-     *
-     * @param id KademliaId that identify the node
-     *
-     * @author Edoardo Raimondi
-     */
-    public SMSKademliaNode(KademliaId id){ this.id = id; }
-
-    /**
      * Stores information of a Kademlia node.
      *
      * @param phoneNumber The phone associated to the node, replaces its IP address in out

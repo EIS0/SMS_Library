@@ -53,16 +53,16 @@ class TableUpdateIterator {
     /**
      * Steps execution of the algorithm once.
      *
-     * @param receivedId The KademliaId received because of the last step
+     * @param peerReceived The SMSPeer received because of the last step
      */
-    public void step(KademliaId receivedId) {
+    public void step(SMSPeer peerReceived) {
         if (hasFinished()) {
             //finished execution
             return;
         }
         //check if I'm the id received: stop if I am
-        SMSKademliaNode receivedNode = new SMSKademliaNode(receivedId);
-        if (receivedId == netId) {
+        SMSKademliaNode receivedNode = new SMSKademliaNode(peerReceived);
+        if (receivedNode.getId() == netId) {
             currentCount = maxCount + 1;
             return;
         }
