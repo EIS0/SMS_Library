@@ -178,7 +178,9 @@ public class IntMsgKademliaListener {
                 CommandExecutor.execute(new KadSendAcknowledge(peer));
                 //2. Processes the information brought by the message received
                 Log.i(LOG_TAG, "Received GetFromDictionary request.\nKey: " + key);
-                resource = KademliaJoinableNetwork.getInstance().getFromLocalDictionary(key);
+                resource = KademliaJoinableNetwork.getInstance()
+                        .getLocalDictionary()
+                        .getResource(key);
                 //2. Send the <key, resource> pair
                 message = new KademliaMessage()
                         .setPeer(peer)

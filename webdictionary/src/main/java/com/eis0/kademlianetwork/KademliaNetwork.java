@@ -162,56 +162,11 @@ public class KademliaNetwork implements NetworkManager<String, String, SMSPeer, 
     }
 
     /**
-     * Method used to add a <key, resource> pair to the local Dictionary
-     *
-     * @param key      The key of the pair <key, resource> the user is trying to add to the dictionary
-     * @param resource The resource of the pair <key, resource> the user is trying to add to the dictionary
-     * @author Enrico Cestaro
-     */
-    public void addToLocalDictionary(String key, String resource) {
-        CommandExecutor.execute(new KadAddLocalResource(key, resource, localKademliaDictionary));
-    }
-
-    /**
-     * Method used to remove a pair <key, resource> from the local Dictionary
-     *
-     * @param key The key of the pair <key, resource> the user is trying to remove the dictionary
-     * @author Enrico Cestaro
-     */
-    public void removeFromLocalDictionary(String key) {
-        CommandExecutor.execute(new KadRemoveLocalResource(key, localKademliaDictionary));
-    }
-
-    /**
-     * Method used to get a resource specified by its key
-     *
-     * @param key The key of the pair <key, resource> the user is trying to get from the dictionary
-     * @return The SerializableObject with the specified key
-     * @author Enrico Cestaro
-     */
-    public String getFromLocalDictionary(String key) {
-        return localKademliaDictionary.getResource(key);
-    }
-
-    /**
-     * Method used to update a resource with the specified key, with a new resource
-     *
-     * @param key      The key of the pair <key, resource> the user is trying to update in the dictionary
-     * @param resource The new resource
-     * @author Enrico Cestaro
-     */
-    public void updateLocalDictionary(String key, String resource) {
-        //if the resource is already present it gets automatically updated
-        localKademliaDictionary.addResource(key, resource);
-    }
-
-    /**
      * @return Returns the local dictionary used by the network
      */
     public NetDictionary<String, String> getLocalDictionary(){
         return localKademliaDictionary;
     }
-
 
     /**
      * Saves a resource value in the network for the specified key. If the save is successful
