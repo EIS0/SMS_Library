@@ -10,7 +10,7 @@ import java.util.TimerTask;
  * @author edits by Giovanni Velludo
  */
 
-class RefreshTimer extends TimerTask {
+public class RefreshTimer extends TimerTask {
 
      private static final long time = 7200000;
 

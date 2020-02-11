@@ -43,7 +43,7 @@ public class KademliaNetwork implements NetworkManager<String, String, SMSPeer, 
 
 
     public final NodeConnectionInfo connectionInfo = new NodeConnectionInfo();
-    public final RoutingTableRefresh refresh = new RoutingTableRefresh(this.localNode, this);
+    public RoutingTableRefresh refresh;
 
     //Routing table for this user of the network
     protected SMSKademliaRoutingTable localRoutingTable;
@@ -66,6 +66,8 @@ public class KademliaNetwork implements NetworkManager<String, String, SMSPeer, 
         SMSManager.getInstance().setReceivedListener(smsKademliaListener.getClass(), context);
         this.localNode = localNode;
         localRoutingTable = new SMSKademliaRoutingTable(localNode, new DefaultConfiguration());
+        refresh = new RoutingTableRefresh(this.localNode, this);
+        refresh.start();
     }
 
     /**

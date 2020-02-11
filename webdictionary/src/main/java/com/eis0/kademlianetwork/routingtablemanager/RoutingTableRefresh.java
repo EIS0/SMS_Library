@@ -6,9 +6,9 @@ import com.eis0.kademlia.KademliaId;
 import com.eis0.kademlia.SMSKademliaBucket;
 import com.eis0.kademlia.SMSKademliaNode;
 import com.eis0.kademlianetwork.KademliaNetwork;
+import com.eis0.kademlianetwork.activitystatus.RefreshTimer;
+import com.eis0.kademlianetwork.commands.KadFindId;
 import com.eis0.kademlianetwork.commands.messages.KadPing;
-import com.eis0.kademlianetwork.informationdeliverymanager.IdFinderHandler;
-import com.eis0.kademlianetwork.informationdeliverymanager.ResearchMode;
 import com.eis0.netinterfaces.commands.CommandExecutor;
 
 import java.util.List;
@@ -38,6 +38,13 @@ public class RoutingTableRefresh extends Thread{
      * @author Marco Cognolato, little improvements
      */
     public void run() {
+        while (true){
+            updateTable();
+            new RefreshTimer().run();
+        }
+    }
+
+    public void updateTable(){
         //create the list of my routing table nodes. I need to check all that nodes.
         List<SMSKademliaNode> allRoutingTableNodes = net.getLocalRoutingTable().getAllNodes();
         for (int i = 0; i < allRoutingTableNodes.size(); i++) {
@@ -57,7 +64,19 @@ public class RoutingTableRefresh extends Thread{
 
             if (removeIfUnresponsive(currentNode)) {
                 //now I search for another one
-                askForId(currentNode.getId());
+                //take the node peer
+                SMSPeer peer = localNode.getPeer();
+                //create the fake id. I want a node in the same bucket so I search for a same distance one
+                KademliaId fakeId = currentNode.getId().generateNodeIdByDistance(0);
+
+                //search in the net for the fakeId and wait
+                KadFindId findIdCommand = new KadFindId(fakeId, net.getRequestsHandler());
+                CommandExecutor.execute(findIdCommand);
+
+                if(!findIdCommand.hasSuccessfullyCompleted()){
+                    return;
+                }
+                net.getLocalRoutingTable().insert(new SMSKademliaNode(findIdCommand.getPeerFound()));
             }
         }
     }
@@ -89,19 +108,5 @@ public class RoutingTableRefresh extends Thread{
             currentBucket.insert(currentContact);
             return false;
         }
-    }
-    /**
-     * Generates an id to find and searches for it in the net sending a request
-     *
-     * @param id the id to replace
-     */
-    private void askForId(KademliaId id) {
-        //take the node peer
-        SMSPeer peer = localNode.getPeer();
-        //create the fake id. I want a node in the same bucket so I search for a same distance one
-        KademliaId fakeId = id.generateNodeIdByDistance(0);
-
-        //search in the net for the fakeId and wait
-        IdFinderHandler.searchId(fakeId, peer, ResearchMode.Refresh);
     }
 }
