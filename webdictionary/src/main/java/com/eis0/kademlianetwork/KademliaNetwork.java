@@ -178,12 +178,19 @@ public class KademliaNetwork implements NetworkManager<String, String, SMSPeer, 
      * @param setResourceListener Listener called on resource successfully saved or on fail.
      */
     public void setResource(String key, String value, SetResourceListener<String, String, KademliaFailReason> setResourceListener) {
+        KadAddResource addResourceCommand;
         try{
-            CommandExecutor.execute(new KadAddResource(key, value, requestsHandler));
+            addResourceCommand = new KadAddResource(key, value, requestsHandler);
+            CommandExecutor.execute(addResourceCommand);
         }
         catch (Exception e){
             Log.e(LOG_KEY, e.toString());
             setResourceListener.onResourceSetFail(key, value, KademliaFailReason.GENERIC_FAIL);
+            return;
+        }
+
+        if(!addResourceCommand.hasSuccessfullyCompleted()){
+            setResourceListener.onResourceSetFail(key, value, addResourceCommand.getFailReason());
             return;
         }
         setResourceListener.onResourceSet(key, value);
@@ -223,12 +230,19 @@ public class KademliaNetwork implements NetworkManager<String, String, SMSPeer, 
      * @param removeResourceListener Listener called on resource successfully removed or on fail.
      */
     public void removeResource(String key, RemoveResourceListener<String, KademliaFailReason> removeResourceListener) {
+        KadDeleteResource resourceCommand;
         try{
-            CommandExecutor.execute(new KadDeleteResource(key, requestsHandler));
+            resourceCommand = new KadDeleteResource(key, requestsHandler);
+            CommandExecutor.execute(resourceCommand);
         }
         catch (Exception e){
             Log.e(LOG_KEY, e.toString());
             removeResourceListener.onResourceRemoveFail(key, KademliaFailReason.GENERIC_FAIL);
+            return;
+        }
+
+        if(!resourceCommand.hasSuccessfullyCompleted()){
+            removeResourceListener.onResourceRemoveFail(key, resourceCommand.getFailReason());
             return;
         }
         removeResourceListener.onResourceRemoved(key);
