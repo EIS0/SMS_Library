@@ -1,4 +1,4 @@
-package com.eis0.kademlianetwork.informationdeliverymanager;
+package com.eis0.kademlianetwork.informationdeliverymanager.Requests;
 
 import androidx.annotation.NonNull;
 

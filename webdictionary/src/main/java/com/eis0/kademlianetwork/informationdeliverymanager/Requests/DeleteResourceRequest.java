@@ -1,4 +1,4 @@
-package com.eis0.kademlianetwork.informationdeliverymanager;
+package com.eis0.kademlianetwork.informationdeliverymanager.Requests;
 
 import com.eis0.kademlia.KademliaId;
 
@@ -10,10 +10,9 @@ import com.eis0.kademlia.KademliaId;
  *
  * @author Enrico Cestaro
  */
-public class AddResourceRequest {
+public class DeleteResourceRequest {
     private KademliaId resourceKeyId;
     private String key;
-    private String resource;
 
     private static final String KEY_NULL = "The key parameter is null";
     private static final String INVALID_KEY_LENGTH = "The key must contain at least 1 character";
@@ -25,14 +24,12 @@ public class AddResourceRequest {
      * resource key
      *
      * @param key      The String value of the key of the <key, resource> pair
-     * @param resource The String value of the resource of the <key, resource> pair
      * @throws IllegalArgumentException If the the key or the resource are null or invalid
      */
-    public AddResourceRequest(String key, String resource) {
+    public DeleteResourceRequest(String key) {
         if (key == null) throw new IllegalArgumentException(KEY_NULL);
         if (key.length() == 0) throw new IllegalArgumentException(INVALID_KEY_LENGTH);
         this.key = key;
-        this.resource = resource;
         this.resourceKeyId = new KademliaId(key);
     }
 
@@ -55,15 +52,6 @@ public class AddResourceRequest {
     }
 
     /**
-     * This method returns the resource of the <key, resource> stored in the DeleteResourceRequest
-     *
-     * @return The String value of the resource of the <key, resource> pair
-     */
-    public String getResource() {
-        return resource;
-    }
-
-    /**
      * Sets the Request as completed
      */
     public void setCompleted(){
@@ -80,8 +68,8 @@ public class AddResourceRequest {
     @Override
     public boolean equals(Object obj) {
         if (obj == null) throw new IllegalArgumentException();
-        if (!(obj instanceof AddResourceRequest)) return false;
-        AddResourceRequest toCompare = (AddResourceRequest) obj;
+        if (!(obj instanceof DeleteResourceRequest)) return false;
+        DeleteResourceRequest toCompare = (DeleteResourceRequest) obj;
         return toCompare.getKeyId().toString().equals(this.getKeyId().toString());
     }
 }

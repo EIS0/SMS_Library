@@ -6,7 +6,7 @@ import com.eis.smslibrary.SMSManager;
 import com.eis.smslibrary.SMSMessage;
 import com.eis0.kademlianetwork.KademliaFailReason;
 import com.eis0.kademlianetwork.commands.KadFindId;
-import com.eis0.kademlianetwork.informationdeliverymanager.DeleteResourceRequest;
+import com.eis0.kademlianetwork.informationdeliverymanager.Requests.DeleteResourceRequest;
 import com.eis0.kademlianetwork.informationdeliverymanager.KademliaMessage;
 import com.eis0.kademlianetwork.informationdeliverymanager.RequestTypes;
 import com.eis0.kademlianetwork.informationdeliverymanager.RequestsHandler;
