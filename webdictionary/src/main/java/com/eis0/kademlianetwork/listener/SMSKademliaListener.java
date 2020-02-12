@@ -99,7 +99,7 @@ public class SMSKademliaListener extends SMSReceivedServiceListener {
                 //1. I inform that I'm alive and happy to be
                 CommandExecutor.execute(new KadSendAcknowledge(peer));
                 //2. Processes the information brought by the message received
-                requestsHandler.completeFindIdRequest(peer);
+                requestsHandler.completeFindIdRequest(idToFind, peer);
                 break;
 
 
