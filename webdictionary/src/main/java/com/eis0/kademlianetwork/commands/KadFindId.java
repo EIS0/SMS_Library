@@ -7,7 +7,7 @@ import com.eis0.kademlia.KademliaId;
 import com.eis0.kademlianetwork.KademliaFailReason;
 import com.eis0.kademlianetwork.KademliaJoinableNetwork;
 import com.eis0.kademlianetwork.activitystatus.FindIdTimer;
-import com.eis0.kademlianetwork.informationdeliverymanager.FindIdRequest;
+import com.eis0.kademlianetwork.informationdeliverymanager.Requests.FindIdRequest;
 import com.eis0.kademlianetwork.informationdeliverymanager.IdFinderHandler;
 import com.eis0.kademlianetwork.informationdeliverymanager.RequestsHandler;
 import com.eis0.netinterfaces.commands.Command;

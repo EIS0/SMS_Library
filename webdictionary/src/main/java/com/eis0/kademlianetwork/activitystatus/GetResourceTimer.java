@@ -3,7 +3,7 @@ package com.eis0.kademlianetwork.activitystatus;
 import androidx.annotation.NonNull;
 
 import com.eis0.kademlia.KademliaId;
-import com.eis0.kademlianetwork.informationdeliverymanager.FindResourceRequest;
+import com.eis0.kademlianetwork.informationdeliverymanager.Requests.FindResourceRequest;
 
 import java.util.TimerTask;
 
