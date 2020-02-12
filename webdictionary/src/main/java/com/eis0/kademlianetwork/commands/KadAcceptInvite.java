@@ -31,7 +31,7 @@ public class KadAcceptInvite extends AcceptInvite<KademliaInvitation> {
     /**
      * Invites a peer to join a network
      */
-    protected void execute(){
+    public void execute(){
         /*
         Send an "invite accepted" notification to the other used
          */
