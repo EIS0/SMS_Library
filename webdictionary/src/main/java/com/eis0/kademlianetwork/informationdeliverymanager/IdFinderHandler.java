@@ -71,7 +71,7 @@ public class IdFinderHandler {
                 .buildMessage();
         if (targetPeer.equals(KademliaJoinableNetwork.getInstance().getLocalNode().getPeer())) {
             //If I'm searching the id for myself, then I have a pending request I can directly fulfill
-            KademliaJoinableNetwork.getInstance().getRequestsHandler().completeFindIdRequest(idToFind, targetPeer);
+            KademliaJoinableNetwork.getInstance().getRequestsHandler().completeFindIdRequest(targetPeer);
             return;
         }
 

@@ -24,12 +24,6 @@ import java.util.Map;
  */
 public class RequestsHandler {
 
-    private static final String ID_TO_FIND_NULL = "The idToFind parameter is null";
-    private static final String SEARCHER_NULL = "The searcher parameter is null";
-    private static final String RESEARCH_MODE_NULL = "The researchMode parameter is null";
-    private static final String TARGET_PEER_NULL = "The targetPeer parameter is null";
-
-
     //Maps containing the pending Requests waiting to be completed; each pending request is identified
     //inside the Map by the request ID that the request must process
     private static Map<KademliaId, AddResourceRequest> pendingAddRequests;
@@ -94,10 +88,9 @@ public class RequestsHandler {
     /**
      * Sets the corresponding FindIdRequest as completed
      *
-     * @param idToFind The KademliaId to find originally
      * @param peerFound The SMSPeer found for the FindIdRequest
      */
-    public void completeFindIdRequest(KademliaId idToFind, SMSPeer peerFound){
+    public void completeFindIdRequest(SMSPeer peerFound){
         SMSKademliaNode node = new SMSKademliaNode(peerFound);
         KademliaId idFound = node.getId();
         if(pendingFindIdRequests.containsKey(idFound)){
