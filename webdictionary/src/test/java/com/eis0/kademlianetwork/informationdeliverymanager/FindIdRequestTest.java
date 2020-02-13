@@ -2,6 +2,7 @@ package com.eis0.kademlianetwork.informationdeliverymanager;
 
 import com.eis.smslibrary.SMSPeer;
 import com.eis0.kademlia.KademliaId;
+import com.eis0.kademlianetwork.informationdeliverymanager.Requests.FindIdRequest;
 
 import org.junit.Test;
 

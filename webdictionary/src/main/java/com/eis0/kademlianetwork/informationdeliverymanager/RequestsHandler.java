@@ -10,6 +10,7 @@ import com.eis0.kademlianetwork.informationdeliverymanager.Requests.DeleteResour
 import com.eis0.kademlianetwork.informationdeliverymanager.Requests.FindIdRequest;
 import com.eis0.kademlianetwork.informationdeliverymanager.Requests.FindResourceRequest;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -52,9 +53,9 @@ public class RequestsHandler {
      * @return An instance of a specific FindIdRequest
      */
     public FindIdRequest startFindIdRequest(@NonNull KademliaId idToFind) {
-        FindIdRequest newRequest = new FindIdRequest(idToFind);
-        pendingFindIdRequests.put(idToFind, newRequest);
-        return newRequest;
+        FindIdRequest findIdRequest = new FindIdRequest(idToFind);
+        pendingFindIdRequests.put(idToFind, findIdRequest);
+        return findIdRequest;
     }
 
     /**
@@ -100,10 +101,8 @@ public class RequestsHandler {
      * @param peerFound The SMSPeer found for the FindIdRequest
      */
     public void completeFindIdRequest(KademliaId idToFind, SMSPeer peerFound) {
-        SMSKademliaNode node = new SMSKademliaNode(peerFound);
-        KademliaId idFound = node.getId();
-        if (pendingFindIdRequests.containsKey(idFound)) {
-            pendingFindIdRequests.get(idFound).setCompleted(peerFound);
+        if (pendingFindIdRequests.containsKey(idToFind)) {
+            pendingFindIdRequests.get(idToFind).setCompleted(peerFound);
         }
     }
 
