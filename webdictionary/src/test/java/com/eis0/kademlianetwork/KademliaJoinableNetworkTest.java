@@ -77,18 +77,16 @@ public class KademliaJoinableNetworkTest {
     }
 
     @Test (expected = RuntimeException.class) // I expect acceptJoinInvitation() to be called
-    public void checkInvitation_noListenerSet() {
+    public void checkInvitation_ListenerNotSet() {
         NETWORK.checkInvitation(invitation);
     }
 
-    @Test (expected = IllegalArgumentException.class) //I expect onJoinInvitation to be called
+    @Test (expected = IllegalArgumentException.class) //I expect onJoinInvitation() to be called
     public void checkInvitation_listenerSet() {
         NETWORK.setJoinInvitationListener(invitationListener); //2 test in 1. Not so elegant but necessary
         NETWORK.checkInvitation(invitation);
     }
 
     @Test
-    public void setNetDictionary() {
-        //not testable
-    }
+    public void setNetDictionary() { /*not testable*/ }
 }
