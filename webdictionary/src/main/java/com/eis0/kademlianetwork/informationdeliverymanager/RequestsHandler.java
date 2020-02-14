@@ -103,6 +103,7 @@ public class RequestsHandler {
     public void completeFindIdRequest(KademliaId idToFind, SMSPeer peerFound) {
         if (pendingFindIdRequests.containsKey(idToFind)) {
             pendingFindIdRequests.get(idToFind).setCompleted(peerFound);
+            pendingFindIdRequests.remove(idToFind);
         }
     }
 
@@ -116,6 +117,7 @@ public class RequestsHandler {
         KademliaId requestId = new KademliaId(key);
         if (pendingFindResourceRequests.containsKey(requestId)) {
             pendingFindResourceRequests.get(requestId).setCompleted(resourceFound);
+            pendingFindResourceRequests.remove(requestId);
         }
     }
 
@@ -128,6 +130,7 @@ public class RequestsHandler {
         KademliaId requestId = new KademliaId(key);
         if (pendingAddRequests.containsKey(requestId)) {
             pendingAddRequests.get(requestId).setCompleted();
+            pendingAddRequests.remove(requestId);
         }
     }
 
@@ -140,6 +143,9 @@ public class RequestsHandler {
         KademliaId requestId = new KademliaId(key);
         if (pendingDeleteRequests.containsKey(requestId)) {
             pendingDeleteRequests.get(requestId).setCompleted();
+            pendingDeleteRequests.remove(requestId);
         }
     }
+
+
 }
