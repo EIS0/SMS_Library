@@ -88,7 +88,7 @@ public class RoutingTableRefresh extends Thread{
      * @param node Contact node
      * @return true if the node has been correctly removed
      */
-    private boolean removeIfUnresponsive(SMSKademliaNode node){
+    public boolean removeIfUnresponsive(SMSKademliaNode node){
         KademliaId currentId = node.getId();
         //I check the bucket Id that contains that node.
         int b = net.getLocalRoutingTable().getBucketId(currentId);

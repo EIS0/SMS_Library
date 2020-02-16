@@ -4,7 +4,10 @@ import android.telephony.SmsManager;
 
 import com.eis.smslibrary.SMSPeer;
 import com.eis0.UtilityMocks;
+import com.eis0.kademlia.Contact;
+import com.eis0.kademlia.DefaultConfiguration;
 import com.eis0.kademlia.KademliaId;
+import com.eis0.kademlia.SMSKademliaBucket;
 import com.eis0.kademlia.SMSKademliaNode;
 import com.eis0.kademlianetwork.routingtablemanager.RoutingTableRefresh;
 
@@ -16,6 +19,8 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
 @RunWith(PowerMockRunner.class)
@@ -36,11 +41,12 @@ public class RoutingTableRefreshTest {
     private final KademliaNetwork NET2 = new KademliaNetwork();
     private final KademliaNetwork NET3 = new KademliaNetwork();
 
+    private final int MAX_STALE_COUNT = 2;
 
     RoutingTableRefresh tableRefresh = new RoutingTableRefresh(NODE1, NET1);
 
     @Before
-    public void setUp(){
+    public void setUp() {
 
         SmsManager smsManagerMock = mock(SmsManager.class);
 
@@ -61,16 +67,19 @@ public class RoutingTableRefreshTest {
     }
 
     @Test
-    public void setUnresponsiveTest(){
-        //I imagine NODE2 to be unresponsive
-        //tableRefresh.setUnresponsive(NODE2);
-
-        KademliaId currentId = NODE2.getId();
-        //I check the bucket Id that contains that node
-        int b = NET1.getLocalRoutingTable().getBucketId(currentId);
-
-        assertEquals( NET1.getLocalRoutingTable().getBuckets()[b].getFromContacts(NODE2).staleCount(), 1);
+    public void removeIfUnresponsive_responsive() {
+        assertFalse(tableRefresh.removeIfUnresponsive(NODE1)); // I expect NODE1 to be not removed
     }
 
-
+    @Test
+    public void removeIfUnresponsive_unresponsive() {
+        KademliaId id = NODE1.getId();
+        //I check the bucket Id that contains that node.
+        int b = NET1.getLocalRoutingTable().getBucketId(id);
+        //I extract the bucket
+        SMSKademliaBucket bucket = NET1.getLocalRoutingTable().getBuckets()[b];
+        Contact c = bucket.getFromContacts(NODE1);
+        for(int i=0; i<MAX_STALE_COUNT; i++) c.incrementStaleCount();
+        assertTrue(tableRefresh.removeIfUnresponsive(NODE1)); // I expect NODE1 to be removed
+    }
 }
