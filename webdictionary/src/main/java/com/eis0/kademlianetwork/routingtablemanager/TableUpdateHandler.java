@@ -27,7 +27,7 @@ public class TableUpdateHandler {
                                    @NonNull SMSPeer netPeer,
                                    @NonNull RequestsHandler requestsHandler) {
         iterator = new TableUpdateIterator(KademliaId.ID_LENGTH, netId, table, netPeer, requestsHandler);
-        iterator.start();
+        iterator.run();
     }
 
 }
