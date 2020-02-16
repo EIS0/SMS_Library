@@ -45,12 +45,13 @@ public class TableUpdateHandlerTest {
 
     @Before
     public void setUp() throws Exception{
+
         TableUpdateIterator dummyTableUpdateIterator = PowerMockito.mock(TableUpdateIterator.class);
         PowerMockito.whenNew(TableUpdateIterator.class).withAnyArguments().thenReturn(dummyTableUpdateIterator);
-        doThrow(new RuntimeException()).when(dummyTableUpdateIterator).run();
+        doThrow(new IllegalArgumentException()).when(dummyTableUpdateIterator).start();
     }
 
-    @Test (expected = RuntimeException.class) //I expected run() to be called
+    @Test (expected = IllegalArgumentException.class) //I expected start() to be called
     public void updateTable() {
         tableUpdateHandler.updateTable(routingTable, ID, PEER, requestsHandler);
     }
