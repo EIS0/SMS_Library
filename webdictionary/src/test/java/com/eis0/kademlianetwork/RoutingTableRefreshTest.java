@@ -82,4 +82,28 @@ public class RoutingTableRefreshTest {
         for(int i=0; i<MAX_STALE_COUNT; i++) c.incrementStaleCount();
         assertTrue(tableRefresh.removeIfUnresponsive(NODE1)); // I expect NODE1 to be removed
     }
+
+    @Test
+    public void removeIfUnresponsive_responsive_checkIfInBucket(){
+        tableRefresh.removeIfUnresponsive(NODE1); //I expected NODE1 to be not removed
+        KademliaId id = NODE1.getId();
+        //I check the bucket Id that contains that node.
+        int b = NET1.getLocalRoutingTable().getBucketId(id);
+        //I extract the bucket
+        SMSKademliaBucket bucket = NET1.getLocalRoutingTable().getBuckets()[b];
+        assertTrue(bucket.containsContact(new Contact(NODE1)));
+    }
+
+    @Test
+    public void removeIfUnresponsive_unresponsive_checkIfNotInBucket(){
+        KademliaId id = NODE1.getId();
+        //I check the bucket Id that contains that node.
+        int b = NET1.getLocalRoutingTable().getBucketId(id);
+        //I extract the bucket
+        SMSKademliaBucket bucket = NET1.getLocalRoutingTable().getBuckets()[b];
+        Contact c = bucket.getFromContacts(NODE1);
+        for(int i=0; i<MAX_STALE_COUNT; i++) c.incrementStaleCount();
+        tableRefresh.removeIfUnresponsive(NODE1);
+        assertFalse(bucket.containsContact(c));
+    }
 }
