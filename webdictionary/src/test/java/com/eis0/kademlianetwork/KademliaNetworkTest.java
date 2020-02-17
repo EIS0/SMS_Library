@@ -23,6 +23,7 @@ import com.eis0.netinterfaces.listeners.SetResourceListener;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -60,7 +61,7 @@ public class KademliaNetworkTest {
 
     private final RequestsHandler REQUEST_HANDLER = new RequestsHandler();
 
-    private final SetResourceListener    dummySetResourceListener    = mock(SetResourceListener.class);
+    private final SetResourceListener    dummySetResourceListener = mock(SetResourceListener.class);
     private final GetResourceListener    dummyGetResourceListener    = mock(GetResourceListener.class);
     private final RemoveResourceListener dummyRemoveResourceListener = mock(RemoveResourceListener.class);
     private final InviteListener         dummyInviteListener         = mock(InviteListener.class);
@@ -71,13 +72,21 @@ public class KademliaNetworkTest {
         NET1.getLocalRoutingTable().insert(new SMSKademliaNode(peer2));
 
         PowerMockito.mockStatic(CommandExecutor.class);
+
+        /*These exceptions will be all catch*/
         doThrow(new RuntimeException()).when(CommandExecutor.class, "execute", new KadAddResource(KEY, RESOURCE, REQUEST_HANDLER));
         doThrow(new RuntimeException()).when(CommandExecutor.class, "execute", new KadDeleteResource(KEY, REQUEST_HANDLER));
         doThrow(new RuntimeException()).when(CommandExecutor.class, "execute", new FindResource(KEY, REQUEST_HANDLER));
+
         doNothing().when(CommandExecutor.class, "execute", new KadSendInvitation(new KademliaInvitation(peer3))); //so onInvitationSent() can be called
 
+        /*NullPointerException will be use for failing calls. IllegalArgumentException otherwise*/
+        Mockito.doThrow(NullPointerException.class).when(dummySetResourceListener).onResourceSetFail(Mockito.anyString(), Mockito.anyString(), Mockito.any(KademliaFailReason.class));
+        Mockito.doThrow(NullPointerException.class).when(dummyGetResourceListener).onGetResourceFailed(Mockito.anyString(), Mockito.any(KademliaFailReason.class));
+        Mockito.doThrow(NullPointerException.class).when(dummyRemoveResourceListener).onResourceRemoveFail(Mockito.anyString(), Mockito.any(KademliaFailReason.class));
+        Mockito.doThrow(NullPointerException.class).when(dummyInviteListener).onInvitationNotSent(Mockito.any(SMSPeer.class), Mockito.any(KademliaFailReason.class));
+
         Mockito.doThrow(IllegalArgumentException.class).when(dummyInviteListener).onInvitationSent(Mockito.any(SMSPeer.class));
-        Mockito.doThrow(NullPointerException.class).when(dummyInviteListener).onInvitationNotSent(Mockito.any(SMSPeer.class), Mockito.any(FailReason.class));
     }
 
     @Test
@@ -195,17 +204,17 @@ public class KademliaNetworkTest {
         assertTrue(NET1.isAlive(peer2));
     }
 
-    @Test (expected = RuntimeException.class) //I expect execute() to be called
+    @Test (expected = NullPointerException.class) //I expect onResourceSetFail() to be called
     public void setResource(){
         NET1.setResource(KEY, RESOURCE, dummySetResourceListener);
     }
 
-    @Test (expected = RuntimeException.class) //I expect execute() to be called
+    @Test (expected = NullPointerException.class) //I expect onResourceGetFailed() to be called
     public void getResource(){
         NET1.getResource(KEY, dummyGetResourceListener);
     }
 
-    @Test (expected = RuntimeException.class) //I expect execute() to be called
+    @Test (expected = NullPointerException.class) //I expect onRemoveResourceFailed() to be called
     public void removeResource(){
         NET1.removeResource(KEY, dummyRemoveResourceListener);
     }
