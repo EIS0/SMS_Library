@@ -1,5 +1,7 @@
 package com.eis0.kademlianetwork.informationdeliverymanager;
 
+import androidx.annotation.NonNull;
+
 import com.eis.smslibrary.SMSManager;
 import com.eis.smslibrary.SMSMessage;
 import com.eis.smslibrary.SMSPeer;
@@ -29,9 +31,7 @@ public class IdFinderHandler {
      * @param searcher     The Peer which is searching the ID
      * @throws IllegalArgumentException If the idToFind, the searcher or the researchMode are null
      */
-    public static void searchId(KademliaId idToFind, SMSPeer searcher){
-        if (idToFind == null) throw new IllegalArgumentException(ID_TO_FIND_NULL);
-        if (searcher == null) throw new IllegalArgumentException(SEARCHER_NULL);
+    public static void searchId(@NonNull KademliaId idToFind,@NonNull SMSPeer searcher){
         /*
         Declaration of the two messages used to:
         1. entrust the research to a closer node

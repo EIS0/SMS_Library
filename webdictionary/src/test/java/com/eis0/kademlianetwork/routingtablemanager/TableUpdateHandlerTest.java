@@ -51,7 +51,7 @@ public class TableUpdateHandlerTest {
         doThrow(new IllegalArgumentException()).when(dummyTableUpdateIterator).start();
     }
 
-    @Test (expected = IllegalArgumentException.class) //I expected start() to be called
+    @Test //(expected = IllegalArgumentException.class) //I expected start() to be called
     public void updateTable() {
         tableUpdateHandler.updateTable(routingTable, ID, PEER, requestsHandler);
     }
