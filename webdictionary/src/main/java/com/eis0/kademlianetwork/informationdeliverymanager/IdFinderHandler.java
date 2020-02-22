@@ -46,7 +46,6 @@ public class IdFinderHandler {
         // Checks if I'm closest node to the one to find
         if (closestNode.equals(KademliaJoinableNetwork.getInstance().getLocalNode())) {
             sendResult(idToFind, searcher);
-            retryIfDead(idToFind, searcher, searcher);
             return;
         }
         //else, I ask to the closest node inside my Routing Table to continue the research

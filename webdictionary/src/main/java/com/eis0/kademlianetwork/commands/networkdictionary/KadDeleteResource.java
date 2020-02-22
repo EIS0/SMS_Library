@@ -5,6 +5,7 @@ import androidx.annotation.NonNull;
 import com.eis.smslibrary.SMSManager;
 import com.eis.smslibrary.SMSMessage;
 import com.eis0.kademlianetwork.KademliaFailReason;
+import com.eis0.kademlianetwork.KademliaJoinableNetwork;
 import com.eis0.kademlianetwork.commands.KadFindId;
 import com.eis0.kademlianetwork.informationdeliverymanager.Requests.DeleteResourceRequest;
 import com.eis0.kademlianetwork.informationdeliverymanager.KademliaMessage;
@@ -58,7 +59,13 @@ public class KadDeleteResource extends Command {
                 .buildMessage();
         SMSManager.getInstance().sendMessage(message);
 
-        //TODO: wait for him to acknowledge the reception
+        //If I'm here it means that the closest node found couldn't complete the task
+        if(!KademliaJoinableNetwork.getInstance().isAlive(findIdCommand.getPeerFound())){
+            failReason = KademliaFailReason.REQUEST_EXPIRED;
+            return;
+        }
+
+
         requestsHandler.completeDeleteResourceRequest(key);
 
         hasSuccessfullyCompleted = true;

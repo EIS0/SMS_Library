@@ -96,9 +96,7 @@ public class SMSKademliaListener extends SMSReceivedServiceListener {
                 IdFinderHandler.searchId(idToFind, searcher);
                 break;
             case FindIdSearchResult:
-                //1. I inform that I'm alive and happy to be
-                CommandExecutor.execute(new KadSendAcknowledge(peer));
-                //2. Processes the information brought by the message received
+                //Processes the information brought by the message received
                 requestsHandler.completeFindIdRequest(idToFind, peer);
                 break;
 
@@ -116,14 +114,12 @@ public class SMSKademliaListener extends SMSReceivedServiceListener {
 
             /*Asking for a resource to the Dictionary*/
             case GetFromDict:
-                //1. I inform that I'm alive and happy to be
-                CommandExecutor.execute(new KadSendAcknowledge(peer));
-                //2. Processes the information brought by the message received
+                //1. Processes the information brought by the message received
                 Log.i(LOG_TAG, "Received GetFromDictionary request.\nKey: " + key);
                 resource = KademliaJoinableNetwork.getInstance()
                         .getLocalDictionary()
                         .getResource(key);
-                //3. Send the <key, resource> pair
+                //2. Send the <key, resource> pair
                 message = new KademliaMessage()
                         .setPeer(peer)
                         .setRequestType(RequestTypes.ResultGetRequest)
@@ -133,8 +129,7 @@ public class SMSKademliaListener extends SMSReceivedServiceListener {
                 SMSManager.getInstance().sendMessage(message);
                 break;
             case ResultGetRequest:
-                //1. I inform that I'm alive and happy to be
-                CommandExecutor.execute(new KadSendAcknowledge(peer));
+                //1. Add the node that answered the research to the local Routing Table
                 KademliaJoinableNetwork.getInstance().addNodeToTable(new SMSKademliaNode(peer));
                 //2. Processes the information brought by the message received
                 requestsHandler.completeFindResourceRequest(key, resource);
