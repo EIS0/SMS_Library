@@ -6,7 +6,6 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNull;
 
 public class SMSKademliaNodeTest {
 
@@ -49,13 +48,13 @@ public class SMSKademliaNodeTest {
 
     @Test
     public void hasCodeTest() {
-        int expected = -1199924090;
+        int expected = -1154572726;
         assertEquals(NODE1.hashCode(), expected);
     }
 
     @Test
     public void toStringTest(){
-        String expected = "8B9D0EAE850B323A";
+        String expected = "8B9D0EAE850B323A897CF4A1B76C20";
         assertEquals(NODE1.toString(), expected);
     }
 }
