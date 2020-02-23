@@ -42,23 +42,19 @@ import static org.powermock.api.mockito.PowerMockito.when;
 @PrepareForTest({CommandExecutor.class, SMSManager.class})
 
 public class KademliaNetworkTest {
-
-    private final SMSPeer peer1 = new SMSPeer("+393335552121");
-    private final SMSPeer peer2 = new SMSPeer("+5555");
-    private final SMSPeer peer3 = new SMSPeer("+5556");
-
-    private final SMSKademliaNode NODE1 = new SMSKademliaNode(peer1); //local node
-    private final SMSKademliaNode NODE2 = new SMSKademliaNode(peer2);
-    private final SMSKademliaNode NODE3 = new SMSKademliaNode(peer3);
+    private SMSPeer peer1;
+    private SMSPeer peer2;
+    private SMSPeer peer3;
+    private SMSKademliaNode NODE1; //local node
+    private SMSKademliaNode NODE2;
+    private SMSKademliaNode NODE3;
 
     private final String KEY = "key";
     private final String RESOURCE = "resource";
 
-    private final KademliaNetwork NET1 = new KademliaNetwork();
-
-    private final RequestsHandler REQUEST_HANDLER = new RequestsHandler();
-
-
+    private KademliaNetwork NET1;
+    private RequestsHandler REQUEST_HANDLER;
+    
     private SMSManager smsManagerMock;
     private final SetResourceListener dummySetResourceListener = mock(SetResourceListener.class);
     private final GetResourceListener dummyGetResourceListener = mock(GetResourceListener.class);
@@ -68,6 +64,15 @@ public class KademliaNetworkTest {
 
     @Before
     public void setUp() throws Exception {
+        peer1 = new SMSPeer("+393335552121");
+        peer2 = new SMSPeer("+5555");
+        peer3 = new SMSPeer("+5556");
+        NODE1 = new SMSKademliaNode(peer1); //local node
+        NODE2 = new SMSKademliaNode(peer2);
+        NODE3 = new SMSKademliaNode(peer3);
+        NET1 = new KademliaNetwork();
+        REQUEST_HANDLER = new RequestsHandler();
+
         NET1.init(NODE1, UtilityMocks.setupMocks());
         NET1.getLocalRoutingTable().insert(new SMSKademliaNode(peer2));
 
