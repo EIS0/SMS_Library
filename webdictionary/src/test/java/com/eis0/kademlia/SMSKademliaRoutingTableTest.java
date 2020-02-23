@@ -17,8 +17,8 @@ public class SMSKademliaRoutingTableTest {
 
     private final KadConfiguration CONFIG = new DefaultConfiguration();
 
-    private final KademliaId ID1 = new KademliaId("0000000000000001");
-    private final KademliaId ID2 = new KademliaId("0000000000000011");
+    private final KademliaId ID1 = new KademliaId("000000000000001");
+    private final KademliaId ID2 = new KademliaId("000000000000011");
     private final KademliaId ID4 = new KademliaId("9012dfgj");
     private final KademliaId ID5 = new KademliaId("ciaociao");
 
@@ -117,7 +117,7 @@ public class SMSKademliaRoutingTableTest {
         routingTable.insert(NODE1);
         int b = routingTable.getBucketId(NODE2.getId());
         //bucket id compute by external program as the "getBucketId" method work
-        assertEquals(b, 62);
+        assertEquals(b, KademliaId.ID_LENGTH-2);
     }
 
     @Test
@@ -173,7 +173,7 @@ public class SMSKademliaRoutingTableTest {
         routingTable.insert(NODE2);
         routingTable.insert(MAIN_NODE);
         List<SMSKademliaNode> result = routingTable.findClosest(ID2, 1);
-        assertEquals(result.get(0), NODE2);
+        assertEquals(result.get(0), NODE1);
     }
 
     @Test
@@ -182,7 +182,7 @@ public class SMSKademliaRoutingTableTest {
         routingTable.insert(NODE2);
         routingTable.insert(MAIN_NODE);
         List<SMSKademliaNode> result = routingTable.findClosest(ID1, 1);
-        assertEquals(result.get(0), NODE2);
+        assertEquals(result.get(0), NODE1);
     }
 
     @Test
@@ -191,7 +191,7 @@ public class SMSKademliaRoutingTableTest {
         routingTable.insert(NODE2);
         routingTable.insert(MAIN_NODE);
         List<SMSKademliaNode> result = routingTable.findClosest(ID4, 1);
-        assertEquals(result.get(0), NODE1);
+        assertEquals(result.get(0), NODE2);
     }
 
     @Test
@@ -200,7 +200,7 @@ public class SMSKademliaRoutingTableTest {
         routingTable.insert(NODE2);
         routingTable.insert(MAIN_NODE);
         List<SMSKademliaNode> result = routingTable.findClosest(ID5, 1);
-        assertEquals(result.get(0), MAIN_NODE);
+        assertEquals(result.get(0), NODE2);
     }
 
     @Test
@@ -209,8 +209,8 @@ public class SMSKademliaRoutingTableTest {
         routingTable.insert(NODE2);
         routingTable.insert(MAIN_NODE);
         List<SMSKademliaNode> result = routingTable.findClosest(ID4, 2);
-        assertEquals(result.get(0), NODE1);
-        assertEquals(result.get(1), NODE2);
+        assertEquals(result.get(0), NODE2);
+        assertEquals(result.get(1), NODE1);
     }
 
     @Test
@@ -237,7 +237,7 @@ public class SMSKademliaRoutingTableTest {
                 "# nodes in Bucket with depth 0: 1\n" +
                 "Bucket at depth: 0\n" +
                 " Nodes: \n" +
-                "Node: 6F52A67F144121EC (stale: 0)\n" +
+                "Node: 6F52A67F144121EC9A01BE1CE0DACD (stale: 0)\n" +
                 "\n" +
                 "Total Contacts: 1";
         assertEquals(routingTable.toString(), toReturn);
