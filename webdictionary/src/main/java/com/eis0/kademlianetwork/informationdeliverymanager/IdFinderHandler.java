@@ -32,6 +32,8 @@ public class IdFinderHandler {
      * @throws IllegalArgumentException If the idToFind, the searcher or the researchMode are null
      */
     public static void searchId(@NonNull KademliaId idToFind,@NonNull SMSPeer searcher){
+        if(idToFind == null) throw new NullPointerException("The idToFind cannot be Null");
+        if(searcher == null) throw new NullPointerException("The searcher cannot be Null");
         /*
         Declaration of the two messages used to:
         1. entrust the research to a closer node
@@ -111,10 +113,7 @@ public class IdFinderHandler {
      */
     private static void retryIfDead(KademliaId idToFind, SMSPeer searcherNode, SMSPeer nodeToCheck) {
         if (!KademliaJoinableNetwork.getInstance().isAlive(nodeToCheck)) {
-            //The target node is not alive. It is no more in my routing table
-            //I try with another one, starting another ID research, with the same values, but now
-            //that I executed the .isAlive(nodeToCheck) method, the invalid node it's been removed
-            //from my routing table
+
             searchId(idToFind, searcherNode);
         }
     }
