@@ -34,7 +34,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.powermock.api.mockito.PowerMockito.doNothing;
-import static org.powermock.api.mockito.PowerMockito.doThrow;
 import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.when;
 
@@ -83,7 +82,7 @@ public class KademliaNetworkTest {
         when(SMSManager.getInstance()).thenReturn(smsManagerMock);
 
         /*These exceptions will be all catch*/
-        doThrow(new RuntimeException()).when(CommandExecutor.class, "execute", new KadAddResource(KEY, RESOURCE, REQUEST_HANDLER));
+        when(CommandExecutor.class, "execute", new KadAddResource(KEY, RESOURCE, REQUEST_HANDLER)).thenThrow(new RuntimeException());
         when(CommandExecutor.class, "execute", new KadDeleteResource(KEY, REQUEST_HANDLER)).thenThrow(new RuntimeException());
         when(CommandExecutor.class, "execute", new FindResource(KEY, REQUEST_HANDLER)).thenThrow(new RuntimeException());
 
