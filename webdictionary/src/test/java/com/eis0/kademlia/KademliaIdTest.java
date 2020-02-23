@@ -4,7 +4,6 @@ import com.eis.smslibrary.SMSPeer;
 
 import org.junit.Test;
 
-import java.math.BigDecimal;
 import java.math.BigInteger;
 
 import static org.junit.Assert.assertEquals;
@@ -35,7 +34,7 @@ public class KademliaIdTest {
         String id = test.getInt().toString(16);
         /* SHA-256 hash of test SMSPeer, calculated with an external
         program, and truncated to the first 160 bits */
-        String NUMBER_HASH = "8202021e5ef98f7a";
+        String NUMBER_HASH = "8202021e5ef98f7a2dfcda894e49b8";
         assertEquals(NUMBER_HASH, id);
     }
 
@@ -168,7 +167,7 @@ public class KademliaIdTest {
 
     @Test
     public void generateIdByHex(){
-        new KademliaId("1745AF3B726C7C6F");
+        new KademliaId("745AF3B726C7C6F");
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -195,13 +194,13 @@ public class KademliaIdTest {
 
     @Test
     public void hexRepresentation_ByPhoneNumber(){
-        String shouldBe = "8202021E5EF98F7A"; //calculated outside
+        String shouldBe = "8202021E5EF98F7A2DFCDA894E49B8"; //calculated outside
         assertEquals(NUMBER_ID.hexRepresentation(), shouldBe);
     }
 
     @Test
     public void hexRepresentation_ByString(){
-        String shouldBe = "3131313131313131"; //calculated outside
+        String shouldBe = "000000000000003131313131313131"; //calculated outside
         assertEquals(STRING_ID.hexRepresentation(), shouldBe);
     }
 }
