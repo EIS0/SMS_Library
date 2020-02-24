@@ -93,6 +93,11 @@ public class SMSKademliaListenerTest {
             .setResource(resource1)
             .setRequestType(RequestTypes.AddToDict)
             .buildMessage();
+    private final SMSMessage getMessage = new KademliaMessage()
+            .setPeer(peer1)
+            .setKey(key1)
+            .setRequestType(RequestTypes.GetFromDict)
+            .buildMessage();
 
     @Before
     public void setUp() {
@@ -169,5 +174,19 @@ public class SMSKademliaListenerTest {
         verify(spyNetwork, times(2)).getLocalDictionary();
         verify(dictionarySpy, times(1)).addResource(key1, resource1);
         assertEquals(dictionarySpy.getResource(key1), resource1);
+    }
+
+    @Test
+    public void GetFromDict() {
+        when(spyNetwork.getLocalDictionary()).thenReturn(dictionarySpy);
+        dictionarySpy.addResource(key1, resource1);
+        spyListener.onMessageReceived(getMessage);
+        SMSMessage expectedMessage = new KademliaMessage()
+                .setPeer(peer1)
+                .setKey(key1)
+                .setResource(resource1)
+                .setRequestType(RequestTypes.ResultGetRequest)
+                .buildMessage();
+        verify(smsManagerMock).sendMessage(expectedMessage);
     }
 }
