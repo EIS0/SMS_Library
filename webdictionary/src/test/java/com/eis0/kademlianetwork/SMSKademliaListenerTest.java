@@ -25,6 +25,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.mock;
@@ -97,6 +98,17 @@ public class SMSKademliaListenerTest {
             .setPeer(peer1)
             .setKey(key1)
             .setRequestType(RequestTypes.GetFromDict)
+            .buildMessage();
+    private final SMSMessage resultGetMessage = new KademliaMessage()
+            .setPeer(peer1)
+            .setKey(key1)
+            .setResource(resource1)
+            .setRequestType(RequestTypes.ResultGetRequest)
+            .buildMessage();
+    private final SMSMessage removeMessage = new KademliaMessage()
+            .setPeer(peer1)
+            .setKey(key1)
+            .setRequestType(RequestTypes.RemoveFromDict)
             .buildMessage();
 
     @Before
@@ -171,13 +183,13 @@ public class SMSKademliaListenerTest {
         when(spyNetwork.getLocalDictionary()).thenReturn(dictionarySpy);
         spyListener.onMessageReceived(addMessage);
         verify(smsManagerMock).sendMessage(acknowledgeMessage);
-        verify(spyNetwork, times(2)).getLocalDictionary();
+        verify(spyNetwork, times(1)).getLocalDictionary();
         verify(dictionarySpy, times(1)).addResource(key1, resource1);
         assertEquals(dictionarySpy.getResource(key1), resource1);
     }
 
     @Test
-    public void GetFromDict() {
+    public void GetFromDict_asExpected() {
         when(spyNetwork.getLocalDictionary()).thenReturn(dictionarySpy);
         dictionarySpy.addResource(key1, resource1);
         spyListener.onMessageReceived(getMessage);
@@ -188,5 +200,19 @@ public class SMSKademliaListenerTest {
                 .setRequestType(RequestTypes.ResultGetRequest)
                 .buildMessage();
         verify(smsManagerMock).sendMessage(expectedMessage);
+    }
+
+    @Test
+    public void ResultGetRequest_asExpected() {
+        spyListener.onMessageReceived(resultGetMessage);
+        verify(handlerMock, times(1)).completeFindResourceRequest(key1, resource1);
+    }
+
+    @Test
+    public void RemoveFromDict_asExpected() {
+        when(spyNetwork.getLocalDictionary()).thenReturn(dictionarySpy);
+        dictionarySpy.addResource(key1, resource1);
+        spyListener.onMessageReceived(removeMessage);
+        assertNull(dictionarySpy.getResource(key1));
     }
 }
