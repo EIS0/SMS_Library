@@ -26,17 +26,17 @@ import static org.mockito.Mockito.verify;
 @PrepareForTest({KademliaNetwork.class, SMSManager.class})
 public class SMSKademliaListenerTest {
 
-    private final SMSPeer peer1 = new SMSPeer("+556");
+    private final SMSPeer peer1 = new SMSPeer("+3408140326");
 
     private final SMSKademliaNode node1 = new SMSKademliaNode(peer1);
 
     private SMSManager smsManagerMock;
 
     @Spy
-    private KademliaNetwork spyNetwork = new KademliaNetwork();
+    private KademliaJoinableNetwork spyNetwork = KademliaJoinableNetwork.getInstance();
 
     @Spy
-    private SMSKademliaListener spyListener = new SMSKademliaListener(spyNetwork);
+    private SMSKademliaListener spyListener = new SMSKademliaListener();
 
     /*Default messages*/
     private final SMSMessage acknowledge = new KademliaMessage()

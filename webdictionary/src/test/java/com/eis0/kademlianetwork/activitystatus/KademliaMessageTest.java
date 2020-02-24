@@ -17,7 +17,7 @@ public class KademliaMessageTest {
     private final SMSPeer PEER1 = new SMSPeer("+393423541601");
     private final SMSPeer PEER2 = new SMSPeer("+393423541602");
 
-    private final RequestTypes REQUEST1 = RequestTypes.FindId;
+    private final RequestTypes REQUEST1 = RequestTypes.RemoveFromDict;
     private final RequestTypes REQUEST2 = RequestTypes.AcceptJoin;
 
     private final KademliaId ID1 = new KademliaId(PEER1);

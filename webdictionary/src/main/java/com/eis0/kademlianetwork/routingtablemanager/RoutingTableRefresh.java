@@ -6,10 +6,9 @@ import com.eis0.kademlia.KademliaId;
 import com.eis0.kademlia.SMSKademliaBucket;
 import com.eis0.kademlia.SMSKademliaNode;
 import com.eis0.kademlianetwork.KademliaNetwork;
-import com.eis0.kademlianetwork.activitystatus.RespondTimer;
+import com.eis0.kademlianetwork.activitystatus.RefreshTimer;
+import com.eis0.kademlianetwork.commands.KadFindId;
 import com.eis0.kademlianetwork.commands.messages.KadPing;
-import com.eis0.kademlianetwork.informationdeliverymanager.IdFinderHandler;
-import com.eis0.kademlianetwork.informationdeliverymanager.ResearchMode;
 import com.eis0.netinterfaces.commands.CommandExecutor;
 
 import java.util.List;
@@ -20,9 +19,7 @@ import java.util.List;
  * @author Edoardo Raimondi
  */
 
-public class RoutingTableRefresh{
-    //create a timer to verify if I had a pong in at least 10 secs
-    private final RespondTimer timer = new RespondTimer();
+public class RoutingTableRefresh extends Thread{
     //node doing this refresh
     private final SMSKademliaNode localNode;
     //kademlia network of the local node
@@ -33,11 +30,21 @@ public class RoutingTableRefresh{
         this.net = net;
     }
 
-
     /**
-     * Method that performs a refresh
+     * Method that performs a refresh: checks if the users I have are still alive.
+     * If they're not I ask for a new id to get instead of him
+     *
+     * @author Edoardo Raimondi
+     * @author Marco Cognolato, little improvements
      */
-    public void start() {
+    public void run() {
+        while (true){
+            updateTable();
+            new RefreshTimer().run();
+        }
+    }
+
+    public void updateTable(){
         //create the list of my routing table nodes. I need to check all that nodes.
         List<SMSKademliaNode> allRoutingTableNodes = net.getLocalRoutingTable().getAllNodes();
         for (int i = 0; i < allRoutingTableNodes.size(); i++) {
@@ -45,17 +52,31 @@ public class RoutingTableRefresh{
             CommandExecutor.execute(new KadPing(currentNode.getPeer()));
 
             //wait 10 secs to get a pong answer
-            timer.run();
+            net.connectionInfo.run();
 
             //check if I received a pong (so if the node is alive)
             if (net.connectionInfo.hasPong()) {
                 //is alive, set the pong state to false in order to do it again
-                net.connectionInfo.setPong(false);
-            } else { //the node is not alive at the moment
-                if (removeIfUnresponsive(currentNode)) {
-                    //now I search for another one
-                    askForId(currentNode.getId());
+                net.connectionInfo.reset();
+                continue;
+            }
+            //If I'm here it means the node has not answered
+
+            if (removeIfUnresponsive(currentNode)) {
+                //now I search for another one
+                //take the node peer
+                SMSPeer peer = localNode.getPeer();
+                //create the fake id. I want a node in the same bucket so I search for a same distance one
+                KademliaId fakeId = currentNode.getId().generateNodeIdByDistance(0);
+
+                //search in the net for the fakeId and wait
+                KadFindId findIdCommand = new KadFindId(fakeId, net.getRequestsHandler());
+                CommandExecutor.execute(findIdCommand);
+
+                if(!findIdCommand.hasSuccessfullyCompleted()){
+                    return;
                 }
+                net.getLocalRoutingTable().insert(new SMSKademliaNode(findIdCommand.getPeerFound()));
             }
         }
     }
@@ -67,7 +88,7 @@ public class RoutingTableRefresh{
      * @param node Contact node
      * @return true if the node has been correctly removed
      */
-    private boolean removeIfUnresponsive(SMSKademliaNode node){
+    public boolean removeIfUnresponsive(SMSKademliaNode node){
         KademliaId currentId = node.getId();
         //I check the bucket Id that contains that node.
         int b = net.getLocalRoutingTable().getBucketId(currentId);
@@ -87,19 +108,5 @@ public class RoutingTableRefresh{
             currentBucket.insert(currentContact);
             return false;
         }
-    }
-    /**
-     * Generates an id to find and searches for it in the net sending a request
-     *
-     * @param id the id to replace
-     */
-    private void askForId(KademliaId id) {
-        //take the node peer
-        SMSPeer peer = localNode.getPeer();
-        //create the fake id. I want a node in the same bucket so I search for a same distance one
-        KademliaId fakeId = id.generateNodeIdByDistance(0);
-
-        //search in the net for the fakeId and wait
-        IdFinderHandler.searchId(fakeId, peer, ResearchMode.Refresh);
     }
 }

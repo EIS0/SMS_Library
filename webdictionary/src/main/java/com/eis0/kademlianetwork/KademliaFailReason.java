@@ -17,6 +17,11 @@ public class KademliaFailReason extends FailReason {
     public static final KademliaFailReason PEER_IN_NET = new KademliaFailReason("PeerAlreadyInNetwork");
 
     /**
+     * Failure when a Request takes too long to execute
+     */
+    public static final KademliaFailReason REQUEST_EXPIRED = new KademliaFailReason("RequestExpired");
+
+    /**
      * Private constructor as suggested in the TypeSafe enum pattern.
      *
      * @param name The name of the enumeration.

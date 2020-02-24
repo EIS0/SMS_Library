@@ -1,5 +1,7 @@
 package com.eis0.kademlia;
 
+import androidx.annotation.NonNull;
+
 import java.math.BigInteger;
 import java.util.Comparator;
 
@@ -16,7 +18,7 @@ class KeyComparator implements Comparator<SMSKademliaNode> {
     /**
      * @param key The NodeId relative to which the distance should be measured.
      */
-    public KeyComparator(KademliaId key) {
+    public KeyComparator(@NonNull KademliaId key) {
         this.key = key.getInt();
     }
 

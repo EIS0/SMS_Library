@@ -1,6 +1,7 @@
 package com.eis0.kademlianetwork;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.eis.communication.Peer;
 import com.eis.smslibrary.SMSManager;
@@ -11,10 +12,11 @@ import com.eis0.kademlia.KademliaId;
 import com.eis0.kademlia.SMSKademliaNode;
 import com.eis0.kademlia.SMSKademliaRoutingTable;
 import com.eis0.kademlianetwork.activitystatus.NodeConnectionInfo;
-import com.eis0.kademlianetwork.activitystatus.RespondTimer;
-import com.eis0.kademlianetwork.commands.localdictionary.KadAddLocalResource;
-import com.eis0.kademlianetwork.commands.localdictionary.KadRemoveLocalResource;
 import com.eis0.kademlianetwork.commands.messages.KadSendInvitation;
+import com.eis0.kademlianetwork.commands.networkdictionary.FindResource;
+import com.eis0.kademlianetwork.commands.networkdictionary.KadAddResource;
+import com.eis0.kademlianetwork.commands.networkdictionary.KadDeleteResource;
+import com.eis0.kademlianetwork.informationdeliverymanager.RequestsHandler;
 import com.eis0.kademlianetwork.listener.SMSKademliaListener;
 import com.eis0.kademlianetwork.routingtablemanager.RoutingTableRefresh;
 import com.eis0.kademlianetwork.routingtablemanager.TableUpdateHandler;
@@ -25,6 +27,7 @@ import com.eis0.netinterfaces.listeners.GetResourceListener;
 import com.eis0.netinterfaces.listeners.InviteListener;
 import com.eis0.netinterfaces.listeners.RemoveResourceListener;
 import com.eis0.netinterfaces.listeners.SetResourceListener;
+import com.eis0.webdictionary.SMSNetVocabulary;
 
 /**
  * Central class fo the KademliaNetwork. Instead of handling everything itself,
@@ -40,17 +43,18 @@ public class KademliaNetwork implements NetworkManager<String, String, SMSPeer, 
 
 
     public final NodeConnectionInfo connectionInfo = new NodeConnectionInfo();
-    public final RoutingTableRefresh refresh = new RoutingTableRefresh(this.localNode, this);
+    public RoutingTableRefresh refresh;
 
     //Routing table for this user of the network
     protected SMSKademliaRoutingTable localRoutingTable;
     //User node of the network
     protected SMSKademliaNode localNode;
     //Dictionary containing the resources stored by the local node
-    protected NetDictionary<String, String> localKademliaDictionary;
-    protected final SMSKademliaListener smsKademliaListener = new SMSKademliaListener(this);
+    protected NetDictionary<String, String> localKademliaDictionary = new SMSNetVocabulary();
+    protected final SMSKademliaListener smsKademliaListener = new SMSKademliaListener();
+    protected RequestsHandler requestsHandler = new RequestsHandler();
 
-    private final RespondTimer timer = new RespondTimer();
+    private final String LOG_KEY = "KAD_NET";
 
     /**
      * Initialize the network by setting the current node.
@@ -62,6 +66,8 @@ public class KademliaNetwork implements NetworkManager<String, String, SMSPeer, 
         SMSManager.getInstance().setReceivedListener(smsKademliaListener.getClass(), context);
         this.localNode = localNode;
         localRoutingTable = new SMSKademliaRoutingTable(localNode, new DefaultConfiguration());
+        refresh = new RoutingTableRefresh(this.localNode, this);
+        refresh.start();
     }
 
     /**
@@ -75,17 +81,17 @@ public class KademliaNetwork implements NetworkManager<String, String, SMSPeer, 
      */
     public boolean isAlive(SMSPeer targetPeer) {
         //I wait 10 secs
-        timer.run();
+        connectionInfo.run();
         //check if I had an acknowledge respond to my request
         if (connectionInfo.hasRespond()) {
-            //I know my request has ben received successfully. I set false in order to do it again
-            connectionInfo.setRespond(false);
+            //I know my request has ben received successfully. I reset the connectionInfo
+            connectionInfo.reset();
             return true;
-        } else { //My target node is unresponsive.
-            setUnresponsive(targetPeer);
-            //the node is not alive at the moment
-            return false;
         }
+        connectionInfo.reset();
+        setUnresponsive(targetPeer);
+        //the node is not alive at the moment
+        return false;
     }
 
     /**
@@ -153,53 +159,15 @@ public class KademliaNetwork implements NetworkManager<String, String, SMSPeer, 
     public void updateTable() {
         //calls the proper handler to update the routing table
         SMSPeer netPeer = localNode.getPeer();
-        TableUpdateHandler.updateTable(localRoutingTable, localNode.getId(), netPeer);
+        TableUpdateHandler.updateTable(localRoutingTable, localNode.getId(), netPeer, requestsHandler);
     }
 
     /**
-     * Method used to add a <key, resource> pair to the local Dictionary
-     *
-     * @param key      The key of the pair <key, resource> the user is trying to add to the dictionary
-     * @param resource The resource of the pair <key, resource> the user is trying to add to the dictionary
-     * @author Enrico Cestaro
+     * @return Returns the local dictionary used by the network
      */
-    public void addToLocalDictionary(String key, String resource) {
-        new KadAddLocalResource(key, resource, localKademliaDictionary).execute();
+    public NetDictionary<String, String> getLocalDictionary(){
+        return localKademliaDictionary;
     }
-
-    /**
-     * Method used to remove a pair <key, resource> from the local Dictionary
-     *
-     * @param key The key of the pair <key, resource> the user is trying to remove the dictionary
-     * @author Enrico Cestaro
-     */
-    public void removeFromLocalDictionary(String key) {
-        new KadRemoveLocalResource(key, localKademliaDictionary).execute();
-    }
-
-    /**
-     * Method used to get a resource specified by its key
-     *
-     * @param key The key of the pair <key, resource> the user is trying to get from the dictionary
-     * @return The SerializableObject with the specified key
-     * @author Enrico Cestaro
-     */
-    public String getFromLocalDictionary(String key) {
-        return localKademliaDictionary.getResource(key);
-    }
-
-    /**
-     * Method used to update a resource with the specified key, with a new resource
-     *
-     * @param key      The key of the pair <key, resource> the user is trying to update in the dictionary
-     * @param resource The new resource
-     * @author Enrico Cestaro
-     */
-    public void updateLocalDictionary(String key, String resource) {
-        //if the resource is already present it gets automatically updated
-        localKademliaDictionary.addResource(key, resource);
-    }
-
 
     /**
      * Saves a resource value in the network for the specified key. If the save is successful
@@ -210,6 +178,22 @@ public class KademliaNetwork implements NetworkManager<String, String, SMSPeer, 
      * @param setResourceListener Listener called on resource successfully saved or on fail.
      */
     public void setResource(String key, String value, SetResourceListener<String, String, KademliaFailReason> setResourceListener) {
+        KadAddResource addResourceCommand;
+        try{
+            addResourceCommand = new KadAddResource(key, value, requestsHandler);
+            CommandExecutor.execute(addResourceCommand);
+        }
+        catch (Exception e){
+            Log.e(LOG_KEY, e.toString());
+            setResourceListener.onResourceSetFail(key, value, KademliaFailReason.GENERIC_FAIL);
+            return;
+        }
+
+        if(!addResourceCommand.hasSuccessfullyCompleted()){
+            setResourceListener.onResourceSetFail(key, value, addResourceCommand.getFailReason());
+            return;
+        }
+        setResourceListener.onResourceSet(key, value);
     }
 
     /**
@@ -220,7 +204,22 @@ public class KademliaNetwork implements NetworkManager<String, String, SMSPeer, 
      * @param getResourceListener Listener called on resource successfully retrieved or on fail.
      */
     public void getResource(String key, GetResourceListener<String, String, KademliaFailReason> getResourceListener) {
+        FindResource resourceCommand;
+        try {
+            resourceCommand = new FindResource(key, requestsHandler);
+            CommandExecutor.execute(resourceCommand);
+        }
+        catch (Exception e){
+            Log.e(LOG_KEY, e.toString());
+            getResourceListener.onGetResourceFailed(key, KademliaFailReason.GENERIC_FAIL);
+            return;
+        }
 
+        if(!resourceCommand.hasSuccessfullyCompleted()){
+            getResourceListener.onGetResourceFailed(key, resourceCommand.getFailReason());
+            return;
+        }
+        getResourceListener.onGetResource(key, resourceCommand.getResource());
     }
 
     /**
@@ -231,7 +230,22 @@ public class KademliaNetwork implements NetworkManager<String, String, SMSPeer, 
      * @param removeResourceListener Listener called on resource successfully removed or on fail.
      */
     public void removeResource(String key, RemoveResourceListener<String, KademliaFailReason> removeResourceListener) {
+        KadDeleteResource resourceCommand;
+        try{
+            resourceCommand = new KadDeleteResource(key, requestsHandler);
+            CommandExecutor.execute(resourceCommand);
+        }
+        catch (Exception e){
+            Log.e(LOG_KEY, e.toString());
+            removeResourceListener.onResourceRemoveFail(key, KademliaFailReason.GENERIC_FAIL);
+            return;
+        }
 
+        if(!resourceCommand.hasSuccessfullyCompleted()){
+            removeResourceListener.onResourceRemoveFail(key, resourceCommand.getFailReason());
+            return;
+        }
+        removeResourceListener.onResourceRemoved(key);
     }
 
     /**
@@ -253,9 +267,17 @@ public class KademliaNetwork implements NetworkManager<String, String, SMSPeer, 
             KademliaInvitation invitation = new KademliaInvitation(peer);
             CommandExecutor.execute(new KadSendInvitation(invitation));
         } catch (Exception e) {
+            Log.e(LOG_KEY, e.toString());
             inviteListener.onInvitationNotSent(peer, KademliaFailReason.GENERIC_FAIL);
             return;
         }
         inviteListener.onInvitationSent(peer);
+    }
+
+    /**
+     * Returns the network valid instance of the RequestsHandler
+     */
+    public RequestsHandler getRequestsHandler(){
+        return requestsHandler;
     }
 }

@@ -291,7 +291,7 @@ public class SMSKademliaBucketTest {
     public void toStringTest() {
         String expected = "Bucket at depth: 5\n" +
                 " Nodes: \n" +
-                "Node: 8202021E5EF98F7A (stale: 0)";
+                "Node: 8202021E5EF98F7A2DFCDA894E49B8 (stale: 0)";
         assertEquals(bucket.toString(), expected);
     }
 }

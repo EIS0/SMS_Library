@@ -20,7 +20,7 @@ public abstract class RemoveResource<K, R> extends Command {
     protected final K key;
 
     /**
-     * Constructor for the RemoveResource command, needs the data to operate
+     * Constructor for the KadDeleteResource command, needs the data to operate
      *
      * @param key           The key identifier of the resource to remove
      * @param netDictionary The dictionary to remove the resource from

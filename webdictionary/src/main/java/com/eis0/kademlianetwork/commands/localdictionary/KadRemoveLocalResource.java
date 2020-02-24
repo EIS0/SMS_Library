@@ -17,6 +17,7 @@ public class KadRemoveLocalResource extends RemoveResource<String, String> {
 
     /**
      * Remove the resource from the dictionary
+     * @throws NullPointerException if there isn't that resource in my dictionary
      */
     public void execute(){
         localDictionary.removeResource(key);
