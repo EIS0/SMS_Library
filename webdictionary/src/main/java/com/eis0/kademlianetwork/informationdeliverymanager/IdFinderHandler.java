@@ -29,7 +29,8 @@ public class IdFinderHandler {
 
     /**
      * Searches for a specific Id, which needs to be closer to a given resource Id.
-     * The list of possible nodes is formed by the 7 closest nodes
+     * The list of possible nodes is formed by the closest nodes, and it always contains the local node
+
      *
      * @param idToFind     The ID to find in the network
      * @param searcher     The Peer which is searching for the ID
@@ -87,9 +88,9 @@ public class IdFinderHandler {
      * This method sends to the specified target {@link SMSPeer} the result of the previously
      * carried out research
      *
-     * @param idToFind    The ID whose research originated the request
-     *                    It's sent back as response to the research
-     * @param targetPeer  The Peer representing the target that will receive the result
+     * @param idToFind   The ID whose research originated the request
+     *                   It's sent back as response to the research
+     * @param targetPeer The Peer representing the target that will receive the result
      */
     private static void sendResult(KademliaId idToFind, SMSPeer targetPeer) {
         SMSMessage searchResult = new KademliaMessage()

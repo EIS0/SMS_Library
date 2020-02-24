@@ -20,7 +20,7 @@ public class GetResourceTimer extends TimerTask {
     private int currentSecond = 0;
     private FindResourceRequest request;
 
-    public GetResourceTimer(@NonNull FindResourceRequest request){
+    public GetResourceTimer(@NonNull FindResourceRequest request) {
         this.request = request;
     }
 

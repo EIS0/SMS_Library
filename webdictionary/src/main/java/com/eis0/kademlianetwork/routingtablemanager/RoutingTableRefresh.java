@@ -19,13 +19,13 @@ import java.util.List;
  * @author Edoardo Raimondi
  */
 
-public class RoutingTableRefresh extends Thread{
+public class RoutingTableRefresh extends Thread {
     //node doing this refresh
     private final SMSKademliaNode localNode;
     //kademlia network of the local node
     private final KademliaNetwork net;
 
-    public RoutingTableRefresh(SMSKademliaNode node, KademliaNetwork net){
+    public RoutingTableRefresh(SMSKademliaNode node, KademliaNetwork net) {
         localNode = node;
         this.net = net;
     }
@@ -38,13 +38,13 @@ public class RoutingTableRefresh extends Thread{
      * @author Marco Cognolato, little improvements
      */
     public void run() {
-        while (true){
+        while (true) {
             updateTable();
             new RefreshTimer().run();
         }
     }
 
-    public void updateTable(){
+    public void updateTable() {
         //create the list of my routing table nodes. I need to check all that nodes.
         List<SMSKademliaNode> allRoutingTableNodes = net.getLocalRoutingTable().getAllNodes();
         for (int i = 0; i < allRoutingTableNodes.size(); i++) {
@@ -73,7 +73,7 @@ public class RoutingTableRefresh extends Thread{
                 KadFindId findIdCommand = new KadFindId(fakeId, net.getRequestsHandler());
                 CommandExecutor.execute(findIdCommand);
 
-                if(!findIdCommand.hasSuccessfullyCompleted()){
+                if (!findIdCommand.hasSuccessfullyCompleted()) {
                     return;
                 }
                 net.getLocalRoutingTable().insert(new SMSKademliaNode(findIdCommand.getPeerFound()));
@@ -88,7 +88,7 @@ public class RoutingTableRefresh extends Thread{
      * @param node Contact node
      * @return true if the node has been correctly removed
      */
-    public boolean removeIfUnresponsive(SMSKademliaNode node){
+    public boolean removeIfUnresponsive(SMSKademliaNode node) {
         KademliaId currentId = node.getId();
         //I check the bucket Id that contains that node.
         int b = net.getLocalRoutingTable().getBucketId(currentId);
@@ -97,11 +97,10 @@ public class RoutingTableRefresh extends Thread{
         //I extract the contact
         Contact currentContact = currentBucket.getFromContacts(node);
         //If the contact has been stale more than two times, i remove it
-        if(currentContact.staleCount()> net.getLocalRoutingTable().getConfig().stale()){
+        if (currentContact.staleCount() > net.getLocalRoutingTable().getConfig().stale()) {
             currentBucket.removeContact(currentContact);
             return true;
-        }
-        else { //let's update I've seen it. I need to remove and re-add the node to get the sort order
+        } else { //let's update I've seen it. I need to remove and re-add the node to get the sort order
             currentBucket.removeContact(currentContact);
             currentContact.setSeenNow();
             currentContact.resetStaleCount();

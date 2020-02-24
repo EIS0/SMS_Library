@@ -11,14 +11,12 @@ import com.eis0.kademlia.KademliaId;
  * each DeleteResourceRequest from the other
  *
  * @author Enrico Cestaro
+ * @author Marco Cognolato
  */
 public class FindResourceRequest {
     private KademliaId resourceKeyId;
     private String key;
     private String resource;
-
-    private static final String KEY_NULL = "The key parameter is null";
-    private static final String INVALID_KEY_LENGTH = "The key must contain at least 1 character";
 
     private boolean hasBeenFulfilled = false;
 
@@ -26,7 +24,7 @@ public class FindResourceRequest {
      * This is the constructor of the class, it automatically creates the ID of the
      * resource key
      *
-     * @param key      The String value of the key of the <key, resource> pair
+     * @param key The String value of the key of the <key, resource> pair
      * @throws IllegalArgumentException If the the key or the resource are null or invalid
      */
     public FindResourceRequest(@NonNull String key) {

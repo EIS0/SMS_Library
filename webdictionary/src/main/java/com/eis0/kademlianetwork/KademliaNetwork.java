@@ -38,6 +38,7 @@ import com.eis0.webdictionary.SMSNetVocabulary;
  *
  * @author Matteo Carnelos
  * @author Edoardo Raimondi
+ * @author Marco Cognolato
  */
 public class KademliaNetwork implements NetworkManager<String, String, SMSPeer, KademliaFailReason> {
 
@@ -154,6 +155,7 @@ public class KademliaNetwork implements NetworkManager<String, String, SMSPeer, 
 
     /**
      * Updates the routing table
+     *
      * @author Edoardo Raimondi
      */
     public void updateTable() {
@@ -165,7 +167,7 @@ public class KademliaNetwork implements NetworkManager<String, String, SMSPeer, 
     /**
      * @return Returns the local dictionary used by the network
      */
-    public NetDictionary<String, String> getLocalDictionary(){
+    public NetDictionary<String, String> getLocalDictionary() {
         return localKademliaDictionary;
     }
 
@@ -176,20 +178,20 @@ public class KademliaNetwork implements NetworkManager<String, String, SMSPeer, 
      * @param key                 The key identifier for the resource.
      * @param value               The identified value of the resource.
      * @param setResourceListener Listener called on resource successfully saved or on fail.
+     * @author Marco Cognolato
      */
     public void setResource(String key, String value, SetResourceListener<String, String, KademliaFailReason> setResourceListener) {
         KadAddResource addResourceCommand;
-        try{
+        try {
             addResourceCommand = new KadAddResource(key, value, requestsHandler);
             CommandExecutor.execute(addResourceCommand);
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             Log.e(LOG_KEY, e.toString());
             setResourceListener.onResourceSetFail(key, value, KademliaFailReason.GENERIC_FAIL);
             return;
         }
 
-        if(!addResourceCommand.hasSuccessfullyCompleted()){
+        if (!addResourceCommand.hasSuccessfullyCompleted()) {
             setResourceListener.onResourceSetFail(key, value, addResourceCommand.getFailReason());
             return;
         }
@@ -202,20 +204,20 @@ public class KademliaNetwork implements NetworkManager<String, String, SMSPeer, 
      *
      * @param key                 The key identifier for the resource.
      * @param getResourceListener Listener called on resource successfully retrieved or on fail.
+     * @author Marco Cognolato
      */
     public void getResource(String key, GetResourceListener<String, String, KademliaFailReason> getResourceListener) {
         FindResource resourceCommand;
         try {
             resourceCommand = new FindResource(key, requestsHandler);
             CommandExecutor.execute(resourceCommand);
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             Log.e(LOG_KEY, e.toString());
             getResourceListener.onGetResourceFailed(key, KademliaFailReason.GENERIC_FAIL);
             return;
         }
 
-        if(!resourceCommand.hasSuccessfullyCompleted()){
+        if (!resourceCommand.hasSuccessfullyCompleted()) {
             getResourceListener.onGetResourceFailed(key, resourceCommand.getFailReason());
             return;
         }
@@ -228,20 +230,20 @@ public class KademliaNetwork implements NetworkManager<String, String, SMSPeer, 
      *
      * @param key                    The key identifier for the resource.
      * @param removeResourceListener Listener called on resource successfully removed or on fail.
+     * @author Marco Cognolato
      */
     public void removeResource(String key, RemoveResourceListener<String, KademliaFailReason> removeResourceListener) {
         KadDeleteResource resourceCommand;
-        try{
+        try {
             resourceCommand = new KadDeleteResource(key, requestsHandler);
             CommandExecutor.execute(resourceCommand);
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             Log.e(LOG_KEY, e.toString());
             removeResourceListener.onResourceRemoveFail(key, KademliaFailReason.GENERIC_FAIL);
             return;
         }
 
-        if(!resourceCommand.hasSuccessfullyCompleted()){
+        if (!resourceCommand.hasSuccessfullyCompleted()) {
             removeResourceListener.onResourceRemoveFail(key, resourceCommand.getFailReason());
             return;
         }
@@ -258,7 +260,7 @@ public class KademliaNetwork implements NetworkManager<String, String, SMSPeer, 
      */
     public void invite(SMSPeer peer, InviteListener<SMSPeer, KademliaFailReason> inviteListener) {
         //don't invite a peer if it's already in the net
-        if (isNodeInNetwork(new SMSKademliaNode(peer))){
+        if (isNodeInNetwork(new SMSKademliaNode(peer))) {
             inviteListener.onInvitationNotSent(peer, KademliaFailReason.PEER_IN_NET);
             return;
         }
@@ -277,7 +279,7 @@ public class KademliaNetwork implements NetworkManager<String, String, SMSPeer, 
     /**
      * Returns the network valid instance of the RequestsHandler
      */
-    public RequestsHandler getRequestsHandler(){
+    public RequestsHandler getRequestsHandler() {
         return requestsHandler;
     }
 }

@@ -20,7 +20,7 @@ public class FindIdTimer extends TimerTask {
     private int currentSecond = 0;
     private FindIdRequest request;
 
-    public FindIdTimer(@NonNull FindIdRequest request){
+    public FindIdTimer(@NonNull FindIdRequest request) {
         this.request = request;
     }
 

@@ -18,7 +18,7 @@ import com.eis0.netinterfaces.commands.CommandExecutor;
  *
  * @author Marco Cognolato
  */
-class TableUpdateIterator extends Thread{
+class TableUpdateIterator extends Thread {
     private int currentCount;
     private int maxCount;
     private KademliaId netId;
@@ -30,9 +30,9 @@ class TableUpdateIterator extends Thread{
      * Constructs an Iterator object which is used to update a given table.
      *
      * @param maxCount How many elements should the table update
-     * @param netId Id of the owner of the table
-     * @param table The RoutingTable to update
-     * @param netPeer The SMSPeer which is asking to update the table (used as part of the algorithm)
+     * @param netId    Id of the owner of the table
+     * @param table    The RoutingTable to update
+     * @param netPeer  The SMSPeer which is asking to update the table (used as part of the algorithm)
      * @throws IllegalArgumentException if maxCount is <= 0 or if any of the input parameters is null
      */
     public TableUpdateIterator(int maxCount,
@@ -40,7 +40,7 @@ class TableUpdateIterator extends Thread{
                                @NonNull SMSKademliaRoutingTable table,
                                @NonNull SMSPeer netPeer,
                                @NonNull RequestsHandler requestsHandler) {
-        if(maxCount <= 0) throw new IllegalArgumentException("maxCount has to be at least 1!");
+        if (maxCount <= 0) throw new IllegalArgumentException("maxCount has to be at least 1!");
         this.maxCount = maxCount;
         this.currentCount = 0;
         this.netId = netId;
@@ -49,13 +49,13 @@ class TableUpdateIterator extends Thread{
         this.requestsHandler = requestsHandler;
     }
 
-    public void run(){
-        while (!hasFinished()){
+    public void run() {
+        while (!hasFinished()) {
             //create the fake id
             KademliaId fakeId = netId.generateNodeIdByDistance(currentCount);
             KadFindId findIdCommand = new KadFindId(fakeId, requestsHandler);
             CommandExecutor.execute(findIdCommand);
-            if(!findIdCommand.hasSuccessfullyCompleted()){
+            if (!findIdCommand.hasSuccessfullyCompleted()) {
                 return;
             }
             //If I'm here it means I've found a peer

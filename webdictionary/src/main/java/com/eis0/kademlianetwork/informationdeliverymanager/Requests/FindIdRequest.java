@@ -12,6 +12,7 @@ import com.eis0.kademlia.KademliaId;
  * each DeleteResourceRequest from the other
  *
  * @author Enrico Cestaro
+ * @author Marco Cognolato
  */
 public class FindIdRequest {
 

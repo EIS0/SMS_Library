@@ -18,6 +18,8 @@ public class KademliaMessageAnalyzerTest {
     private final KademliaId ID1 = new KademliaId(PEER1);
     private final String KEY1 = "Key1";
     private final String RESOURCE1 = "risorsa/risorsa";
+    private final String RESOURCE2 = "risorsa";
+    private final String RESOURCE3 = "risorsa con più parole";
 
     SMSMessage constructed = new KademliaMessage()
             .setPeer(PEER1)
@@ -76,4 +78,31 @@ public class KademliaMessageAnalyzerTest {
     @Test
     public void getSearcher_null() { assertEquals(messageAnalyzer2.getSearcher(), NULL_PEER);}
 
+    @Test
+    public void getResource_oneWord() {
+        SMSMessage message = new KademliaMessage()
+                .setPeer(PEER1)
+                .setRequestType(REQUEST1)
+                .setIdToFind(ID1)
+                .setSearcher(PEER1)
+                .setKey(KEY1)
+                .setResource(RESOURCE2)
+                .buildMessage();
+        KademliaMessageAnalyzer messageAnalyzer = new KademliaMessageAnalyzer(message);
+        assertEquals(messageAnalyzer.getResource(), RESOURCE2);
+    }
+
+    @Test
+    public void getResource_multipleWords() {
+        SMSMessage message = new KademliaMessage()
+                .setPeer(PEER1)
+                .setRequestType(REQUEST1)
+                .setIdToFind(ID1)
+                .setSearcher(PEER1)
+                .setKey(KEY1)
+                .setResource(RESOURCE3)
+                .buildMessage();
+        KademliaMessageAnalyzer messageAnalyzer = new KademliaMessageAnalyzer(message);
+        assertEquals(messageAnalyzer.getResource(), RESOURCE3);
+    }
 }
