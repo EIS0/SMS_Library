@@ -78,13 +78,4 @@ public class ContactTest {
     public void compareToTest(){
         assertEquals(VALID_CONTACT1.compareTo(VALID_CONTACT1), 0);
     }
-
-    @Test
-    public void hashCodeTest(){
-        int expected = 1889745535;
-        assertEquals(VALID_CONTACT1.hashCode(), expected);
-        //assertEquals(VALID_CONTACT1.hashCode(), hashCodeExpected);
-        //The hashCode algorithm works, apparently not as expected
-
-    }
 }

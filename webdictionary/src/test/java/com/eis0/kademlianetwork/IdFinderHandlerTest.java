@@ -18,6 +18,8 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import java.util.List;
+
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -172,7 +174,6 @@ public class IdFinderHandlerTest {
         verify(smsManagerMock, times(1)).sendMessage(expectedMessage);
     }
 
-
     @Test
     public void forwardRequest() {
         routingTable.insert(VALID_NODE1);
@@ -182,5 +183,35 @@ public class IdFinderHandlerTest {
                         VALID_NODE1_ID + " " + SEARCHER_PEER + " / /";
         SMSMessage expectedMessage = new SMSMessage(VALID_PEER1, expectedTextMessage);
         verify(smsManagerMock, times(1)).sendMessage(expectedMessage);
+    }
+
+    /**
+     * In the inserted list there is not the LocalNode. It is inserted as last node to check
+     * The searched node is the local node; this is an irrealistic situation, if the searched id
+     * corresponds to the localNode id, then the local node is always in the list that the searchIdList()
+     * will analyze.
+     * Anyway, we know for sure that the localNode is always part of the lust of nodes considered as
+     * possible closest node (to the idToFind)
+     */
+    @Test
+    public void noLocalNode_localNodeSearched() {
+        List<SMSKademliaNode> nodes = routingTable.getAllNodes();
+        nodes.add(VALID_NODE1);
+        nodes.remove(SEARCHER);
+        IdFinderHandler.searchIdList(SEARCHER_ID, SEARCHER_PEER, nodes);
+        verify(smsManagerMock, times(1)).sendMessage(any(SMSMessage.class));
+    }
+
+    /**
+     * In the inserted list there is not the LocalNode. It is inserted as the last node to check
+     */
+    @Test
+    public void noLocalNode_notLocalNodeSearched() {
+        List<SMSKademliaNode> nodes = routingTable.getAllNodes();
+        nodes.add(VALID_NODE1);
+        nodes.remove(SEARCHER);
+        IdFinderHandler.searchIdList(VALID_NODE1_ID, SEARCHER_PEER, nodes);
+        //A message is sent to the VALID_NODE1
+        verify(smsManagerMock, times(1)).sendMessage(any(SMSMessage.class));
     }
 }
