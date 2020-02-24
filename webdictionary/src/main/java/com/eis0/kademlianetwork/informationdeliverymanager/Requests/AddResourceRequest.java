@@ -9,6 +9,7 @@ import com.eis0.kademlia.KademliaId;
  * each DeleteResourceRequest from the other
  *
  * @author Enrico Cestaro
+ * @author Marco Cognolato
  */
 public class AddResourceRequest {
     private KademliaId resourceKeyId;
@@ -66,14 +67,14 @@ public class AddResourceRequest {
     /**
      * Sets the Request as completed
      */
-    public void setCompleted(){
+    public void setCompleted() {
         hasBeenFulfilled = true;
     }
 
     /**
      * @return Returns true if the Request has been completed, false otherwise
      */
-    public boolean isCompleted(){
+    public boolean isCompleted() {
         return hasBeenFulfilled;
     }
 

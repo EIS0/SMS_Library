@@ -146,6 +146,4 @@ public class RequestsHandler {
             pendingDeleteRequests.remove(requestId);
         }
     }
-
-
 }

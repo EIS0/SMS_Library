@@ -27,13 +27,13 @@ public class IdFinderHandler {
      * If found, it's sent the searching Peer, else sends a request to find it
      * to a closer person than the actual node. So on by a chain process
      *
-     * @param idToFind     The ID to find in the network
-     * @param searcher     The Peer which is searching the ID
+     * @param idToFind The ID to find in the network
+     * @param searcher The Peer which is searching the ID
      * @throws IllegalArgumentException If the idToFind, the searcher or the researchMode are null
      */
-    public static void searchId(@NonNull KademliaId idToFind,@NonNull SMSPeer searcher){
-        if(idToFind == null) throw new NullPointerException("The idToFind cannot be Null");
-        if(searcher == null) throw new NullPointerException("The searcher cannot be Null");
+    public static void searchId(@NonNull KademliaId idToFind, @NonNull SMSPeer searcher) {
+        if (idToFind == null) throw new NullPointerException("The idToFind cannot be Null");
+        if (searcher == null) throw new NullPointerException("The searcher cannot be Null");
         /*
         Declaration of the two messages used to:
         1. entrust the research to a closer node
@@ -60,9 +60,9 @@ public class IdFinderHandler {
      * This method sends to the specified target {@link SMSPeer} the result of the previously
      * carried out research
      *
-     * @param idToFind    The ID whose research originated the request
-     *                    It's sent back as response to the research
-     * @param targetPeer  The Peer representing the target that will receive the result
+     * @param idToFind   The ID whose research originated the request
+     *                   It's sent back as response to the research
+     * @param targetPeer The Peer representing the target that will receive the result
      */
     private static void sendResult(KademliaId idToFind, SMSPeer targetPeer) {
         SMSMessage searchResult = new KademliaMessage()

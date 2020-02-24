@@ -14,6 +14,11 @@ import com.eis0.kademlianetwork.informationdeliverymanager.RequestsHandler;
 import com.eis0.netinterfaces.commands.Command;
 import com.eis0.netinterfaces.commands.CommandExecutor;
 
+/**
+ * Command to add a resource inside the network
+ *
+ * @author Marco Cognolato
+ */
 public class KadAddResource extends Command {
 
     protected final String key;
@@ -26,8 +31,8 @@ public class KadAddResource extends Command {
     /**
      * Set a <key, resource> pair in the network dictionary
      *
-     * @param key
-     * @param resource
+     * @param key      The key identifier of the resource
+     * @param resource The resource to add to the net
      */
     public KadAddResource(@NonNull String key, @NonNull String resource, @NonNull RequestsHandler requestsHandler) {
         this.key = key;
@@ -48,7 +53,7 @@ public class KadAddResource extends Command {
         KadFindId findIdCommand = new KadFindId(addRequest.getKeyId(), requestsHandler);
         CommandExecutor.execute(findIdCommand);
 
-        if(!findIdCommand.hasSuccessfullyCompleted()){
+        if (!findIdCommand.hasSuccessfullyCompleted()) {
             failReason = findIdCommand.getFailReason();
             return;
         }
@@ -63,7 +68,7 @@ public class KadAddResource extends Command {
         SMSManager.getInstance().sendMessage(message);
 
         //If I'm here it means that the closest node found couldn't complete the task
-        if(!KademliaJoinableNetwork.getInstance().isAlive(findIdCommand.getPeerFound())){
+        if (!KademliaJoinableNetwork.getInstance().isAlive(findIdCommand.getPeerFound())) {
             failReason = KademliaFailReason.REQUEST_EXPIRED;
             return;
         }
@@ -72,11 +77,18 @@ public class KadAddResource extends Command {
         hasSuccessfullyCompleted = true;
     }
 
-    public boolean hasSuccessfullyCompleted(){
+    /**
+     * @return Returns true if the command successfully completed and found a resource
+     */
+    public boolean hasSuccessfullyCompleted() {
         return hasSuccessfullyCompleted;
     }
 
-    public KademliaFailReason getFailReason(){
+    /**
+     * @return Returns a KademliaFailReason for this request. If the Request
+     * completed successfully, or is still going, null is returned.
+     */
+    public KademliaFailReason getFailReason() {
         return failReason;
     }
 }

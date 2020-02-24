@@ -6,7 +6,7 @@ import com.eis0.webdictionary.SMSNetVocabulary;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNull;
 
 public class KadRemoveLocalResourceTest {
 
@@ -15,12 +15,12 @@ public class KadRemoveLocalResourceTest {
     @Before
     public void setUp(){
         //add a resource in order to be removed
-        test.addResource("key", "");
+        test.addResource("key", "value");
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test
     public void execute() {
         new KadRemoveLocalResource("key", test).execute();
-        test.getResource("key");
+        assertNull(test.getResource("key"));
     }
 }

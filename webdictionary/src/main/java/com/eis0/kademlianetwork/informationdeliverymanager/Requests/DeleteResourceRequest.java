@@ -9,6 +9,7 @@ import com.eis0.kademlia.KademliaId;
  * each DeleteResourceRequest from the other
  *
  * @author Enrico Cestaro
+ * @author Marco Cognolato
  */
 public class DeleteResourceRequest {
     private KademliaId resourceKeyId;
@@ -23,7 +24,7 @@ public class DeleteResourceRequest {
      * This is the constructor of the class, it automatically creates the ID of the
      * resource key
      *
-     * @param key      The String value of the key of the <key, resource> pair
+     * @param key The String value of the key of the <key, resource> pair
      * @throws IllegalArgumentException If the the key or the resource are null or invalid
      */
     public DeleteResourceRequest(String key) {
@@ -54,14 +55,14 @@ public class DeleteResourceRequest {
     /**
      * Sets the Request as completed
      */
-    public void setCompleted(){
+    public void setCompleted() {
         hasBeenFulfilled = true;
     }
 
     /**
      * @return Returns true if the Request has been completed, false otherwise
      */
-    public boolean isCompleted(){
+    public boolean isCompleted() {
         return hasBeenFulfilled;
     }
 
