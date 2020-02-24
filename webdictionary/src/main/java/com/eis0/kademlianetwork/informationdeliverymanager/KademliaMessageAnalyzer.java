@@ -10,7 +10,7 @@ public class KademliaMessageAnalyzer {
     private final KademliaId idToFind;
     private final SMSPeer searcher;
     private final String key;
-    private final String resource;
+    private String resource = "";
 
     /**
      * Constructor for the SMSMessage analyzer:
@@ -30,7 +30,9 @@ public class KademliaMessageAnalyzer {
         idToFind = new KademliaId(messageTextParts[1]);
         searcher = new SMSPeer(messageTextParts[2]);
         key = messageTextParts[3];
-        resource = messageTextParts[4];
+        for(int i = 4; i < messageTextParts.length-1; i++)
+            resource += messageTextParts[i] + " ";
+        resource += messageTextParts[messageTextParts.length-1];
     }
 
     /**
