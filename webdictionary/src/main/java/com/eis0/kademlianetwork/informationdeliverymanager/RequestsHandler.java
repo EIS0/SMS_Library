@@ -46,17 +46,6 @@ public class RequestsHandler {
         pendingFindIdRequests = new HashMap<>();
     }
 
-    /**
-     * Starts a new FindIdRequest
-     *
-     * @param idToFind The KademliaId to find, used as a key to identify a pending request
-     * @return An instance of a specific FindIdRequest
-     */
-    public FindIdRequest startFindIdRequest(@NonNull KademliaId idToFind) {
-        FindIdRequest findIdRequest = new FindIdRequest(idToFind);
-        pendingFindIdRequests.put(idToFind, findIdRequest);
-        return findIdRequest;
-    }
 
     /**
      * Starts a new FindResourceRequest
@@ -94,18 +83,6 @@ public class RequestsHandler {
         return resourceRequest;
     }
 
-    /**
-     * Sets the corresponding FindIdRequest as completed
-     *
-     * @param idToFind  The KademliaId to find originally
-     * @param peerFound The SMSPeer found for the FindIdRequest
-     */
-    public void completeFindIdRequest(KademliaId idToFind, SMSPeer peerFound) {
-        if (pendingFindIdRequests.containsKey(idToFind)) {
-            pendingFindIdRequests.get(idToFind).setCompleted(peerFound);
-            pendingFindIdRequests.remove(idToFind);
-        }
-    }
 
     /**
      * Sets the corresponding FindIdRequest as completed
