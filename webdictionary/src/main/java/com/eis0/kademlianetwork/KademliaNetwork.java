@@ -199,6 +199,32 @@ public class KademliaNetwork implements NetworkManager<String, String, SMSPeer, 
     }
 
     /**
+     * Retrieves a resource value from the network for the specified key. The value is returned inside
+     * {@link GetResourceListener#onGetResource(Object, Object)}.
+     *
+     * @param key                 The key identifier for the resource.
+     * @param getResourceListener Listener called on resource successfully retrieved or on fail.
+     * @author Marco Cognolato
+     */
+    public void getResource(String key, GetResourceListener<String, String, KademliaFailReason> getResourceListener) {
+        FindResource resourceCommand;
+        try {
+            resourceCommand = new FindResource(key, requestsHandler);
+            CommandExecutor.execute(resourceCommand);
+        } catch (Exception e) {
+            Log.e(LOG_KEY, e.toString());
+            getResourceListener.onGetResourceFailed(key, KademliaFailReason.GENERIC_FAIL);
+            return;
+        }
+
+        if (!resourceCommand.hasSuccessfullyCompleted()) {
+            getResourceListener.onGetResourceFailed(key, resourceCommand.getFailReason());
+            return;
+        }
+        getResourceListener.onGetResource(key, resourceCommand.getResource());
+    }
+
+    /**
      * Removes a resource value from the network for the specified key. If the removal is successful
      * {@link RemoveResourceListener#onResourceRemoved(Object)} is called
      *
