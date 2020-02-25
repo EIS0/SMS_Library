@@ -8,8 +8,8 @@ import com.eis0.netinterfaces.NetDictionary;
  * Command to add a resource to the net dictionary
  *
  * @author Edoardo Raimondi
- * @author Marco Cognolato
- * @author Giovanni Velludo
+ * @author Marco Cognolato (edited a comment)
+ * @author Giovanni Velludo (added @NonNull)
  */
 public abstract class AddResource<K, R> extends Command {
 

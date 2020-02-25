@@ -7,6 +7,9 @@ import com.eis0.kademlianetwork.informationdeliverymanager.KademliaMessage;
 import com.eis0.kademlianetwork.informationdeliverymanager.RequestTypes;
 import com.eis0.netinterfaces.commands.Command;
 
+/**
+ * Command to send a pong message
+ */
 public class KadPong extends Command {
 
     private SMSPeer peer;

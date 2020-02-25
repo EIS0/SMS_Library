@@ -9,7 +9,7 @@ import com.eis0.netinterfaces.commands.AddResource;
  * Command to add a resource to the local dictionary
  *
  * @author Edoardo Raimondi
- * @author Marco Cognolato
+ * @author Marco Cognolato (edited comments)
  */
 public class KadAddLocalResource extends AddResource<String, String> {
 

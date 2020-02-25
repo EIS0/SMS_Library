@@ -9,8 +9,8 @@ import com.eis0.kademlianetwork.KademliaNetwork;
  * Command to add a peer to the Subscribers list
  *
  * @author Edoardo Raimondi
- * @author Marco Cognolato
- * @author Giovanni Velludo
+ * @author Marco Cognolato (edited comments)
+ * @author Giovanni Velludo (added NonNull)
  */
 public abstract class AddPeer<T extends Peer> extends Command {
 

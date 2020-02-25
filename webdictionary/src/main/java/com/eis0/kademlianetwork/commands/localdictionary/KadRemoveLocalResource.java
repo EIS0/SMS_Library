@@ -9,7 +9,7 @@ import com.eis0.netinterfaces.commands.RemoveResource;
  * Command to remove a resource from the local dictionary
  *
  * @author Edoardo Raimondi
- * @author Marco Cognolato
+ * @author Marco Cognolato (edited comments)
  */
 public class KadRemoveLocalResource extends RemoveResource<String, String> {
 
