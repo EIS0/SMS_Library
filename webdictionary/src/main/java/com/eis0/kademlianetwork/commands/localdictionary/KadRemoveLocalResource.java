@@ -14,6 +14,8 @@ import com.eis0.netinterfaces.commands.RemoveResource;
 public class KadRemoveLocalResource extends RemoveResource<String, String> {
 
     /**
+     * Constructor for the KadRemoveResource command. Need data to work
+     *
      * @param key             of the resource to remove
      * @param localDictionary where the resource is
      */

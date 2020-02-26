@@ -10,6 +10,7 @@ import com.eis0.kademlianetwork.commands.KadFindId;
 import com.eis0.kademlianetwork.commands.messages.KadPing;
 import com.eis0.netinterfaces.commands.CommandExecutor;
 
+import java.lang.reflect.Method;
 import java.util.List;
 
 /**
@@ -30,8 +31,8 @@ public class RoutingTableRefresh extends Thread {
     }
 
     /**
-     * Method that performs a refresh: checks if the users I have are still alive.
-     * If they're not I ask for a new id to get instead of him
+     * Method to start a refresh every 2 hours. As suggested by Kademlia Paper
+     * @see < https://pdos.csail.mit.edu/~petar/papers/maymounkov-kademlia-lncs.pdf > for more details
      *
      * @author Edoardo Raimondi
      * @author Marco Cognolato, little improvements
@@ -43,6 +44,12 @@ public class RoutingTableRefresh extends Thread {
         }
     }
 
+    /**
+     * Method that performs a refresh: checks if the users I have are still alive.
+     * If they're not I ask for a new id to get instead of him
+     *
+     * @author Edoardo Raimondi
+     */
     public void updateTable() {
         //create the list of my routing table nodes. I need to check all that nodes.
         List<SMSKademliaNode> allRoutingTableNodes = net.getLocalRoutingTable().getAllNodes();
@@ -79,7 +86,7 @@ public class RoutingTableRefresh extends Thread {
 
     /**
      * Remove a contact if unresponsive (its stale count is more than the one permitted by
-     * the configuration
+     * the configuration)
      *
      * @param node Contact node
      * @return true if the node has been correctly removed
