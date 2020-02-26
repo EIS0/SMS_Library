@@ -15,16 +15,16 @@ public class KadPong extends Command {
     private SMSPeer peer;
 
     /**
-     * Constructor for the Ping command message
+     * Constructor for the Pong command message
      *
-     * @param peer The SMSPeer to send the ping to
+     * @param peer The SMSPeer to send the pong to
      */
     public KadPong(SMSPeer peer) {
         this.peer = peer;
     }
 
     /**
-     * Sends a Ping message
+     * Sends a Pong message
      */
     protected void execute() {
         SMSMessage pongMessage = new KademliaMessage()
