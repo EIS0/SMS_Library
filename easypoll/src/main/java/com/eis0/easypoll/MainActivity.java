@@ -16,6 +16,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.viewpager.widget.ViewPager;
 
+import com.eis0.easypoll.poll.BinaryPoll;
 import com.eis0.easypoll.poll.PollManager;
 import com.eis0.easypoll.ui.SectionsPagerAdapter;
 import com.eis0.smslibrary.SMSPeer;
@@ -76,16 +77,18 @@ public class MainActivity extends AppCompatActivity {
         ActivityCompat.requestPermissions(this, PERMISSIONS, 1);
 
         // Load previously saved data and set the directory to which data will be saved
-        //DataProvider.setOutputFilesDir(getFilesDir());
-        //BinaryPoll.setSharedPreferences(getPreferences(Context.MODE_PRIVATE));
-        //DataProvider.loadDataFromInternal(this);
-        //BinaryPoll.loadPollsCountFromInternal();
+        DataProvider.setOutputFilesDir(getFilesDir());
+        BinaryPoll.setSharedPreferences(getPreferences(Context.MODE_PRIVATE));
+        DataProvider.loadDataFromInternal(this);
+        BinaryPoll.loadPollsCountFromInternal();
         if(DataProvider.isEmpty()) infoTxt.setVisibility(View.VISIBLE);
 
+        // If there aren't polls show the info label that informs how to create new ones, otherwise
+        // hide it
         DataProvider.getInstance().addObserver(new Observer() {
             @Override
             public void update(Observable o, Object arg) {
-                infoTxt.setVisibility(View.GONE);
+                infoTxt.setVisibility(DataProvider.isEmpty() ? View.VISIBLE : View.GONE);
             }
         });
     }

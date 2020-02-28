@@ -65,6 +65,8 @@ public class CreatePollActivity extends AppCompatActivity {
         @Override
         public boolean onTouch(View v, MotionEvent event) {
             v.setAlpha((event.getAction() == MotionEvent.ACTION_DOWN)? 0.5f : 1f);
+            // There is no need to override performClick() because the returned value is false,
+            // meaning that the handling of the touch is delegated to the system
             return false;
         }
     };
@@ -72,6 +74,8 @@ public class CreatePollActivity extends AppCompatActivity {
         @Override
         public boolean onTouch(View v, MotionEvent event) {
             v.setAlpha((event.getAction() == MotionEvent.ACTION_DOWN)? 0.25f : 0.5f);
+            // Same as above, there is no need to override performClick() because the returned
+            // value is false, meaning that the handling of the touch is delegated to the system
             return false;
         }
     };
