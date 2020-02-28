@@ -9,6 +9,9 @@ import com.eis0.kademlianetwork.informationdeliverymanager.KademliaMessage;
 import com.eis0.kademlianetwork.informationdeliverymanager.RequestTypes;
 import com.eis0.netinterfaces.commands.SendInvitation;
 
+/**
+ * Command to send an invitation
+ */
 public class KadSendInvitation extends SendInvitation<KademliaInvitation> {
 
     /**

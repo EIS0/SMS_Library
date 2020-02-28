@@ -7,6 +7,9 @@ import com.eis0.kademlianetwork.informationdeliverymanager.KademliaMessage;
 import com.eis0.kademlianetwork.informationdeliverymanager.RequestTypes;
 import com.eis0.netinterfaces.commands.Command;
 
+/**
+ * Command to send an acknowledge message
+ */
 public class KadSendAcknowledge extends Command {
 
     private SMSPeer peer;

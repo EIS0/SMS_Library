@@ -9,8 +9,8 @@ import com.eis0.netinterfaces.NetSubscriberList;
  * Command to quit a network, which is, removing myself from the network I'm in
  *
  * @author Edoardo Raimondi
- * @author Marco Cognolato
- * @author Giovanni Velludo
+ * @author Marco Cognolato (edited comments)
+ * @author Giovanni Velludo (added NonNull)
  */
 public abstract class QuitNetwork<T extends Peer> extends Command {
 

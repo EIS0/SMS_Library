@@ -11,8 +11,8 @@ import com.eis0.netinterfaces.NetDictionary;
  * to a Peer with a file, basically something to keep in a network.
  *
  * @author Edoardo Raimondi
- * @author Marco Cognolato
- * @author Giovanni Velludo
+ * @author Marco Cognolato (edited comments)
+ * @author Giovanni Velludo (added NonNull)
  */
 public abstract class RemoveResource<K, R> extends Command {
 
