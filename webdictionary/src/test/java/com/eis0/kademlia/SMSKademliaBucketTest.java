@@ -39,7 +39,7 @@ public class SMSKademliaBucketTest {
     private Method removeFromReplacementCache;
 
     @Before
-    public void setup() throws NoSuchMethodException, NoSuchFieldException {
+    public void setup() throws NoSuchMethodException{
         bucket = new SMSKademliaBucket(5, config);
         CONTACT1.resetStaleCount();
         CONTACT2.resetStaleCount();
@@ -142,9 +142,9 @@ public class SMSKademliaBucketTest {
         bucket.insert(CONTACT1);
         bucket.removeContact(CONTACT2);
         boolean contains = bucket.containsContact(CONTACT1);
-        boolean doesnTcontain = bucket.containsContact(CONTACT2);
+        boolean doesNotContain = bucket.containsContact(CONTACT2);
         assertTrue(contains);
-        assertFalse(doesnTcontain);
+        assertFalse(doesNotContain);
 
     }
 
@@ -210,7 +210,7 @@ public class SMSKademliaBucketTest {
     }
 
     @Test
-    public void removeFromReplacementCache_contactInserteOnce() throws InvocationTargetException, IllegalAccessException {
+    public void removeFromReplacementCache_contactInsertOnce() throws InvocationTargetException, IllegalAccessException {
         insertIntoReplacementCache.invoke(bucket, CONTACT1);
         Contact contact1 = (Contact) removeFromReplacementCache.invoke(bucket, NODE1);
         assertEquals(contact1, CONTACT1);
