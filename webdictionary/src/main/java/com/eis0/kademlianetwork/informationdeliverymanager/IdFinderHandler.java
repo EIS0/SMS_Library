@@ -13,33 +13,49 @@ import com.eis0.kademlianetwork.KademliaJoinableNetwork;
 import java.util.List;
 
 /**
- * This Class is used to find the closest node ID to a specific resource ID inside the network
+ * This class is used to scan the RoutingTable, searching for the {@link SMSKademliaNode} with the
+ * {@link KademliaId} closest to the idToFind (the Resource Id specified in the searchId() call); if
+ * the local node is the closest one it will answer to the searching {@link SMSPeer}, if the closest
+ * node is another node inside of the RoutingTable the local node will pass the task to him (it sends
+ * a SMS to the node, and waits to know if it is still alive inside of the network).
+ * <p>
+ * The searchId() is a wrapper of the searchIdList() method.
+ * <p>
+ * It creates a list of nodes (number of nodes = ATTEMPTS), starting from the closest one; if a node
+ * doesn't respond in 10s the method removes it from the list of closest nodes and restarts the
+ * process with the new list, asking to the following one, and so on, as long as the list ends
+ * or the closest node is the local node. The list length corresponds to the ATTEMPTS value (or to
+ * ATTEMPTS+1, if the list doesn't contain the local node; in this scenario, the local node is added
+ * at the end of the list, as last possible node that will answer to the research).
+ * The nodes are removed only from the list created by the searchIdList, not from the RoutingTable,
+ * to avoid the direct erasure.
+ * <p>
+ * When a node doesn't respond its staleCount get incremented, in the Refresh phase it will be
+ * removed if still inactive.
  *
- * @author Marco Cognolato (wrote the class)
- * @author Enrico Cestaro (edited and restored the code, to implement multiple research modes)
+ * @author Marco Cognolato (created the class)
+ * @author Enrico Cestaro (edited and restored the code)
  * @author Edoardo Raimondi (added the check cicle to verify if the target node is 'alive')
- * @author Giovanni Velludo (removed an useless variable)
  */
 public class IdFinderHandler {
+    private static final int ATTEMPTS = 7;
     private static final String ID_TO_FIND_NULL = "The idToFind cannot be null";
     private static final String SEARCHER_NULL = "The searcher cannot be null";
     private static final String NODES_LIST_NULL = "The nodeList cannot be null";
     private static final String NODES_LIST_EMPTY = "The nodeList cannot be empty";
-    private static final int ATTEMPTS = 7;
 
     /**
      * Searches for a specific Id, which needs to be closer to a given resource Id.
      * The list of possible nodes is formed by the closest nodes, and it always contains the local node
-
+     * (if it doesn't, the node is automatically added)
      *
-     * @param idToFind     The ID to find in the network
-     * @param searcher     The Peer which is searching for the ID
+     * @param idToFind The ID to find in the network
+     * @param searcher The Peer which is searching for the ID
      * @throws NullPointerException If the idToFind, the searcher or the researchMode are null
      */
-    public static void searchId(@NonNull KademliaId idToFind,@NonNull SMSPeer searcher){
-        if(idToFind == null) throw new NullPointerException(ID_TO_FIND_NULL);
-        if(searcher == null) throw new NullPointerException(SEARCHER_NULL);
-
+    public static void searchId(@NonNull KademliaId idToFind, @NonNull SMSPeer searcher) {
+        if (idToFind == null) throw new NullPointerException(ID_TO_FIND_NULL);
+        if (searcher == null) throw new NullPointerException(SEARCHER_NULL);
         //Obtain the local RoutingTable
         SMSKademliaRoutingTable table = KademliaJoinableNetwork.getInstance().getLocalRoutingTable();
         //Create a list containing the closest nodes (five is more than enough)
@@ -49,29 +65,25 @@ public class IdFinderHandler {
     }
 
     /**
-     * Searches inside of the given list for the active closest node; when a node doesn't respond is
-     * removed from the list, and the process is repeated
+     * Searches inside of the given list for the active closest node; when a node doesn't respond it
+     * gets removed from the list, and the process is repeated
+     *
      * @param idToFind The ID to find in the network
      * @param searcher The peer which is searching for the ID
      * @param nodeList
      */
     public static void searchIdList(@NonNull KademliaId idToFind, @NonNull SMSPeer searcher, @NonNull List<SMSKademliaNode> nodeList) {
-        if(nodeList.isEmpty()) throw new IllegalArgumentException(NODES_LIST_EMPTY);
-        if(nodeList == null) throw new NullPointerException(NODES_LIST_NULL);
-        /*
-        Declaration of the two messages used to:
-        1. entrust the research to a closer node
-        2. communicate the result of the research to the originating node
-        */
+        if (nodeList.isEmpty()) throw new IllegalArgumentException(NODES_LIST_EMPTY);
+        if (nodeList == null) throw new NullPointerException(NODES_LIST_NULL);
 
         //Local node, inserted in the list if not already present
         SMSKademliaNode local = KademliaJoinableNetwork.getInstance().getLocalNode();
-        if(!nodeList.contains(local)) {
+        if (!nodeList.contains(local)) {
             //inserted in the last position, must be the last node to be checked
             nodeList.add(local);
         }
         //Get the node with the node ID closest to the idToFind
-        //The first node in the nodeList is the one with the Node Id closest to the idToFind
+        //The first node in the nodeList is the one with the node Id closest to the idToFind
         SMSKademliaNode closestNode = nodeList.get(0);
 
         // Checks if I'm closest node to the one to find
@@ -84,11 +96,12 @@ public class IdFinderHandler {
         keepLooking(idToFind, searcher, closer);
         retryIfDead(idToFind, searcher, closer, nodeList);
     }
+
     /**
      * This method sends to the specified target {@link SMSPeer} the result of the previously
      * carried out research
      *
-     * @param idToFind   The ID whose research originated the request
+     * @param idToFind   The ID whose research originated the request;
      *                   It's sent back as response to the research
      * @param targetPeer The Peer representing the target that will receive the result
      */
@@ -103,7 +116,6 @@ public class IdFinderHandler {
             KademliaJoinableNetwork.getInstance().getRequestsHandler().completeFindIdRequest(idToFind, targetPeer);
             return;
         }
-
         SMSManager.getInstance().sendMessage(searchResult);
     }
 
@@ -144,6 +156,7 @@ public class IdFinderHandler {
             //The first node is the one tested, if I'm here it failed.
             //I remove it and restart the process
             nodeList.remove(0);
+            //Recursive call
             searchIdList(idToFind, searcherNode, nodeList);
         }
     }
