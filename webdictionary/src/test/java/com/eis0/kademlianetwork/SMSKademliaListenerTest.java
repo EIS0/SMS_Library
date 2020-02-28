@@ -8,7 +8,6 @@ import com.eis.smslibrary.SMSPeer;
 import com.eis0.UtilityMocks;
 import com.eis0.kademlia.KademliaId;
 import com.eis0.kademlia.SMSKademliaNode;
-import com.eis0.kademlianetwork.informationdeliverymanager.IdFinderHandler;
 import com.eis0.kademlianetwork.informationdeliverymanager.KademliaMessage;
 import com.eis0.kademlianetwork.informationdeliverymanager.RequestTypes;
 import com.eis0.kademlianetwork.informationdeliverymanager.RequestsHandler;
