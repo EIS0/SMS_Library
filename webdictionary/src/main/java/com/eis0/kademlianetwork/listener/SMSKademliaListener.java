@@ -16,7 +16,6 @@ import com.eis0.kademlianetwork.commands.localdictionary.KadAddLocalResource;
 import com.eis0.kademlianetwork.commands.localdictionary.KadRemoveLocalResource;
 import com.eis0.kademlianetwork.commands.messages.KadPong;
 import com.eis0.kademlianetwork.commands.messages.KadSendAcknowledge;
-import com.eis0.kademlianetwork.informationdeliverymanager.IdFinderHandler;
 import com.eis0.kademlianetwork.informationdeliverymanager.KademliaMessage;
 import com.eis0.kademlianetwork.informationdeliverymanager.KademliaMessageAnalyzer;
 import com.eis0.kademlianetwork.informationdeliverymanager.RequestTypes;
