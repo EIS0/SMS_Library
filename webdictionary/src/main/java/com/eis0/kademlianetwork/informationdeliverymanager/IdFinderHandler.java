@@ -10,6 +10,8 @@ import com.eis0.kademlia.SMSKademliaNode;
 import com.eis0.kademlia.SMSKademliaRoutingTable;
 import com.eis0.kademlianetwork.KademliaJoinableNetwork;
 
+import java.util.List;
+
 /**
  * This Class is used to find the closest node ID to a specific resource ID inside the network
  *
@@ -19,31 +21,58 @@ import com.eis0.kademlianetwork.KademliaJoinableNetwork;
  * @author Giovanni Velludo (removed an useless variable)
  */
 public class IdFinderHandler {
-    private static final String ID_TO_FIND_NULL = "The idToFind parameter is null";
-    private static final String SEARCHER_NULL = "The searcher parameter is null";
+    private static final String ID_TO_FIND_NULL = "The idToFind cannot be null";
+    private static final String SEARCHER_NULL = "The searcher cannot be null";
+    private static final String NODES_LIST_NULL = "The nodeList cannot be null";
+    private static final String NODES_LIST_EMPTY = "The nodeList cannot be empty";
+    private static final int ATTEMPTS = 7;
 
     /**
      * Searches for a specific Id, which needs to be closer to a given resource Id.
-     * If found, it's sent the searching Peer, else sends a request to find it
-     * to a closer person than the actual node. So on by a chain process
+     * The list of possible nodes is formed by the closest nodes, and it always contains the local node
+
      *
-     * @param idToFind The ID to find in the network
-     * @param searcher The Peer which is searching the ID
-     * @throws IllegalArgumentException If the idToFind, the searcher or the researchMode are null
+     * @param idToFind     The ID to find in the network
+     * @param searcher     The Peer which is searching for the ID
+     * @throws NullPointerException If the idToFind, the searcher or the researchMode are null
      */
-    public static void searchId(@NonNull KademliaId idToFind, @NonNull SMSPeer searcher) {
-        if (idToFind == null) throw new NullPointerException("The idToFind cannot be Null");
-        if (searcher == null) throw new NullPointerException("The searcher cannot be Null");
+    public static void searchId(@NonNull KademliaId idToFind,@NonNull SMSPeer searcher){
+        if(idToFind == null) throw new NullPointerException(ID_TO_FIND_NULL);
+        if(searcher == null) throw new NullPointerException(SEARCHER_NULL);
+
+        //Obtain the local RoutingTable
+        SMSKademliaRoutingTable table = KademliaJoinableNetwork.getInstance().getLocalRoutingTable();
+        //Create a list containing the closest nodes (five is more than enough)
+        List<SMSKademliaNode> nodeList = table.findClosest(idToFind, ATTEMPTS);
+
+        searchIdList(idToFind, searcher, nodeList);
+    }
+
+    /**
+     * Searches inside of the given list for the active closest node; when a node doesn't respond is
+     * removed from the list, and the process is repeated
+     * @param idToFind The ID to find in the network
+     * @param searcher The peer which is searching for the ID
+     * @param nodeList
+     */
+    public static void searchIdList(@NonNull KademliaId idToFind, @NonNull SMSPeer searcher, @NonNull List<SMSKademliaNode> nodeList) {
+        if(nodeList.isEmpty()) throw new IllegalArgumentException(NODES_LIST_EMPTY);
+        if(nodeList == null) throw new NullPointerException(NODES_LIST_NULL);
         /*
         Declaration of the two messages used to:
         1. entrust the research to a closer node
         2. communicate the result of the research to the originating node
         */
 
-        //Obtain the local RoutingTable
-        SMSKademliaRoutingTable table = KademliaJoinableNetwork.getInstance().getLocalRoutingTable();
+        //Local node, inserted in the list if not already present
+        SMSKademliaNode local = KademliaJoinableNetwork.getInstance().getLocalNode();
+        if(!nodeList.contains(local)) {
+            //inserted in the last position, must be the last node to be checked
+            nodeList.add(local);
+        }
         //Get the node with the node ID closest to the idToFind
-        SMSKademliaNode closestNode = table.findClosest(idToFind, 1).get(0);
+        //The first node in the nodeList is the one with the Node Id closest to the idToFind
+        SMSKademliaNode closestNode = nodeList.get(0);
 
         // Checks if I'm closest node to the one to find
         if (closestNode.equals(KademliaJoinableNetwork.getInstance().getLocalNode())) {
@@ -53,9 +82,8 @@ public class IdFinderHandler {
         //else, I ask to the closest node inside my Routing Table to continue the research
         SMSPeer closer = closestNode.getPeer();
         keepLooking(idToFind, searcher, closer);
-        retryIfDead(idToFind, searcher, closer);
+        retryIfDead(idToFind, searcher, closer, nodeList);
     }
-
     /**
      * This method sends to the specified target {@link SMSPeer} the result of the previously
      * carried out research
@@ -111,10 +139,12 @@ public class IdFinderHandler {
      *                     anymore, it is removed from the RoutingTable, and the research is started
      *                     again
      */
-    private static void retryIfDead(KademliaId idToFind, SMSPeer searcherNode, SMSPeer nodeToCheck) {
+    private static void retryIfDead(KademliaId idToFind, SMSPeer searcherNode, SMSPeer nodeToCheck, List<SMSKademliaNode> nodeList) {
         if (!KademliaJoinableNetwork.getInstance().isAlive(nodeToCheck)) {
-
-            searchId(idToFind, searcherNode);
+            //The first node is the one tested, if I'm here it failed.
+            //I remove it and restart the process
+            nodeList.remove(0);
+            searchIdList(idToFind, searcherNode, nodeList);
         }
     }
 }

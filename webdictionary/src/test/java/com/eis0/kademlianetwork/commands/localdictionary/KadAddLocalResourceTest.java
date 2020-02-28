@@ -1,12 +1,11 @@
 package com.eis0.kademlianetwork.commands.localdictionary;
 
-import com.eis0.kademlianetwork.KademliaNetwork;
 import com.eis0.netinterfaces.NetDictionary;
 import com.eis0.webdictionary.SMSNetVocabulary;
 
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class KadAddLocalResourceTest {
 
@@ -14,7 +13,7 @@ public class KadAddLocalResourceTest {
 
     @Test
     public void execute() {
-        new KadAddLocalResource("test", "", flex).execute();
-        assertEquals(flex.getResource("test"), "");
+        new KadAddLocalResource("test", "value", flex).execute();
+        assertEquals(flex.getResource("test"), "value");
     }
 }
