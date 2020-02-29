@@ -1,6 +1,7 @@
 package com.eis0.kademlianetwork.informationdeliverymanager.Requests;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.eis.smslibrary.SMSPeer;
 import com.eis0.kademlia.KademliaId;
@@ -56,14 +57,22 @@ public class FindIdRequest {
         return peerFound;
     }
 
+    /**
+     * Compares this object to another
+     * @param obj The object to compare to this
+     * @return Returns true if the object are equal or are the same, false otherwise
+     */
     @Override
-    public boolean equals(Object obj) {
-        if (obj == null) throw new IllegalArgumentException();
+    public boolean equals(@Nullable Object obj) {
+        if (obj == null) return false;
         if (!(obj instanceof FindIdRequest)) return false;
         FindIdRequest toCompare = (FindIdRequest) obj;
         return toCompare.idToFind.equals(this.idToFind);
     }
 
+    /**
+     * @return Returns the hashcode of this object
+     */
     @Override
     public int hashCode() {
         return idToFind.hashCode();
