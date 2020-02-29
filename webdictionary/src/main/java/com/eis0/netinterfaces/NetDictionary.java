@@ -1,5 +1,7 @@
 package com.eis0.netinterfaces;
 
+import java.util.Map;
+
 /**
  * Interface to define a network dictionary
  *
@@ -38,4 +40,5 @@ public interface NetDictionary<K, R> {
      * Removes all keys and resources from the dictionary.
      */
     void clear();
+    Map<K, R> getDictionaryCopy();
 }

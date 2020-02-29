@@ -8,10 +8,12 @@ import com.eis0.kademlianetwork.KademliaNetwork;
 import com.eis0.kademlianetwork.activitystatus.RefreshTimer;
 import com.eis0.kademlianetwork.commands.KadFindId;
 import com.eis0.kademlianetwork.commands.messages.KadPing;
+import com.eis0.kademlianetwork.commands.networkdictionary.KadAddResource;
+import com.eis0.netinterfaces.NetDictionary;
 import com.eis0.netinterfaces.commands.CommandExecutor;
 
-import java.lang.reflect.Method;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Perform a local routing table refresh.
@@ -32,10 +34,10 @@ public class RoutingTableRefresh extends Thread {
 
     /**
      * Method to start a refresh every 2 hours. As suggested by Kademlia Paper
-     * @see < https://pdos.csail.mit.edu/~petar/papers/maymounkov-kademlia-lncs.pdf > for more details
      *
      * @author Edoardo Raimondi
      * @author Marco Cognolato, little improvements
+     * @see < https://pdos.csail.mit.edu/~petar/papers/maymounkov-kademlia-lncs.pdf > for more details
      */
     public void run() {
         while (true) {
@@ -53,7 +55,7 @@ public class RoutingTableRefresh extends Thread {
     public void updateTable() {
         //create the list of my routing table nodes. I need to check all that nodes.
         List<SMSKademliaNode> allRoutingTableNodes = net.getLocalRoutingTable().getAllNodes();
-        for ( SMSKademliaNode currentNode : allRoutingTableNodes) {
+        for (SMSKademliaNode currentNode : allRoutingTableNodes) {
             CommandExecutor.execute(new KadPing(currentNode.getPeer()));
 
             //wait 10 secs to get a pong answer
@@ -81,6 +83,23 @@ public class RoutingTableRefresh extends Thread {
                 }
                 net.getLocalRoutingTable().insert(new SMSKademliaNode(findIdCommand.getPeerFound()));
             }
+        }
+
+        //Relocate the resources in the new nodes (if necessary)
+        NetDictionary localDictionary = net.getLocalDictionary();
+        Map localDictionaryCopy = localDictionary.getDictionaryCopy();
+        for (Object key : localDictionaryCopy.keySet()) {
+            //Get the resource from the copy of the localDictionary
+            Object resource = localDictionaryCopy.remove(key);
+            //Remove the resource from the localDictionary
+            try {
+                localDictionary.removeResource(key);
+            } catch(NullPointerException e) {
+                return;
+            }
+            KadAddResource addResource = new KadAddResource((String) key, (String) resource,
+                    net.getRequestsHandler());
+            CommandExecutor.execute(addResource);
         }
     }
 

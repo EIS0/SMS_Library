@@ -24,6 +24,16 @@ public class SMSNetVocabulary implements NetDictionary<String, String> {
     }
 
     /**
+     * Return an HashMap with the same elements contained in the Network Dictionary
+     * @return
+     */
+    public Map<String, String> getDictionaryCopy() {
+        Map<String, String> completeDictionary = new HashMap<>();
+        completeDictionary.putAll(netDict);
+    return completeDictionary;
+    }
+
+    /**
      * Adds a valid Key-Resource couple to the network dictionary.
      * If already presents, updates the key-resource pair
      * @param key A key to add to the dictionary

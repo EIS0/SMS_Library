@@ -22,8 +22,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.eis.smslibrary.SMSPeer;
 import com.eis0.kademlia.SMSKademliaNode;
 import com.eis0.kademlianetwork.KademliaFailReason;
+import com.eis0.kademlianetwork.KademliaJoinableNetwork;
 import com.eis0.kademlianetwork.KademliaNetwork;
-import com.eis0.kademlianetwork.listener.SMSKademliaListener;
 import com.eis0.netinterfaces.listeners.InviteListener;
 
 import java.util.Set;
@@ -48,8 +48,7 @@ public class KademliaDemo extends AppCompatActivity implements InviteListener<SM
     RecyclerView routingTableRclView;
 
     RoutingTableAdapter routingTableAdapter;
-    KademliaNetwork network = KademliaNetwork.getInstance();
-    SMSKademliaListener smsKademliaListener = new SMSKademliaListener(network);
+    KademliaNetwork network = (KademliaNetwork) KademliaJoinableNetwork.getInstance();
 
     /**
      * Called on the creation of the activity.
