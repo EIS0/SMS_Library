@@ -38,16 +38,17 @@ import java.util.List;
  * @author Edoardo Raimondi (added the check cicle to verify if the target node is 'alive')
  */
 public class IdFinderHandler {
-    private static final int ATTEMPTS = 7;
+    private static int maxAttempts = 10;
     private static final String ID_TO_FIND_NULL = "The idToFind cannot be null";
     private static final String SEARCHER_NULL = "The searcher cannot be null";
     private static final String NODES_LIST_NULL = "The nodeList cannot be null";
     private static final String NODES_LIST_EMPTY = "The nodeList cannot be empty";
+private static final String INSUFFICIENT_ATTEMPTS = "The attemptsNumber must be higher then zero";
 
     /**
      * Searches for a specific Id, which needs to be closer to a given resource Id.
-     * The list of possible nodes is formed by the closest nodes, and it always contains the local node
-     * (if it doesn't, the node is automatically added)
+     * The list of possible nodes is formed by the closest nodes, and it always contains the local
+     * node (if it doesn't, the node is automatically added)
      *
      * @param idToFind The ID to find in the network
      * @param searcher The Peer which is searching for the ID
@@ -59,7 +60,7 @@ public class IdFinderHandler {
         //Obtain the local RoutingTable
         SMSKademliaRoutingTable table = KademliaJoinableNetwork.getInstance().getLocalRoutingTable();
         //Create a list containing the closest nodes (five is more than enough)
-        List<SMSKademliaNode> nodeList = table.findClosest(idToFind, ATTEMPTS);
+        List<SMSKademliaNode> nodeList = table.findClosest(idToFind, maxAttempts);
 
         searchIdList(idToFind, searcher, nodeList);
     }
@@ -72,7 +73,8 @@ public class IdFinderHandler {
      * @param searcher The peer which is searching for the ID
      * @param nodeList
      */
-    public static void searchIdList(@NonNull KademliaId idToFind, @NonNull SMSPeer searcher, @NonNull List<SMSKademliaNode> nodeList) {
+    public static void searchIdList(@NonNull KademliaId idToFind, @NonNull SMSPeer searcher,
+                                    @NonNull List<SMSKademliaNode> nodeList) {
         if (nodeList.isEmpty()) throw new IllegalArgumentException(NODES_LIST_EMPTY);
         if (nodeList == null) throw new NullPointerException(NODES_LIST_NULL);
 
@@ -113,7 +115,8 @@ public class IdFinderHandler {
                 .buildMessage();
         if (targetPeer.equals(KademliaJoinableNetwork.getInstance().getLocalNode().getPeer())) {
             //If I'm searching the id for myself, then I have a pending request I can directly fulfill
-            KademliaJoinableNetwork.getInstance().getRequestsHandler().completeFindIdRequest(idToFind, targetPeer);
+            KademliaJoinableNetwork.getInstance().getRequestsHandler().
+                    completeFindIdRequest(idToFind, targetPeer);
             return;
         }
         SMSManager.getInstance().sendMessage(searchResult);
@@ -151,7 +154,8 @@ public class IdFinderHandler {
      *                     anymore, it is removed from the RoutingTable, and the research is started
      *                     again
      */
-    private static void retryIfDead(KademliaId idToFind, SMSPeer searcherNode, SMSPeer nodeToCheck, List<SMSKademliaNode> nodeList) {
+    private static void retryIfDead(KademliaId idToFind, SMSPeer searcherNode, SMSPeer nodeToCheck,
+                                    List<SMSKademliaNode> nodeList) {
         if (!KademliaJoinableNetwork.getInstance().isAlive(nodeToCheck)) {
             //The first node is the one tested, if I'm here it failed.
             //I remove it and restart the process
@@ -159,5 +163,22 @@ public class IdFinderHandler {
             //Recursive call
             searchIdList(idToFind, searcherNode, nodeList);
         }
+    }
+
+    /**
+     * The number of maximum attempts for the research of the node in the RoutingTable is by default
+     * set to 10; the reason for the existence of this value is to assure that, if the node can't
+     * reach a large number of nodes, it can still insert the resource inside of the Network; the
+     * resource will be then relocated during the refresh, IF the unresponsive node returns to live.
+     * If it doesn't, then the node chosen as closest one remains the closest one.
+     * It must also be considered the time that each attempts takes (10s)
+     * Warning: when the application is closed the number of attempts is reset
+     *
+     * @param attemptsNumber The maximum number of attempts before saving the resource in the local
+     *                       dictionary
+     */
+    private static void setAttemptsNumber(int attemptsNumber) {
+        if(attemptsNumber < 1) throw new IllegalArgumentException(INSUFFICIENT_ATTEMPTS);
+        maxAttempts = attemptsNumber;
     }
 }
