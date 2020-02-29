@@ -11,7 +11,7 @@ package com.eis0.kademlianetwork.activitystatus;
 public class NodeConnectionInfo {
 
     private static final int ONE_SECOND = 1000;
-    private static final int NUMBER_OF_SECONDS = 10;
+    public static final int NUMBER_OF_SECONDS = 10;
     private int currentSecond = 0;
 
     //To know if I had a positive acknowledge respond to a sent command
