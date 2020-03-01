@@ -11,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationManagerCompat;
@@ -55,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
      * @author Matteo Carnelos
      */
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -100,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
      * @param view The view on which the onClick event is coming from.
      * @author Matteo Carnelos
      */
-    public void newPollBtnOnClick(View view) {
+    public void newPollBtnOnClick(@NonNull View view) {
         Intent newPollIntent = new Intent(this, CreatePollActivity.class);
         startActivityForResult(
                 newPollIntent,
@@ -119,9 +120,9 @@ public class MainActivity extends AppCompatActivity {
      * @author Matteo Carnelos
      */
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == NEW_POLL_REQUEST_CODE && resultCode == RESULT_OK) {
+        if (requestCode == NEW_POLL_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
             String name = data.getStringExtra(CreatePollActivity.ARG_POLL_NAME);
             String question = data.getStringExtra(CreatePollActivity.ARG_POLL_QUESTION);
             // There's no need for a checked cast, see CreatePollActivity

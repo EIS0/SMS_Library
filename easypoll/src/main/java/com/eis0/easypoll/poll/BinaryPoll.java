@@ -3,6 +3,7 @@ package com.eis0.easypoll.poll;
 import android.content.SharedPreferences;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.eis0.networklibrary.Network;
 import com.eis0.networklibrary.NetworksPool;
@@ -88,15 +89,18 @@ public class BinaryPoll {
 
     /**
      * Set the SharedPreferences reference to which save the {@link #pollsCount} value.
+     * @param sharedPreferences The reference to the shared preferences of the application.
      *
      * @author Matteo Carnelos
      */
-    public static void setSharedPreferences(SharedPreferences sharedPreferences) {
+    public static void setSharedPreferences(@Nullable SharedPreferences sharedPreferences) {
         mSharedPreferences = sharedPreferences;
     }
 
     /**
-     * Save the polls counter (for ids) to the internal storage.
+     * Save the polls counter (for ids) to the internal storage.<br>
+     * Note: This method needs shared preferences to be previously set with
+     * {@link #setSharedPreferences(SharedPreferences)} otherwise it will return doing nothing.
      *
      * @author Matteo Carnelos
      */
@@ -109,11 +113,14 @@ public class BinaryPoll {
 
     /**
      * Load the polls counter (for ids) from the internal storage. If none is found, load the default
-     * one (0).
+     * one (0).<br>
+     * Note: This method needs shared preferences to be previously set with
+     * {@link #setSharedPreferences(SharedPreferences)} otherwise it will return doing nothing.
      *
      * @author Matteo Carnelos
      */
     public static void loadPollsCountFromInternal() {
+        if(mSharedPreferences == null) return;
         pollsCount = mSharedPreferences.getLong(POLLS_COUNT_KEY, 0);
     }
 
@@ -156,6 +163,7 @@ public class BinaryPoll {
      * @return A string representing the poll name.
      * @author Matteo Carnelos
      */
+    @NonNull
     public String getName() {
         return name;
     }
@@ -166,6 +174,7 @@ public class BinaryPoll {
      * @return A string representing the poll question.
      * @author Matteo Carnelos
      */
+    @NonNull
     public String getQuestion() {
         return question;
     }
@@ -176,6 +185,7 @@ public class BinaryPoll {
      * @return The {@link Network} object representing all the users subscribed to the poll.
      * @author Matteo Carnelos
      */
+    @NonNull
     public Network getUsers() {
         return users;
     }
@@ -186,6 +196,7 @@ public class BinaryPoll {
      * @return The {@link Network} object representing the author.
      * @author Matteo Carnelos
      */
+    @NonNull
     public Network getAuthor() {
         return author;
     }
@@ -197,6 +208,7 @@ public class BinaryPoll {
      *
      * @return A {@link String} representing the name of the author.
      */
+    @NonNull
     public String getAuthorName() {
         if(author.isLocalNetwork()) return SELF_AUTHOR_NAME;
         return author.getAddresses().get(0);
@@ -291,7 +303,7 @@ public class BinaryPoll {
      * @author Matteo Carnelos
      */
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         BinaryPoll that = (BinaryPoll) o;

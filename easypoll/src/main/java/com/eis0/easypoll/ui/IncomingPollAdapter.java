@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.eis0.easypoll.DataProvider;
 import com.eis0.easypoll.R;
@@ -48,7 +49,7 @@ public class IncomingPollAdapter extends BaseAdapter implements Observer {
      *            object coming from the PollManager.
      * @author Matteo Carnelos
      */
-    public void update(Observable o, Object arg) {
+    public void update(@NonNull Observable o, @Nullable Object arg) {
         notifyDataSetChanged();
     }
 
@@ -72,6 +73,7 @@ public class IncomingPollAdapter extends BaseAdapter implements Observer {
      * @author Matteo Carnelos
      */
     @Override
+    @NonNull
     public Object getItem(int position) {
         return DataProvider.getIncomingPolls().get(position);
     }
@@ -104,7 +106,8 @@ public class IncomingPollAdapter extends BaseAdapter implements Observer {
      * @author Matteo Carnelos
      */
     @Override
-    public View getView(int position, View convertView, ViewGroup container) {
+    @NonNull
+    public View getView(int position, @Nullable View convertView, @Nullable ViewGroup container) {
         if (convertView == null)
             convertView = inflater.inflate(R.layout.listitem_incoming_poll, null);
 
