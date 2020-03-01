@@ -16,6 +16,8 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -89,7 +91,7 @@ public class CreatePollActivity extends AppCompatActivity {
      * @author Matteo Carnelos
      */
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_poll);
         Slide slide = new Slide();
@@ -128,7 +130,7 @@ public class CreatePollActivity extends AppCompatActivity {
      * @author Matteo Carnelos
      */
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if(item.getItemId() == android.R.id.home) finishAfterTransition();
         return super.onOptionsItemSelected(item);
     }
@@ -140,7 +142,7 @@ public class CreatePollActivity extends AppCompatActivity {
      * @param view The view on which the onClick event is coming from.
      * @author Matteo Carnelos
      */
-    public void addPeerBtnOnClick(View view) {
+    public void addPeerBtnOnClick(@NonNull View view) {
         if(!peerTxt.hasFocus()) {
             openContactPicker(view);
             return;
@@ -167,7 +169,7 @@ public class CreatePollActivity extends AppCompatActivity {
      *
      * @author Matteo Carnelos
      */
-    public void openContactPicker(View view) {
+    public void openContactPicker(@NonNull View view) {
         Intent contactPickerIntent = new Intent(Intent.ACTION_PICK);
         contactPickerIntent.setType(ContactsContract.CommonDataKinds.Phone.CONTENT_TYPE);
         startActivityForResult(contactPickerIntent, CONTACT_PICKER_REQUEST_CODE);
@@ -183,7 +185,7 @@ public class CreatePollActivity extends AppCompatActivity {
      * @author Matteo Carnelos
      */
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == CONTACT_PICKER_REQUEST_CODE && resultCode == RESULT_OK) {
             Uri contactUri = data.getData();
@@ -211,7 +213,7 @@ public class CreatePollActivity extends AppCompatActivity {
      * @author Marco Cognolato
      * @author Matteo Carnelos
      */
-    public void sendPollOnClick(View view) {
+    public void sendPollOnClick(@NonNull View view) {
         // Check if the name and/or the question is empty, in case show a Toast
         String name = pollNameTxt.getText().toString();
         String question = pollQuestionTxt.getText().toString();

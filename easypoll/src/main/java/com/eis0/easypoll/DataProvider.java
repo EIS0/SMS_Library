@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.eis0.easypoll.poll.BinaryPoll;
 import com.google.gson.Gson;
@@ -62,6 +63,7 @@ public class DataProvider extends Observable {
      * @return The only instance of this class.
      * @author Matteo Carnelos
      */
+    @NonNull
     public static DataProvider getInstance() {
         if (instance == null) instance = new DataProvider();
         return instance;
@@ -76,12 +78,14 @@ public class DataProvider extends Observable {
      *
      * @author Matteo Carnelos
      */
-    static void setOutputFilesDir(File outputFilesDir) {
+    static void setOutputFilesDir(@Nullable File outputFilesDir) {
         filesDir = outputFilesDir;
     }
 
     /**
-     * Save all the incoming/opened/closed polls data in the internal memory.
+     * Save all the incoming/opened/closed polls data in the internal memory.<br>
+     * Note: This method needs the output directory to be previously set with
+     * {@link #setOutputFilesDir(File)} otherwise it will return doing nothing.
      *
      * @author Matteo Carnelos
      */
@@ -93,13 +97,12 @@ public class DataProvider extends Observable {
     }
 
     /**
-     * Load all the incoming/opened/closed polls data from the internal memory.
+     * Load all the incoming/opened/closed polls data from the internal memory.<br>
      *
      * @param context The context of the application.
      * @author Matteo Carnelos
      */
-    static void loadDataFromInternal(Context context) {
-        if(context == null) return;
+    static void loadDataFromInternal(@NonNull Context context) {
         incomingPolls = loadPollsList(INCOMING_POLLS_FILE_NAME, context);
         openedPolls = loadPollsList(OPENED_POLLS_FILE_NAME, context);
         closedPolls = loadPollsList(CLOSED_POLLS_FILE_NAME, context);
@@ -113,7 +116,7 @@ public class DataProvider extends Observable {
      * @param directory The directory path.
      * @author Matteo Carnelos
      */
-    private static void savePollsList(List<BinaryPoll> list, String fileName, File directory) {
+    private static void savePollsList(@NonNull List<BinaryPoll> list, @NonNull String fileName, @NonNull File directory) {
         Type listType = new TypeToken<List<BinaryPoll>>() {}.getType();
         Gson gson = new GsonBuilder().enableComplexMapKeySerialization().create();
         String listJson = gson.toJson(list, listType);
@@ -135,7 +138,8 @@ public class DataProvider extends Observable {
      * @return The loaded list, or an empty list if the file was not found.
      * @author Matteo Carnelos
      */
-    private static List<BinaryPoll> loadPollsList(String fileName, Context context) {
+    @NonNull
+    private static List<BinaryPoll> loadPollsList(@NonNull String fileName, @NonNull Context context) {
         FileInputStream fileInputStream;
         try {
             fileInputStream = context.openFileInput(fileName);
@@ -168,6 +172,7 @@ public class DataProvider extends Observable {
      * @return The incoming polls ArrayList.
      * @author Matteo Carnelos
      */
+    @NonNull
     public static List<BinaryPoll> getIncomingPolls() {
         return incomingPolls;
     }
@@ -178,6 +183,7 @@ public class DataProvider extends Observable {
      * @return The opened polls ArrayList.
      * @author Matteo Carnelos
      */
+    @NonNull
     public static List<BinaryPoll> getOpenedPolls() {
         return openedPolls;
     }
@@ -188,6 +194,7 @@ public class DataProvider extends Observable {
      * @return The closed polls ArrayList.
      * @author Matteo Carnelos
      */
+    @NonNull
     public static List<BinaryPoll> getClosedPolls() {
         return closedPolls;
     }
