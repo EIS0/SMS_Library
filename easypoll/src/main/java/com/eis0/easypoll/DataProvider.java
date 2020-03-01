@@ -52,9 +52,7 @@ public class DataProvider extends Observable {
      *
      * @author Matteo Carnelos
      */
-    private DataProvider() {
-
-    }
+    private DataProvider() { }
 
     /**
      * Returns a new instance of DataProvider if none exist, otherwise the one already created as per
