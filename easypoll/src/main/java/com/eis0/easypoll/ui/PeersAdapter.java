@@ -42,7 +42,7 @@ public class PeersAdapter extends RecyclerView.Adapter<PeersAdapter.PeerListView
      *
      * @author Matteo Carnelos
      */
-    class PeerListViewHolder extends RecyclerView.ViewHolder {
+    static class PeerListViewHolder extends RecyclerView.ViewHolder {
 
         TextView userTxtView;
         Button removeBtn;

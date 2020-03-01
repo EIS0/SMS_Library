@@ -22,8 +22,6 @@ import static com.eis0.easypoll.ui.OpenedPollAdapter.NEGATIVE_COLOR;
 import static com.eis0.easypoll.ui.OpenedPollAdapter.NEUTRAL_COLOR;
 import static com.eis0.easypoll.ui.OpenedPollAdapter.POSITIVE_COLOR;
 
-\
-
 /**
  * ListAdapter that adapts data coming from the DataProvider class into the graphical UI elements
  * of the closed poll ListItem view.
