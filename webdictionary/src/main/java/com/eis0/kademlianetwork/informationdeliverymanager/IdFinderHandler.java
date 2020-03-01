@@ -43,7 +43,7 @@ public class IdFinderHandler {
     private static final String SEARCHER_NULL = "The searcher cannot be null";
     private static final String NODES_LIST_NULL = "The nodeList cannot be null";
     private static final String NODES_LIST_EMPTY = "The nodeList cannot be empty";
-private static final String INSUFFICIENT_ATTEMPTS = "The attemptsNumber must be higher then zero";
+    private static final String INSUFFICIENT_ATTEMPTS = "The attemptsNumber must be higher then zero";
 
     /**
      * Searches for a specific Id, which needs to be closer to a given resource Id.
@@ -61,7 +61,12 @@ private static final String INSUFFICIENT_ATTEMPTS = "The attemptsNumber must be 
         SMSKademliaRoutingTable table = KademliaJoinableNetwork.getInstance().getLocalRoutingTable();
         //Create a list containing the closest nodes (five is more than enough)
         List<SMSKademliaNode> nodeList = table.findClosest(idToFind, maxAttempts);
-
+        //Local node, inserted in the list if not already present
+        SMSKademliaNode local = KademliaJoinableNetwork.getInstance().getLocalNode();
+        if (!nodeList.contains(local)) {
+            //inserted in the last position, must be the last node to be checked
+            nodeList.add(local);
+        }
         searchIdList(idToFind, searcher, nodeList);
     }
 
@@ -77,13 +82,6 @@ private static final String INSUFFICIENT_ATTEMPTS = "The attemptsNumber must be 
                                     @NonNull List<SMSKademliaNode> nodeList) {
         if (nodeList.isEmpty()) throw new IllegalArgumentException(NODES_LIST_EMPTY);
         if (nodeList == null) throw new NullPointerException(NODES_LIST_NULL);
-
-        //Local node, inserted in the list if not already present
-        SMSKademliaNode local = KademliaJoinableNetwork.getInstance().getLocalNode();
-        if (!nodeList.contains(local)) {
-            //inserted in the last position, must be the last node to be checked
-            nodeList.add(local);
-        }
         //Get the node with the node ID closest to the idToFind
         //The first node in the nodeList is the one with the node Id closest to the idToFind
         SMSKademliaNode closestNode = nodeList.get(0);
@@ -177,8 +175,8 @@ private static final String INSUFFICIENT_ATTEMPTS = "The attemptsNumber must be 
      * @param attemptsNumber The maximum number of attempts before saving the resource in the local
      *                       dictionary
      */
-    private static void setAttemptsNumber(int attemptsNumber) {
-        if(attemptsNumber < 1) throw new IllegalArgumentException(INSUFFICIENT_ATTEMPTS);
+    public static void setAttemptsNumber(int attemptsNumber) {
+        if (attemptsNumber < 1) throw new IllegalArgumentException(INSUFFICIENT_ATTEMPTS);
         maxAttempts = attemptsNumber;
     }
 }
