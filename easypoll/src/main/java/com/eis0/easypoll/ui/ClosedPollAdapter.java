@@ -8,6 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.eis0.easypoll.DataProvider;
 import com.eis0.easypoll.R;
@@ -20,6 +21,8 @@ import static com.eis0.easypoll.ui.OpenedPollAdapter.BLACK_COLOR;
 import static com.eis0.easypoll.ui.OpenedPollAdapter.NEGATIVE_COLOR;
 import static com.eis0.easypoll.ui.OpenedPollAdapter.NEUTRAL_COLOR;
 import static com.eis0.easypoll.ui.OpenedPollAdapter.POSITIVE_COLOR;
+
+\
 
 /**
  * ListAdapter that adapts data coming from the DataProvider class into the graphical UI elements
@@ -50,7 +53,7 @@ public class ClosedPollAdapter extends BaseAdapter implements Observer {
      *            object coming from the PollManager.
      * @author Matteo Carnelos
      */
-    public void update(Observable o, Object arg) {
+    public void update(@NonNull Observable o, @Nullable Object arg) {
         notifyDataSetChanged();
     }
 
@@ -74,6 +77,7 @@ public class ClosedPollAdapter extends BaseAdapter implements Observer {
      * @author Matteo Carnelos
      */
     @Override
+    @NonNull
     public Object getItem(int position) {
         return DataProvider.getClosedPolls().get(position);
     }
@@ -106,7 +110,8 @@ public class ClosedPollAdapter extends BaseAdapter implements Observer {
      * @author Matteo Carnelos
      */
     @Override
-    public View getView(int position, View convertView, ViewGroup container) {
+    @NonNull
+    public View getView(int position, @Nullable View convertView, @Nullable ViewGroup container) {
         if (convertView == null)
             convertView = inflater.inflate(R.layout.listitem_closed_poll, null);
 

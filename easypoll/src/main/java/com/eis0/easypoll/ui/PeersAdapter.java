@@ -25,7 +25,13 @@ public class PeersAdapter extends RecyclerView.Adapter<PeersAdapter.PeerListView
     private ArrayList<SMSPeer> peersDataset = new ArrayList<>();
     private TextView infoTxt;
 
-    public PeersAdapter(TextView infoTxt) {
+    /**
+     * Class constructor. Create a peers adapter given its info label.
+     *
+     * @param infoTxt The label containing the info text.
+     * @author Matteo Carnelos
+     */
+    public PeersAdapter(@NonNull TextView infoTxt) {
         this.infoTxt = infoTxt;
     }
 
@@ -42,7 +48,7 @@ public class PeersAdapter extends RecyclerView.Adapter<PeersAdapter.PeerListView
         Button removeBtn;
 
         /**
-         * Constructor of the view holder. It gets teh reference to UI objects.
+         * Constructor of the view holder. It gets the reference to UI objects.
          *
          * @param v The {@link View} containing the UI elements.
          * @author Matteo Carnelos
@@ -101,9 +107,9 @@ public class PeersAdapter extends RecyclerView.Adapter<PeersAdapter.PeerListView
      * @return A new ViewHolder that holds a View of the given view type.
      * @author Matteo Carnelos
      */
-    @NonNull
     @Override
-    public PeersAdapter.PeerListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    @NonNull
+    public PeersAdapter.PeerListViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.rclviewitem_user, parent, false);
         return new PeerListViewHolder(v);
@@ -118,7 +124,7 @@ public class PeersAdapter extends RecyclerView.Adapter<PeersAdapter.PeerListView
      * @author Matteo Carnelos
      */
     @Override
-    public void onBindViewHolder(PeerListViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull PeerListViewHolder holder, final int position) {
         holder.userTxtView.setText(peersDataset.get(position).getAddress());
         holder.removeBtn.setOnClickListener(new View.OnClickListener() {
             @Override

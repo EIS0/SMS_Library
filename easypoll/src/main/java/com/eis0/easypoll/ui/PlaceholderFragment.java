@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ListAdapter;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.ListFragment;
 
 import com.eis0.easypoll.DataProvider;
@@ -34,6 +35,7 @@ public class PlaceholderFragment extends ListFragment {
      * @return A PlaceholderFragment instance with the bundle containing the section number.
      * @author Matteo Carnelos
      */
+    @NonNull
     static PlaceholderFragment newInstance(int index) {
         PlaceholderFragment fragment = new PlaceholderFragment();
         // Put the section number in the bundle, it will be used in onCreateView(...)
@@ -57,8 +59,9 @@ public class PlaceholderFragment extends ListFragment {
      * @author Matteo Carnelos
      */
     @Override
+    @Nullable
     public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
+                             @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         int sectionNumber = getArguments().getInt(ARG_SECTION_NUMBER);
         switch(sectionNumber) {
             case INCOMING_SECTION_NUMBER:

@@ -47,6 +47,7 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
      * @return The only instance of this class.
      * @author Matteo Carnelos
      */
+    @NonNull
     public static PollManager getInstance() {
         if (instance == null) instance = new PollManager();
         return instance;
@@ -125,7 +126,7 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
      *                the rules of the {@link NetworkMessageBuilder}.
      * @author Matteo Carnelos
      */
-    public void onMessageReceived(SMSMessage message) {
+    public void onMessageReceived(@NonNull SMSMessage message) {
         String data = message.getData();
         SMSPeer peer = message.getPeer();
         // Parse the formatted text into a NetworkMessageBuilder object
@@ -175,6 +176,7 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
      * @return The correspondent {@link Network} object.
      * @author Matteo Carnelos
      */
+    @NonNull
     private Network extractNetworkFromAddresses(@NonNull List<String> addresses) {
         // Check if the authorAddress is the LOCALNET_ADDR, it means that the extracted network
         // will be the LOCALNET
@@ -193,7 +195,7 @@ public class PollManager implements ReceivedMessageListener<SMSMessage> {
      * @param answer The answer to apply.
      * @author Matteo Carnelos
      */
-    private synchronized void applyAnswerToPoll(long number, Network author, boolean answer) {
+    private synchronized void applyAnswerToPoll(long number, @NonNull Network author, boolean answer) {
         for(BinaryPoll openedPoll : DataProvider.getOpenedPolls()) {
             if(openedPoll.getNumber() == number && openedPoll.getAuthor().equals(author)) {
                 openedPoll.setAnswer(answer);
