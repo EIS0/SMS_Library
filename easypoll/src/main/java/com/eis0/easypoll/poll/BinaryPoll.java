@@ -89,6 +89,7 @@ public class BinaryPoll {
 
     /**
      * Set the SharedPreferences reference to which save the {@link #pollsCount} value.
+     * @param sharedPreferences The reference to the shared preferences of the application.
      *
      * @author Matteo Carnelos
      */
