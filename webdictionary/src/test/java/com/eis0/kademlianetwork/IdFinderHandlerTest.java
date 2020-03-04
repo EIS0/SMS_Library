@@ -29,18 +29,18 @@ import static org.mockito.Mockito.when;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({KademliaNetwork.class, SMSManager.class, KademliaJoinableNetwork.class})
 public class IdFinderHandlerTest {
-    //SEARCHER
-    private SMSPeer SEARCHER_PEER;
-    private KademliaId SEARCHER_ID;
-    private SMSKademliaNode SEARCHER;
+    //searcher
+    private SMSPeer searcherPeer;
+    private KademliaId searcherId;
+    private SMSKademliaNode searcher;
     //NODE1
-    private SMSPeer VALID_PEER1;
-    private KademliaId VALID_NODE1_ID;
-    private SMSKademliaNode VALID_NODE1;
+    private SMSPeer validPeer1;
+    private KademliaId validNodeId1;
+    private SMSKademliaNode validNode1;
     //NODE2
-    private SMSPeer VALID_PEER2;
-    private KademliaId VALID_NODE2_ID;
-    private SMSKademliaNode VALID_NODE2;
+    private SMSPeer validPeer2;
+    private KademliaId validNodeId2;
+    private SMSKademliaNode validNode2;
 
     private KademliaJoinableNetwork networkMock;
     private SMSManager smsManagerMock;
@@ -51,19 +51,19 @@ public class IdFinderHandlerTest {
     @Before
     public void setup() {
         //Searcher
-        SEARCHER_PEER = new SMSPeer("+393423541601");
-        SEARCHER_ID = new KademliaId(SEARCHER_PEER);
-        SEARCHER = new SMSKademliaNode(SEARCHER_PEER);
+        searcherPeer = new SMSPeer("+393423541601");
+        searcherId = new KademliaId(searcherPeer);
+        searcher = new SMSKademliaNode(searcherPeer);
         //Node1
-        VALID_PEER1 = new SMSPeer("+393335552121");
-        VALID_NODE1_ID = new KademliaId(VALID_PEER1);
-        VALID_NODE1 = new SMSKademliaNode(VALID_PEER1);
+        validPeer1 = new SMSPeer("+393335552121");
+        validNodeId1 = new KademliaId(validPeer1);
+        validNode1 = new SMSKademliaNode(validPeer1);
         //Node2
-        VALID_PEER2 = new SMSPeer("+393423541602");
-        VALID_NODE2_ID = new KademliaId(VALID_PEER2);
-        VALID_NODE2 = new SMSKademliaNode(VALID_PEER2);
+        validPeer2 = new SMSPeer("+393423541602");
+        validNodeId2 = new KademliaId(validPeer2);
+        validNode2 = new SMSKademliaNode(validPeer2);
         //RoutingTable
-        routingTable = new SMSKademliaRoutingTable(SEARCHER, new DefaultConfiguration());
+        routingTable = new SMSKademliaRoutingTable(searcher, new DefaultConfiguration());
 
         //MOCK
         networkMock = mock(KademliaJoinableNetwork.class);
@@ -75,38 +75,35 @@ public class IdFinderHandlerTest {
         PowerMockito.mockStatic(KademliaJoinableNetwork.class);
         PowerMockito.when(KademliaJoinableNetwork.getInstance()).thenReturn(networkMock);
 
-        when(networkMock.getLocalNode()).thenReturn(SEARCHER);
+        when(networkMock.getLocalNode()).thenReturn(searcher);
         when(networkMock.getLocalRoutingTable()).thenReturn(routingTable);
 
-        when(networkMock.isAlive(SEARCHER_PEER)).thenReturn(true);
-        when(networkMock.isAlive(VALID_PEER1)).thenReturn(true);
-        when(networkMock.isAlive(VALID_PEER2)).thenReturn(false);
-
+        when(networkMock.isAlive(searcherPeer)).thenReturn(true);
+        when(networkMock.isAlive(validPeer1)).thenReturn(true);
+        when(networkMock.isAlive(validPeer2)).thenReturn(false);
 
         when(networkMock.getRequestsHandler()).thenReturn(requestsHandler);
-
-        //when(networkMock.isNodeInNetwork(VALID_NODE2)).thenReturn(true);
 
     }
 
     @Test(expected = NullPointerException.class)
     public void nullId_throws() {
-        IdFinderHandler.searchId(null, SEARCHER_PEER);
+        IdFinderHandler.searchId(null, searcherPeer);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullSearcher_throws() {
-        IdFinderHandler.searchId(VALID_NODE1_ID, null);
+        IdFinderHandler.searchId(validNodeId1, null);
     }
 
     /**
      * This test starts a searchId operation, that should end with the calling Request being closed,
-     * but the Request doesn't exist; as it is written, the code simply ignore the situation after
-     * having started the research
+     * but the Request doesn't exist; in the way it is written, the code should simply ignore the
+     * situation after having started the research (no Exceptions)
      */
     @Test
-    public void nullRequest_throws() {
-        IdFinderHandler.searchId(VALID_NODE1_ID, SEARCHER_PEER);
+    public void closingUnexistingRequest_noExcpetionThrow() {
+        IdFinderHandler.searchId(validNodeId1, searcherPeer);
     }
 
     /**
@@ -114,9 +111,9 @@ public class IdFinderHandlerTest {
      */
     @Test
     public void findMyId() {
-        IdFinderHandler.searchId(SEARCHER_ID, SEARCHER_PEER);
-        String expectedTextMessage = RequestTypes.Ping.ordinal() + " " + SEARCHER_ID + " / / /";
-        SMSMessage expectedMessage = new SMSMessage(SEARCHER_PEER, expectedTextMessage);
+        IdFinderHandler.searchId(searcherId, searcherPeer);
+        String expectedTextMessage = RequestTypes.Ping.ordinal() + " " + searcherId + " / / /";
+        SMSMessage expectedMessage = new SMSMessage(searcherPeer, expectedTextMessage);
         verify(smsManagerMock, times(0)).sendMessage(expectedMessage);
     }
 
@@ -127,8 +124,8 @@ public class IdFinderHandlerTest {
      */
     @Test
     public void findNotMyId_inserted() {
-        routingTable.insert(VALID_NODE1);
-        IdFinderHandler.searchId(VALID_NODE1_ID, SEARCHER_PEER);
+        routingTable.insert(validNode1);
+        IdFinderHandler.searchId(validNodeId1, searcherPeer);
         verify(smsManagerMock, times(1)).sendMessage(any(SMSMessage.class));
     }
 
@@ -139,8 +136,8 @@ public class IdFinderHandlerTest {
      */
     @Test
     public void findNotMyId_inserted_DEAD() {
-        routingTable.insert(VALID_NODE2);
-        IdFinderHandler.searchId(VALID_NODE2_ID, SEARCHER_PEER);
+        routingTable.insert(validNode2);
+        IdFinderHandler.searchId(validNodeId2, searcherPeer);
         verify(smsManagerMock, times(1)).sendMessage(any(SMSMessage.class));
     }
 
@@ -150,16 +147,16 @@ public class IdFinderHandlerTest {
      */
     @Test
     public void findNotMyId_notInserted() {
-        IdFinderHandler.searchId(VALID_NODE1_ID, SEARCHER_PEER);
+        IdFinderHandler.searchId(validNodeId1, searcherPeer);
         verify(smsManagerMock, times(0)).sendMessage(any(SMSMessage.class));
     }
 
 
     @Test
     public void findIdInTable_notSearchedByMe() {
-        IdFinderHandler.searchId(SEARCHER_ID, VALID_PEER1);
-        String expectedTextMessage = RequestTypes.FindIdSearchResult.ordinal() + " " + SEARCHER + " / / /";
-        SMSMessage expectedMessage = new SMSMessage(VALID_PEER1, expectedTextMessage);
+        IdFinderHandler.searchId(searcherId, validPeer1);
+        String expectedTextMessage = RequestTypes.FindIdSearchResult.ordinal() + " " + searcher + " / / /";
+        SMSMessage expectedMessage = new SMSMessage(validPeer1, expectedTextMessage);
         verify(smsManagerMock, times(1)).sendMessage(expectedMessage);
     }
 
@@ -168,20 +165,20 @@ public class IdFinderHandlerTest {
      */
     @Test
     public void findIdInTable_notSearchedByMe_DEAD() {
-        IdFinderHandler.searchId(SEARCHER_ID, VALID_PEER2);
-        String expectedTextMessage = RequestTypes.FindIdSearchResult.ordinal() + " " + SEARCHER + " / / /";
-        SMSMessage expectedMessage = new SMSMessage(VALID_PEER2, expectedTextMessage);
+        IdFinderHandler.searchId(searcherId, validPeer2);
+        String expectedTextMessage = RequestTypes.FindIdSearchResult.ordinal() + " " + searcher + " / / /";
+        SMSMessage expectedMessage = new SMSMessage(validPeer2, expectedTextMessage);
         verify(smsManagerMock, times(1)).sendMessage(expectedMessage);
     }
 
     @Test
     public void forwardRequest() {
-        routingTable.insert(VALID_NODE1);
-        IdFinderHandler.searchId(VALID_NODE1_ID, SEARCHER_PEER);
+        routingTable.insert(validNode1);
+        IdFinderHandler.searchId(validNodeId1, searcherPeer);
         String expectedTextMessage =
                 RequestTypes.FindId.ordinal() + " " +
-                        VALID_NODE1_ID + " " + SEARCHER_PEER + " / /";
-        SMSMessage expectedMessage = new SMSMessage(VALID_PEER1, expectedTextMessage);
+                        validNodeId1 + " " + searcherPeer + " / /";
+        SMSMessage expectedMessage = new SMSMessage(validPeer1, expectedTextMessage);
         verify(smsManagerMock, times(1)).sendMessage(expectedMessage);
     }
 
@@ -196,9 +193,9 @@ public class IdFinderHandlerTest {
     @Test
     public void noLocalNode_localNodeSearched() {
         List<SMSKademliaNode> nodes = routingTable.getAllNodes();
-        nodes.add(VALID_NODE1);
-        nodes.remove(SEARCHER);
-        IdFinderHandler.searchIdList(SEARCHER_ID, SEARCHER_PEER, nodes);
+        nodes.add(validNode1);
+        nodes.remove(searcher);
+        IdFinderHandler.searchIdList(searcherId, searcherPeer, nodes);
         verify(smsManagerMock, times(1)).sendMessage(any(SMSMessage.class));
     }
 
@@ -208,10 +205,10 @@ public class IdFinderHandlerTest {
     @Test
     public void noLocalNode_notLocalNodeSearched() {
         List<SMSKademliaNode> nodes = routingTable.getAllNodes();
-        nodes.add(VALID_NODE1);
-        nodes.remove(SEARCHER);
-        IdFinderHandler.searchIdList(VALID_NODE1_ID, SEARCHER_PEER, nodes);
-        //A message is sent to the VALID_NODE1
+        nodes.add(validNode1);
+        nodes.remove(searcher);
+        IdFinderHandler.searchIdList(validNodeId1, searcherPeer, nodes);
+        //A message is sent to the validNode1
         verify(smsManagerMock, times(1)).sendMessage(any(SMSMessage.class));
     }
 }
