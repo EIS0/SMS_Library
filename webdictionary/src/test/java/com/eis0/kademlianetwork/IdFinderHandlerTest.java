@@ -98,11 +98,11 @@ public class IdFinderHandlerTest {
 
     /**
      * This test starts a searchId operation, that should end with the calling Request being closed,
-     * but the Request doesn't exist; as it is written, the code simply ignore the situation after
-     * having started the research
+     * but the Request doesn't exist; in the way it is written, the code should simply ignore the
+     * situation after having started the research (no Exceptions)
      */
     @Test
-    public void nullRequest_throws() {
+    public void closingUnexistingRequest_noExcpetionThrow() {
         IdFinderHandler.searchId(validNodeId1, searcherPeer);
     }
 
